@@ -1,4 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chiya Pasal</title>
+<meta name="description" content="Run a Kathmandu tea stall and learn romanized Nepali by serving customers, chatting, and making change.">
+<meta name="theme-color" content="#c4122f">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +52,8 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .app{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 28px;display:flex;flex-direction:column;gap:12px}
@@ -188,6 +196,8 @@ nav{display:flex;gap:8px}
 .steam{animation:steam 2.4s ease-in-out infinite;transform-origin:center bottom}
 @keyframes steam{0%,100%{opacity:.25;transform:translateY(1px)}50%{opacity:.8;transform:translateY(-2px)}}
 </style>
+</head>
+<body>
 
 <div class="app">
   <header class="top">
@@ -652,3 +662,5 @@ C=null;$('#cust').innerHTML=avatar({skin:SKIN[1],hair:HAIR[0],shirt:SHIRT[0],top
 renderBubble('Namaste!','Hello!');renderTray();
 startDay();
 </script>
+</body>
+</html>

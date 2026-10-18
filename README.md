@@ -2,9 +2,11 @@
 
 A small browser game for learning romanized Nepali. You run a tea stall (*chiya pasal*) in Kathmandu, and every customer talks to you in Nepali.
 
+**Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
+
 ## How to play
 
-Open `chiya_pasal.html` in any modern browser. There is no build step and nothing to install.
+Play online at the link above, or download `index.html` and open it in any modern browser. There is no build step and nothing to install.
 
 - **Greetings and small talk.** Pick the right reply, e.g. *"Tapai lai kasto cha?"* → *"Malai sanchai cha."*
 - **Orders.** Read *"Malai dui plate momo chahiyo"*, put the right food on the tray, then press **Linus!** ("here you go").
@@ -28,4 +30,4 @@ Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peek
 
 ## Project layout
 
-Everything lives in one file, `chiya_pasal.html`: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.
+Everything lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.
