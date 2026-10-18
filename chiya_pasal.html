@@ -1,0 +1,654 @@
+<title>Chiya Pasal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;700&family=Yatra+One&display=swap">
+<style>
+/* Layout: a Kathmandu tea-stall window (customer + speech) above a wooden counter (chalk menu + food + tray). */
+:root{
+  --bg:#e8edf1; --surface:#ffffff; --surface-2:#f2f5f8; --ink:#1b2230; --muted:#5a6476; --line:#d2d9e2;
+  --crimson:#c4122f; --on-crimson:#ffffff; --blue:#1d3a8a;
+  --sky-top:#c6dcee; --sky-bot:#eef3f7; --mount:#9db1c7; --mount-2:#b9c8d8; --snow:#ffffff;
+  --wood:#6f4329; --wood-hi:#9b653f; --counter:#e7cfae;
+  --board:#26372f; --chalk:#f1eee4; --chalk-dim:#b9c4b8;
+  --good:#1f7d4b; --good-bg:#e1f3e8; --bad:#c4122f; --bad-bg:#fbe4e8;
+  --cup:#f6f3ee; --glass:rgba(205,228,242,.65); --stroke:#3a2a20;
+  --scrim:rgba(16,20,29,.55);
+  --flag1:#2350a5; --flag2:#ffffff; --flag3:#c4122f; --flag4:#2a8a4a; --flag5:#e8b923;
+  --f-display:'Yatra One','Mukta',system-ui,sans-serif;
+  --f-body:'Mukta',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10141d; --surface:#1b2131; --surface-2:#232b3e; --ink:#e8ecf3; --muted:#9ba5b8; --line:#323b50;
+  --crimson:#ff5671; --on-crimson:#22030a; --blue:#9db7ff;
+  --sky-top:#141b33; --sky-bot:#2b3352; --mount:#36425f; --mount-2:#2a3450; --snow:#c6d0e3;
+  --wood:#4a2d1d; --wood-hi:#6d4530; --counter:#2f2620;
+  --board:#1d2b25; --chalk:#ebe8de; --chalk-dim:#98a598;
+  --good:#5fd394; --good-bg:#15342a; --bad:#ff6b80; --bad-bg:#3a1820;
+  --cup:#ece7df; --glass:rgba(170,205,230,.45); --stroke:#1a120d;
+  --scrim:rgba(0,0,0,.65);
+  --flag1:#5b7fd0; --flag2:#d9dde6; --flag3:#e0475f; --flag4:#46a866; --flag5:#e2bd45;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#10141d; --surface:#1b2131; --surface-2:#232b3e; --ink:#e8ecf3; --muted:#9ba5b8; --line:#323b50;
+  --crimson:#ff5671; --on-crimson:#22030a; --blue:#9db7ff;
+  --sky-top:#141b33; --sky-bot:#2b3352; --mount:#36425f; --mount-2:#2a3450; --snow:#c6d0e3;
+  --wood:#4a2d1d; --wood-hi:#6d4530; --counter:#2f2620;
+  --board:#1d2b25; --chalk:#ebe8de; --chalk-dim:#98a598;
+  --good:#5fd394; --good-bg:#15342a; --bad:#ff6b80; --bad-bg:#3a1820;
+  --cup:#ece7df; --glass:rgba(170,205,230,.45); --stroke:#1a120d;
+  --scrim:rgba(0,0,0,.65);
+  --flag1:#5b7fd0; --flag2:#d9dde6; --flag3:#e0475f; --flag4:#46a866; --flag5:#e2bd45;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.app{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 28px;display:flex;flex-direction:column;gap:12px}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand-np{font-family:var(--f-display);font-size:1.7rem;color:var(--crimson);line-height:1}
+.brand-dev{color:var(--muted);font-size:1rem}
+.chip{display:inline-flex;align-items:baseline;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-weight:700;font-variant-numeric:tabular-nums}
+.chip small{font-weight:400;color:var(--muted);font-size:.75rem}
+.stats{display:flex;gap:8px}
+nav{display:flex;gap:8px}
+.ghost{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px}
+.ghost:hover{border-color:var(--muted)}
+
+/* scene */
+.scene{position:relative;border:8px solid var(--wood);border-radius:14px;overflow:hidden;background:linear-gradient(var(--sky-top),var(--sky-bot) 75%);display:grid;grid-template-columns:136px minmax(0,1fr);gap:8px 18px;padding:34px 16px 14px;min-height:250px}
+.flags{position:absolute;top:0;left:0;right:0;height:26px;display:flex;gap:5px;padding:0 6px;border-top:2px solid var(--wood-hi);overflow:hidden;z-index:1}
+.flags i{flex:0 0 18px;height:20px;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);opacity:.92}
+.mount{position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none}
+.mount .back{position:absolute;inset:0;background:var(--mount-2);clip-path:polygon(0 70%,12% 42%,22% 56%,38% 18%,52% 50%,64% 30%,78% 54%,90% 24%,100% 46%,100% 100%,0 100%)}
+.mount .front{position:absolute;inset:0;background:var(--mount);clip-path:polygon(0 88%,18% 62%,30% 74%,46% 48%,60% 70%,74% 56%,88% 76%,100% 64%,100% 100%,0 100%)}
+.mount .snow{position:absolute;inset:0;background:var(--snow);opacity:.9;clip-path:polygon(34.4% 26%,38% 18%,41.6% 26%,39.5% 24.5%,38% 27%,36.2% 24.5%,86.8% 31%,90% 24%,93.2% 31%,91.2% 29.5%,90% 32%,88.4% 29.5%)}
+.left{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px}
+.cust{width:128px;height:150px}
+.cust svg{width:100%;height:100%;display:block}
+.cust.enter{animation:enter .5s ease-out}
+.cust.exit{animation:exit .5s ease-in forwards}
+@keyframes enter{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes exit{to{transform:translateX(60px);opacity:0}}
+.patience{width:128px;font-size:.7rem;color:var(--muted);text-align:center;letter-spacing:.04em}
+.bar{height:8px;border-radius:99px;background:var(--surface);border:1px solid var(--line);overflow:hidden;margin-top:2px}
+.bar i{display:block;height:100%;width:100%;background:var(--good);transition:width .1s linear,background .3s}
+.bar i.mid{background:var(--flag5)} .bar i.low{background:var(--bad)}
+.talk{position:relative;z-index:2;display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:0}
+.queue{font-size:.8rem;color:var(--muted);letter-spacing:.04em}
+.bubble{position:relative;background:var(--surface);border:2px solid var(--stroke);border-radius:18px;padding:14px 18px;box-shadow:4px 4px 0 var(--stroke)}
+.bubble::before{content:"";position:absolute;left:-14px;bottom:22px;border:8px solid transparent;border-right:14px solid var(--stroke);border-left:0}
+.bubble::after{content:"";position:absolute;left:-10px;bottom:24px;border:6px solid transparent;border-right:11px solid var(--surface);border-left:0}
+.say{font-family:var(--f-display);font-size:1.55rem;line-height:1.35;text-wrap:balance}
+.tok{background:none;border:0;padding:0 1px;border-bottom:2px dotted var(--muted);border-radius:2px}
+.tok:hover{background:var(--surface-2)}
+.tok.peek{border-bottom-color:var(--crimson);color:var(--crimson)}
+.say-en{color:var(--muted);font-size:.95rem;margin-top:4px}
+.gloss{min-height:2.6em;font-size:.95rem;background:color-mix(in srgb,var(--surface) 82%,transparent);border-radius:10px;padding:6px 12px}
+.gloss b{font-size:1.05rem}
+.gloss .dev{color:var(--muted);margin:0 4px}
+.gloss .hint{color:var(--muted)}
+
+/* work area */
+.work{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px;align-items:start}
+.board{background:var(--board);color:var(--chalk);border:8px solid var(--wood-hi);border-radius:10px;padding:12px 14px}
+.board h2{font-family:var(--f-display);font-weight:400;margin:0 0 6px;font-size:1.3rem}
+.board h2 small{font-family:var(--f-body);font-size:.75rem;color:var(--chalk-dim);margin-left:6px}
+.board ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.board li{display:flex;align-items:baseline;gap:6px;font-size:1rem}
+.board li .dots{flex:1;border-bottom:2px dotted var(--chalk-dim);transform:translateY(-4px);min-width:10px}
+.board li .p{font-variant-numeric:tabular-nums}
+.board li .e{display:block;font-size:.75rem;color:var(--chalk-dim)}
+.desk{background:var(--counter);border-top:10px solid var(--wood-hi);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.fb{min-height:1.5em;font-size:.98rem}
+.fb.good b{color:var(--good)} .fb.bad b{color:var(--bad)}
+.fb .q{font-weight:500}
+.counter{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.8rem;line-height:1.15;text-align:center;transition:transform .08s}
+.item:active{transform:scale(.95)}
+.item svg{width:48px;height:48px}
+.item:disabled{opacity:.5;cursor:default}
+.trayrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.tray{flex:1 1 220px;min-height:66px;border:2px dashed var(--wood-hi);border-radius:10px;display:flex;flex-wrap:wrap;gap:6px;padding:6px;align-items:center;background:color-mix(in srgb,var(--surface) 35%,transparent)}
+.tray .empty{color:var(--muted);font-size:.85rem;padding-left:6px}
+.tchip{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:2px 8px 2px 2px;font-weight:700;font-variant-numeric:tabular-nums}
+.tchip svg{width:34px;height:34px}
+.primary{background:var(--crimson);color:var(--on-crimson);border:0;border-radius:10px;padding:10px 20px;font-weight:700;font-size:1.1rem;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.primary small{font-weight:400;font-size:.75rem;opacity:.85}
+.primary:disabled{opacity:.5;cursor:default}
+.recap{font-size:.9rem;color:var(--muted)}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:9px 14px;font-size:1.15rem;font-weight:500;display:flex;flex-direction:column;gap:0}
+.opt:hover:not(:disabled){border-color:var(--muted)}
+.opt .en{font-size:.85rem;font-weight:400;color:var(--muted)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.cont{align-self:flex-start}
+
+/* overlays */
+.overlay{position:fixed;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;z-index:10;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet{background:var(--surface);color:var(--ink);border-radius:16px;max-width:640px;width:100%;max-height:100%;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px;border:2px solid var(--stroke);box-shadow:6px 6px 0 var(--stroke)}
+.sheet h2{font-family:var(--f-display);font-weight:400;font-size:2rem;margin:0;color:var(--crimson);line-height:1.1;text-wrap:balance}
+.sheet h3{margin:0;font-size:1.05rem}
+.sheet h3 small,.sheet h2 small{font-family:var(--f-body);font-size:.85rem;color:var(--muted);font-weight:400;margin-left:6px}
+.sheet p{margin:0}
+.howto{background:var(--surface-2);border-radius:10px;padding:10px 14px;margin:0;padding-left:30px;display:grid;gap:4px}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.wcard{border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--surface-2);min-width:0}
+.wcard b{display:block;font-size:1.1rem}
+.wcard .dev{color:var(--muted);font-size:.9rem}
+.wcard .en{font-size:.85rem}
+.menu-new{display:flex;gap:10px;flex-wrap:wrap}
+.menu-new div{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:10px;padding:4px 10px 4px 4px}
+.menu-new svg{width:40px;height:40px}
+.row-end{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.big{font-size:1.1rem}
+.sumgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sumgrid div{background:var(--surface-2);border-radius:10px;padding:8px 12px}
+.sumgrid b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.sumgrid span{font-size:.8rem;color:var(--muted)}
+.book-day{display:grid;gap:4px}
+.brow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr) minmax(0,1.6fr) auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.brow b{overflow-wrap:anywhere}
+.brow .dev{color:var(--muted)}
+.mdots{display:flex;gap:3px}
+.mdots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.mdots i.on{background:var(--good)}
+.locked{color:var(--muted);font-size:.9rem}
+.set{display:flex;gap:10px;align-items:flex-start}
+.set input{margin-top:5px;width:18px;height:18px;accent-color:var(--crimson)}
+.set span small{display:block;color:var(--muted);font-size:.85rem}
+.danger{background:none;border:1px solid var(--bad);color:var(--bad);border-radius:10px;padding:6px 14px}
+
+@media (max-width:720px){
+  .work{grid-template-columns:minmax(0,1fr)}
+  .board ul{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+}
+@media (max-width:520px){
+  .scene{grid-template-columns:92px minmax(0,1fr);gap:8px 12px;padding:32px 10px 12px}
+  .cust{width:90px;height:106px}
+  .patience{width:90px}
+  .say{font-size:1.25rem}
+  .bubble{padding:10px 12px}
+  .sumgrid b{font-size:1.2rem}
+  .brow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+  .brow .dev{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
+.steam{animation:steam 2.4s ease-in-out infinite;transform-origin:center bottom}
+@keyframes steam{0%,100%{opacity:.25;transform:translateY(1px)}50%{opacity:.8;transform:translateY(-2px)}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand"><span class="brand-np">Chiya Pasal</span><span class="brand-dev" lang="ne">चिया पसल</span></div>
+    <div class="stats">
+      <span class="chip" id="dayChip">Din 1</span>
+      <span class="chip" id="money">रु 0</span>
+    </div>
+    <nav>
+      <button class="ghost" id="btnBook">Shabdakosh</button>
+      <button class="ghost" id="btnSet">Settings</button>
+    </nav>
+  </header>
+
+  <section class="scene" aria-label="Customer at the window">
+    <div class="flags" id="flags" aria-hidden="true"></div>
+    <div class="mount" aria-hidden="true"><div class="back"></div><div class="snow"></div><div class="front"></div></div>
+    <div class="left">
+      <div class="cust" id="cust"></div>
+      <div class="patience">dhairya · patience<div class="bar"><i id="bar"></i></div></div>
+    </div>
+    <div class="talk">
+      <div class="queue" id="queue"></div>
+      <div class="bubble"><div class="say" id="say" aria-live="polite"></div><div class="say-en" id="sayEn" hidden></div></div>
+      <div class="gloss" id="gloss"></div>
+    </div>
+  </section>
+
+  <section class="work">
+    <aside class="board" aria-label="Menu board">
+      <h2>Menu <small>prices in rupees</small></h2>
+      <ul id="menu"></ul>
+    </aside>
+    <div class="desk">
+      <div class="fb" id="fb" aria-live="polite"></div>
+      <div id="counterWrap">
+        <div class="counter" id="counter"></div>
+        <div class="trayrow" style="margin-top:10px">
+          <div class="tray" id="tray" aria-label="Tray"></div>
+          <button class="primary" id="serve">Linus! <small>here you go</small></button>
+        </div>
+      </div>
+      <div id="optWrap" hidden>
+        <div class="recap" id="recap"></div>
+        <div class="opts" id="opts"></div>
+      </div>
+      <button class="primary cont" id="cont" hidden>Continue</button>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="ovIntro" hidden><div class="sheet" id="introBody"></div></div>
+<div class="overlay" id="ovSum" hidden><div class="sheet" id="sumBody"></div></div>
+<div class="overlay" id="ovBook" hidden><div class="sheet" id="bookBody"></div></div>
+<div class="overlay" id="ovSet" hidden><div class="sheet">
+  <h2>Settings</h2>
+  <label class="set"><input type="checkbox" id="optRelaxed"><span>Relaxed mode<small>Customers never run out of patience.</small></span></label>
+  <label class="set"><input type="checkbox" id="optEnglish"><span>Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
+  <div class="row-end" style="justify-content:space-between">
+    <button class="danger" id="btnReset">Erase progress</button>
+    <button class="primary" id="closeSet">Done</button>
+  </div>
+</div></div>
+
+<script>
+// ---------- language data ----------
+const ONES=['','ek','dui','tin','char','paanch','chha','saat','aath','nau','das'];
+const TENS={10:'das',20:'bis',30:'tis',40:'chalis',50:'pachas',60:'saathi',70:'sattari',80:'assi',90:'nabbe'};
+const npNum=n=>{const h=Math.floor(n/100),t=n%100,p=[];if(h)p.push(ONES[h]+' saya');if(t)p.push(TENS[t]);return p.join(' ');};
+
+// [romanized, english, devanagari, day introduced] — day 0 = glossary only
+const VOCAB=[
+ ['namaste','hello / greetings','नमस्ते',1],['dhanyabaad','thank you','धन्यवाद',1],['pheri','again','फेरि',1],
+ ['aaunuhola','please come (polite)','आउनुहोला',1],['dinus','please give','दिनुस्',1],
+ ['chiya','tea','चिया',1],['dudh','milk','दूध',1],['paani','water','पानी',1],['samosa','samosa (fried pastry)','समोसा',1],
+ ['cup','cup','कप',1],['gilas','glass','गिलास',1],['wota','counting word for things (“pieces”)','वटा',1],
+ ['ek','one (1)','एक',1],['dui','two (2)','दुई',1],['tin','three (3)','तीन',1],
+ ['kati','how much / how many','कति',1],['bhayo','came to / became','भयो',1],['rupiya','rupees','रुपियाँ',1],
+ ['das','ten (10)','दस',1],['bis','twenty (20)','बीस',1],['tis','thirty (30)','तीस',1],['chalis','forty (40)','चालीस',1],
+ ['pachas','fifty (50)','पचास',1],['saathi','sixty (60)','साठी',1],['sattari','seventy (70)','सत्तरी',1],
+ ['assi','eighty (80)','असी',1],['nabbe','ninety (90)','नब्बे',1],['hoina','no / that’s not it','होइन',1],
+ ['kalo','black','कालो',2],['sel','sel (as in sel roti)','सेल',2],['roti','bread','रोटी',2],
+ ['char','four (4)','चार',2],['paanch','five (5)','पाँच',2],['malai','to me / I (as in “I need”)','मलाई',2],
+ ['chahiyo','is needed / want','चाहियो',2],['tapai','you (polite)','तपाईं',2],['lai','to / for','लाई',2],
+ ['kasto','how / what kind','कस्तो',2],['cha','is / there is','छ',2],['sanchai','well / healthy','सन्चै',2],['mitho','tasty','मीठो',2],
+ ['momo','momo (dumplings)','मोमो',3],['plate','plate','प्लेट',3],['chana','chickpeas','चना',3],['saya','hundred (100)','सय',3],
+ ['ra','and','र',3],['ali','a little','अलि',3],['chhito','quickly','छिटो',3],['garnus','please do','गर्नुस्',3],
+ ['hus','okay (polite yes)','हस्',3],['chin','moment','छिन',3],['chaina','is not / there isn’t','छैन',3],
+ ['jeri','jeri (syrupy sweet spirals)','जेरी',4],['kafi','coffee','कफी',4],['chha','six (6)','छ',4],['saat','seven (7)','सात',4],
+ ['taato','hot','तातो',4],['ho','yes / is','हो',4],['ke','what','के',4],['naam','name','नाम',4],['mero','my','मेरो',4],['ko','of / ’s','को',4],
+ ['dal','lentil soup','दाल',5],['bhaat','cooked rice','भात',5],['aath','eight (8)','आठ',5],['nau','nine (9)','नौ',5],
+ ['bholi','tomorrow','भोलि',5],['bhetaula','we’ll meet','भेटौँला',5],['dinu','give','दिनु',5],['na','softener, like “won’t you?”','न',5],
+ ['hari','Hari (your name)','हरि',0],['dhilo','slow / late','ढिलो',0],['pizza','pizza','पिज्जा',0],['burger','burger','बर्गर',0],
+ ['thukpa','thukpa (noodle soup)','थुक्पा',0],['chatamari','chatamari (Newari rice crepe)','चतामरी',0],['yomari','yomari (sweet steamed dumpling)','योमरी',0],
+ ['syabaas','well done!','स्याबास',0],['ekdam','very / really','एकदम',0],['ramro','good','राम्रो',0],['thik','okay / fine','ठीक',0],
+ ['linus','please take (here you go)','लिनुस्',0],['baksis','tip','बक्सिस',0],['din','day','दिन',0],
+];
+const DICT={};VOCAB.forEach(([t,en,dev,day])=>DICT[t]={t,en,dev,day});
+const LEARN=VOCAB.filter(v=>v[3]>0).map(v=>v[0]);
+
+const ITEMS={
+ dudhchiya:{np:'dudh chiya',short:'milk tea',price:30,unit:'cup',day:1},
+ paani:{np:'paani',short:'water',price:10,unit:'gilas',day:1},
+ samosa:{np:'samosa',short:'samosa',price:20,unit:'wota',day:1},
+ kalochiya:{np:'kalo chiya',short:'black tea',price:20,unit:'cup',day:2},
+ selroti:{np:'sel roti',short:'sel roti',price:20,unit:'wota',day:2},
+ momo:{np:'momo',short:'momo',price:100,unit:'plate',day:3},
+ chana:{np:'chana',short:'chickpea curry',price:40,unit:'plate',day:3},
+ jeri:{np:'jeri',short:'jeri',price:10,unit:'wota',day:4},
+ kafi:{np:'kafi',short:'coffee',price:50,unit:'cup',day:4},
+ dalbhaat:{np:'dal bhaat',short:'dal bhaat',price:150,unit:'plate',day:5},
+};
+const UNIT_EN={cup:['cup','cups'],gilas:['glass','glasses'],plate:['plate','plates']};
+const TEMPLATES=[
+ {day:1,f:p=>`${p} dinus.`,en:e=>`Please give me ${e}.`},
+ {day:2,f:p=>`Malai ${p} chahiyo.`,en:e=>`I need ${e}.`},
+ {day:5,f:p=>`${p} dinu na.`,en:e=>`Give me ${e}, won’t you?`},
+];
+const CHATS=[
+ {day:1,slot:'greet',say:'Namaste!',en:'Hello!',ans:'Namaste!',ansEn:'Hello!',ok:[]},
+ {day:2,slot:'greet',say:'Namaste! Tapai lai kasto cha?',en:'Hello! How are you?',ans:'Malai sanchai cha.',ansEn:'I’m well.',ok:['Namaste!']},
+ {day:3,slot:'mid',say:'Ali chhito garnus.',en:'Please be a little quick.',ans:'Hus, ek chin.',ansEn:'Okay, one moment.',ok:[]},
+ {day:4,slot:'mid',say:'Chiya taato cha?',en:'Is the tea hot?',ans:'Ho, taato cha.',ansEn:'Yes, it’s hot.',ok:['Cha.']},
+ {day:4,slot:'mid',say:'Tapai ko naam ke ho?',en:'What is your name?',ans:'Mero naam Hari ho.',ansEn:'My name is Hari.',ok:[]},
+ {day:1,slot:'bye',say:'Dhanyabaad!',en:'Thank you!',ans:'Pheri aaunuhola.',ansEn:'Please come again.',ok:['Hus, bholi bhetaula!','Namaste!']},
+ {day:2,slot:'bye',say:'Mitho cha!',en:'It’s tasty!',ans:'Dhanyabaad!',ansEn:'Thank you!',ok:['Pheri aaunuhola.','Hus, bholi bhetaula!']},
+ {day:5,slot:'bye',say:'Bholi bhetaula!',en:'See you tomorrow!',ans:'Hus, bholi bhetaula!',ansEn:'Okay, see you tomorrow!',ok:['Pheri aaunuhola.','Dhanyabaad!','Namaste!']},
+];
+const FOILS=[
+ {t:'Hoina.',en:'No, that’s not it.',day:1},
+ {t:'Kati bhayo?',en:'How much is it?',day:1},
+ {t:'Ek gilas paani dinus.',en:'Please give me a glass of water.',day:1},
+ {t:'Malai chiya chahiyo.',en:'I need tea.',day:2},
+ {t:'Chaina.',en:'There isn’t any.',day:3},
+];
+const NOT_SERVED=[['pizza','pizza'],['burger','a burger'],['thukpa','thukpa'],['chatamari','chatamari'],['yomari','yomari']];
+const PRAISE=[['Syabaas!','Well done!'],['Ekdam ramro!','Really good!'],['Thik cha!','That’s right!']];
+
+// ---------- icons ----------
+const mug=(liq,foam)=>`<svg viewBox="0 0 64 64" aria-hidden="true"><path class="steam" d="M24 15c-3-3 3-5 0-9M35 15c-3-3 3-5 0-9" stroke="var(--muted)" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M46 28h4a7 7 0 0 1 0 14h-4" fill="none" stroke="var(--stroke)" stroke-width="3"/><path d="M13 22h34v20a12 12 0 0 1-12 12H25a12 12 0 0 1-12-12z" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/><ellipse cx="30" cy="22" rx="17" ry="4.5" fill="${liq}" stroke="var(--stroke)" stroke-width="2.5"/>${foam?'<ellipse cx="30" cy="21.6" rx="10" ry="2.4" fill="#ead8b9"/><path d="M13 32h34" stroke="#7a4a2c" stroke-width="3"/>':''}</svg>`;
+const plate=`<ellipse cx="32" cy="47" rx="27" ry="8" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/>`;
+const ICON={
+ dudhchiya:mug('#c88d58'), kalochiya:mug('#5e2914'), kafi:mug('#3a2213',true),
+ paani:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M19 10h26l-3.5 44h-19z" fill="var(--glass)" stroke="var(--stroke)" stroke-width="2.5" stroke-linejoin="round"/><path d="M21.3 25h21.4l-2.4 27h-16.6z" fill="#5fb0de"/></svg>`,
+ samosa:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 9 L57 50 Q32 58 7 50 Z" fill="#dca546" stroke="#7d4f17" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 9 L31 54" stroke="#a9701f" stroke-width="2" fill="none"/><circle cx="22" cy="40" r="1.6" fill="#a9701f"/><circle cx="41" cy="38" r="1.6" fill="#a9701f"/></svg>`,
+ selroti:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="33" r="17" fill="none" stroke="#8a4a20" stroke-width="11"/><circle cx="32" cy="33" r="17" fill="none" stroke="#c98244" stroke-width="6"/></svg>`,
+ momo:`<svg viewBox="0 0 64 64" aria-hidden="true">${plate}<path d="M8 46c0-10 6-15 11-15s11 5 11 15z" fill="#f4e8d2" stroke="#8c7550" stroke-width="2"/><path d="M34 46c0-10 6-15 11-15s11 5 11 15z" fill="#f4e8d2" stroke="#8c7550" stroke-width="2"/><path d="M20 44c0-12 7-18 12-18s12 6 12 18z" fill="#faf1e1" stroke="#8c7550" stroke-width="2"/><path d="M32 26v5M28 28l2 4M36 28l-2 4" stroke="#8c7550" stroke-width="1.6"/></svg>`,
+ chana:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 30h48a24 22 0 0 1-48 0z" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/><ellipse cx="32" cy="30" rx="24" ry="5" fill="#b8742f" stroke="var(--stroke)" stroke-width="2.5"/><circle cx="22" cy="29" r="2.4" fill="#e8c27a"/><circle cx="30" cy="31" r="2.4" fill="#e8c27a"/><circle cx="38" cy="28.5" r="2.4" fill="#e8c27a"/><circle cx="45" cy="30.5" r="2.2" fill="#e8c27a"/></svg>`,
+ jeri:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M30 33a3 3 0 1 1 6 0a6 6 0 1 1 -12 0a9 9 0 1 1 18 0a12 12 0 1 1 -24 0a15 15 0 1 1 30 0" fill="none" stroke="#c9600f" stroke-width="6" stroke-linecap="round"/><path d="M30 33a3 3 0 1 1 6 0a6 6 0 1 1 -12 0a9 9 0 1 1 18 0a12 12 0 1 1 -24 0a15 15 0 1 1 30 0" fill="none" stroke="#f39a32" stroke-width="3" stroke-linecap="round"/></svg>`,
+ dalbhaat:`<svg viewBox="0 0 64 64" aria-hidden="true">${plate}<path d="M8 46c2-14 22-14 26 0z" fill="#fdfbf4" stroke="#a69f8e" stroke-width="2"/><path d="M38 34h18a9 9 0 0 1-18 0z" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2"/><ellipse cx="47" cy="34" rx="9" ry="2.6" fill="#e2b02f" stroke="var(--stroke)" stroke-width="2"/><path d="M36 46c2-5 8-6 12-3" stroke="#3f8a3a" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+};
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const wpick=(arr,wf)=>{const w=arr.map(wf),s=w.reduce((a,b)=>a+b,0);let r=Math.random()*s;for(let i=0;i<arr.length;i++){r-=w[i];if(r<=0)return arr[i];}return arr[arr.length-1];};
+const toks=s=>s.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/).filter(Boolean);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>'रु '+n.toLocaleString('en-IN');
+
+// ---------- persistence ----------
+const KEY='chiya-pasal-v1';
+const fresh=()=>({day:1,rupees:0,mastery:{},settings:{relaxed:false,english:false}});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh();}catch(e){S=fresh();}
+S.settings=Object.assign({relaxed:false,english:false},S.settings||{});S.mastery=S.mastery||{};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+
+const E=()=>Math.min(S.day,5);
+const lvl=t=>S.mastery[t]||0;
+const need=t=>DICT[t]&&DICT[t].day>0?6-lvl(t):1;
+const avgNeed=ts=>{const k=ts.filter(t=>DICT[t]&&DICT[t].day>0);return k.length?k.reduce((a,t)=>a+need(t),0)/k.length:1;};
+const unlocked=()=>Object.keys(ITEMS).filter(k=>ITEMS[k].day<=E());
+const maxNum=()=>E()>=5?10:E()>=4?7:E()>=2?5:3;
+
+// ---------- step generators ----------
+function enPart(k,q){const it=ITEMS[k],u=UNIT_EN[it.unit];return u?`${q} ${u[q>1?1:0]} of ${it.short}`:`${q} ${it.short}`;}
+function genPart(k){
+  const it=ITEMS[k];let m=maxNum();
+  if(it.price>=100)m=Math.min(m,2);else if(it.price>=40)m=Math.min(m,4);else if(it.price>20)m=Math.min(m,6);
+  const nums=[];for(let i=1;i<=m;i++)nums.push(i);
+  return {k,q:wpick(nums,n=>need(ONES[n]))};
+}
+function genOrder(){
+  for(let tries=0;tries<60;tries++){
+    const items=unlocked();
+    const a=wpick(items,k=>avgNeed(toks(ITEMS[k].np)));
+    const parts=[genPart(a)];
+    if(E()>=3&&Math.random()<0.4){const o=items.filter(k=>k!==a);parts.push(genPart(wpick(o,k=>avgNeed(toks(ITEMS[k].np)))));}
+    const total=parts.reduce((s,p)=>s+p.q*ITEMS[p.k].price,0);
+    if(E()<3&&total>=100)continue;
+    if(total>=1000)continue;
+    const tpl=rnd(TEMPLATES.filter(t=>t.day<=E()));
+    const phrase=parts.map(p=>`${ONES[p.q]} ${ITEMS[p.k].unit} ${ITEMS[p.k].np}`).join(' ra ');
+    const want={};parts.forEach(p=>want[p.k]=p.q);
+    return {type:'order',say:cap(tpl.f(phrase)),en:tpl.en(parts.map(p=>enPart(p.k,p.q)).join(' and ')),want,parts,total};
+  }
+  return {type:'order',say:'Ek cup dudh chiya dinus.',en:'Please give me 1 cup of milk tea.',want:{dudhchiya:1},parts:[{k:'dudhchiya',q:1}],total:30};
+}
+function makeOptions(answer,okList){
+  const pool=[...CHATS.filter(c=>c.day<=E()).map(c=>({t:c.ans,en:c.ansEn})),...FOILS.filter(f=>f.day<=E())];
+  const bad=new Set([answer.t,...okList]);const seen=new Set();
+  const cands=shuffle(pool.filter(o=>!bad.has(o.t)&&!seen.has(o.t)&&seen.add(o.t)));
+  return shuffle([answer,...cands.slice(0,2)]);
+}
+function chatStep(c){
+  const answer={t:c.ans,en:c.ansEn};
+  return {type:'chat',say:c.say,en:c.en,answer,options:makeOptions(answer,c.ok)};
+}
+function pickChat(slot){
+  const cs=CHATS.filter(c=>c.day<=E()&&c.slot===slot);
+  return cs.length?wpick(cs,c=>avgNeed([...toks(c.say),...toks(c.ans)])):null;
+}
+function haveStep(){
+  let np,en,has;
+  if(Math.random()<0.5){const k=rnd(unlocked());np=ITEMS[k].np;en=ITEMS[k].short;has=true;}
+  else{const locked=Object.keys(ITEMS).filter(k=>ITEMS[k].day>E()).map(k=>[ITEMS[k].np,ITEMS[k].short]);const x=rnd([...NOT_SERVED,...locked]);np=x[0];en=x[1];has=false;}
+  const yes={t:'Cha.',en:'Yes, we have it.'},no={t:'Chaina.',en:'No, we don’t.'};
+  const foil=rnd(FOILS.filter(f=>f.day<=E()&&f.t!=='Chaina.'));
+  return {type:'chat',say:`${cap(np)} cha?`,en:`Do you have ${en}?`,answer:has?yes:no,options:shuffle([yes,no,foil])};
+}
+function payStep(order){
+  const t=order.total;
+  const cands=shuffle([t-20,t-10,t+10,t+20,t+100,t-100,t+30].filter(n=>n>0&&n<(E()<3?100:1000)&&n!==t)).slice(0,2);
+  const mk=n=>({t:cap(npNum(n))+' rupiya.',en:`Rs ${n}`});
+  return {type:'pay',say:'Kati bhayo?',en:'How much does it come to?',answer:mk(t),options:shuffle([mk(t),...cands.map(mk)]),order};
+}
+const SKIN=['#f0c8a2','#dba57a','#bd8058','#916040','#6d432b'];
+const HAIR=['#1c1410','#2b1d16','#3c2b20','#5e5a57','#d4d2cf'];
+const SHIRT=['#2f5d8a','#a8323e','#3f7a4f','#7a4b8c','#c27c2c','#3c4a5c','#b85c7a'];
+function genCustomer(){
+  const steps=[];
+  if(Math.random()<0.65){const c=pickChat('greet');if(c)steps.push(chatStep(c));}
+  const order=genOrder();steps.push(order);
+  if(E()>=3&&Math.random()<0.5){const mids=CHATS.filter(c=>c.day<=E()&&c.slot==='mid');steps.push(Math.random()<0.4||!mids.length?haveStep():chatStep(pickChat('mid')));}
+  steps.push(payStep(order));
+  if(Math.random()<0.7){const c=pickChat('bye');if(c)steps.push(chatStep(c));}
+  const long=Math.random()<0.45;
+  return {look:{skin:rnd(SKIN),hair:rnd(HAIR),shirt:rnd(SHIRT),long,topi:!long&&Math.random()<0.5,glasses:Math.random()<0.25,tika:Math.random()<0.3},
+    steps,i:0,patience:100,hinted:false,mistakes:0,paid:0,lock:false,gone:false};
+}
+
+// ---------- rendering ----------
+function avatar(l){
+  return `<svg viewBox="0 0 120 140" role="img" aria-label="Customer">
+  <defs><pattern id="dhk" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#7b1e2b"/><path d="M0 8L4 1L8 8Z" fill="#e8b923"/><path d="M2.4 8L4 5L5.6 8Z" fill="#2350a5"/></pattern></defs>
+  <path d="M12 140C14 106 38 97 60 97S106 106 108 140Z" fill="${l.shirt}"/>
+  <rect x="52" y="80" width="16" height="22" rx="6" fill="${l.skin}"/>
+  ${l.long?`<path d="M31 56C27 92 38 108 46 108H74C82 108 93 92 89 56Z" fill="${l.hair}"/>`:''}
+  <ellipse cx="60" cy="58" rx="27" ry="31" fill="${l.skin}"/>
+  <path d="M33 56C32 32 47 25 60 25S88 32 87 56C80 43 69 39 60 39S41 43 33 56Z" fill="${l.hair}"/>
+  ${l.topi?'<path d="M33 42L37 17C50 11 70 11 83 17L87 42C72 35 48 35 33 42Z" fill="url(#dhk)" stroke="#3a1a10" stroke-width="1.5"/>':''}
+  ${l.tika?'<ellipse cx="60" cy="47" rx="2.6" ry="4" fill="#c4122f"/>':''}
+  <circle cx="49" cy="60" r="3.2" fill="#1b1410"/><circle cx="71" cy="60" r="3.2" fill="#1b1410"/>
+  ${l.glasses?'<g fill="none" stroke="#222" stroke-width="2"><circle cx="49" cy="60" r="8"/><circle cx="71" cy="60" r="8"/><path d="M57 60h6"/></g>':''}
+  <path id="mouth" d="M50 74Q60 82 70 74" stroke="#5a2a20" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+function renderTop(){
+  $('#dayChip').innerHTML=`Din ${S.day} <small>day</small>`;
+  $('#money').textContent=fmt(S.rupees);
+}
+function renderMenu(){
+  $('#menu').innerHTML=unlocked().map(k=>{const it=ITEMS[k];
+    return `<li><span>${it.np}${S.settings.english?`<span class="e">${it.short}</span>`:''}</span><span class="dots"></span><span class="p">${it.price}</span></li>`;}).join('');
+}
+function renderCounter(){
+  const c=$('#counter');c.innerHTML='';
+  unlocked().forEach(k=>{const b=document.createElement('button');b.className='item';b.innerHTML=ICON[k]+`<span>${ITEMS[k].short}</span>`;
+    b.setAttribute('aria-label','Add '+ITEMS[k].short);b.onclick=()=>addTray(k);c.append(b);});
+}
+let tray={};
+function addTray(k){if(!C||C.lock)return;tray[k]=(tray[k]||0)+1;renderTray();}
+function renderTray(){
+  const t=$('#tray');t.innerHTML='';const keys=Object.keys(tray).filter(k=>tray[k]>0);
+  if(!keys.length){t.innerHTML='<span class="empty">Tap food to put it on the tray. Tap the tray to take one off.</span>';return;}
+  keys.forEach(k=>{const b=document.createElement('button');b.className='tchip';b.innerHTML=ICON[k]+'×'+tray[k];
+    b.setAttribute('aria-label',`Remove one ${ITEMS[k].short} (${tray[k]} on tray)`);
+    b.onclick=()=>{if(C.lock)return;tray[k]--;if(!tray[k])delete tray[k];renderTray();};t.append(b);});
+}
+const glossHint='<span class="hint">Tap any word to see what it means. Peeking costs your tip.</span>';
+function renderBubble(say,en){
+  const el=$('#say');el.innerHTML='';
+  say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=w;b.onclick=()=>peek(w,b);el.append(b);});
+  $('#sayEn').textContent=en;$('#sayEn').hidden=!S.settings.english;
+  $('#gloss').innerHTML=glossHint;
+}
+function peek(w,b){
+  const t=toks(w)[0],v=DICT[t];
+  $('#gloss').innerHTML=v?`<b>${esc(t)}</b><span class="dev" lang="ne">${v.dev}</span>— ${esc(v.en)}`:`<b>${esc(t)}</b> — no entry`;
+  b.classList.add('peek');
+  if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];if(st)st.hinted=true;C.hinted=true;}
+}
+function setFb(html,cls){const f=$('#fb');f.className='fb '+(cls||'');f.innerHTML=html;}
+function setMood(){const m=document.getElementById('mouth');if(!m||!C)return;
+  m.setAttribute('d',C.patience<30?'M50 78Q60 71 70 78':C.patience<60?'M51 76H69':'M50 74Q60 82 70 74');}
+function renderBar(){const b=$('#bar'),p=Math.max(0,C?C.patience:100);b.style.width=p+'%';b.className=p<30?'low':p<60?'mid':'';}
+
+// ---------- game flow ----------
+let G=null,C=null;
+function overlayOpen(){return !!document.querySelector('.overlay:not([hidden])');}
+function show(id){$(id).hidden=false;}
+function hide(id){$(id).hidden=true;}
+
+function startDay(){
+  G={n:Math.min(8,4+S.day),idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0};
+  renderTop();renderMenu();renderCounter();
+  const d=S.day;let words,title;
+  if(d<=5){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
+  else{words=LEARN.map(t=>DICT[t]).sort((a,b)=>lvl(a.t)-lvl(b.t)).slice(0,9).map(v=>[v.t,v.en,v.dev,v.day]);title=`Dohoryaune shabda <small>words to practise</small>`;}
+  const newItems=Object.keys(ITEMS).filter(k=>ITEMS[k].day===d);
+  $('#introBody').innerHTML=`
+   <h2>Din ${d}<small>day ${d} at your tea stall</small></h2>
+   ${d===1?`<ol class="howto">
+     <li>Customers speak romanized Nepali. Tap any word in their speech bubble to see its meaning.</li>
+     <li>For orders, tap food onto the tray, then press <b>Linus!</b> (“here you go”).</li>
+     <li>When they ask <b>Kati bhayo?</b> (“how much?”), add up the menu prices and pick the total.</li>
+     <li>Answer fast and without peeking to earn <b>baksis</b> (a tip).</li></ol>`:''}
+   <h3>${title}</h3>
+   <div class="words">${words.map(v=>`<div class="wcard"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><div class="en">${esc(v[1])}</div></div>`).join('')}</div>
+   ${newItems.length?`<h3>Naya menu <small>new on the menu</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].np}</b> · ${ITEMS[k].short} · रु ${ITEMS[k].price}</span></div>`).join('')}</div>`:''}
+   <div class="row-end"><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+  show('#ovIntro');
+  $('#go').onclick=()=>{hide('#ovIntro');nextCustomer();};
+  $('#go').focus();
+}
+function nextCustomer(){
+  C=genCustomer();tray={};
+  const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
+  $('#queue').textContent=`Customer ${G.idx+1} of ${G.n}`;
+  renderBar();renderStep();
+}
+function renderStep(){
+  const st=C.steps[C.i];st.hinted=false;st.tries=0;st.scored=false;C.lock=false;
+  renderBubble(st.say,st.en);setFb('');$('#cont').hidden=true;
+  if(st.type==='order'){
+    $('#counterWrap').hidden=false;$('#optWrap').hidden=true;tray={};renderTray();
+    document.querySelectorAll('.item').forEach(b=>b.disabled=false);$('#serve').disabled=false;
+  }else{
+    $('#counterWrap').hidden=true;$('#optWrap').hidden=false;
+    $('#recap').innerHTML=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':'Pick your reply:';
+    const o=$('#opts');o.innerHTML='';
+    st.options.forEach(op=>{const b=document.createElement('button');b.className='opt';
+      b.innerHTML=`<span>${esc(op.t)}</span><span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
+      b.onclick=()=>choose(st,op,b);o.append(b);});
+  }
+}
+function score(st,ok){
+  if(st.scored)return;st.scored=true;
+  const keys=[...toks(st.say),...(st.answer?toks(st.answer.t):[])].filter(t=>DICT[t]&&DICT[t].day>0);
+  G.steps++;
+  if(ok){G.correct++;if(!st.hinted)keys.forEach(t=>S.mastery[t]=Math.min(5,lvl(t)+1));C.patience=Math.min(100,C.patience+15);}
+  else{C.mistakes++;keys.forEach(t=>{S.mastery[t]=Math.max(0,lvl(t)-1);G.missed.add(t);});}
+  save();
+}
+function praise(){const p=rnd(PRAISE);return `<b>${p[0]}</b> <span class="recap">(${p[1]})</span>`;}
+function choose(st,op,btn){
+  if(C.lock)return;C.lock=true;
+  const ok=op.t===st.answer.t;score(st,ok);
+  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;b.querySelector('.en').hidden=false;
+    if(b.firstChild.textContent===st.answer.t)b.classList.add('right');});
+  if(!ok){btn.classList.add('wrong');C.patience-=22;}
+  if(st.type==='pay')C.paid=st.order.total;
+  renderBar();setMood();
+  const line=`“${esc(st.say)}” = ${esc(st.en)}`;
+  if(ok){setFb(`${praise()} ${line}`,'good');setTimeout(advance,1700);}
+  else{setFb(`<b>Hoina.</b> The answer was “${esc(st.answer.t)}” (${esc(st.answer.en)}). ${line}`,'bad');waitContinue();}
+}
+function serve(){
+  if(!C||C.lock)return;const st=C.steps[C.i];
+  const a=Object.keys(tray).filter(k=>tray[k]>0),b=Object.keys(st.want);
+  const ok=a.length===b.length&&b.every(k=>tray[k]===st.want[k]);
+  if(!a.length){setFb('The tray is empty. Tap food on the counter to add it.','bad');return;}
+  if(ok){
+    score(st,true);C.lock=true;document.querySelectorAll('.item').forEach(x=>x.disabled=true);$('#serve').disabled=true;
+    setFb(`${praise()} “${esc(st.say)}” = ${esc(st.en)}`,'good');renderBar();setMood();setTimeout(advance,1900);
+  }else{
+    score(st,false);st.tries++;C.patience-=18;renderBar();setMood();
+    setFb(`<b>Hoina!</b> That’s not what they asked for. ${st.tries>=2?`They said: <span class="q">${esc(st.en)}</span>`:'Check the words and quantities, then try again.'}`,'bad');
+    if(C.patience<=0)leave();
+  }
+}
+function waitContinue(){const c=$('#cont');c.hidden=false;c.focus();c.onclick=()=>{c.hidden=true;if(C.patience<=0)leave();else advance();};}
+function advance(){
+  if(!C||C.gone)return;
+  C.i++;
+  if(C.i>=C.steps.length)finishCustomer();else renderStep();
+}
+function finishCustomer(){
+  C.gone=true;C.lock=true;
+  let tip=0;
+  if(!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
+  const earned=C.paid+tip;S.rupees+=earned;G.earned+=earned;G.served++;save();renderTop();
+  setFb(`<b>+${fmt(C.paid)}</b> for the order${tip?` and <b>+${fmt(tip)} baksis</b> (tip)`:C.hinted||C.mistakes?' · no baksis this time':''}.`,'good');
+  $('#cust').classList.add('exit');
+  setTimeout(nextOrEnd,1700);
+}
+function leave(){
+  if(C.gone)return;C.gone=true;C.lock=true;C.patience=0;renderBar();setMood();
+  document.querySelectorAll('.item,.opt').forEach(x=>x.disabled=true);$('#serve').disabled=true;$('#cont').hidden=true;
+  renderBubble('Kasto dhilo!','So slow!');$('#sayEn').hidden=false;
+  G.left++;
+  setFb('<b>The customer gave up and left.</b> “Kasto dhilo!” = So slow! Try Relaxed mode in Settings if you want more time.','bad');
+  $('#cust').classList.add('exit');
+  setTimeout(nextOrEnd,2600);
+}
+function nextOrEnd(){G.idx++;if(G.idx<G.n)nextCustomer();else endDay();}
+function endDay(){
+  const acc=G.steps?Math.round(100*G.correct/G.steps):0;
+  const missed=[...G.missed].slice(0,12);
+  $('#sumBody').innerHTML=`
+   <h2>Din ${S.day} sakiyo<small>day ${S.day} finished</small></h2>
+   <div class="sumgrid"><div><b>${fmt(G.earned)}</b><span>kamai · earnings</span></div>
+     <div><b>${G.served}/${G.n}</b><span>customers served</span></div>
+     <div><b>${acc}%</b><span>right first time</span></div></div>
+   ${missed.length?`<h3>Words to review</h3><div class="words">${missed.map(t=>`<div class="wcard"><b>${t}</b><span class="dev" lang="ne">${DICT[t].dev}</span><div class="en">${esc(DICT[t].en)}</div></div>`).join('')}</div>`:'<p>No mistakes today. Syabaas!</p>'}
+   <div class="row-end"><button class="primary big" id="nextDay">Bholi <small>next day</small></button></div>`;
+  S.day++;save();
+  show('#ovSum');$('#nextDay').focus();
+  $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+}
+
+// ---------- journal & settings ----------
+function renderBook(){
+  const maxD=E();let html=`<h2>Shabdakosh<small>your dictionary</small></h2><p class="recap">Dots fill as you answer correctly without peeking. Mistakes take a dot away.</p>`;
+  for(let d=1;d<=5;d++){
+    const ws=VOCAB.filter(v=>v[3]===d);
+    if(d>maxD){html+=`<p class="locked">Din ${d}: ${ws.length} words unlock on day ${d}.</p>`;continue;}
+    html+=`<div class="book-day"><h3>Din ${d}</h3>${ws.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
+  }
+  html+=`<div class="row-end"><button class="primary" id="closeBook">Close</button></div>`;
+  $('#bookBody').innerHTML=html;$('#closeBook').onclick=()=>hide('#ovBook');$('#closeBook').focus();
+}
+$('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
+$('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');};
+$('#closeSet').onclick=()=>{
+  S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;save();hide('#ovSet');
+  renderMenu();$('#sayEn').hidden=!S.settings.english;
+  document.querySelectorAll('.opt .en').forEach(e=>{if(S.settings.english)e.hidden=false;});
+};
+let resetArm=false;
+$('#btnReset').onclick=()=>{
+  if(!resetArm){resetArm=true;$('#btnReset').textContent='Tap again to erase everything';return;}
+  S=fresh();save();hide('#ovSet');startDay();
+};
+$('#serve').onclick=serve;
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&(o.id==='ovBook'||o.id==='ovSet'))o.hidden=true;}));
+
+// ---------- clock ----------
+setInterval(()=>{
+  if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed)return;
+  C.patience-=(100/Math.max(26,50-3*S.day))*0.1;
+  renderBar();setMood();
+  if(C.patience<=0)leave();
+},100);
+
+// ---------- boot ----------
+$('#flags').innerHTML=Array.from({length:60},(_,i)=>`<i style="background:var(--flag${i%5+1})"></i>`).join('');
+renderTop();renderMenu();renderCounter();
+C=null;$('#cust').innerHTML=avatar({skin:SKIN[1],hair:HAIR[0],shirt:SHIRT[0],topi:true});
+renderBubble('Namaste!','Hello!');renderTray();
+startDay();
+</script>
