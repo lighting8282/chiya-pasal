@@ -21,6 +21,7 @@
   --good:#1f7d4b; --good-bg:#e1f3e8; --bad:#c4122f; --bad-bg:#fbe4e8;
   --cup:#f6f3ee; --glass:rgba(205,228,242,.65); --stroke:#3a2a20;
   --scrim:rgba(16,20,29,.55);
+  --rain:#3f6c9e; --snowfall:#ffffff; --windline:rgba(40,60,90,.38); --fog:rgba(236,240,244,.93); --frost:rgba(240,248,255,.95);
   --flag1:#2350a5; --flag2:#ffffff; --flag3:#c4122f; --flag4:#2a8a4a; --flag5:#e8b923;
   --f-display:'Yatra One','Mukta',system-ui,sans-serif;
   --f-body:'Mukta',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -34,6 +35,7 @@
   --good:#5fd394; --good-bg:#15342a; --bad:#ff6b80; --bad-bg:#3a1820;
   --cup:#ece7df; --glass:rgba(170,205,230,.45); --stroke:#1a120d;
   --scrim:rgba(0,0,0,.65);
+  --rain:#9cc0ea; --snowfall:#eef3fb; --windline:rgba(220,230,245,.38); --fog:rgba(120,132,155,.88); --frost:rgba(200,222,245,.6);
   --flag1:#5b7fd0; --flag2:#d9dde6; --flag3:#e0475f; --flag4:#46a866; --flag5:#e2bd45;
   color-scheme:dark;
 }}
@@ -46,6 +48,7 @@
   --good:#5fd394; --good-bg:#15342a; --bad:#ff6b80; --bad-bg:#3a1820;
   --cup:#ece7df; --glass:rgba(170,205,230,.45); --stroke:#1a120d;
   --scrim:rgba(0,0,0,.65);
+  --rain:#9cc0ea; --snowfall:#eef3fb; --windline:rgba(220,230,245,.38); --fog:rgba(120,132,155,.88); --frost:rgba(200,222,245,.6);
   --flag1:#5b7fd0; --flag2:#d9dde6; --flag3:#e0475f; --flag4:#46a866; --flag5:#e2bd45;
   color-scheme:dark;
 }
@@ -90,7 +93,7 @@ nav{display:flex;gap:8px}
 .bar i{display:block;height:100%;width:100%;background:var(--good);transition:width .1s linear,background .3s}
 .bar i.mid{background:var(--flag5)} .bar i.low{background:var(--bad)}
 .talk{position:relative;z-index:2;display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:0}
-.queue{font-size:.8rem;color:var(--muted);letter-spacing:.04em}
+.queue{font-size:.8rem;color:var(--ink);letter-spacing:.04em;align-self:flex-start;background:color-mix(in srgb,var(--surface) 82%,transparent);border-radius:99px;padding:0 10px}
 .bubble{position:relative;background:var(--surface);border:2px solid var(--stroke);border-radius:18px;padding:14px 18px;box-shadow:4px 4px 0 var(--stroke)}
 .bubble::before{content:"";position:absolute;left:-14px;bottom:22px;border:8px solid transparent;border-right:14px solid var(--stroke);border-left:0}
 .bubble::after{content:"";position:absolute;left:-10px;bottom:24px;border:6px solid transparent;border-right:11px solid var(--surface);border-left:0}
@@ -193,6 +196,47 @@ nav{display:flex;gap:8px}
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
 }
+/* weather in the window */
+.scene{padding-top:64px}
+.wx{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s}
+.wx-sun{position:absolute;top:24px;right:28px;width:40px;height:40px;border-radius:50%;background:#f6bf2c;box-shadow:0 0 0 8px rgba(246,191,44,.25),0 0 36px rgba(246,191,44,.55);opacity:0;transition:opacity .6s}
+.scene[data-weather="ghaam"] .wx-sun{opacity:1}
+.scene[data-weather="garmi"] .wx-sun{opacity:1;width:54px;height:54px;top:18px;background:#ff8a2a;box-shadow:0 0 0 12px rgba(255,138,42,.28),0 0 70px rgba(255,110,30,.75)}
+.scene[data-weather="ghaam"] .wx-tint{opacity:1;background:linear-gradient(rgba(255,214,120,.2),transparent 60%)}
+.scene[data-weather="garmi"] .wx-tint{opacity:1;background:linear-gradient(rgba(255,140,60,.38),rgba(255,200,120,.16))}
+.scene[data-weather="badal"] .wx-tint{opacity:1;background:rgba(100,110,125,.34)}
+.scene[data-weather="paani"] .wx-tint{opacity:1;background:rgba(60,75,98,.45)}
+.scene[data-weather="hiu"] .wx-tint{opacity:1;background:rgba(150,165,185,.3)}
+.scene[data-weather="jaado"] .wx-tint{opacity:1;background:rgba(140,190,235,.45)}
+.scene[data-weather="hawa"] .wx-tint{opacity:1;background:rgba(150,160,175,.12)}
+.cl{position:absolute;width:120px;height:34px;border-radius:40px;background:var(--cl,#fff);animation:drift 14s ease-in-out infinite alternate}
+.cl::before,.cl::after{content:"";position:absolute;border-radius:50%;background:inherit}
+.cl::before{width:56px;height:56px;left:16px;top:-26px}
+.cl::after{width:40px;height:40px;left:62px;top:-17px}
+.cl:nth-child(1){top:46px;left:6%}
+.cl:nth-child(2){top:36px;left:42%;width:150px;animation-duration:18s}
+.cl:nth-child(3){top:52px;left:74%;animation-duration:11s}
+@keyframes drift{to{transform:translateX(26px)}}
+.scene[data-weather="badal"] .wx-clouds,.scene[data-weather="paani"] .wx-clouds,.scene[data-weather="hiu"] .wx-clouds{opacity:1}
+.scene[data-weather="badal"] .cl{--cl:color-mix(in srgb,var(--surface) 45%,#7d8898)}
+.scene[data-weather="paani"] .cl{--cl:color-mix(in srgb,var(--surface) 30%,#566173)}
+.scene[data-weather="hiu"] .cl{--cl:color-mix(in srgb,var(--surface) 85%,#9aa6b5)}
+.wx-fog{background:linear-gradient(transparent 8%,var(--fog) 55%)}
+.scene[data-weather="kuhiro"] .wx-fog{opacity:1}
+.wx-frost{background:radial-gradient(circle at 0 0,var(--frost) 8%,transparent 42%),radial-gradient(circle at 100% 0,var(--frost) 6%,transparent 34%),radial-gradient(circle at 0 100%,var(--frost) 6%,transparent 34%),radial-gradient(circle at 100% 100%,var(--frost) 8%,transparent 42%)}
+.scene[data-weather="jaado"] .wx-frost{opacity:1}
+.scene[data-weather="hiu"] .mount .front{background:var(--snow)}
+.scene[data-weather="hawa"] .flags i{animation:flap .45s ease-in-out infinite alternate}
+.scene[data-weather="hawa"] .flags i:nth-child(odd){animation-delay:.2s}
+@keyframes flap{to{transform:skewX(-16deg) translateX(3px)}}
+#wxCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.wx-cap{position:absolute;top:32px;left:14px;z-index:2;font-size:.75rem;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:0 10px}
+.opts.picks{grid-template-columns:repeat(3,minmax(0,1fr))}
+.opt.pick{align-items:center;text-align:center;padding:8px 6px}
+.opt.pick svg{width:64px;height:64px}
+.wxbtn{border-color:var(--blue);color:var(--blue)}
+.wxbtn small{font-size:.75rem;opacity:.8}
+@media (max-width:520px){.wxbtn small{display:none}.scene{padding-top:58px}.wx-sun{right:14px;width:32px;height:32px}.opt.pick svg{width:48px;height:48px}}
 .steam{animation:steam 2.4s ease-in-out infinite;transform-origin:center bottom}
 @keyframes steam{0%,100%{opacity:.25;transform:translateY(1px)}50%{opacity:.8;transform:translateY(-2px)}}
 </style>
@@ -207,14 +251,22 @@ nav{display:flex;gap:8px}
       <span class="chip" id="money">रु 0</span>
     </div>
     <nav>
+      <button class="ghost wxbtn" id="btnWx">Mausam <small>weather</small></button>
       <button class="ghost" id="btnBook">Shabdakosh</button>
       <button class="ghost" id="btnSet">Settings</button>
     </nav>
   </header>
 
-  <section class="scene" aria-label="Customer at the window">
-    <div class="flags" id="flags" aria-hidden="true"></div>
+  <section class="scene" id="scene" aria-label="Customer at the window">
+    <div class="wx wx-tint" aria-hidden="true"></div>
+    <div class="wx-sun" aria-hidden="true"></div>
     <div class="mount" aria-hidden="true"><div class="back"></div><div class="snow"></div><div class="front"></div></div>
+    <div class="wx wx-clouds" aria-hidden="true"><i class="cl"></i><i class="cl"></i><i class="cl"></i></div>
+    <div class="wx wx-fog" aria-hidden="true"></div>
+    <canvas id="wxCanvas" aria-hidden="true"></canvas>
+    <div class="wx wx-frost" aria-hidden="true"></div>
+    <div class="flags" id="flags" aria-hidden="true"></div>
+    <div class="wx-cap" id="wxCap" hidden></div>
     <div class="left">
       <div class="cust" id="cust"></div>
       <div class="patience">dhairya · patience<div class="bar"><i id="bar"></i></div></div>
@@ -272,7 +324,7 @@ const npNum=n=>{const h=Math.floor(n/100),t=n%100,p=[];if(h)p.push(ONES[h]+' say
 const VOCAB=[
  ['namaste','hello / greetings','नमस्ते',1],['dhanyabaad','thank you','धन्यवाद',1],['pheri','again','फेरि',1],
  ['aaunuhola','please come (polite)','आउनुहोला',1],['dinus','please give','दिनुस्',1],
- ['chiya','tea','चिया',1],['dudh','milk','दूध',1],['paani','water','पानी',1],['samosa','samosa (fried pastry)','समोसा',1],
+ ['chiya','tea','चिया',1],['dudh','milk','दूध',1],['paani','water (also: rain)','पानी',1],['samosa','samosa (fried pastry)','समोसा',1],
  ['cup','cup','कप',1],['gilas','glass','गिलास',1],['wota','counting word for things (“pieces”)','वटा',1],
  ['ek','one (1)','एक',1],['dui','two (2)','दुई',1],['tin','three (3)','तीन',1],
  ['kati','how much / how many','कति',1],['bhayo','came to / became','भयो',1],['rupiya','rupees','रुपियाँ',1],
@@ -290,6 +342,12 @@ const VOCAB=[
  ['taato','hot','तातो',4],['ho','yes / is','हो',4],['ke','what','के',4],['naam','name','नाम',4],['mero','my','मेरो',4],['ko','of / ’s','को',4],
  ['dal','lentil soup','दाल',5],['bhaat','cooked rice','भात',5],['aath','eight (8)','आठ',5],['nau','nine (9)','नौ',5],
  ['bholi','tomorrow','भोलि',5],['bhetaula','we’ll meet','भेटौँला',5],['dinu','give','दिनु',5],['na','softener, like “won’t you?”','न',5],
+ ['mausam','weather','मौसम',6],['aaja','today','आज',6],['ghaam','sunshine','घाम',6],['lagyo','has set in (sun, clouds, fog)','लाग्यो',6],
+ ['garmi','heat / hot weather','गर्मी',6],['badal','cloud(s)','बादल',6],['pardai','falling (rain, snow)','पर्दै',6],['hiu','snow','हिउँ',6],
+ ['jaado','cold weather','जाडो',6],['hawa','wind / air','हावा',6],['chaldai','blowing / moving','चल्दै',6],['kuhiro','fog','कुहिरो',6],
+ ['ma','in / at','मा',6],['thaha','known (“thaha chaina” = I don’t know)','थाहा',6],
+ ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
+ ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
  ['hari','Hari (your name)','हरि',0],['dhilo','slow / late','ढिलो',0],['pizza','pizza','पिज्जा',0],['burger','burger','बर्गर',0],
  ['thukpa','thukpa (noodle soup)','थुक्पा',0],['chatamari','chatamari (Newari rice crepe)','चतामरी',0],['yomari','yomari (sweet steamed dumpling)','योमरी',0],
  ['syabaas','well done!','स्याबास',0],['ekdam','very / really','एकदम',0],['ramro','good','राम्रो',0],['thik','okay / fine','ठीक',0],
@@ -334,6 +392,30 @@ const FOILS=[
  {t:'Chaina.',en:'There isn’t any.',day:3},
 ];
 const NOT_SERVED=[['pizza','pizza'],['burger','a burger'],['thukpa','thukpa'],['chatamari','chatamari'],['yomari','yomari']];
+const WEATHER={
+ ghaam:{core:'ghaam lagyo',en:'sunny',clash:['garmi'],places:['pokhara','janakpur','ilam']},
+ garmi:{core:'garmi cha',en:'hot',clash:['ghaam'],places:['chitwan','janakpur']},
+ badal:{core:'badal lagyo',en:'cloudy',clash:['paani','kuhiro','hiu'],places:['ilam','pokhara']},
+ paani:{core:'paani pardai cha',en:'raining',clash:['badal'],places:['pokhara','ilam','chitwan']},
+ hiu:{core:'hiu pardai cha',en:'snowing',clash:['jaado','badal'],places:['namche','mustang']},
+ jaado:{core:'jaado cha',en:'cold',clash:['hiu'],places:['namche','mustang']},
+ hawa:{core:'hawa chaldai cha',en:'windy',clash:[],places:['mustang','namche']},
+ kuhiro:{core:'kuhiro lagyo',en:'foggy',clash:['badal'],places:['ilam','chitwan']},
+};
+const WX_KEYS=Object.keys(WEATHER);
+const WX_DAY=6;
+WX_KEYS.forEach(k=>WEATHER[k].clash.forEach(o=>{if(!WEATHER[o].clash.includes(k))WEATHER[o].clash.push(k);}));
+const cloudP='M14 44h34a11 11 0 0 0 1-22 15 15 0 0 0-29-4A12 12 0 0 0 14 44z';
+const WX_ICON={
+ ghaam:`<svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#e0a100" stroke-width="3.5" stroke-linecap="round"><path d="M32 5v8M32 51v8M5 32h8M51 32h8M13 13l6 6M45 45l6 6M13 51l6-6M45 19l6-6"/></g><circle cx="32" cy="32" r="12" fill="#f6bf2c" stroke="#e0a100" stroke-width="2"/></svg>`,
+ garmi:`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="24" cy="26" r="15" fill="#ff8a2a"/><path d="M10 50q5-4 10 0t10 0" stroke="#ff8a2a" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="44" y="8" width="9" height="36" rx="4.5" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/><circle cx="48.5" cy="49" r="8" fill="#d8262f" stroke="var(--stroke)" stroke-width="2.5"/><rect x="46.5" y="14" width="4" height="34" fill="#d8262f"/></svg>`,
+ badal:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="${cloudP}" transform="translate(-2 4)" fill="#c9d1db" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/></svg>`,
+ paani:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="${cloudP}" transform="translate(-2 -6)" fill="#8f9aaa" stroke="#4f5967" stroke-width="2.5" stroke-linejoin="round"/><g stroke="#3f7cc4" stroke-width="3" stroke-linecap="round"><path d="M20 46l-3 8M32 46l-3 8M44 46l-3 8"/></g></svg>`,
+ hiu:`<svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#4f8fcf" stroke-width="3.5" stroke-linecap="round"><path d="M32 8v48M11 20l42 24M11 44l42-24"/><path d="M26 12l6 6 6-6M26 52l6-6 6 6"/></g></svg>`,
+ jaado:`<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="26" y="6" width="12" height="38" rx="6" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/><circle cx="32" cy="48" r="10" fill="#3d86d8" stroke="var(--stroke)" stroke-width="2.5"/><rect x="29.5" y="34" width="5" height="12" fill="#3d86d8"/><g stroke="#7fb4e8" stroke-width="2.5" stroke-linecap="round"><path d="M10 18h8M14 14v8M48 26h8M52 22v8"/></g></svg>`,
+ hawa:`<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#6f8199" stroke-width="3.5" stroke-linecap="round"><path d="M6 24h34a7 7 0 1 0-7-7"/><path d="M6 36h44a7 7 0 1 1-7 7"/><path d="M10 30h22"/></g></svg>`,
+ kuhiro:`<svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#97a2b0" stroke-width="4" stroke-linecap="round"><path d="M8 18h40M16 28h40M8 38h40M16 48h32"/></g></svg>`,
+};
 const PRAISE=[['Syabaas!','Well done!'],['Ekdam ramro!','Really good!'],['Thik cha!','That’s right!']];
 
 // ---------- icons ----------
@@ -382,10 +464,17 @@ function genPart(k){
   const nums=[];for(let i=1;i<=m;i++)nums.push(i);
   return {k,q:wpick(nums,n=>need(ONES[n]))};
 }
+// cold or wet days sell hot drinks, hot days sell water
+function wxBoost(k){
+  const w=G&&G.weather;if(!w)return 1;
+  if(['jaado','hiu','paani','hawa'].includes(w)&&['dudhchiya','kalochiya','kafi'].includes(k))return 2.5;
+  if(w==='garmi'&&k==='paani')return 3;
+  return 1;
+}
 function genOrder(){
   for(let tries=0;tries<60;tries++){
     const items=unlocked();
-    const a=wpick(items,k=>avgNeed(toks(ITEMS[k].np)));
+    const a=wpick(items,k=>avgNeed(toks(ITEMS[k].np))*wxBoost(k));
     const parts=[genPart(a)];
     if(E()>=3&&Math.random()<0.4){const o=items.filter(k=>k!==a);parts.push(genPart(wpick(o,k=>avgNeed(toks(ITEMS[k].np)))));}
     const total=parts.reduce((s,p)=>s+p.q*ITEMS[p.k].price,0);
@@ -426,6 +515,33 @@ function payStep(order){
   const mk=n=>({t:cap(npNum(n))+' rupiya.',en:`Rs ${n}`});
   return {type:'pay',say:'Kati bhayo?',en:'How much does it come to?',answer:mk(t),options:shuffle([mk(t),...cands.map(mk)]),order};
 }
+// weather steps: read the window, answer yes/no, or match a report from elsewhere in Nepal
+const wxSentence=k=>({t:`Aaja ${WEATHER[k].core}.`,en:`It’s ${WEATHER[k].en} today.`});
+const wxNeed=k=>avgNeed(toks(WEATHER[k].core));
+function otherWx(w,n){return shuffle(WX_KEYS.filter(k=>k!==w&&!WEATHER[w].clash.includes(k))).slice(0,n);}
+function wxOptions(w,mk){
+  // wrong options must not also describe the right weather, or each other
+  const picks=[w];
+  for(const k of shuffle(WX_KEYS)){if(picks.length===3)break;if(picks.every(p=>p!==k&&!WEATHER[p].clash.includes(k)))picks.push(k);}
+  return shuffle(picks.map(mk));
+}
+function wxAskStep(w){
+  return {type:'chat',say:'Aaja mausam kasto cha?',en:'What’s the weather like today?',prompt:'Look out the window, then reply:',answer:wxSentence(w),options:wxOptions(w,wxSentence)};
+}
+function wxYesNoStep(w){
+  const asked=Math.random()<0.5?w:wpick(otherWx(w,8),wxNeed);
+  const yes={t:'Ho.',en:'Yes.'},no={t:'Hoina.',en:'No.'},dunno={t:'Thaha chaina.',en:'I don’t know.'};
+  return {type:'chat',say:`${cap(WEATHER[asked].core)}?`,en:`Is it ${WEATHER[asked].en}?`,prompt:'Look out the window, then reply:',answer:asked===w?yes:no,options:[yes,no,dunno]};
+}
+function wxPlaceStep(){
+  const k=wpick(WX_KEYS,wxNeed),place=rnd(WEATHER[k].places);
+  const mk=x=>({t:WEATHER[x].core,en:cap(WEATHER[x].en),wx:x});
+  return {type:'pick',say:`${cap(place)} ma ${WEATHER[k].core}.`,en:`It’s ${WEATHER[k].en} in ${cap(place)}.`,prompt:'Which weather are they talking about?',answer:mk(k),options:wxOptions(k,mk)};
+}
+function wxStep(w,kind){
+  kind=kind||rnd(['ask','yn','place']);
+  return kind==='ask'?wxAskStep(w):kind==='yn'?wxYesNoStep(w):wxPlaceStep();
+}
 const SKIN=['#f0c8a2','#dba57a','#bd8058','#916040','#6d432b'];
 const HAIR=['#1c1410','#2b1d16','#3c2b20','#5e5a57','#d4d2cf'];
 const SHIRT=['#2f5d8a','#a8323e','#3f7a4f','#7a4b8c','#c27c2c','#3c4a5c','#b85c7a'];
@@ -433,11 +549,22 @@ function genCustomer(){
   const steps=[];
   if(Math.random()<0.65){const c=pickChat('greet');if(c)steps.push(chatStep(c));}
   const order=genOrder();steps.push(order);
-  if(E()>=3&&Math.random()<0.5){const mids=CHATS.filter(c=>c.day<=E()&&c.slot==='mid');steps.push(Math.random()<0.4||!mids.length?haveStep():chatStep(pickChat('mid')));}
+  if(G.weather&&Math.random()<0.5)steps.push(wxStep(G.weather));
+  else if(E()>=3&&Math.random()<0.5){const mids=CHATS.filter(c=>c.day<=E()&&c.slot==='mid');steps.push(Math.random()<0.4||!mids.length?haveStep():chatStep(pickChat('mid')));}
   steps.push(payStep(order));
   if(Math.random()<0.7){const c=pickChat('bye');if(c)steps.push(chatStep(c));}
-  const long=Math.random()<0.45;
-  return {look:{skin:rnd(SKIN),hair:rnd(HAIR),shirt:rnd(SHIRT),long,topi:!long&&Math.random()<0.5,glasses:Math.random()<0.25,tika:Math.random()<0.3},
+  return withLook(steps);
+}
+function genWeatherCustomer(w){
+  const steps=[];
+  if(Math.random()<0.4){const c=pickChat('greet');if(c)steps.push(chatStep(c));}
+  shuffle(['ask','yn','place']).slice(0,2).forEach(kind=>steps.push(wxStep(w,kind)));
+  if(Math.random()<0.4){const c=pickChat('bye');if(c)steps.push(chatStep(c));}
+  return withLook(steps,w);
+}
+function withLook(steps,weather){
+  const long=Math.random()<0.45,cold=['jaado','hiu'].includes(weather||G.weather);
+  return {weather,look:{skin:rnd(SKIN),hair:rnd(HAIR),shirt:rnd(SHIRT),long,topi:!long&&Math.random()<0.5,glasses:Math.random()<0.25,tika:Math.random()<0.3,scarf:cold},
     steps,i:0,patience:100,hinted:false,mistakes:0,paid:0,lock:false,gone:false};
 }
 
@@ -455,6 +582,7 @@ function avatar(l){
   <circle cx="49" cy="60" r="3.2" fill="#1b1410"/><circle cx="71" cy="60" r="3.2" fill="#1b1410"/>
   ${l.glasses?'<g fill="none" stroke="#222" stroke-width="2"><circle cx="49" cy="60" r="8"/><circle cx="71" cy="60" r="8"/><path d="M57 60h6"/></g>':''}
   <path id="mouth" d="M50 74Q60 82 70 74" stroke="#5a2a20" stroke-width="3" fill="none" stroke-linecap="round"/>
+  ${l.scarf?'<path d="M36 92Q60 106 84 92L86 104Q60 118 34 104Z" fill="#c4122f" stroke="#7d0a1d" stroke-width="1.5"/><path d="M64 104l8 26h-10l-5-24z" fill="#a50f27" stroke="#7d0a1d" stroke-width="1.5"/><path d="M40 98l2 6M50 102l1 6M70 102l-1 6M80 98l-2 6" stroke="#f1d36b" stroke-width="2"/>':''}
   </svg>`;
 }
 function renderTop(){
@@ -503,11 +631,18 @@ function overlayOpen(){return !!document.querySelector('.overlay:not([hidden])')
 function show(id){$(id).hidden=false;}
 function hide(id){$(id).hidden=true;}
 
+const wcards=words=>`<div class="words">${words.map(v=>`<div class="wcard"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><div class="en">${esc(v[1])}</div></div>`).join('')}</div>`;
+const WX_HOWTO=`<ol class="howto">
+     <li><b>Aaja mausam kasto cha?</b> (“What’s the weather like today?”): look out the window and pick the sentence that matches.</li>
+     <li>Yes/no questions like <b>Paani pardai cha?</b> (“Is it raining?”): answer <b>Ho</b> (yes) or <b>Hoina</b> (no).</li>
+     <li>Reports from around Nepal like <b>Mustang ma hawa chaldai cha</b>: pick the weather picture they mean.</li></ol>`;
 function startDay(){
-  G={n:Math.min(8,4+S.day),idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0};
+  G={mode:'stall',n:Math.min(8,4+S.day),idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,
+     weather:S.day>=WX_DAY?rnd(WX_KEYS):''};
+  setWeather(G.weather);
   renderTop();renderMenu();renderCounter();
   const d=S.day;let words,title;
-  if(d<=5){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
+  if(d<=WX_DAY){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
   else{words=LEARN.map(t=>DICT[t]).sort((a,b)=>lvl(a.t)-lvl(b.t)).slice(0,9).map(v=>[v.t,v.en,v.dev,v.day]);title=`Dohoryaune shabda <small>words to practise</small>`;}
   const newItems=Object.keys(ITEMS).filter(k=>ITEMS[k].day===d);
   $('#introBody').innerHTML=`
@@ -517,20 +652,89 @@ function startDay(){
      <li>For orders, tap food onto the tray, then press <b>Linus!</b> (“here you go”).</li>
      <li>When they ask <b>Kati bhayo?</b> (“how much?”), add up the menu prices and pick the total.</li>
      <li>Answer fast and without peeking to earn <b>baksis</b> (a tip).</li></ol>`:''}
+   ${d===WX_DAY?`<p>From today the weather changes, and customers talk about it while they order.</p>${WX_HOWTO}`:''}
    <h3>${title}</h3>
-   <div class="words">${words.map(v=>`<div class="wcard"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><div class="en">${esc(v[1])}</div></div>`).join('')}</div>
+   ${wcards(words)}
    ${newItems.length?`<h3>Naya menu <small>new on the menu</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].np}</b> · ${ITEMS[k].short} · रु ${ITEMS[k].price}</span></div>`).join('')}</div>`:''}
-   <div class="row-end"><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+   <div class="row-end"><button class="ghost wxbtn" id="toWx">Mausam practice</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
   show('#ovIntro');
-  $('#go').onclick=()=>{hide('#ovIntro');nextCustomer();};
+  $('#go').onclick=()=>{hide('#ovIntro');G.started=true;nextCustomer();};
+  $('#toWx').onclick=openWeatherIntro;
   $('#go').focus();
 }
+function openWeatherIntro(){
+  const words=VOCAB.filter(v=>v[3]===WX_DAY);
+  const midDay=G&&G.mode==='stall'&&G.started;
+  $('#introBody').innerHTML=`
+   <h2>Mausam<small>weather practice</small></h2>
+   <p>Six customers who only want to talk about the weather. The window shows a new sky for each one.</p>
+   ${WX_HOWTO}
+   <h3>Mausam ka shabda <small>weather words</small></h3>
+   ${wcards(words)}
+   <div class="menu-new">${WX_KEYS.map(k=>`<div>${WX_ICON[k]}<span><b>${WEATHER[k].core}</b> · ${WEATHER[k].en}</span></div>`).join('')}</div>
+   ${G&&G.mode==='stall'?`<p class="recap">${midDay?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`:''}
+   <div class="row-end"><button class="ghost" id="wxLater">Pachi <small>later</small></button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+  show('#ovIntro');
+  $('#wxLater').onclick=()=>{if(G&&G.mode==='stall'&&!G.started)startDay();else hide('#ovIntro');};
+  $('#go').onclick=()=>{hide('#ovIntro');startWeather();};
+  $('#go').focus();
+}
+function startWeather(){
+  if(C){C.gone=true;C.lock=true;}
+  $('#cont').hidden=true;
+  S.wxPlayed=true;save();
+  G={mode:'weather',n:6,idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,weather:''};
+  nextCustomer();
+}
 function nextCustomer(){
-  C=genCustomer();tray={};
+  if(G.mode==='weather'){
+    const prev=C&&C.weather;
+    const w=rnd(WX_KEYS.filter(k=>k!==prev));
+    C=genWeatherCustomer(w);setWeather(w);
+  }else C=genCustomer();
+  tray={};
   const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
-  $('#queue').textContent=`Customer ${G.idx+1} of ${G.n}`;
+  $('#queue').textContent=(G.mode==='weather'?'Mausam practice · ':'')+`Customer ${G.idx+1} of ${G.n}`;
   renderBar();renderStep();
 }
+
+// ---------- weather in the window ----------
+const cv=$('#wxCanvas'),cx=cv.getContext('2d');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let wxNow='',wxRaf=0;
+function setWeather(w){
+  wxNow=w||'';
+  const sc=$('#scene');sc.dataset.weather=wxNow;
+  sc.setAttribute('aria-label','Customer at the window'+(wxNow?`. Outside it is ${WEATHER[wxNow].en}.`:''));
+  $('#wxCap').hidden=!(wxNow&&S.settings.english);
+  if(wxNow)$('#wxCap').textContent='Outside: '+WEATHER[wxNow].en;
+  startParticles();
+}
+function startParticles(){
+  cancelAnimationFrame(wxRaf);
+  const kind=wxNow==='paani'?'rain':wxNow==='hiu'?'snow':wxNow==='hawa'?'wind':null;
+  const r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1,W=r.width,H=r.height;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);
+  if(!kind||!W)return;
+  const n=kind==='rain'?110:kind==='snow'?70:16;
+  const ps=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,s:Math.random()*.6+.6,p:Math.random()*6.28}));
+  const col=getComputedStyle(document.documentElement).getPropertyValue(kind==='rain'?'--rain':kind==='snow'?'--snowfall':'--windline').trim();
+  const frame=()=>{
+    cx.clearRect(0,0,W,H);cx.strokeStyle=col;cx.fillStyle=col;cx.lineCap='round';
+    for(const q of ps){
+      if(kind==='rain'){cx.lineWidth=1.5;cx.beginPath();cx.moveTo(q.x,q.y);cx.lineTo(q.x-3,q.y+12*q.s);cx.stroke();if(!RM){q.y+=9*q.s;q.x-=2.2*q.s;}}
+      else if(kind==='snow'){cx.beginPath();cx.arc(q.x,q.y,1.6+q.s*1.5,0,7);cx.fill();if(!RM){q.y+=.7*q.s;q.p+=.02;q.x+=Math.sin(q.p)*.5;}}
+      else{cx.lineWidth=2;cx.beginPath();cx.moveTo(q.x,q.y);cx.quadraticCurveTo(q.x+30,q.y-8*Math.sin(q.p),q.x+70*q.s,q.y);cx.stroke();if(!RM){q.x+=6*q.s;q.p+=.05;}}
+      if(q.y>H+14){q.y=-14;q.x=Math.random()*(W+40);}
+      if(q.x<-20)q.x=W+10;
+      if(q.x>W+80){q.x=-80;q.y=Math.random()*H;}
+    }
+    if(!RM)wxRaf=requestAnimationFrame(frame);
+  };
+  frame();
+}
+addEventListener('resize',()=>startParticles());
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>startParticles());
 function renderStep(){
   const st=C.steps[C.i];st.hinted=false;st.tries=0;st.scored=false;C.lock=false;
   renderBubble(st.say,st.en);setFb('');$('#cont').hidden=true;
@@ -539,10 +743,12 @@ function renderStep(){
     document.querySelectorAll('.item').forEach(b=>b.disabled=false);$('#serve').disabled=false;
   }else{
     $('#counterWrap').hidden=true;$('#optWrap').hidden=false;
-    $('#recap').innerHTML=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':'Pick your reply:';
-    const o=$('#opts');o.innerHTML='';
-    st.options.forEach(op=>{const b=document.createElement('button');b.className='opt';
-      b.innerHTML=`<span>${esc(op.t)}</span><span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
+    $('#recap').innerHTML=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':(st.prompt||'Pick your reply:');
+    const o=$('#opts');o.innerHTML='';o.classList.toggle('picks',st.type==='pick');
+    st.options.forEach(op=>{const b=document.createElement('button');b.className=st.type==='pick'?'opt pick':'opt';b.dataset.t=op.t;
+      b.innerHTML=st.type==='pick'?`${WX_ICON[op.wx]}<span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`
+        :`<span>${esc(op.t)}</span><span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
+      if(st.type==='pick')b.setAttribute('aria-label',S.settings.english?op.en:'Weather picture '+(st.options.indexOf(op)+1));
       b.onclick=()=>choose(st,op,b);o.append(b);});
   }
 }
@@ -559,13 +765,14 @@ function choose(st,op,btn){
   if(C.lock)return;C.lock=true;
   const ok=op.t===st.answer.t;score(st,ok);
   document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;b.querySelector('.en').hidden=false;
-    if(b.firstChild.textContent===st.answer.t)b.classList.add('right');});
+    if(b.dataset.t===st.answer.t)b.classList.add('right');});
   if(!ok){btn.classList.add('wrong');C.patience-=22;}
   if(st.type==='pay')C.paid=st.order.total;
   renderBar();setMood();
   const line=`“${esc(st.say)}” = ${esc(st.en)}`;
-  if(ok){setFb(`${praise()} ${line}`,'good');setTimeout(advance,1700);}
-  else{setFb(`<b>Hoina.</b> The answer was “${esc(st.answer.t)}” (${esc(st.answer.en)}). ${line}`,'bad');waitContinue();}
+  const c=C;
+  if(ok){setFb(`${praise()} ${line}`,'good');setTimeout(()=>{if(c===C)advance();},1700);}
+  else{setFb(`<b>Hoina.</b> The answer was ${st.type==='pick'?esc(st.answer.en.toLowerCase()):`“${esc(st.answer.t)}” (${esc(st.answer.en)})`}. ${line}`,'bad');waitContinue();}
 }
 function serve(){
   if(!C||C.lock)return;const st=C.steps[C.i];
@@ -574,7 +781,7 @@ function serve(){
   if(!a.length){setFb('The tray is empty. Tap food on the counter to add it.','bad');return;}
   if(ok){
     score(st,true);C.lock=true;document.querySelectorAll('.item').forEach(x=>x.disabled=true);$('#serve').disabled=true;
-    setFb(`${praise()} “${esc(st.say)}” = ${esc(st.en)}`,'good');renderBar();setMood();setTimeout(advance,1900);
+    const c=C;setFb(`${praise()} “${esc(st.say)}” = ${esc(st.en)}`,'good');renderBar();setMood();setTimeout(()=>{if(c===C)advance();},1900);
   }else{
     score(st,false);st.tries++;C.patience-=18;renderBar();setMood();
     setFb(`<b>Hoina!</b> That’s not what they asked for. ${st.tries>=2?`They said: <span class="q">${esc(st.en)}</span>`:'Check the words and quantities, then try again.'}`,'bad');
@@ -592,9 +799,12 @@ function finishCustomer(){
   let tip=0;
   if(!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
   const earned=C.paid+tip;S.rupees+=earned;G.earned+=earned;G.served++;save();renderTop();
-  setFb(`<b>+${fmt(C.paid)}</b> for the order${tip?` and <b>+${fmt(tip)} baksis</b> (tip)`:C.hinted||C.mistakes?' · no baksis this time':''}.`,'good');
+  const parts=[];
+  if(C.paid)parts.push(`<b>+${fmt(C.paid)}</b> for the order`);
+  if(tip)parts.push(`<b>+${fmt(tip)} baksis</b> (tip)`);
+  setFb((parts.length?parts.join(' and ')+'.':'<b>Happy customer.</b>')+(!tip&&(C.hinted||C.mistakes)?' No baksis this time.':''),'good');
   $('#cust').classList.add('exit');
-  setTimeout(nextOrEnd,1700);
+  const g=G;setTimeout(()=>nextOrEnd(g),1700);
 }
 function leave(){
   if(C.gone)return;C.gone=true;C.lock=true;C.patience=0;renderBar();setMood();
@@ -603,12 +813,25 @@ function leave(){
   G.left++;
   setFb('<b>The customer gave up and left.</b> “Kasto dhilo!” = So slow! Try Relaxed mode in Settings if you want more time.','bad');
   $('#cust').classList.add('exit');
-  setTimeout(nextOrEnd,2600);
+  const g=G;setTimeout(()=>nextOrEnd(g),2600);
 }
-function nextOrEnd(){G.idx++;if(G.idx<G.n)nextCustomer();else endDay();}
+function nextOrEnd(g){if(g!==G)return;G.idx++;if(G.idx<G.n)nextCustomer();else endDay();}
 function endDay(){
   const acc=G.steps?Math.round(100*G.correct/G.steps):0;
   const missed=[...G.missed].slice(0,12);
+  if(G.mode==='weather'){
+    $('#sumBody').innerHTML=`
+     <h2>Mausam sakiyo<small>weather practice finished</small></h2>
+     <div class="sumgrid"><div><b>${fmt(G.earned)}</b><span>baksis · tips</span></div>
+       <div><b>${G.served}/${G.n}</b><span>customers happy</span></div>
+       <div><b>${acc}%</b><span>right first time</span></div></div>
+     ${missed.length?`<h3>Words to review</h3>${wcards(missed.map(t=>[t,DICT[t].en,DICT[t].dev]))}`:'<p>No mistakes. Syabaas!</p>'}
+     <div class="row-end"><button class="ghost" id="wxAgain">Pheri <small>again</small></button><button class="primary big" id="nextDay">Pasal ma <small>back to the stall</small></button></div>`;
+    show('#ovSum');$('#nextDay').focus();
+    $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+    $('#wxAgain').onclick=()=>{hide('#ovSum');startWeather();};
+    return;
+  }
   $('#sumBody').innerHTML=`
    <h2>Din ${S.day} sakiyo<small>day ${S.day} finished</small></h2>
    <div class="sumgrid"><div><b>${fmt(G.earned)}</b><span>kamai · earnings</span></div>
@@ -624,19 +847,20 @@ function endDay(){
 // ---------- journal & settings ----------
 function renderBook(){
   const maxD=E();let html=`<h2>Shabdakosh<small>your dictionary</small></h2><p class="recap">Dots fill as you answer correctly without peeking. Mistakes take a dot away.</p>`;
-  for(let d=1;d<=5;d++){
-    const ws=VOCAB.filter(v=>v[3]===d);
-    if(d>maxD){html+=`<p class="locked">Din ${d}: ${ws.length} words unlock on day ${d}.</p>`;continue;}
-    html+=`<div class="book-day"><h3>Din ${d}</h3>${ws.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
+  for(let d=1;d<=WX_DAY;d++){
+    const ws=VOCAB.filter(v=>v[3]===d),wx=d===WX_DAY;
+    if(wx?!(S.day>=WX_DAY||S.wxPlayed):d>maxD){html+=`<p class="locked">${wx?'Mausam (weather)':'Din '+d}: ${ws.length} words unlock on day ${d}${wx?' or in Mausam practice':''}.</p>`;continue;}
+    html+=`<div class="book-day"><h3>${wx?'Din 6 · Mausam <small>weather</small>':'Din '+d}</h3>${ws.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
   }
   html+=`<div class="row-end"><button class="primary" id="closeBook">Close</button></div>`;
   $('#bookBody').innerHTML=html;$('#closeBook').onclick=()=>hide('#ovBook');$('#closeBook').focus();
 }
 $('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
+$('#btnWx').onclick=openWeatherIntro;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');};
 $('#closeSet').onclick=()=>{
   S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;save();hide('#ovSet');
-  renderMenu();$('#sayEn').hidden=!S.settings.english;
+  renderMenu();$('#sayEn').hidden=!S.settings.english;setWeather(wxNow);
   document.querySelectorAll('.opt .en').forEach(e=>{if(S.settings.english)e.hidden=false;});
 };
 let resetArm=false;
