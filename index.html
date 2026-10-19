@@ -69,7 +69,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 .chip{display:inline-flex;align-items:baseline;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-weight:700;font-variant-numeric:tabular-nums}
 .chip small{font-weight:400;color:var(--muted);font-size:.75rem}
 .stats{display:flex;gap:8px}
-nav{display:flex;gap:8px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
 .ghost{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 14px}
 .ghost:hover{border-color:var(--muted)}
 
@@ -235,8 +235,17 @@ nav{display:flex;gap:8px}
 .opt.pick{align-items:center;text-align:center;padding:8px 6px}
 .opt.pick svg{width:64px;height:64px}
 .wxbtn{border-color:var(--blue);color:var(--blue)}
-.wxbtn small{font-size:.75rem;opacity:.8}
-@media (max-width:520px){.wxbtn small{display:none}.scene{padding-top:58px}.wx-sun{right:14px;width:32px;height:32px}.opt.pick svg{width:48px;height:48px}}
+.wxbtn small,.fambtn small{font-size:.75rem;opacity:.8}
+.fambtn{border-color:var(--crimson);color:var(--crimson)}
+.scene.calm .patience{visibility:hidden}
+.fb .note{display:block;margin-top:6px;font-size:.92rem;color:var(--ink)}
+.fb .note b{color:var(--ink)}
+.kinwrap{overflow-x:auto}
+.kin{width:100%;border-collapse:collapse;font-size:.92rem}
+.kin th{text-align:left;font-size:.75rem;letter-spacing:.04em;color:var(--muted);font-weight:500;padding:4px 8px;border-bottom:1px solid var(--line)}
+.kin td{padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:baseline}
+.kin .dev{color:var(--muted);font-size:.85rem}
+@media (max-width:520px){.wxbtn small,.fambtn small{display:none}.scene{padding-top:58px}.wx-sun{right:14px;width:32px;height:32px}.opt.pick svg{width:48px;height:48px}}
 .steam{animation:steam 2.4s ease-in-out infinite;transform-origin:center bottom}
 @keyframes steam{0%,100%{opacity:.25;transform:translateY(1px)}50%{opacity:.8;transform:translateY(-2px)}}
 </style>
@@ -252,6 +261,7 @@ nav{display:flex;gap:8px}
     </div>
     <nav>
       <button class="ghost wxbtn" id="btnWx">Mausam <small>weather</small></button>
+      <button class="ghost fambtn" id="btnFam">Pariwar <small>family</small></button>
       <button class="ghost" id="btnBook">Shabdakosh</button>
       <button class="ghost" id="btnSet">Settings</button>
     </nav>
@@ -342,10 +352,28 @@ const VOCAB=[
  ['taato','hot','तातो',4],['ho','yes / is','हो',4],['ke','what','के',4],['naam','name','नाम',4],['mero','my','मेरो',4],['ko','of / ’s','को',4],
  ['dal','lentil soup','दाल',5],['bhaat','cooked rice','भात',5],['aath','eight (8)','आठ',5],['nau','nine (9)','नौ',5],
  ['bholi','tomorrow','भोलि',5],['bhetaula','we’ll meet','भेटौँला',5],['dinu','give','दिनु',5],['na','softener, like “won’t you?”','न',5],
- ['mausam','weather','मौसम',6],['aaja','today','आज',6],['ghaam','sunshine','घाम',6],['lagyo','has set in (sun, clouds, fog)','लाग्यो',6],
+ ['mausam','weather','मौसम',6],['aaja','today','आज',6],['ghaam','sunshine','घाम',6],['lagyo','has set in (sun, clouds, fog; also hunger: “bhok lagyo”)','लाग्यो',6],
  ['garmi','heat / hot weather','गर्मी',6],['badal','cloud(s)','बादल',6],['pardai','falling (rain, snow)','पर्दै',6],['hiu','snow','हिउँ',6],
  ['jaado','cold weather','जाडो',6],['hawa','wind / air','हावा',6],['chaldai','blowing / moving','चल्दै',6],['kuhiro','fog','कुहिरो',6],
- ['ma','in / at','मा',6],['thaha','known (“thaha chaina” = I don’t know)','थाहा',6],
+ ['ma','in / at (मा, after a place) · also “I” (म)','मा / म',6],['thaha','known (“thaha chaina” = I don’t know)','थाहा',6],
+ ['pariwar','family','परिवार',7],['sasura','father-in-law','ससुरा',7],['sasu','mother-in-law','सासू',7],['srimati','wife','श्रीमती',7],
+ ['jethan','wife’s elder brother','जेठान',7],['salo','wife’s younger brother (also used as an insult!)','सालो',7],['sali','wife’s younger sister','साली',7],
+ ['jwain','son-in-law (what her family calls you)','ज्वाइँ',7],['bhinaju','elder sister’s husband (what her younger siblings call you)','भिनाजु',7],
+ ['saab','respectful “sir”, after a title','साब',7],['buwa','father / Dad','बुवा',7],['aama','mother / Mum','आमा',7],['dai','elder brother','दाइ',7],
+ ['didi','elder sister','दिदी',7],['bhai','younger brother','भाइ',7],['bahini','younger sister','बहिनी',7],
+ ['hajuraama','grandmother','हजुरआमा',7],['hajurbuwa','grandfather','हजुरबुवा',7],
+ ['hajur','you (most respectful) · also “yes?” when called','हजुर',7],['timi','you (familiar)','तिमी',7],['timilai','to you (familiar)','तिमीलाई',7],
+ ['khana','meal / food','खाना',7],['khanubhayo','have (you) eaten? (polite)','खानुभयो',7],['khaye','I ate','खाएँ',7],['khane','to eat / shall (we) eat','खाने',7],
+ ['khanus','please eat','खानुस्',7],['khaun','let’s eat / let’s drink','खाऔँ',7],['aru','more / other','अरू',7],['pugyo','that’s enough','पुग्यो',7],
+ ['hunuhunchha','(you) are (very polite)','हुनुहुन्छ',7],['chhu','(I) am','छु',7],['chhau','(you) are (familiar)','छौ',7],['ni','and you? / softener','नि',7],
+ ['kaam','work','काम',7],['sikdai','learning','सिक्दै',7],['gardai','doing','गर्दै',7],['kahaa','where','कहाँ',7],['jaane','going','जाने',7],
+ ['bazaar','market','बजार',7],['khelaun','shall we play?','खेलौँ',7],['hunchha','okay / sure','हुन्छ',7],['bhok','hunger','भोक',7],
+ ['maya','love','माया',7],['garchhu','(I) do','गर्छु',7],['pani','also / too','पनि',7],['thakyau','are you tired? (familiar)','थाक्यौ',7],
+ ['thakeko','tired','थाकेको',7],['aaunus','please come (in)','आउनुस्',7],['basnus','please sit','बस्नुस्',7],
+ ['dhog','respectful bow to an elder (“dhog garchhu” = my respects)','ढोग',7],['bolnu','to speak','बोल्नु',7],['bolchhu','(I) speak','बोल्छु',7],
+ ['bujhnubhayo','did (you) understand? (polite)','बुझ्नुभयो',7],['bujhina','I didn’t understand','बुझिनँ',7],['bhannus','please say','भन्नुस्',7],
+ ['shubha','good / auspicious','शुभ',7],['ratri','night','रात्रि',7],
+ ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
  ['hari','Hari (your name)','हरि',0],['dhilo','slow / late','ढिलो',0],['pizza','pizza','पिज्जा',0],['burger','burger','बर्गर',0],
@@ -354,7 +382,7 @@ const VOCAB=[
  ['linus','please take (here you go)','लिनुस्',0],['baksis','tip','बक्सिस',0],['din','day','दिन',0],
 ];
 const DICT={};VOCAB.forEach(([t,en,dev,day])=>DICT[t]={t,en,dev,day});
-const LEARN=VOCAB.filter(v=>v[3]>0).map(v=>v[0]);
+const LEARN=VOCAB.filter(v=>v[3]>0&&v[3]<7).map(v=>v[0]);
 
 const ITEMS={
  dudhchiya:{np:'dudh chiya',short:'milk tea',price:30,unit:'cup',day:1},
@@ -542,6 +570,71 @@ function wxStep(w,kind){
   kind=kind||rnd(['ask','yn','place']);
   return kind==='ask'?wxAskStep(w):kind==='yn'?wxYesNoStep(w):wxPlaceStep();
 }
+// ---------- pariwar (family): visiting your wife's family ----------
+const FAM_DAY=7;
+// addr = what you call them; callsYou = what they call you; reg = which "you" to use with them
+const FAMILY={
+ sasu:{kin:'sasu',en:'your mother-in-law',addr:'Aama',callsYou:'jwain',reg:'hajur',woman:true,old:true,greet:'Namaste, jwain!',greetEn:'Hello, son-in-law!',note:'Many sons-in-law call their mother-in-law Aama (mother). Use hajur with her, the most respectful “you”.'},
+ sasura:{kin:'sasura',en:'your father-in-law',addr:'Buwa',callsYou:'jwain saab',reg:'hajur',old:true,greet:'Namaste, jwain saab!',greetEn:'Hello, dear son-in-law!',note:'Calling him Buwa (father) is warm and respectful. In-laws often add saab to jwain as a mark of respect.'},
+ hajuraama:{kin:'hajuraama',en:'your wife’s grandmother',addr:'Hajuraama',callsYou:'jwain',reg:'hajur',woman:true,old:true,greet:'Aaunus, jwain. Basnus.',greetEn:'Come in, son-in-law. Please sit.',dhog:true,note:'Dhog is the respectful greeting for elders in the family. She will bless you with “Sukhi rahanu” (stay happy).'},
+ hajurbuwa:{kin:'hajurbuwa',en:'your wife’s grandfather',addr:'Hajurbuwa',callsYou:'jwain',reg:'hajur',old:true,greet:'Aaunus, jwain. Basnus.',greetEn:'Come in, son-in-law. Please sit.',dhog:true,note:'Greet grandparents with dhog. He will bless you with “Sukhi rahanu” (stay happy).'},
+ jethan:{kin:'jethan',en:'your wife’s elder brother',addr:'Dai',callsYou:'jwain',reg:'tapai',greet:'Namaste, jwain!',greetEn:'Hello, brother-in-law!',note:'He is older than your wife, so you call him Dai (elder brother) and use tapai with him.'},
+ salo:{kin:'salo',en:'your wife’s younger brother',addr:'Bhai',callsYou:'bhinaju',reg:'timi',greet:'Namaste, bhinaju!',greetEn:'Hello, brother-in-law!',note:'Call him Bhai. “Salo” is the kinship word, but it is also an insult, so never call him that to his face.'},
+ sali:{kin:'sali',en:'your wife’s younger sister',addr:'Bahini',callsYou:'bhinaju',reg:'timi',woman:true,greet:'Namaste, bhinaju!',greetEn:'Hello, brother-in-law!',note:'Her younger siblings call you bhinaju (elder sister’s husband). You can call her Bahini (younger sister).'},
+ srimati:{kin:'srimati',en:'your wife',addr:null,callsYou:'your name',reg:'timi',woman:true,greet:'Ke cha?',greetEn:'What’s up?',note:'Many couples use timi with each other. Some use tapai. Never use ta with in-laws or elders.'},
+};
+const FAM_KEYS=Object.keys(FAMILY);
+const ADDR_EN={Buwa:'Father',Aama:'Mother',Dai:'elder brother',Bhai:'younger brother',Bahini:'younger sister',Hajuraama:'Grandmother',Hajurbuwa:'Grandfather'};
+// {A} = how you address this person
+const FAM_CHATS=[
+ {roles:['sasu','hajuraama'],say:'Jwain, khana khanubhayo?',en:'Son-in-law, have you eaten?',ans:'Khaye, hajur.',ansEn:'Yes, I’ve eaten.',ok:['Pugyo, Aama. Dhanyabaad.'],note:'“Khana khanubhayo?” is an everyday greeting, a bit like “how are you?”.'},
+ {roles:['sasu'],say:'Ali aru khanus na.',en:'Please eat a little more.',ans:'Pugyo, Aama. Dhanyabaad.',ansEn:'That’s enough, Aama. Thank you.',ok:['Khaye, hajur.'],note:'Hosts keep serving. Say pugyo (that’s enough) politely, or your plate fills up again.'},
+ {roles:['sasu','hajuraama','jethan'],say:'Mitho bhayo?',en:'Was it tasty?',ans:'Ekdam mitho bhayo!',ansEn:'It was really tasty!'},
+ {roles:['sasura','hajurbuwa'],say:'Sanchai hunuhunchha?',en:'Are you well?',ans:'Sanchai chhu, {A}. Hajur lai ni?',ansEn:'I’m well, {A}. And you?',note:'Hunuhunchha is the very polite “are”. Ask back with “Hajur lai ni?” (and you?).'},
+ {roles:['sasura','jethan'],say:'Kaam kasto cha?',en:'How’s work?',ans:'Ramro cha, dhanyabaad.',ansEn:'It’s good, thanks.'},
+ {roles:['sasura','hajurbuwa','sasu'],say:'Nepali sikdai hunuhunchha?',en:'Are you learning Nepali?',ans:'Ali ali sikdai chhu.',ansEn:'I’m learning a little.',ok:['Ali ali bolchhu.']},
+ {roles:['sasura','jethan','hajurbuwa'],say:'Tapai Nepali bolnu hunchha?',en:'Do you speak Nepali?',ans:'Ali ali bolchhu.',ansEn:'I speak a little.',ok:['Ali ali sikdai chhu.']},
+ {roles:['sasura','sasu','hajuraama','hajurbuwa','jethan'],say:'Bujhnubhayo?',en:'Did you understand?',ans:'Bujhina. Pheri bhannus na.',ansEn:'I didn’t understand. Please say it again.',note:'The most useful sentence for a learner. Everyone will happily repeat themselves.'},
+ {roles:['jethan'],say:'Jwain, ek cup chiya khaun?',en:'Shall we have a cup of tea, brother-in-law?',ans:'Hunchha, {A}!',ansEn:'Sure, {A}!',note:'Nepali uses khanu (eat) for drinking tea too.'},
+ {roles:['sali'],say:'Bhinaju, kahaa jaane?',en:'Where are you going, brother-in-law?',ans:'Bazaar jaane, {A}.',ansEn:'Going to the market, {A}.',note:'“Kahaa jaane?” is a friendly everyday question, not nosiness.'},
+ {roles:['salo'],say:'Bhinaju, cricket khelaun?',en:'Shall we play cricket, brother-in-law?',ans:'Hunchha, {A}!',ansEn:'Sure, {A}!'},
+ {roles:['sali','salo','srimati','jethan'],say:'Aaja ke khane?',en:'What shall we eat today?',ans:'Momo khaun!',ansEn:'Let’s have momo!'},
+ {roles:['srimati'],say:'Ke gardai chhau?',en:'What are you doing?',ans:'Nepali sikdai chhu.',ansEn:'I’m learning Nepali.'},
+ {roles:['srimati','sali'],say:'Bhok lagyo?',en:'Are you hungry?',ans:'Ali ali bhok lagyo.',ansEn:'I’m a little hungry.',note:'Hunger “sets in” (lagyo), just like the sun and the fog.'},
+ {roles:['srimati'],say:'Ma timilai maya garchhu.',en:'I love you.',ans:'Ma pani timilai maya garchhu.',ansEn:'I love you too.',note:'Pani means “also / too”.'},
+ {roles:['srimati','salo'],say:'Thakyau?',en:'Are you tired?',ans:'Ali thakeko chhu.',ansEn:'I’m a bit tired.'},
+ {roles:FAM_KEYS,bye:true,say:'Shubha ratri!',en:'Good night!',ans:'Shubha ratri!',ansEn:'Good night!'},
+];
+const famSub=(s,r)=>s.replace('{A}',FAMILY[r].addr||'');
+function famGreetStep(r){
+  const f=FAMILY[r];
+  if(!f.addr){
+    const answer={t:'Thik cha. Timilai ni?',en:'I’m fine. And you?'};
+    return {type:'chat',say:f.greet,en:f.greetEn,prompt:`This is ${f.en}. Reply:`,answer,note:f.note,
+      options:shuffle([answer,{t:'Namaste, Buwa.',en:'Hello, Father.'},{t:'Dhog garchhu, Hajuraama.',en:'My respects, Grandmother.'}])};
+  }
+  const mk=f.dhog?a=>({t:`Dhog garchhu, ${a}.`,en:`My respects, ${ADDR_EN[a]}.`}):a=>({t:`Namaste, ${a}.`,en:`Hello, ${ADDR_EN[a]}.`});
+  const others=shuffle([...new Set(FAM_KEYS.map(k=>FAMILY[k].addr).filter(a=>a&&a!==f.addr))]).slice(0,2);
+  return {type:'chat',say:f.greet,en:f.greetEn,prompt:`This is ${f.en}. Greet them by the right name:`,answer:mk(f.addr),options:shuffle([mk(f.addr),...others.map(mk)]),note:f.note};
+}
+function famChatStep(c,r){
+  const answer={t:famSub(c.ans,r),en:famSub(c.ansEn,r)};
+  const bad=new Set([answer.t,...(c.ok||[])]),seen=new Set();
+  const pool=FAM_CHATS.filter(x=>x!==c&&(FAMILY[r].addr||!x.ans.includes('{A}'))).map(x=>({t:famSub(x.ans,r),en:famSub(x.ansEn,r)}));
+  const cands=shuffle(pool.filter(o=>!bad.has(o.t)&&!seen.has(o.t)&&seen.add(o.t))).slice(0,2);
+  return {type:'chat',say:c.say,en:c.en,answer,options:shuffle([answer,...cands]),note:c.note||''};
+}
+function genFamilyCustomer(r){
+  const steps=[famGreetStep(r)];
+  const pool=FAM_CHATS.filter(c=>!c.bye&&c.roles.includes(r));
+  for(let i=0;i<2&&pool.length;i++){const c=wpick(pool,c=>avgNeed([...toks(c.say),...toks(c.ans)]));pool.splice(pool.indexOf(c),1);steps.push(famChatStep(c,r));}
+  if(Math.random()<0.4)steps.push(famChatStep(FAM_CHATS.find(c=>c.bye),r));
+  const f=FAMILY[r],c=withLook(steps,'');
+  c.role=r;
+  c.look={skin:rnd(SKIN),hair:f.old?rnd(['#8f8b88','#d4d2cf']):rnd(HAIR.slice(0,3)),shirt:r==='srimati'?'#b3122f':rnd(SHIRT),
+    long:!!f.woman,topi:!f.woman&&!!f.old,glasses:!!f.old&&Math.random()<0.6,tika:!!f.woman&&Math.random()<0.7,scarf:false};
+  return c;
+}
 const SKIN=['#f0c8a2','#dba57a','#bd8058','#916040','#6d432b'];
 const HAIR=['#1c1410','#2b1d16','#3c2b20','#5e5a57','#d4d2cf'];
 const SHIRT=['#2f5d8a','#a8323e','#3f7a4f','#7a4b8c','#c27c2c','#3c4a5c','#b85c7a'];
@@ -612,7 +705,7 @@ function renderBubble(say,en){
   const el=$('#say');el.innerHTML='';
   say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=w;b.onclick=()=>peek(w,b);el.append(b);});
   $('#sayEn').textContent=en;$('#sayEn').hidden=!S.settings.english;
-  $('#gloss').innerHTML=glossHint;
+  $('#gloss').innerHTML=G&&G.mode==='family'?'<span class="hint">Tap any word to see what it means.</span>':glossHint;
 }
 function peek(w,b){
   const t=toks(w)[0],v=DICT[t];
@@ -656,10 +749,11 @@ function startDay(){
    <h3>${title}</h3>
    ${wcards(words)}
    ${newItems.length?`<h3>Naya menu <small>new on the menu</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].np}</b> · ${ITEMS[k].short} · रु ${ITEMS[k].price}</span></div>`).join('')}</div>`:''}
-   <div class="row-end"><button class="ghost wxbtn" id="toWx">Mausam practice</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+   <div class="row-end"><button class="ghost wxbtn" id="toWx">Mausam practice</button><button class="ghost fambtn" id="toFam">Pariwar practice</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
   show('#ovIntro');
   $('#go').onclick=()=>{hide('#ovIntro');G.started=true;nextCustomer();};
   $('#toWx').onclick=openWeatherIntro;
+  $('#toFam').onclick=openFamilyIntro;
   $('#go').focus();
 }
 function openWeatherIntro(){
@@ -686,15 +780,49 @@ function startWeather(){
   G={mode:'weather',n:6,idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,weather:''};
   nextCustomer();
 }
+const KIN_TABLE=()=>`<div class="kinwrap"><table class="kin">
+   <thead><tr><th>Who</th><th>Word</th><th>You call them</th><th>They call you</th><th>Use</th></tr></thead>
+   <tbody>${FAM_KEYS.map(k=>{const f=FAMILY[k];return `<tr><td>${esc(cap(f.en.replace('your ','')))}</td><td><b>${f.kin}</b> <span class="dev" lang="ne">${DICT[f.kin].dev}</span></td><td>${f.addr?`<b>${f.addr}</b>`:'their name'}</td><td>${f.callsYou}</td><td>${f.reg}</td></tr>`;}).join('')}</tbody></table></div>`;
+function openFamilyIntro(){
+  const midDay=G&&G.mode==='stall'&&G.started;
+  $('#introBody').innerHTML=`
+   <h2>Pariwar<small>family practice</small></h2>
+   <p>You are visiting your wife’s family. Six relatives come to talk to you. Greet each one by the right name, then answer their everyday questions.</p>
+   <ol class="howto">
+     <li><b>Hajur</b> is the most respectful “you”: use it with parents- and grandparents-in-law.</li>
+     <li><b>Tapai</b> is polite: use it with your wife’s elder brother and other adults.</li>
+     <li><b>Timi</b> is familiar: for your wife and her younger brothers and sisters. Families differ, so follow their lead.</li></ol>
+   <h3>Kasari bolaune? <small>what to call everyone</small></h3>
+   ${KIN_TABLE()}
+   <p class="recap">Nobody runs out of patience here, and there are no tips. Read the tip after each answer.</p>
+   ${G&&G.mode==='stall'?`<p class="recap">${midDay?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`:''}
+   <div class="row-end"><button class="ghost" id="famLater">Pachi <small>later</small></button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+  show('#ovIntro');
+  $('#famLater').onclick=()=>{if(G&&G.mode==='stall'&&!G.started)startDay();else hide('#ovIntro');};
+  $('#go').onclick=()=>{hide('#ovIntro');startFamily();};
+  $('#go').focus();
+}
+function startFamily(){
+  if(C){C.gone=true;C.lock=true;}
+  $('#cont').hidden=true;
+  S.famPlayed=true;save();
+  G={mode:'family',n:6,idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,weather:'',
+     roles:shuffle([...FAM_KEYS]).slice(0,6)};
+  nextCustomer();
+}
 function nextCustomer(){
   if(G.mode==='weather'){
     const prev=C&&C.weather;
     const w=rnd(WX_KEYS.filter(k=>k!==prev));
     C=genWeatherCustomer(w);setWeather(w);
+  }else if(G.mode==='family'){
+    C=genFamilyCustomer(G.roles[G.idx]);setWeather('');
   }else C=genCustomer();
   tray={};
+  $('#scene').classList.toggle('calm',G.mode==='family');
   const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
-  $('#queue').textContent=(G.mode==='weather'?'Mausam practice · ':'')+`Customer ${G.idx+1} of ${G.n}`;
+  $('#queue').textContent=G.mode==='family'?`Pariwar ${G.idx+1}/${G.n} · ${cap(FAMILY[C.role].kin)}, ${FAMILY[C.role].en}`
+    :(G.mode==='weather'?'Mausam practice · ':'')+`Customer ${G.idx+1} of ${G.n}`;
   renderBar();renderStep();
 }
 
@@ -770,9 +898,10 @@ function choose(st,op,btn){
   if(st.type==='pay')C.paid=st.order.total;
   renderBar();setMood();
   const line=`“${esc(st.say)}” = ${esc(st.en)}`;
+  const note=st.note?`<span class="note"><b>Tip:</b> ${esc(st.note)}</span>`:'';
   const c=C;
-  if(ok){setFb(`${praise()} ${line}`,'good');setTimeout(()=>{if(c===C)advance();},1700);}
-  else{setFb(`<b>Hoina.</b> The answer was ${st.type==='pick'?esc(st.answer.en.toLowerCase()):`“${esc(st.answer.t)}” (${esc(st.answer.en)})`}. ${line}`,'bad');waitContinue();}
+  if(ok){setFb(`${praise()} ${line}${note}`,'good');if(note)waitContinue();else setTimeout(()=>{if(c===C)advance();},1700);}
+  else{setFb(`<b>Hoina.</b> The answer was ${st.type==='pick'?esc(st.answer.en.toLowerCase()):`“${esc(st.answer.t)}” (${esc(st.answer.en)})`}. ${line}${note}`,'bad');waitContinue();}
 }
 function serve(){
   if(!C||C.lock)return;const st=C.steps[C.i];
@@ -797,12 +926,14 @@ function advance(){
 function finishCustomer(){
   C.gone=true;C.lock=true;
   let tip=0;
-  if(!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
+  const fam=G.mode==='family';
+  if(!fam&&!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
   const earned=C.paid+tip;S.rupees+=earned;G.earned+=earned;G.served++;save();renderTop();
   const parts=[];
   if(C.paid)parts.push(`<b>+${fmt(C.paid)}</b> for the order`);
   if(tip)parts.push(`<b>+${fmt(tip)} baksis</b> (tip)`);
-  setFb((parts.length?parts.join(' and ')+'.':'<b>Happy customer.</b>')+(!tip&&(C.hinted||C.mistakes)?' No baksis this time.':''),'good');
+  if(fam)setFb(C.mistakes?'<b>They smile and move on.</b> Practice makes perfect.':'<b>Ekdam ramro!</b> They look very pleased with you.','good');
+  else setFb((parts.length?parts.join(' and ')+'.':'<b>Happy customer.</b>')+(!tip&&(C.hinted||C.mistakes)?' No baksis this time.':''),'good');
   $('#cust').classList.add('exit');
   const g=G;setTimeout(()=>nextOrEnd(g),1700);
 }
@@ -819,6 +950,19 @@ function nextOrEnd(g){if(g!==G)return;G.idx++;if(G.idx<G.n)nextCustomer();else e
 function endDay(){
   const acc=G.steps?Math.round(100*G.correct/G.steps):0;
   const missed=[...G.missed].slice(0,12);
+  if(G.mode==='family'){
+    $('#sumBody').innerHTML=`
+     <h2>Pariwar sakiyo<small>family practice finished</small></h2>
+     <div class="sumgrid"><div><b>${G.n}</b><span>relatives greeted</span></div>
+       <div><b>${G.correct}/${G.steps}</b><span>answers right</span></div>
+       <div><b>${acc}%</b><span>right first time</span></div></div>
+     ${missed.length?`<h3>Words to review</h3>${wcards(missed.map(t=>[t,DICT[t].en,DICT[t].dev]))}`:'<p>No mistakes. Your in-laws are impressed. Syabaas!</p>'}
+     <div class="row-end"><button class="ghost" id="famAgain">Pheri <small>again</small></button><button class="primary big" id="nextDay">Pasal ma <small>back to the stall</small></button></div>`;
+    show('#ovSum');$('#nextDay').focus();
+    $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+    $('#famAgain').onclick=()=>{hide('#ovSum');startFamily();};
+    return;
+  }
   if(G.mode==='weather'){
     $('#sumBody').innerHTML=`
      <h2>Mausam sakiyo<small>weather practice finished</small></h2>
@@ -852,11 +996,15 @@ function renderBook(){
     if(wx?!(S.day>=WX_DAY||S.wxPlayed):d>maxD){html+=`<p class="locked">${wx?'Mausam (weather)':'Din '+d}: ${ws.length} words unlock on day ${d}${wx?' or in Mausam practice':''}.</p>`;continue;}
     html+=`<div class="book-day"><h3>${wx?'Din 6 · Mausam <small>weather</small>':'Din '+d}</h3>${ws.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
   }
+  const fw=VOCAB.filter(v=>v[3]===FAM_DAY);
+  if(!S.famPlayed)html+=`<p class="locked">Pariwar (family): ${fw.length} words unlock when you play Pariwar practice.</p>`;
+  else html+=`<div class="book-day"><h3>Pariwar <small>family</small></h3>${fw.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
   html+=`<div class="row-end"><button class="primary" id="closeBook">Close</button></div>`;
   $('#bookBody').innerHTML=html;$('#closeBook').onclick=()=>hide('#ovBook');$('#closeBook').focus();
 }
 $('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
 $('#btnWx').onclick=openWeatherIntro;
+$('#btnFam').onclick=openFamilyIntro;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');};
 $('#closeSet').onclick=()=>{
   S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;save();hide('#ovSet');
@@ -873,7 +1021,7 @@ document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
 
 // ---------- clock ----------
 setInterval(()=>{
-  if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed)return;
+  if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed||G.mode==='family')return;
   C.patience-=(100/Math.max(26,50-3*S.day))*0.1;
   renderBar();setMood();
   if(C.patience<=0)leave();

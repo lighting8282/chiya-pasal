@@ -23,6 +23,16 @@ Open **Mausam** from the header at any time for a weather practice round, or rea
 
 On cold or wet days customers order more hot drinks. On hot days they want water.
 
+### Pariwar (family)
+
+Open **Pariwar** from the header to practise talking with your wife's family. Six relatives come to visit, each labelled with who they are (for example *sasu*, your mother-in-law). You:
+
+- greet each one by the right name: *Aama* and *Buwa* for your parents-in-law, *Dai* for her elder brother, *Bhai* and *Bahini* for her younger siblings, and *dhog* for her grandparents;
+- answer everyday questions such as *"Khana khanubhayo?"* ("Have you eaten?"), *"Ali aru khanus na"* (eat a little more → *"Pugyo"*, that's enough), *"Kahaa jaane?"* ("Where are you going?") and *"Bujhnubhayo?"* → *"Bujhina. Pheri bhannus na."* ("I didn't understand. Please say it again.");
+- with your wife, use the familiar *timi* forms, e.g. *"Ma pani timilai maya garchhu"* ("I love you too").
+
+After each answer a tip explains the custom behind it, such as when to use *hajur*, *tapai* or *timi*. The intro screen has a table of what to call each relative and what they call you (*jwain*, *bhinaju*). There is no timer in this round.
+
 Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peeking costs that customer's tip (*baksis*).
 
 ## Learning design
