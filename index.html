@@ -238,6 +238,9 @@ nav{display:flex;gap:8px;flex-wrap:wrap}
 .wxbtn small,.fambtn small{font-size:.75rem;opacity:.8}
 .fambtn{border-color:var(--crimson);color:var(--crimson)}
 .scene.calm .patience{visibility:hidden}
+/* the menu board only matters at the stall */
+body[data-mode="weather"] .board,body[data-mode="family"] .board{display:none}
+body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-columns:minmax(0,1fr)}
 .fb .note{display:block;margin-top:6px;font-size:.92rem;color:var(--ink)}
 .fb .note b{color:var(--ink)}
 .kinwrap{overflow-x:auto}
@@ -732,7 +735,7 @@ const WX_HOWTO=`<ol class="howto">
 function startDay(){
   G={mode:'stall',n:Math.min(8,4+S.day),idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,
      weather:S.day>=WX_DAY?rnd(WX_KEYS):''};
-  setWeather(G.weather);
+  setWeather(G.weather);document.body.dataset.mode='stall';
   renderTop();renderMenu();renderCounter();
   const d=S.day;let words,title;
   if(d<=WX_DAY){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
@@ -819,6 +822,7 @@ function nextCustomer(){
     C=genFamilyCustomer(G.roles[G.idx]);setWeather('');
   }else C=genCustomer();
   tray={};
+  document.body.dataset.mode=G.mode;
   $('#scene').classList.toggle('calm',G.mode==='family');
   const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
   $('#queue').textContent=G.mode==='family'?`Pariwar ${G.idx+1}/${G.n} · ${cap(FAMILY[C.role].kin)}, ${FAMILY[C.role].en}`
