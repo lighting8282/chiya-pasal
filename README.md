@@ -4,6 +4,8 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Kids tap big pictures to hear Nepali words for animals, colours, counting, family, food and body parts, then play "find it" games for stars. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button lets a grown-up pick the voice and speed.
+
 ## How to play
 
 Play online at the link above, or download `index.html` and open it in any modern browser. There is no build step and nothing to install.
@@ -50,4 +52,4 @@ Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peek
 
 ## Project layout
 
-Everything lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.
+The kids' game is a separate single file, `kids.html`. The main game lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.

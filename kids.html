@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Habre's Nepali</title>
+<meta name="description" content="A picture-and-voice Nepali game for children, with Habre the red panda.">
+<meta name="theme-color" content="#e8463a">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap">
+<style>
+/* Layout: one bright playroom screen. Habre (mascot) on the left talks; big tap cards fill the rest. Single sunny theme on purpose. */
+:root{
+  color-scheme:light;
+  --sky:#dcf1ff; --sky-2:#f4fbff; --ink:#2b2140; --soft:#6a6280; --card:#ffffff; --line:#cfe3f2;
+  --red:#e8463a; --red-dark:#b8321f; --yellow:#ffc93c; --green:#2fae6e; --blue:#3a7bf2; --purple:#8e5be8; --pink:#ff7eb6;
+  --good:#2fae6e; --bad:#e8463a;
+  --f:'Baloo 2','Nirmala UI','Mangal',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--sky)}
+body{margin:0;background:radial-gradient(120% 80% at 50% 0%,var(--sky-2),var(--sky) 60%);color:var(--ink);font-family:var(--f);font-size:18px;line-height:1.3;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+.app{max-width:980px;margin:0 auto;min-height:100%;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 24px;display:flex;flex-direction:column;gap:14px}
+
+/* top bar */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.home{background:var(--card);border-radius:999px;padding:6px 16px;font-weight:800;box-shadow:0 4px 0 var(--line)}
+.title{font-weight:800;font-size:1.6rem;color:var(--red);margin-right:auto;line-height:1}
+.title small{display:block;font-size:.8rem;color:var(--soft);font-weight:500}
+.stars{background:var(--yellow);border-radius:999px;padding:4px 14px;font-weight:800;box-shadow:0 4px 0 #e0a800;font-variant-numeric:tabular-nums}
+.round{width:52px;height:52px;border-radius:50%;background:var(--card);box-shadow:0 4px 0 var(--line);display:grid;place-items:center;font-size:1.5rem}
+.round[aria-pressed="false"]{opacity:.55}
+
+/* stage */
+.stage{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;align-items:start}
+.buddy{position:sticky;top:12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.speech{background:var(--card);border-radius:22px;padding:10px 14px;text-align:center;box-shadow:0 5px 0 var(--line);position:relative;min-height:74px;width:100%;display:flex;flex-direction:column;justify-content:center}
+.speech::after{content:"";position:absolute;left:50%;bottom:-14px;margin-left:-12px;border:12px solid transparent;border-top-color:var(--card);border-bottom:0}
+.speech b{font-size:1.25rem;display:block;line-height:1.15}
+.speech .dev{font-size:1rem;color:var(--soft)}
+.speech .en{font-size:.85rem;color:var(--soft)}
+.habre{width:180px;height:190px;cursor:pointer}
+.habre svg{width:100%;height:100%;overflow:visible}
+.main{min-width:0;display:flex;flex-direction:column;gap:14px}
+
+/* habre animation */
+.hb-body{transform-origin:80px 160px;animation:bob 2.6s ease-in-out infinite}
+.hb-tail{transform-origin:112px 140px;animation:wag 1.8s ease-in-out infinite}
+.hb-eyes{transform-origin:80px 64px;animation:blink 4.2s infinite}
+.hb-mouth{transform-origin:80px 86px;transition:transform .1s}
+.talking .hb-mouth{animation:talk .22s ease-in-out infinite alternate}
+.happy .hb-body{animation:jump .7s cubic-bezier(.3,1.6,.5,1) 2}
+.happy .hb-armL{transform-origin:50px 120px;animation:waveL .35s ease-in-out 4 alternate}
+.happy .hb-armR{transform-origin:110px 120px;animation:waveR .35s ease-in-out 4 alternate}
+.sad .hb-head{transform-origin:80px 100px;animation:tilt 1s ease-in-out}
+.wave .hb-armR{transform-origin:110px 120px;animation:waveR .4s ease-in-out 6 alternate}
+@keyframes bob{50%{transform:translateY(-5px)}}
+@keyframes wag{50%{transform:rotate(12deg)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes talk{to{transform:scaleY(1.9)}}
+@keyframes jump{40%{transform:translateY(-34px) scale(1.04,.96)}70%{transform:translateY(0) scale(1.06,.94)}}
+@keyframes waveL{to{transform:rotate(-38deg)}}
+@keyframes waveR{to{transform:rotate(38deg)}}
+@keyframes tilt{30%,70%{transform:rotate(-10deg)}}
+
+/* screens */
+h1{margin:0;font-size:2rem;line-height:1.1;text-wrap:balance}
+h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.topic{background:var(--card);border-radius:26px;padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 7px 0 var(--tc,var(--line));transition:transform .12s;animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.topic:hover{transform:translateY(-3px)}
+.topic:active{transform:translateY(4px);box-shadow:0 3px 0 var(--tc)}
+.topic .ic{font-size:3.4rem;line-height:1.1}
+.topic b{font-size:1.5rem;line-height:1}
+.topic .dev{color:var(--soft)}
+.topic .en{font-size:.85rem;color:var(--soft)}
+.topic .st{font-size:.9rem;font-weight:700;color:#b98900}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mode{border-radius:28px;padding:22px 12px;color:#fff;font-weight:800;font-size:1.6rem;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 7px 0 rgba(0,0,0,.18);animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.mode span{font-size:3rem;line-height:1}
+.mode small{font-size:.95rem;font-weight:500;opacity:.92}
+.mode:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.learn{background:var(--blue)} .play{background:var(--green)}
+
+/* learn card */
+.big{background:var(--card);border-radius:32px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 8px 0 var(--line);text-align:center;min-height:300px;justify-content:center}
+.big .pic{font-size:7rem;line-height:1.1;animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+.big b{font-size:2.6rem;line-height:1}
+.big .dev{font-size:1.5rem;color:var(--soft)}
+.big .en{font-size:1rem;color:var(--soft)}
+.swatch{width:150px;height:150px;border-radius:44% 56% 52% 48%/50% 44% 56% 50%;border:5px solid rgba(0,0,0,.08);animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+.count{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;font-size:2.6rem;max-width:360px;line-height:1.1}
+.count i{font-style:normal;animation:drop .4s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes drop{from{transform:translateY(-40px) scale(.4);opacity:0}}
+.digit{font-size:4rem;font-weight:800;line-height:1;color:var(--blue)}
+.nav{display:flex;gap:12px;justify-content:center;align-items:center}
+.arrow{width:76px;height:76px;border-radius:50%;background:var(--yellow);font-size:2rem;font-weight:800;box-shadow:0 6px 0 #e0a800}
+.arrow:active{transform:translateY(4px);box-shadow:0 2px 0 #e0a800}
+.listen{background:var(--red);color:#fff;border-radius:999px;padding:12px 26px;font-weight:800;font-size:1.3rem;box-shadow:0 6px 0 var(--red-dark)}
+.listen:active{transform:translateY(4px);box-shadow:0 2px 0 var(--red-dark)}
+.dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--blue)}
+
+/* quiz */
+.q{background:var(--card);border-radius:26px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 0 var(--line)}
+.q .say{font-size:1.8rem;font-weight:800;line-height:1.1}
+.q .say small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
+.q .again{margin-left:auto;flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:var(--red);color:#fff;font-size:1.8rem;box-shadow:0 5px 0 var(--red-dark)}
+.progress{height:16px;border-radius:99px;background:var(--card);overflow:hidden;box-shadow:inset 0 2px 0 var(--line)}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),#ff9f1c);border-radius:99px;transition:width .4s}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.opt{background:var(--card);border-radius:28px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 7px 0 var(--line);animation:pop .4s cubic-bezier(.3,1.5,.5,1) backwards;transition:transform .12s}
+.opt:active{transform:translateY(4px)}
+.opt .pic{font-size:5rem;line-height:1.1}
+.opt .swatch{width:110px;height:110px}
+.opt .digit{font-size:3.6rem}
+.opt .w{font-size:1.2rem;font-weight:700}
+.opt .lab{font-size:.85rem;color:var(--soft);visibility:hidden}
+.opt.right{box-shadow:0 7px 0 var(--good),0 0 0 6px var(--good);animation:yay .6s cubic-bezier(.3,1.6,.5,1)}
+.opt.right .lab,.opt.show .lab{visibility:visible}
+.opt.wrong{animation:shake .5s;opacity:.55}
+.opt.hint{box-shadow:0 7px 0 var(--good),0 0 0 6px var(--yellow);animation:glow 1s ease-in-out infinite alternate}
+@keyframes yay{40%{transform:scale(1.15) rotate(-4deg)}}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+@keyframes glow{to{transform:scale(1.05)}}
+.counter{background:var(--card);border-radius:26px;padding:12px;box-shadow:0 6px 0 var(--line);display:flex;justify-content:center}
+
+/* end */
+.end{background:var(--card);border-radius:32px;padding:24px;text-align:center;box-shadow:0 8px 0 var(--line);display:flex;flex-direction:column;align-items:center;gap:8px}
+.end .trophy{font-size:6rem;line-height:1;animation:jump .8s cubic-bezier(.3,1.6,.5,1) 2}
+.end .row{font-size:2.6rem;letter-spacing:4px}
+.end .row .off{filter:grayscale(1);opacity:.3}
+.btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{border-radius:999px;padding:12px 24px;font-weight:800;font-size:1.2rem;color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.18)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+
+/* grown-ups */
+.grown{background:var(--card);border-radius:24px;padding:16px 18px;box-shadow:0 6px 0 var(--line);display:grid;gap:10px;font-size:1rem}
+.grown h2{margin:0;font-size:1.3rem}
+.grown p{margin:0;color:var(--soft)}
+.grown label{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grown select{font:inherit;font-size:1rem;padding:4px 8px;border-radius:10px;border:2px solid var(--line);max-width:100%}
+.grown input[type=checkbox]{width:22px;height:22px;accent-color:var(--red)}
+.grown input[type=range]{accent-color:var(--red)}
+.linkbtn{color:var(--blue);text-decoration:underline;font-weight:700;padding:0}
+
+/* confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+.confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall var(--d) cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes fall{to{transform:translate(var(--x),110vh) rotate(var(--r))}}
+
+@media (max-width:680px){
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .buddy{position:static;flex-direction:row;align-items:center}
+  .habre{width:110px;height:118px;flex:0 0 auto}
+  .speech{order:2}
+  .speech::after{left:-10px;top:50%;bottom:auto;margin:-10px 0 0;border:10px solid transparent;border-right-color:var(--card);border-left:0}
+  .opts{gap:10px}
+  .opt{min-height:130px;border-radius:22px}
+  .opt .pic{font-size:3.6rem}
+  .opt .swatch{width:76px;height:76px}
+  .big .pic{font-size:5.5rem}
+  .topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .topic .ic{font-size:2.8rem}
+  .q .say{font-size:1.4rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <button class="home" id="homeBtn" aria-label="Home">⌂ Ghar</button>
+    <div class="title">Habre's Nepali<small>हाब्रेको नेपाली</small></div>
+    <span class="stars" id="stars" aria-label="Stars">★ 0</span>
+    <button class="round" id="soundBtn" aria-pressed="true" aria-label="Sound on">🔊</button>
+    <button class="round" id="grownBtn" aria-label="For grown-ups">⚙</button>
+  </header>
+
+  <div class="stage">
+    <div class="buddy">
+      <div class="speech" id="speech" aria-live="polite"></div>
+      <div class="habre" id="habre" role="img" aria-label="Habre the red panda"></div>
+    </div>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script>
+// ---------- words ----------
+// [romanized, devanagari, english, picture]
+const TOPICS=[
+ {id:'janawar',np:'Janawar',dev:'जनावर',en:'Animals',icon:'🐘',color:'#2fae6e',kind:'pic',items:[
+  ['biralo','बिरालो','cat','🐱'],['kukur','कुकुर','dog','🐶'],['gai','गाई','cow','🐄'],['bakhra','बाख्रा','goat','🐐'],
+  ['kukhura','कुखुरा','chicken','🐔'],['machha','माछा','fish','🐟'],['hatti','हात्ती','elephant','🐘'],['bandar','बाँदर','monkey','🐒'],
+  ['chara','चरा','bird','🐦'],['bagh','बाघ','tiger','🐯'],['muso','मुसो','mouse','🐭'],['ghoda','घोडा','horse','🐴']]},
+ {id:'rang',np:'Rang',dev:'रङ',en:'Colours',icon:'🎨',color:'#8e5be8',kind:'color',items:[
+  ['rato','रातो','red','#e8463a'],['nilo','निलो','blue','#3a7bf2'],['hariyo','हरियो','green','#2fae6e'],['pahelo','पहेंलो','yellow','#ffd23c'],
+  ['kalo','कालो','black','#2b2b2b'],['seto','सेतो','white','#ffffff'],['suntala rang','सुन्तला रङ','orange','#ff8c2e'],
+  ['gulaafi','गुलाफी','pink','#ff7eb6'],['khairo','खैरो','brown','#8b5a3c'],['baijani','बैजनी','purple','#8e5be8']]},
+ {id:'ganti',np:'Ganti',dev:'गन्ती',en:'Counting',icon:'🔢',color:'#3a7bf2',kind:'num',items:[
+  ['ek','एक','one',1],['dui','दुई','two',2],['tin','तीन','three',3],['char','चार','four',4],['paanch','पाँच','five',5],
+  ['chha','छ','six',6],['saat','सात','seven',7],['aath','आठ','eight',8],['nau','नौ','nine',9],['das','दस','ten',10]]},
+ {id:'pariwar',np:'Pariwar',dev:'परिवार',en:'Family',icon:'👪',color:'#ff7eb6',kind:'pic',items:[
+  ['aama','आमा','mum','👩'],['buwa','बुवा','dad','👨'],['hajuraama','हजुरआमा','grandma','👵'],['hajurbuwa','हजुरबुवा','grandpa','👴'],
+  ['dai','दाइ','big brother','👦'],['didi','दिदी','big sister','👧'],['bhai','भाइ','little brother','👶']]},
+ {id:'khana',np:'Khana',dev:'खाना',en:'Food',icon:'🍎',color:'#e8463a',kind:'pic',items:[
+  ['syau','स्याउ','apple','🍎'],['kera','केरा','banana','🍌'],['aanp','आँप','mango','🥭'],['suntala','सुन्तला','orange','🍊'],
+  ['angur','अंगुर','grapes','🍇'],['dudh','दूध','milk','🥛'],['anda','अण्डा','egg','🥚'],['momo','मोमो','momo','🥟'],['bhaat','भात','rice','🍚']]},
+ {id:'sharir',np:'Sharir',dev:'शरीर',en:'Body',icon:'👃',color:'#ff9f1c',kind:'pic',items:[
+  ['aankha','आँखा','eye','👁️'],['naak','नाक','nose','👃'],['kaan','कान','ear','👂'],['mukh','मुख','mouth','👄'],
+  ['jibro','जिब्रो','tongue','👅'],['haat','हात','hand','✋'],['khutta','खुट्टा','foot','🦶'],['daant','दाँत','tooth','🦷']]},
+];
+const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
+const PRAISE=[['Syabaas!','स्याबास!','Well done!'],['Ekdam ramro!','एकदम राम्रो!','Really good!'],['Waah!','वाह!','Wow!']];
+const RETRY=['Pheri kosis gara!','फेरि कोसिस गर!','Try again!'];
+const ROUND=8;
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const NP_DIGITS='०१२३४५६७८९';
+const npDigits=n=>String(n).split('').map(d=>NP_DIGITS[d]).join('');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- saved settings & stars ----------
+const KEY='habre-nepali-v1';
+let S={sound:true,english:true,rate:0.8,voice:'',best:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY))||{});}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const totalStars=()=>Object.values(S.best).reduce((a,b)=>a+b,0);
+
+let screen='home',topic=null,learnI=0,Q=null;
+
+// ---------- voice ----------
+const TTS='speechSynthesis' in window;
+let voices=[],npVoice=null,enVoice=null;
+function loadVoices(){
+  if(!TTS)return;
+  voices=speechSynthesis.getVoices();
+  const saved=voices.find(v=>v.name===S.voice);
+  npVoice=saved||voices.find(v=>/^ne/i.test(v.lang))||voices.find(v=>/^hi/i.test(v.lang))||voices.find(v=>/^mr/i.test(v.lang))||null;
+  enVoice=voices.find(v=>/^en/i.test(v.lang)&&/female|zira|aria|jenny|samantha|google us/i.test(v.name))||voices.find(v=>/^en/i.test(v.lang))||null;
+  if(screen==='grown')renderGrown();
+}
+if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
+// say a Nepali line (Devanagari for a Nepali/Hindi voice, romanized otherwise), then optionally the English
+function say(rom,dev,en){
+  if(!TTS||!S.sound)return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(npVoice?dev:rom);
+    if(npVoice){u.voice=npVoice;u.lang=npVoice.lang;}
+    u.rate=S.rate;u.pitch=1.15;
+    u.onstart=()=>$('#habre').classList.add('talking');
+    const stop=()=>$('#habre').classList.remove('talking');
+    u.onend=stop;u.onerror=stop;
+    speechSynthesis.speak(u);
+    if(en&&S.english){
+      const e=new SpeechSynthesisUtterance(en);
+      if(enVoice){e.voice=enVoice;e.lang=enVoice.lang;}
+      e.rate=Math.min(1,S.rate+0.1);e.pitch=1.1;
+      e.onstart=()=>$('#habre').classList.add('talking');e.onend=stop;e.onerror=stop;
+      speechSynthesis.speak(e);
+    }
+  }catch(err){}
+}
+
+// ---------- Habre ----------
+$('#habre').innerHTML=`<svg viewBox="0 0 160 170" aria-hidden="true">
+ <g class="hb-body">
+  <g class="hb-tail"><path d="M108 142 C140 138 152 112 146 88" stroke="#c4471f" stroke-width="22" fill="none" stroke-linecap="round"/>
+   <path d="M128 136l8-14M140 120l9-8M146 102l10-2" stroke="#7a2a12" stroke-width="7" stroke-linecap="round"/></g>
+  <ellipse cx="80" cy="134" rx="38" ry="30" fill="#c4471f"/>
+  <ellipse cx="80" cy="142" rx="22" ry="18" fill="#3b2016"/>
+  <path class="hb-armL" d="M52 118 C40 126 38 140 46 146" stroke="#3b2016" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <path class="hb-armR" d="M108 118 C120 126 122 140 114 146" stroke="#3b2016" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <ellipse cx="64" cy="162" rx="13" ry="7" fill="#3b2016"/><ellipse cx="96" cy="162" rx="13" ry="7" fill="#3b2016"/>
+  <g class="hb-head">
+   <path d="M40 54 L30 16 L66 36Z" fill="#c4471f"/><path d="M42 46 L37 26 L56 38Z" fill="#fff4e8"/>
+   <path d="M120 54 L130 16 L94 36Z" fill="#c4471f"/><path d="M118 46 L123 26 L104 38Z" fill="#fff4e8"/>
+   <ellipse cx="80" cy="66" rx="48" ry="42" fill="#d9572b"/>
+   <ellipse cx="58" cy="50" rx="11" ry="7" fill="#fff4e8"/><ellipse cx="102" cy="50" rx="11" ry="7" fill="#fff4e8"/>
+   <path d="M44 74 C46 96 66 104 80 104 C94 104 114 96 116 74 C104 84 92 82 80 82 C68 82 56 84 44 74Z" fill="#fff4e8"/>
+   <path d="M56 62 C50 74 52 86 58 92" stroke="#8a2e14" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/>
+   <path d="M104 62 C110 74 108 86 102 92" stroke="#8a2e14" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/>
+   <g class="hb-eyes"><circle cx="62" cy="66" r="7.5" fill="#2a1712"/><circle cx="98" cy="66" r="7.5" fill="#2a1712"/>
+    <circle cx="64.5" cy="63" r="2.6" fill="#fff"/><circle cx="100.5" cy="63" r="2.6" fill="#fff"/></g>
+   <ellipse cx="80" cy="80" rx="7" ry="5" fill="#2a1712"/>
+   <ellipse class="hb-mouth" cx="80" cy="91" rx="6" ry="3" fill="#7a2a20"/>
+   <circle cx="50" cy="84" r="6" fill="#ff8f8f" opacity=".6"/><circle cx="110" cy="84" r="6" fill="#ff8f8f" opacity=".6"/>
+  </g>
+ </g></svg>`;
+function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave');void h.offsetWidth;if(cls)h.classList.add(cls);}
+function speech(rom,dev,en){$('#speech').innerHTML=`<b>${rom}</b><span class="dev" lang="ne">${dev}</span>${en&&S.english?`<span class="en">${en}</span>`:''}`;}
+$('#habre').onclick=()=>{mood('wave');speech('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I’m Habre.');say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');};
+
+function confetti(){
+  if(RM)return;
+  const c=$('#confetti'),cols=['#e8463a','#ffc93c','#2fae6e','#3a7bf2','#8e5be8','#ff7eb6'];
+  for(let i=0;i<46;i++){const p=document.createElement('i');
+    p.style.left=Math.random()*100+'vw';p.style.background=rnd(cols);
+    p.style.setProperty('--x',(Math.random()*200-100)+'px');p.style.setProperty('--r',(Math.random()*900-450)+'deg');
+    p.style.setProperty('--d',(1.1+Math.random()*1.1)+'s');p.style.animationDelay=Math.random()*.25+'s';c.append(p);
+    setTimeout(()=>p.remove(),2700);}
+}
+
+// ---------- pictures ----------
+function pictureOf(t,it,size){
+  if(t.kind==='color')return `<span class="swatch" style="background:${it[3]}"></span>`;
+  if(t.kind==='num')return `<span class="digit">${it[3]}</span>`;
+  return `<span class="pic">${it[3]}</span>`;
+}
+
+// ---------- screens ----------
+const main=$('#main');
+function renderStars(){$('#stars').textContent='★ '+totalStars();}
+
+function goHome(){
+  screen='home';topic=null;speechSynthesis?.cancel?.();
+  main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
+   <div class="topics">${TOPICS.map((t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${i*60}ms" data-t="${t.id}">
+     <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
+     <span class="st">${'★'.repeat(Math.min(3,Math.ceil((S.best[t.id]||0)/3)))||'☆'} ${S.best[t.id]||0}/${ROUND}</span></button>`).join('')}</div>`;
+  main.querySelectorAll('.topic').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
+  speech('Namaste!','नमस्ते!','Hello! Pick a picture.');
+  mood('wave');
+}
+function openTopic(t){
+  topic=t;screen='topic';
+  main.innerHTML=`<h1>${t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
+   <div class="modes">
+    <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>Let’s learn</small></button>
+    <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>Let’s play</small></button>
+   </div>`;
+  $('#mLearn').onclick=()=>{learnI=0;renderLearn();};
+  $('#mPlay').onclick=startQuiz;
+  speech(t.np,t.dev,t.en);say(t.np,t.dev,t.en);
+}
+
+// learn: one big card at a time
+function renderLearn(){
+  screen='learn';const t=topic,it=t.items[learnI];
+  const pic=t.kind==='num'?`<div class="count" aria-hidden="true">${Array.from({length:it[3]},(_,i)=>`<i style="animation-delay:${i*90}ms">${COUNT_PICS[learnI%COUNT_PICS.length]}</i>`).join('')}</div><span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
+  main.innerHTML=`<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}<b>${it[0]}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${it[2]}</span>`:''}</div>
+   <div class="nav">
+    <button class="arrow" id="prev" aria-label="Previous">◀</button>
+    <button class="listen" id="listen">🔊 Suna <small style="font-weight:500">listen</small></button>
+    <button class="arrow" id="next" aria-label="Next">▶</button>
+   </div>
+   <div class="dots">${t.items.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
+  const hear=()=>{say(it[0],it[1],it[2]);mood('happy');};
+  $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
+  $('#listen').onclick=hear;
+  $('#prev').onclick=()=>{learnI=(learnI-1+t.items.length)%t.items.length;renderLearn();};
+  $('#next').onclick=()=>{if(learnI===t.items.length-1){speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;}learnI++;renderLearn();};
+  speech(it[0],it[1],it[2]);hear();
+}
+
+// play: 8 questions, 3 big choices
+function questionLine(t,it){
+  if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
+  if(t.kind==='color')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
+  return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
+}
+function startQuiz(){
+  const t=topic,order=[];
+  while(order.length<ROUND)order.push(...shuffle(t.items));
+  // never the same answer twice in a row
+  for(let i=1;i<ROUND;i++)if(order[i]===order[i-1]){const j=order.findIndex((x,k)=>k>i&&x!==order[i-1]);if(j>0)[order[i],order[j]]=[order[j],order[i]];}
+  Q={t,order:order.slice(0,ROUND),i:0,stars:0,tries:0,lock:false};
+  renderQ();
+}
+function renderQ(){
+  screen='quiz';const t=Q.t,it=Q.order[Q.i];Q.tries=0;Q.lock=false;
+  const others=shuffle(t.items.filter(x=>x!==it)).slice(0,2);
+  const opts=shuffle([it,...others]);
+  const [rom,dev,en]=questionLine(t,it);
+  const pic=rnd(COUNT_PICS);
+  main.innerHTML=`<div class="progress" aria-label="Question ${Q.i+1} of ${ROUND}"><i style="width:${Q.i/ROUND*100}%"></i></div>
+   <div class="q"><div class="say">${rom}<small lang="ne">${dev}${S.english?` · ${en}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   ${t.kind==='num'?`<div class="counter"><div class="count" aria-label="${it[3]} things">${Array.from({length:it[3]},(_,k)=>`<i style="animation-delay:${k*110}ms">${pic}</i>`).join('')}</div></div>`:''}
+   <div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${t.kind==='num'?o[0]:o[2]}">
+     ${t.kind==='num'?`<span class="digit">${o[3]}</span><span class="w">${o[0]}</span>`:pictureOf(t,o)}<span class="lab">${o[0]}${S.english&&t.kind!=='num'?' · '+o[2]:''}</span></button>`).join('')}</div>`;
+  const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
+  $('#again').onclick=ask;
+  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k],it));
+  ask();
+}
+function pick(b,o,it){
+  if(Q.lock)return;
+  if(o===it){
+    Q.lock=true;if(Q.tries===0)Q.stars++;
+    b.classList.add('right');confetti();mood('happy');
+    const p=rnd(PRAISE);speech(p[0]+' '+cap(it[0])+'!',p[1]+' '+it[1],p[2]+' '+cap(it[2])+'!');say(p[0]+' '+it[0],p[1]+' '+it[1],null);
+    setTimeout(()=>{Q.i++;if(Q.i<ROUND)renderQ();else endQuiz();},1900);
+  }else{
+    Q.tries++;b.classList.add('wrong');b.disabled=true;b.classList.add('show');mood('sad');
+    if(Q.tries>=2){const right=[...main.querySelectorAll('.opt')].find(x=>!x.disabled);right?.classList.add('hint');speech(cap(it[0]),it[1],'This one!');say(it[0],it[1],null);}
+    else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
+  }
+}
+function endQuiz(){
+  screen='end';const t=Q.t,n=Q.stars;
+  if(n>(S.best[t.id]||0)){S.best[t.id]=n;save();}
+  renderStars();
+  main.innerHTML=`<div class="end">
+    <div class="trophy" aria-hidden="true">${n>=7?'🏆':n>=4?'🥇':'🌟'}</div>
+    <h1>${n>=7?'Ekdam ramro!':n>=4?'Syabaas!':'Ramro kosis!'}<small>${n>=7?'Amazing!':n>=4?'Well done!':'Good try!'}</small></h1>
+    <div class="row" aria-label="${n} of ${ROUND} stars">${Array.from({length:ROUND},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>
+    <div class="btns">
+      <button class="btn" style="background:var(--green)" id="againQ">🔁 Pheri <small style="font-weight:500">again</small></button>
+      <button class="btn" style="background:var(--blue)" id="toLearn">👀 Sikaun <small style="font-weight:500">learn</small></button>
+      <button class="btn" style="background:var(--red)" id="toHome">⌂ Ghar <small style="font-weight:500">home</small></button>
+    </div></div>`;
+  $('#againQ').onclick=startQuiz;$('#toLearn').onclick=()=>{learnI=0;renderLearn();};$('#toHome').onclick=goHome;
+  confetti();setTimeout(confetti,500);mood('happy');
+  const line=n>=7?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:n>=4?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
+  speech(...line);say(...line);
+}
+
+// grown-ups panel
+function renderGrown(){
+  screen='grown';
+  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
+  main.innerHTML=`<div class="grown">
+    <h2>For grown-ups</h2>
+    <p>The voice comes from this device’s browser. Microsoft Edge has real Nepali voices. Chrome usually uses its Hindi voice, which reads the Nepali (Devanagari) words closely. If no Nepali or Hindi voice is installed, the romanized spelling is read with an English voice, which sounds less accurate.</p>
+    <p><b>Voice in use:</b> ${!TTS?'none (this browser cannot speak)':npVoice?`${npVoice.name} (${npVoice.lang})`:'no Nepali or Hindi voice found'}</p>
+    ${list.length>1?`<label>Choose voice <select id="vSel">${list.map(v=>`<option value="${v.name}" ${npVoice&&v.name===npVoice.name?'selected':''}>${v.name} (${v.lang})</option>`).join('')}</select></label>`:''}
+    <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
+    <label>Speed <input type="range" id="vRate" min="0.5" max="1.2" step="0.05" value="${S.rate}"> <span id="vRateV">${S.rate.toFixed(2)}</span></label>
+    <div class="btns" style="justify-content:flex-start">
+      <button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button>
+      <button class="btn" style="background:var(--blue)" id="vDone">Done</button>
+    </div>
+    <p>Stars are saved in this browser only.</p>
+  </div>`;
+  $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
+  $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
+  $('#vRate').oninput=e=>{S.rate=+e.target.value;$('#vRateV').textContent=S.rate.toFixed(2);save();};
+  $('#vTest').onclick=()=>say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');
+  $('#vDone').onclick=goHome;
+}
+
+$('#homeBtn').onclick=goHome;
+$('#grownBtn').onclick=renderGrown;
+function renderSound(){const b=$('#soundBtn');b.setAttribute('aria-pressed',String(S.sound));b.setAttribute('aria-label',S.sound?'Sound on':'Sound off');b.textContent=S.sound?'🔊':'🔇';}
+$('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
+renderSound();renderStars();goHome();
+</script>
+</body>
+</html>
