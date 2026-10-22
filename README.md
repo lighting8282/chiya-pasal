@@ -4,7 +4,7 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
-**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Kids tap big pictures to hear Nepali words for animals, colours, counting, family, food and body parts, then play "find it" games for stars. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button lets a grown-up pick the voice and speed.
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Kids tap big pictures to hear Nepali words in 11 topics (animals, colours, counting, family, food, body, clothes, things at home, nature, vehicles and feelings), then play "find it" games for stars. Each topic has three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3 choices) and *Gaaro* (hard, 4 choices, counting to 20, listen-only). Each child gets their own player profile with their own stars. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button lets a grown-up pick the voice and speed.
 
 ## How to play
 

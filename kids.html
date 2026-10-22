@@ -25,7 +25,7 @@ html,body{height:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--sky)}
 body{margin:0;background:radial-gradient(120% 80% at 50% 0%,var(--sky-2),var(--sky) 60%);color:var(--ink);font-family:var(--f);font-size:18px;line-height:1.3;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+button:focus-visible,input:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .app{max-width:980px;margin:0 auto;min-height:100%;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 24px;display:flex;flex-direction:column;gap:14px}
 
 /* top bar */
@@ -33,6 +33,9 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 .home{background:var(--card);border-radius:999px;padding:6px 16px;font-weight:800;box-shadow:0 4px 0 var(--line)}
 .title{font-weight:800;font-size:1.6rem;color:var(--red);margin-right:auto;line-height:1}
 .title small{display:block;font-size:.8rem;color:var(--soft);font-weight:500}
+.who{display:flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:3px 14px 3px 4px;font-weight:800;box-shadow:0 4px 0 var(--line);max-width:200px}
+.who .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:1.4rem;background:var(--sky)}
+.who .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stars{background:var(--yellow);border-radius:999px;padding:4px 14px;font-weight:800;box-shadow:0 4px 0 #e0a800;font-variant-numeric:tabular-nums}
 .round{width:52px;height:52px;border-radius:50%;background:var(--card);box-shadow:0 4px 0 var(--line);display:grid;place-items:center;font-size:1.5rem}
 .round[aria-pressed="false"]{opacity:.55}
@@ -72,22 +75,55 @@ button:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
 /* screens */
 h1{margin:0;font-size:2rem;line-height:1.1;text-wrap:balance}
 h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
-.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+h2.sub{margin:0;font-size:1.2rem}
+h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
 .topic{background:var(--card);border-radius:26px;padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 7px 0 var(--tc,var(--line));transition:transform .12s;animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
 .topic:hover{transform:translateY(-3px)}
 .topic:active{transform:translateY(4px);box-shadow:0 3px 0 var(--tc)}
-.topic .ic{font-size:3.4rem;line-height:1.1}
-.topic b{font-size:1.5rem;line-height:1}
+.topic .ic{font-size:3.2rem;line-height:1.1}
+.topic b{font-size:1.45rem;line-height:1}
 .topic .dev{color:var(--soft)}
 .topic .en{font-size:.85rem;color:var(--soft)}
-.topic .st{font-size:.9rem;font-weight:700;color:#b98900}
+.medals{display:flex;gap:4px;font-size:1.1rem;margin-top:2px}
+.medals span{filter:grayscale(1);opacity:.3}
+.medals span.on{filter:none;opacity:1}
 @keyframes pop{from{transform:scale(.6);opacity:0}}
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.lv{background:var(--card);border-radius:22px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:0;box-shadow:0 5px 0 var(--line);border:4px solid transparent}
+.lv span{font-size:2rem;line-height:1.1}
+.lv b{font-size:1.2rem;line-height:1.1}
+.lv small{font-size:.8rem;color:var(--soft)}
+.lv .best{font-weight:700;color:#b98900}
+.lv[aria-pressed="true"]{border-color:var(--lc);box-shadow:0 5px 0 var(--lc)}
 .modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.mode{border-radius:28px;padding:22px 12px;color:#fff;font-weight:800;font-size:1.6rem;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 7px 0 rgba(0,0,0,.18);animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.mode{border-radius:28px;padding:20px 12px;color:#fff;font-weight:800;font-size:1.6rem;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 7px 0 rgba(0,0,0,.18);animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
 .mode span{font-size:3rem;line-height:1}
 .mode small{font-size:.95rem;font-weight:500;opacity:.92}
 .mode:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.18)}
 .learn{background:var(--blue)} .play{background:var(--green)}
+
+/* profiles */
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.person{position:relative;background:var(--card);border-radius:26px;padding:14px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 7px 0 var(--pc,var(--line));animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.person .av{font-size:3.6rem;line-height:1.1}
+.person b{font-size:1.3rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person small{color:#b98900;font-weight:700}
+.person.add{box-shadow:0 7px 0 var(--line);border:3px dashed var(--line)}
+.person.add .av{color:var(--soft)}
+.edit-row{display:flex;gap:8px;justify-content:center;margin-top:4px}
+.mini{border-radius:999px;padding:2px 12px;font-size:.9rem;font-weight:700;background:var(--sky);box-shadow:0 3px 0 var(--line)}
+.mini.del{color:var(--red)}
+.form{background:var(--card);border-radius:28px;padding:18px;box-shadow:0 7px 0 var(--line);display:flex;flex-direction:column;gap:12px}
+.form label{font-weight:800;font-size:1.1rem}
+.form input[type=text]{font:inherit;font-size:1.4rem;padding:8px 14px;border-radius:16px;border:3px solid var(--line);width:100%;max-width:360px}
+.avatars{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.avatars button{font-size:2.4rem;height:68px;border-radius:18px;background:var(--sky);border:4px solid transparent}
+.avatars button[aria-pressed="true"]{border-color:var(--red);background:#ffe9e6}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.colors button{width:46px;height:46px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px var(--line)}
+.colors button[aria-pressed="true"]{box-shadow:0 0 0 4px var(--ink)}
+.warn{background:#fff1ef;border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 
 /* learn card */
 .big{background:var(--card);border-radius:32px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 8px 0 var(--line);text-align:center;min-height:300px;justify-content:center}
@@ -97,6 +133,7 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 .big .en{font-size:1rem;color:var(--soft)}
 .swatch{width:150px;height:150px;border-radius:44% 56% 52% 48%/50% 44% 56% 50%;border:5px solid rgba(0,0,0,.08);animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
 .count{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;font-size:2.6rem;max-width:360px;line-height:1.1}
+.count.many{font-size:1.8rem;max-width:300px}
 .count i{font-style:normal;animation:drop .4s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes drop{from{transform:translateY(-40px) scale(.4);opacity:0}}
 .digit{font-size:4rem;font-weight:800;line-height:1;color:var(--blue)}
@@ -114,9 +151,10 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 .q .say{font-size:1.8rem;font-weight:800;line-height:1.1}
 .q .say small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 .q .again{margin-left:auto;flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:var(--red);color:#fff;font-size:1.8rem;box-shadow:0 5px 0 var(--red-dark)}
+.q.listenonly .again{width:84px;height:84px;font-size:2.4rem;animation:glow 1s ease-in-out infinite alternate}
 .progress{height:16px;border-radius:99px;background:var(--card);overflow:hidden;box-shadow:inset 0 2px 0 var(--line)}
 .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),#ff9f1c);border-radius:99px;transition:width .4s}
-.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.opts{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:14px}
 .opt{background:var(--card);border-radius:28px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 7px 0 var(--line);animation:pop .4s cubic-bezier(.3,1.5,.5,1) backwards;transition:transform .12s}
 .opt:active{transform:translateY(4px)}
 .opt .pic{font-size:5rem;line-height:1.1}
@@ -136,11 +174,12 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 /* end */
 .end{background:var(--card);border-radius:32px;padding:24px;text-align:center;box-shadow:0 8px 0 var(--line);display:flex;flex-direction:column;align-items:center;gap:8px}
 .end .trophy{font-size:6rem;line-height:1;animation:jump .8s cubic-bezier(.3,1.6,.5,1) 2}
-.end .row{font-size:2.6rem;letter-spacing:4px}
+.end .row{font-size:2.2rem;letter-spacing:3px;line-height:1.2}
 .end .row .off{filter:grayscale(1);opacity:.3}
 .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn{border-radius:999px;padding:12px 24px;font-weight:800;font-size:1.2rem;color:#fff;box-shadow:0 6px 0 rgba(0,0,0,.18)}
 .btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:0 6px 0 var(--line)}
 
 /* grown-ups */
 .grown{background:var(--card);border-radius:24px;padding:16px 18px;box-shadow:0 6px 0 var(--line);display:grid;gap:10px;font-size:1rem}
@@ -150,7 +189,9 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 .grown select{font:inherit;font-size:1rem;padding:4px 8px;border-radius:10px;border:2px solid var(--line);max-width:100%}
 .grown input[type=checkbox]{width:22px;height:22px;accent-color:var(--red)}
 .grown input[type=range]{accent-color:var(--red)}
-.linkbtn{color:var(--blue);text-decoration:underline;font-weight:700;padding:0}
+.lvtable{border-collapse:collapse;font-size:.95rem}
+.lvtable td,.lvtable th{padding:4px 10px 4px 0;text-align:left;vertical-align:top}
+.lvtable th{color:var(--soft);font-weight:500}
 
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
@@ -163,14 +204,17 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
   .habre{width:110px;height:118px;flex:0 0 auto}
   .speech{order:2}
   .speech::after{left:-10px;top:50%;bottom:auto;margin:-10px 0 0;border:10px solid transparent;border-right-color:var(--card);border-left:0}
-  .opts{gap:10px}
+  .opts{gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.three{grid-template-columns:repeat(3,minmax(0,1fr))}
   .opt{min-height:130px;border-radius:22px}
   .opt .pic{font-size:3.6rem}
   .opt .swatch{width:76px;height:76px}
   .big .pic{font-size:5.5rem}
-  .topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .topic .ic{font-size:2.8rem}
+  .topics,.people{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .topic .ic{font-size:2.6rem}
   .q .say{font-size:1.4rem}
+  .who .nm{max-width:70px}
+  .title{font-size:1.3rem}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -182,6 +226,7 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
   <header class="bar">
     <button class="home" id="homeBtn" aria-label="Home">⌂ Ghar</button>
     <div class="title">Habre's Nepali<small>हाब्रेको नेपाली</small></div>
+    <button class="who" id="whoBtn" aria-label="Switch player"><span class="av" id="whoAv">🦊</span><span class="nm" id="whoNm"></span></button>
     <span class="stars" id="stars" aria-label="Stars">★ 0</span>
     <button class="round" id="soundBtn" aria-pressed="true" aria-label="Sound on">🔊</button>
     <button class="round" id="grownBtn" aria-label="For grown-ups">⚙</button>
@@ -199,49 +244,96 @@ h1 small{display:block;font-size:1rem;color:var(--soft);font-weight:500}
 
 <script>
 // ---------- words ----------
-// [romanized, devanagari, english, picture]
+// items: [romanized, devanagari, english, picture]; the first six are the easy-level words
+// q: how the question is asked ('kahaa' = where is it?, 'kun' = which one is it?)
 const TOPICS=[
- {id:'janawar',np:'Janawar',dev:'जनावर',en:'Animals',icon:'🐘',color:'#2fae6e',kind:'pic',items:[
-  ['biralo','बिरालो','cat','🐱'],['kukur','कुकुर','dog','🐶'],['gai','गाई','cow','🐄'],['bakhra','बाख्रा','goat','🐐'],
-  ['kukhura','कुखुरा','chicken','🐔'],['machha','माछा','fish','🐟'],['hatti','हात्ती','elephant','🐘'],['bandar','बाँदर','monkey','🐒'],
+ {id:'janawar',np:'Janawar',dev:'जनावर',en:'Animals',icon:'🐘',color:'#2fae6e',kind:'pic',q:'kahaa',items:[
+  ['biralo','बिरालो','cat','🐱'],['kukur','कुकुर','dog','🐶'],['gai','गाई','cow','🐄'],['machha','माछा','fish','🐟'],
+  ['kukhura','कुखुरा','chicken','🐔'],['hatti','हात्ती','elephant','🐘'],['bakhra','बाख्रा','goat','🐐'],['bandar','बाँदर','monkey','🐒'],
   ['chara','चरा','bird','🐦'],['bagh','बाघ','tiger','🐯'],['muso','मुसो','mouse','🐭'],['ghoda','घोडा','horse','🐴']]},
- {id:'rang',np:'Rang',dev:'रङ',en:'Colours',icon:'🎨',color:'#8e5be8',kind:'color',items:[
+ {id:'rang',np:'Rang',dev:'रङ',en:'Colours',icon:'🎨',color:'#8e5be8',kind:'color',q:'kun',items:[
   ['rato','रातो','red','#e8463a'],['nilo','निलो','blue','#3a7bf2'],['hariyo','हरियो','green','#2fae6e'],['pahelo','पहेंलो','yellow','#ffd23c'],
   ['kalo','कालो','black','#2b2b2b'],['seto','सेतो','white','#ffffff'],['suntala rang','सुन्तला रङ','orange','#ff8c2e'],
   ['gulaafi','गुलाफी','pink','#ff7eb6'],['khairo','खैरो','brown','#8b5a3c'],['baijani','बैजनी','purple','#8e5be8']]},
- {id:'ganti',np:'Ganti',dev:'गन्ती',en:'Counting',icon:'🔢',color:'#3a7bf2',kind:'num',items:[
+ {id:'ganti',np:'Ganti',dev:'गन्ती',en:'Counting',icon:'🔢',color:'#3a7bf2',kind:'num',q:'kati',items:[
   ['ek','एक','one',1],['dui','दुई','two',2],['tin','तीन','three',3],['char','चार','four',4],['paanch','पाँच','five',5],
-  ['chha','छ','six',6],['saat','सात','seven',7],['aath','आठ','eight',8],['nau','नौ','nine',9],['das','दस','ten',10]]},
- {id:'pariwar',np:'Pariwar',dev:'परिवार',en:'Family',icon:'👪',color:'#ff7eb6',kind:'pic',items:[
+  ['chha','छ','six',6],['saat','सात','seven',7],['aath','आठ','eight',8],['nau','नौ','nine',9],['das','दस','ten',10],
+  ['eghaara','एघार','eleven',11],['baahra','बाह्र','twelve',12],['tehra','तेह्र','thirteen',13],['chaudha','चौध','fourteen',14],
+  ['pandhra','पन्ध्र','fifteen',15],['sohra','सोह्र','sixteen',16],['satra','सत्र','seventeen',17],['athaara','अठार','eighteen',18],
+  ['unnais','उन्नाइस','nineteen',19],['bis','बीस','twenty',20]]},
+ {id:'pariwar',np:'Pariwar',dev:'परिवार',en:'Family',icon:'👪',color:'#ff7eb6',kind:'pic',q:'kahaa',items:[
   ['aama','आमा','mum','👩'],['buwa','बुवा','dad','👨'],['hajuraama','हजुरआमा','grandma','👵'],['hajurbuwa','हजुरबुवा','grandpa','👴'],
   ['dai','दाइ','big brother','👦'],['didi','दिदी','big sister','👧'],['bhai','भाइ','little brother','👶']]},
- {id:'khana',np:'Khana',dev:'खाना',en:'Food',icon:'🍎',color:'#e8463a',kind:'pic',items:[
-  ['syau','स्याउ','apple','🍎'],['kera','केरा','banana','🍌'],['aanp','आँप','mango','🥭'],['suntala','सुन्तला','orange','🍊'],
-  ['angur','अंगुर','grapes','🍇'],['dudh','दूध','milk','🥛'],['anda','अण्डा','egg','🥚'],['momo','मोमो','momo','🥟'],['bhaat','भात','rice','🍚']]},
- {id:'sharir',np:'Sharir',dev:'शरीर',en:'Body',icon:'👃',color:'#ff9f1c',kind:'pic',items:[
+ {id:'khana',np:'Khana',dev:'खाना',en:'Food',icon:'🍎',color:'#e8463a',kind:'pic',q:'kahaa',items:[
+  ['syau','स्याउ','apple','🍎'],['kera','केरा','banana','🍌'],['dudh','दूध','milk','🥛'],['anda','अण्डा','egg','🥚'],
+  ['momo','मोमो','momo','🥟'],['bhaat','भात','rice','🍚'],['aanp','आँप','mango','🥭'],['suntala','सुन्तला','orange','🍊'],['angur','अंगुर','grapes','🍇']]},
+ {id:'sharir',np:'Sharir',dev:'शरीर',en:'Body',icon:'👃',color:'#ff9f1c',kind:'pic',q:'kahaa',items:[
   ['aankha','आँखा','eye','👁️'],['naak','नाक','nose','👃'],['kaan','कान','ear','👂'],['mukh','मुख','mouth','👄'],
-  ['jibro','जिब्रो','tongue','👅'],['haat','हात','hand','✋'],['khutta','खुट्टा','foot','🦶'],['daant','दाँत','tooth','🦷']]},
+  ['haat','हात','hand','✋'],['khutta','खुट्टा','foot','🦶'],['jibro','जिब्रो','tongue','👅'],['daant','दाँत','tooth','🦷']]},
+ {id:'kapada',np:'Kapada',dev:'कपडा',en:'Clothes',icon:'👕',color:'#00a6b8',kind:'pic',q:'kahaa',items:[
+  ['topi','टोपी','cap','🧢'],['jutta','जुत्ता','shoes','👟'],['moja','मोजा','socks','🧦'],['kamij','कमिज','shirt','👕'],
+  ['paint','पाइन्ट','trousers','👖'],['chasma','चस्मा','glasses','👓'],['chhata','छाता','umbrella','☂️'],['jhola','झोला','school bag','🎒'],
+  ['panja','पन्जा','gloves','🧤'],['phrak','फ्रक','dress','👗']]},
+ {id:'saman',np:'Saman',dev:'सामान',en:'Things at home',icon:'🏠',color:'#c27c2c',kind:'pic',q:'kahaa',items:[
+  ['kitab','किताब','book','📖'],['ghadi','घडी','clock','⏰'],['batti','बत्ती','light','💡'],['dhoka','ढोका','door','🚪'],
+  ['khaat','खाट','bed','🛏️'],['kursi','कुर्सी','chair','🪑'],['kalam','कलम','pen','🖊️'],['saancho','साँचो','key','🔑'],
+  ['bhakundo','भकुण्डो','ball','⚽'],['kainchi','कैंची','scissors','✂️']]},
+ {id:'prakriti',np:'Prakriti',dev:'प्रकृति',en:'Nature',icon:'🌈',color:'#1c9e5a',kind:'pic',q:'kahaa',items:[
+  ['ghaam','घाम','sun','☀️'],['jun','जून','moon','🌙'],['tara','तारा','star','⭐'],['phul','फूल','flower','🌸'],
+  ['rukh','रूख','tree','🌳'],['badal','बादल','cloud','☁️'],['hiu','हिउँ','snow','❄️'],['himal','हिमाल','snowy mountain','🏔️'],
+  ['indreni','इन्द्रेणी','rainbow','🌈'],['aago','आगो','fire','🔥']]},
+ {id:'savari',np:'Savari',dev:'सवारी',en:'Vehicles',icon:'🚌',color:'#3a7bf2',kind:'pic',q:'kahaa',items:[
+  ['kaar','कार','car','🚗'],['bas','बस','bus','🚌'],['saikal','साइकल','bicycle','🚲'],['rel','रेल','train','🚆'],
+  ['hawaijahaj','हवाईजहाज','aeroplane','✈️'],['dunga','डुङ्गा','boat','⛵'],['trak','ट्रक','lorry','🚚'],
+  ['motorsaikal','मोटरसाइकल','motorbike','🏍️'],['helikoptar','हेलिकप्टर','helicopter','🚁']]},
+ {id:'bhavana',np:'Bhavana',dev:'भावना',en:'Feelings',icon:'😊',color:'#ffb000',kind:'pic',q:'kun',items:[
+  ['khusi','खुसी','happy','😀'],['dukhi','दुःखी','sad','😢'],['risaayeko','रिसाएको','angry','😠'],['darayeko','डराएको','scared','😨'],
+  ['nindra lageko','निद्रा लागेको','sleepy','😴'],['chhakka pareko','छक्क परेको','surprised','😮']]},
 ];
+// sajilo = easy, thikka = just right, gaaro = hard
+const LEVELS={
+ easy:{np:'Sajilo',dev:'सजिलो',en:'Easy',icon:'🐣',color:'#2fae6e',choices:2,n:6,words:6,count:5,listen:false,
+   about:'2 pictures to choose from, the first 6 words, counting to 5'},
+ medium:{np:'Thikka',dev:'ठिक्क',en:'Medium',icon:'🐥',color:'#ff9f1c',choices:3,n:8,words:99,count:10,listen:false,
+   about:'3 pictures, every word, counting to 10'},
+ hard:{np:'Gaaro',dev:'गाह्रो',en:'Hard',icon:'🦅',color:'#e8463a',choices:4,n:10,words:99,count:20,listen:true,
+   about:'4 pictures, every word, counting to 20; the word is only spoken, not written, until you answer'},
+};
+const LV_KEYS=Object.keys(LEVELS);
 const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
+const AVATARS=['🦊','🐼','🐯','🐰','🐸','🦁','🐨','🐵','🐶','🐱','🦄','🐧'];
+const PCOLORS=['#e8463a','#3a7bf2','#2fae6e','#8e5be8','#ff9f1c','#ff7eb6'];
 const PRAISE=[['Syabaas!','स्याबास!','Well done!'],['Ekdam ramro!','एकदम राम्रो!','Really good!'],['Waah!','वाह!','Wow!']];
 const RETRY=['Pheri kosis gara!','फेरि कोसिस गर!','Try again!'];
-const ROUND=8;
 
 // ---------- helpers ----------
 const $=s=>document.querySelector(s);
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const NP_DIGITS='०१२३४५६७८९';
 const npDigits=n=>String(n).split('').map(d=>NP_DIGITS[d]).join('');
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ---------- saved settings & stars ----------
+// ---------- saved settings, profiles and stars ----------
 const KEY='habre-nepali-v1';
-let S={sound:true,english:true,rate:0.8,voice:'',best:{}};
+let S={sound:true,english:true,rate:0.8,voice:'',profiles:[],cur:''};
 try{Object.assign(S,JSON.parse(localStorage.getItem(KEY))||{});}catch(e){}
+// the first version kept one shared star table; it becomes the first player's medium scores
+if(!Array.isArray(S.profiles))S.profiles=[];
+if(S.best&&!S.profiles.length){
+  const best={};for(const k in S.best)best[k+':medium']=S.best[k];
+  S.profiles.push({id:'p'+Date.now(),name:'Player 1',icon:'🦊',color:PCOLORS[0],best,lv:{}});
+  S.cur=S.profiles[0].id;
+}
+delete S.best;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
-const totalStars=()=>Object.values(S.best).reduce((a,b)=>a+b,0);
+const P=()=>S.profiles.find(p=>p.id===S.cur)||null;
+const bestOf=(p,tid,lv)=>((p&&p.best)||{})[tid+':'+lv]||0;
+const starsOf=p=>p?Object.values(p.best||{}).reduce((a,b)=>a+b,0):0;
+const levelOf=tid=>(P()&&P().lv&&P().lv[tid])||'easy';
+const passed=(p,tid,lv)=>bestOf(p,tid,lv)>=Math.ceil(LEVELS[lv].n*0.7);
 
 let screen='home',topic=null,learnI=0,Q=null;
 
@@ -262,22 +354,22 @@ function say(rom,dev,en){
   if(!TTS||!S.sound)return;
   try{
     speechSynthesis.cancel();
+    const h=$('#habre'),stop=()=>h.classList.remove('talking');
     const u=new SpeechSynthesisUtterance(npVoice?dev:rom);
     if(npVoice){u.voice=npVoice;u.lang=npVoice.lang;}
     u.rate=S.rate;u.pitch=1.15;
-    u.onstart=()=>$('#habre').classList.add('talking');
-    const stop=()=>$('#habre').classList.remove('talking');
-    u.onend=stop;u.onerror=stop;
+    u.onstart=()=>h.classList.add('talking');u.onend=stop;u.onerror=stop;
     speechSynthesis.speak(u);
     if(en&&S.english){
       const e=new SpeechSynthesisUtterance(en);
       if(enVoice){e.voice=enVoice;e.lang=enVoice.lang;}
       e.rate=Math.min(1,S.rate+0.1);e.pitch=1.1;
-      e.onstart=()=>$('#habre').classList.add('talking');e.onend=stop;e.onerror=stop;
+      e.onstart=()=>h.classList.add('talking');e.onend=stop;e.onerror=stop;
       speechSynthesis.speak(e);
     }
   }catch(err){}
 }
+const canListen=()=>TTS&&S.sound;
 
 // ---------- Habre ----------
 $('#habre').innerHTML=`<svg viewBox="0 0 160 170" aria-hidden="true">
@@ -305,7 +397,7 @@ $('#habre').innerHTML=`<svg viewBox="0 0 160 170" aria-hidden="true">
   </g>
  </g></svg>`;
 function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave');void h.offsetWidth;if(cls)h.classList.add(cls);}
-function speech(rom,dev,en){$('#speech').innerHTML=`<b>${rom}</b><span class="dev" lang="ne">${dev}</span>${en&&S.english?`<span class="en">${en}</span>`:''}`;}
+function speech(rom,dev,en){$('#speech').innerHTML=`<b>${esc(rom)}</b><span class="dev" lang="ne">${esc(dev)}</span>${en&&S.english?`<span class="en">${esc(en)}</span>`:''}`;}
 $('#habre').onclick=()=>{mood('wave');speech('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I’m Habre.');say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');};
 
 function confetti(){
@@ -318,149 +410,259 @@ function confetti(){
     setTimeout(()=>p.remove(),2700);}
 }
 
-// ---------- pictures ----------
-function pictureOf(t,it,size){
+// ---------- shared bits ----------
+const main=$('#main');
+function renderTop(){
+  const p=P();
+  $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
+  $('#whoNm').textContent=p?p.name:'Ko?';
+  $('#stars').textContent='★ '+starsOf(p);
+}
+function pictureOf(t,it){
   if(t.kind==='color')return `<span class="swatch" style="background:${it[3]}"></span>`;
   if(t.kind==='num')return `<span class="digit">${it[3]}</span>`;
   return `<span class="pic">${it[3]}</span>`;
 }
+// the words a level uses
+function wordsFor(t,lv){
+  const L=LEVELS[lv];
+  if(t.kind==='num')return t.items.filter(it=>it[3]<=L.count);
+  return t.items.slice(0,Math.min(L.words,t.items.length));
+}
+function countHtml(n,pic,cls){
+  return `<div class="count${n>10?' many':''}" ${cls||''}>${Array.from({length:n},(_,i)=>`<i style="animation-delay:${Math.min(i,14)*80}ms">${pic}</i>`).join('')}</div>`;
+}
+
+// ---------- players ----------
+function goWho(){
+  screen='who';speechSynthesis?.cancel?.();
+  main.innerHTML=`<h1>Ko khelcha? <small>Who’s playing?</small></h1>
+   <div class="people">${S.profiles.map((p,i)=>`<div class="person" style="--pc:${p.color};animation-delay:${i*60}ms">
+      <button class="pick" data-id="${p.id}" style="display:flex;flex-direction:column;align-items:center;width:100%" aria-label="Play as ${esc(p.name)}">
+        <span class="av" aria-hidden="true">${p.icon}</span><b>${esc(p.name)}</b><small>★ ${starsOf(p)}</small></button>
+      <div class="edit-row"><button class="mini" data-edit="${p.id}">Change</button></div></div>`).join('')}
+     <button class="person add" id="addP" style="animation-delay:${S.profiles.length*60}ms"><span class="av" aria-hidden="true">＋</span><b>Naya</b><small style="color:var(--soft)">New player</small></button>
+   </div>`;
+  main.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{S.cur=b.dataset.id;save();renderTop();const p=P();
+    speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Hello, '+p.name+'!');say('Namaste, '+p.name,'नमस्ते, '+p.name,null);mood('happy');goHome(true);});
+  main.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProfile(S.profiles.find(p=>p.id===b.dataset.edit)));
+  $('#addP').onclick=()=>editProfile(null);
+  speech('Ko khelcha?','को खेल्छ?','Who’s playing?');mood('wave');
+  if(!S.profiles.length)editProfile(null);
+}
+function editProfile(p){
+  screen='edit';
+  const isNew=!p;
+  const d=p?{...p}:{name:'',icon:AVATARS[S.profiles.length%AVATARS.length],color:PCOLORS[S.profiles.length%PCOLORS.length]};
+  main.innerHTML=`<h1>${isNew?'Naya khelaadi':'Change player'} <small>${isNew?'New player':esc(p.name)}</small></h1>
+   <form class="form" id="pf">
+     <label for="pName">Timro naam ke ho? <small style="font-weight:500;color:var(--soft)">What’s your name?</small></label>
+     <input type="text" id="pName" maxlength="14" autocomplete="off" value="${esc(d.name)}" placeholder="Name">
+     <label>Janawar chhana <small style="font-weight:500;color:var(--soft)">Pick an animal</small></label>
+     <div class="avatars">${AVATARS.map(a=>`<button type="button" aria-pressed="${a===d.icon}" data-a="${a}" aria-label="${a}">${a}</button>`).join('')}</div>
+     <label>Rang chhana <small style="font-weight:500;color:var(--soft)">Pick a colour</small></label>
+     <div class="colors">${PCOLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour"></button>`).join('')}</div>
+     <div class="btns" style="justify-content:flex-start">
+       <button type="submit" class="btn" style="background:var(--green)">✔ Thik cha <small style="font-weight:500">save</small></button>
+       ${S.profiles.length?`<button type="button" class="btn ghost" id="pCancel">Back</button>`:''}
+       ${isNew?'':`<button type="button" class="btn ghost" id="pDel" style="color:var(--red)">Delete</button>`}
+     </div>
+     <div class="warn" id="delBox" hidden>
+       <b>Delete ${esc(d.name)} and all their stars?</b>
+       <div class="btns" style="justify-content:flex-start"><button type="button" class="btn" style="background:var(--red)" id="delYes">Yes, delete</button><button type="button" class="btn ghost" id="delNo">Keep</button></div>
+     </div>
+   </form>`;
+  main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{d.icon=b.dataset.a;main.querySelectorAll('[data-a]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{d.color=b.dataset.c;main.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  $('#pf').onsubmit=e=>{
+    e.preventDefault();
+    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1));
+    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
+    else Object.assign(p,{name,icon:d.icon,color:d.color});
+    save();renderTop();goWho();
+  };
+  $('#pCancel')&&($('#pCancel').onclick=goWho);
+  if(!isNew){
+    $('#pDel').onclick=()=>{$('#delBox').hidden=false;$('#delNo').focus();};
+    $('#delNo').onclick=()=>{$('#delBox').hidden=true;};
+    $('#delYes').onclick=()=>{S.profiles=S.profiles.filter(x=>x!==p);if(S.cur===p.id)S.cur=S.profiles[0]?S.profiles[0].id:'';save();renderTop();goWho();};
+  }
+  speech(isNew?'Timro naam ke ho?':'Thik cha!',isNew?'तिम्रो नाम के हो?':'ठिक छ!',isNew?'What’s your name?':'Okay!');
+  setTimeout(()=>$('#pName')&&$('#pName').focus(),50);
+}
 
 // ---------- screens ----------
-const main=$('#main');
-function renderStars(){$('#stars').textContent='★ '+totalStars();}
-
-function goHome(){
-  screen='home';topic=null;speechSynthesis?.cancel?.();
+function goHome(quiet){
+  if(!P()){goWho();return;}
+  screen='home';topic=null;if(!quiet)speechSynthesis?.cancel?.();
+  const p=P();
   main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
-   <div class="topics">${TOPICS.map((t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${i*60}ms" data-t="${t.id}">
+   <div class="topics">${TOPICS.map((t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${i*45}ms" data-t="${t.id}">
      <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
-     <span class="st">${'★'.repeat(Math.min(3,Math.ceil((S.best[t.id]||0)/3)))||'☆'} ${S.best[t.id]||0}/${ROUND}</span></button>`).join('')}</div>`;
+     <span class="medals" aria-label="Levels finished">${LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}</div>`;
   main.querySelectorAll('.topic').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
-  speech('Namaste!','नमस्ते!','Hello! Pick a picture.');
-  mood('wave');
+  if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a picture.');mood('wave');}
 }
 function openTopic(t){
   topic=t;screen='topic';
+  const p=P(),cur=levelOf(t.id);
   main.innerHTML=`<h1>${t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
+   <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
+   <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}">
+     <span aria-hidden="true">${L.icon}</span><b>${L.np}</b><small>${L.en}</small><small class="best">★ ${bestOf(p,t.id,k)}/${L.n}</small></button>`;}).join('')}</div>
    <div class="modes">
     <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>Let’s learn</small></button>
     <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>Let’s play</small></button>
    </div>`;
+  main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{
+    p.lv=p.lv||{};p.lv[t.id]=b.dataset.lv;save();
+    main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    const L=LEVELS[b.dataset.lv];speech(L.np,L.dev,L.en);say(L.np,L.dev,L.en);
+  });
   $('#mLearn').onclick=()=>{learnI=0;renderLearn();};
   $('#mPlay').onclick=startQuiz;
   speech(t.np,t.dev,t.en);say(t.np,t.dev,t.en);
 }
 
-// learn: one big card at a time
+// learn: one big card at a time, through this level's words
 function renderLearn(){
-  screen='learn';const t=topic,it=t.items[learnI];
-  const pic=t.kind==='num'?`<div class="count" aria-hidden="true">${Array.from({length:it[3]},(_,i)=>`<i style="animation-delay:${i*90}ms">${COUNT_PICS[learnI%COUNT_PICS.length]}</i>`).join('')}</div><span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
+  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI];
+  const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
   main.innerHTML=`<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}<b>${it[0]}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${it[2]}</span>`:''}</div>
    <div class="nav">
     <button class="arrow" id="prev" aria-label="Previous">◀</button>
     <button class="listen" id="listen">🔊 Suna <small style="font-weight:500">listen</small></button>
     <button class="arrow" id="next" aria-label="Next">▶</button>
    </div>
-   <div class="dots">${t.items.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
+   <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
   const hear=()=>{say(it[0],it[1],it[2]);mood('happy');};
   $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
   $('#listen').onclick=hear;
-  $('#prev').onclick=()=>{learnI=(learnI-1+t.items.length)%t.items.length;renderLearn();};
-  $('#next').onclick=()=>{if(learnI===t.items.length-1){speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;}learnI++;renderLearn();};
+  $('#prev').onclick=()=>{learnI=(learnI-1+words.length)%words.length;renderLearn();};
+  $('#next').onclick=()=>{
+    if(learnI===words.length-1){speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;}
+    learnI++;renderLearn();
+  };
   speech(it[0],it[1],it[2]);hear();
 }
 
-// play: 8 questions, 3 big choices
+// play: a round of questions with 2, 3 or 4 big choices
 function questionLine(t,it){
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
-  if(t.kind==='color')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
+  if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
 }
 function startQuiz(){
-  const t=topic,order=[];
-  while(order.length<ROUND)order.push(...shuffle(t.items));
+  const t=topic,lv=levelOf(t.id),L=LEVELS[lv],words=wordsFor(t,lv),order=[];
+  while(order.length<L.n)order.push(...shuffle(words));
   // never the same answer twice in a row
-  for(let i=1;i<ROUND;i++)if(order[i]===order[i-1]){const j=order.findIndex((x,k)=>k>i&&x!==order[i-1]);if(j>0)[order[i],order[j]]=[order[j],order[i]];}
-  Q={t,order:order.slice(0,ROUND),i:0,stars:0,tries:0,lock:false};
+  for(let i=1;i<L.n;i++)if(order[i]===order[i-1]){const j=order.findIndex((x,k)=>k>i&&x!==order[i-1]);if(j>0)[order[i],order[j]]=[order[j],order[i]];}
+  Q={t,lv,L,words,order:order.slice(0,L.n),i:0,stars:0,tries:0,lock:false};
   renderQ();
 }
+// for counting, wrong numbers sit close to the right one so the child really counts
+function distractors(t,it,words,n){
+  if(t.kind!=='num')return shuffle(words.filter(x=>x!==it)).slice(0,n);
+  const near=shuffle(words.filter(x=>x!==it&&Math.abs(x[3]-it[3])<=3));
+  const far=shuffle(words.filter(x=>x!==it&&Math.abs(x[3]-it[3])>3));
+  return [...near,...far].slice(0,n);
+}
 function renderQ(){
-  screen='quiz';const t=Q.t,it=Q.order[Q.i];Q.tries=0;Q.lock=false;
-  const others=shuffle(t.items.filter(x=>x!==it)).slice(0,2);
-  const opts=shuffle([it,...others]);
+  screen='quiz';const {t,L}=Q,it=Q.order[Q.i];Q.tries=0;Q.lock=false;
+  const opts=shuffle([it,...distractors(t,it,Q.words,L.choices-1)]);
   const [rom,dev,en]=questionLine(t,it);
+  const hide=L.listen&&canListen()&&t.kind!=='num';
   const pic=rnd(COUNT_PICS);
-  main.innerHTML=`<div class="progress" aria-label="Question ${Q.i+1} of ${ROUND}"><i style="width:${Q.i/ROUND*100}%"></i></div>
-   <div class="q"><div class="say">${rom}<small lang="ne">${dev}${S.english?` · ${en}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
-   ${t.kind==='num'?`<div class="counter"><div class="count" aria-label="${it[3]} things">${Array.from({length:it[3]},(_,k)=>`<i style="animation-delay:${k*110}ms">${pic}</i>`).join('')}</div></div>`:''}
-   <div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${t.kind==='num'?o[0]:o[2]}">
+  main.innerHTML=`<div class="progress" aria-label="Question ${Q.i+1} of ${L.n}"><i style="width:${Q.i/L.n*100}%"></i></div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:`${rom}<small lang="ne">${dev}${S.english&&Q.lv==='easy'?` · ${en}`:''}</small>`}</div>
+     <button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   ${t.kind==='num'?`<div class="counter">${countHtml(it[3],pic,`aria-label="${it[3]} things"`)}</div>`:''}
+   <div class="opts${L.choices===3?' three':''}" style="--cols:${L.choices}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${t.kind==='num'?o[0]:o[2]}">
      ${t.kind==='num'?`<span class="digit">${o[3]}</span><span class="w">${o[0]}</span>`:pictureOf(t,o)}<span class="lab">${o[0]}${S.english&&t.kind!=='num'?' · '+o[2]:''}</span></button>`).join('')}</div>`;
-  const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
+  const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');say(rom,dev,Q.lv==='easy'?en:null);};
   $('#again').onclick=ask;
-  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k],it));
+  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k],it,[rom,dev,en]));
   ask();
 }
-function pick(b,o,it){
+function pick(b,o,it,line){
   if(Q.lock)return;
   if(o===it){
     Q.lock=true;if(Q.tries===0)Q.stars++;
     b.classList.add('right');confetti();mood('happy');
+    $('#qSay').innerHTML=`${line[0]}<small lang="ne">${line[1]} · ${line[2]}</small>`;
     const p=rnd(PRAISE);speech(p[0]+' '+cap(it[0])+'!',p[1]+' '+it[1],p[2]+' '+cap(it[2])+'!');say(p[0]+' '+it[0],p[1]+' '+it[1],null);
-    setTimeout(()=>{Q.i++;if(Q.i<ROUND)renderQ();else endQuiz();},1900);
+    setTimeout(()=>{if(screen!=='quiz')return;Q.i++;if(Q.i<Q.L.n)renderQ();else endQuiz();},1900);
   }else{
-    Q.tries++;b.classList.add('wrong');b.disabled=true;b.classList.add('show');mood('sad');
-    if(Q.tries>=2){const right=[...main.querySelectorAll('.opt')].find(x=>!x.disabled);right?.classList.add('hint');speech(cap(it[0]),it[1],'This one!');say(it[0],it[1],null);}
+    Q.tries++;b.classList.add('wrong','show');b.disabled=true;mood('sad');
+    const left=[...main.querySelectorAll('.opt')].filter(x=>!x.disabled);
+    if(Q.tries>=2||left.length===1){const right=left.find(x=>x.getAttribute('aria-label')===(Q.t.kind==='num'?it[0]:it[2]));right?.classList.add('hint');speech(cap(it[0]),it[1],'This one!');say(it[0],it[1],null);}
     else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
   }
 }
 function endQuiz(){
-  screen='end';const t=Q.t,n=Q.stars;
-  if(n>(S.best[t.id]||0)){S.best[t.id]=n;save();}
-  renderStars();
+  screen='end';const {t,lv,L}=Q,n=Q.stars,p=P(),frac=n/L.n;
+  let newBest=false;
+  if(n>bestOf(p,t.id,lv)){p.best=p.best||{};p.best[t.id+':'+lv]=n;save();newBest=true;}
+  renderTop();
+  const next=LV_KEYS[LV_KEYS.indexOf(lv)+1];
+  const offerNext=next&&frac>=0.7;
   main.innerHTML=`<div class="end">
-    <div class="trophy" aria-hidden="true">${n>=7?'🏆':n>=4?'🥇':'🌟'}</div>
-    <h1>${n>=7?'Ekdam ramro!':n>=4?'Syabaas!':'Ramro kosis!'}<small>${n>=7?'Amazing!':n>=4?'Well done!':'Good try!'}</small></h1>
-    <div class="row" aria-label="${n} of ${ROUND} stars">${Array.from({length:ROUND},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>
+    <div class="trophy" aria-hidden="true">${frac>=0.9?'🏆':frac>=0.6?'🥇':'🌟'}</div>
+    <h1>${frac>=0.9?'Ekdam ramro!':frac>=0.6?'Syabaas!':'Ramro kosis!'}<small>${frac>=0.9?'Amazing!':frac>=0.6?'Well done!':'Good try!'} ${L.icon} ${L.np} · ${L.en}${newBest?' · new best!':''}</small></h1>
+    <div class="row" aria-label="${n} of ${L.n} stars">${Array.from({length:L.n},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>
     <div class="btns">
+      ${offerNext?`<button class="btn" style="background:${LEVELS[next].color}" id="nextLv">${LEVELS[next].icon} ${LEVELS[next].np} <small style="font-weight:500">try ${LEVELS[next].en.toLowerCase()}</small></button>`:''}
       <button class="btn" style="background:var(--green)" id="againQ">🔁 Pheri <small style="font-weight:500">again</small></button>
       <button class="btn" style="background:var(--blue)" id="toLearn">👀 Sikaun <small style="font-weight:500">learn</small></button>
       <button class="btn" style="background:var(--red)" id="toHome">⌂ Ghar <small style="font-weight:500">home</small></button>
     </div></div>`;
-  $('#againQ').onclick=startQuiz;$('#toLearn').onclick=()=>{learnI=0;renderLearn();};$('#toHome').onclick=goHome;
+  $('#againQ').onclick=startQuiz;$('#toLearn').onclick=()=>{learnI=0;renderLearn();};$('#toHome').onclick=()=>goHome();
+  if(offerNext)$('#nextLv').onclick=()=>{p.lv=p.lv||{};p.lv[t.id]=next;save();startQuiz();};
   confetti();setTimeout(confetti,500);mood('happy');
-  const line=n>=7?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:n>=4?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
+  const line=frac>=0.9?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:frac>=0.6?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
   speech(...line);say(...line);
 }
 
 // grown-ups panel
 function renderGrown(){
   screen='grown';
-  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
+  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang)),p=P();
   main.innerHTML=`<div class="grown">
     <h2>For grown-ups</h2>
     <p>The voice comes from this device’s browser. Microsoft Edge has real Nepali voices. Chrome usually uses its Hindi voice, which reads the Nepali (Devanagari) words closely. If no Nepali or Hindi voice is installed, the romanized spelling is read with an English voice, which sounds less accurate.</p>
-    <p><b>Voice in use:</b> ${!TTS?'none (this browser cannot speak)':npVoice?`${npVoice.name} (${npVoice.lang})`:'no Nepali or Hindi voice found'}</p>
-    ${list.length>1?`<label>Choose voice <select id="vSel">${list.map(v=>`<option value="${v.name}" ${npVoice&&v.name===npVoice.name?'selected':''}>${v.name} (${v.lang})</option>`).join('')}</select></label>`:''}
+    <p><b>Voice in use:</b> ${!TTS?'none (this browser cannot speak)':npVoice?`${esc(npVoice.name)} (${npVoice.lang})`:'no Nepali or Hindi voice found'}</p>
+    ${list.length>1?`<label>Choose voice <select id="vSel">${list.map(v=>`<option value="${esc(v.name)}" ${npVoice&&v.name===npVoice.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join('')}</select></label>`:''}
     <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
     <label>Speed <input type="range" id="vRate" min="0.5" max="1.2" step="0.05" value="${S.rate}"> <span id="vRateV">${S.rate.toFixed(2)}</span></label>
     <div class="btns" style="justify-content:flex-start">
       <button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button>
       <button class="btn" style="background:var(--blue)" id="vDone">Done</button>
     </div>
-    <p>Stars are saved in this browser only.</p>
+    <h2>Levels</h2>
+    <table class="lvtable">${LV_KEYS.map(k=>`<tr><th>${LEVELS[k].icon} ${LEVELS[k].np} (${LEVELS[k].en})</th><td>${LEVELS[k].n} questions, ${LEVELS[k].about}.</td></tr>`).join('')}</table>
+    <p>A level’s medal on the home screen lights up at 70% of its stars. Each player keeps their own stars and chosen levels. Everything is saved in this browser only.</p>
+    ${p?`<div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="resetP">Reset ${esc(p.name)}’s stars</button></div><div class="warn" id="resetBox" hidden><b>Clear every star ${esc(p.name)} has earned?</b><div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="resetYes">Yes, clear</button><button class="btn ghost" id="resetNo">Keep</button></div></div>`:''}
   </div>`;
   $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
   $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
   $('#vRate').oninput=e=>{S.rate=+e.target.value;$('#vRateV').textContent=S.rate.toFixed(2);save();};
   $('#vTest').onclick=()=>say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');
-  $('#vDone').onclick=goHome;
+  $('#vDone').onclick=()=>goHome();
+  if(p){
+    $('#resetP').onclick=()=>{$('#resetBox').hidden=false;$('#resetNo').focus();};
+    $('#resetNo').onclick=()=>{$('#resetBox').hidden=true;};
+    $('#resetYes').onclick=()=>{p.best={};save();renderTop();renderGrown();};
+  }
 }
 
-$('#homeBtn').onclick=goHome;
+$('#homeBtn').onclick=()=>goHome();
+$('#whoBtn').onclick=goWho;
 $('#grownBtn').onclick=renderGrown;
 function renderSound(){const b=$('#soundBtn');b.setAttribute('aria-pressed',String(S.sound));b.setAttribute('aria-label',S.sound?'Sound on':'Sound off');b.textContent=S.sound?'🔊':'🔇';}
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
-renderSound();renderStars();goHome();
+save();renderSound();renderTop();
+// with more than one player (or none yet), ask who is playing first
+if(S.profiles.length===1&&P())goHome();else goWho();
 </script>
 </body>
 </html>
