@@ -35,6 +35,14 @@ Open **Pariwar** from the header to practise talking with your wife's family. Si
 
 After each answer a tip explains the custom behind it, such as when to use *hajur*, *tapai* or *timi*. The intro screen has a table of what to call each relative and what they call you (*jwain*, *bhinaju*). There is no timer in this round.
 
+### Vishaya (picture topics)
+
+Open **Vishaya** from the header to practise everyday nouns in nine topics: animals, colours, body, clothes, things at home, nature, vehicles, feelings and fruit. A neighbour's child shows you a picture and asks *"Yo ke ho?"* ("What is this?") to name in Nepali, or asks *"… dekhaunus"* ("please show me …") and you pick the picture. Each topic opens with word cards you can tap to hear.
+
+### Voices
+
+Every line in the game can be read aloud. The game turns the romanized text into Devanagari and speaks it with a Nepali voice installed on your device, or a Hindi voice if there is no Nepali one. Microsoft Edge has Nepali voices built in. On Android, install Nepali in Google's text-to-speech settings. Tap 🔊 in a speech bubble to hear the line again, or tap a word to hear just that word. Settings lets you turn voices off, pick a voice and change the speed.
+
 Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peeking costs that customer's tip (*baksis*).
 
 ## Learning design

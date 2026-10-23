@@ -235,12 +235,37 @@ nav{display:flex;gap:8px;flex-wrap:wrap}
 .opt.pick{align-items:center;text-align:center;padding:8px 6px}
 .opt.pick svg{width:64px;height:64px}
 .wxbtn{border-color:var(--blue);color:var(--blue)}
-.wxbtn small,.fambtn small{font-size:.75rem;opacity:.8}
+.wxbtn small,.fambtn small,.wdbtn small{font-size:.75rem;opacity:.8}
+.wdbtn{border-color:var(--good);color:var(--good)}
 .fambtn{border-color:var(--crimson);color:var(--crimson)}
 .scene.calm .patience{visibility:hidden}
 /* the menu board only matters at the stall */
-body[data-mode="weather"] .board,body[data-mode="family"] .board{display:none}
-body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-columns:minmax(0,1fr)}
+body[data-mode="weather"] .board,body[data-mode="family"] .board,body[data-mode="words"] .board{display:none}
+body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="words"] .work{grid-template-columns:minmax(0,1fr)}
+/* picture topics */
+.say-pic{display:flex;justify-content:center;margin-bottom:4px}
+.wd-pic{line-height:1.1;font-size:2.6rem}
+.wd-pic.big{font-size:4.2rem}
+.wd-pic.small{font-size:2.2rem}
+.wd-swatch{display:inline-block;width:56px;height:56px;border-radius:44% 56% 52% 48%/50% 44% 56% 50%;border:3px solid var(--line)}
+.wd-swatch.big{width:84px;height:84px}
+.wd-swatch.small{width:40px;height:40px}
+.opt.pick .wd-swatch{width:72px;height:72px}
+.opt.pick .wd-pic{font-size:3.4rem}
+.wd-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.wd-topic{display:flex;flex-direction:column;align-items:center;gap:0;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 6px}
+.wd-topic:hover{border-color:var(--muted)}
+.wd-ic{font-size:2.2rem;line-height:1.2}
+.wd-topic small{color:var(--muted);font-size:.8rem;text-align:center}
+.wd-card{text-align:left;cursor:pointer;font:inherit;color:inherit}
+.wd-card:hover{border-color:var(--muted)}
+/* voice */
+.sayagain{position:absolute;top:6px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);font-size:1rem;line-height:1}
+.bubble.has-voice{padding-right:48px}
+.set-voice{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding-left:28px;font-size:.95rem}
+.set-voice label{display:flex;gap:8px;align-items:center}
+.set-voice select{font:inherit;font-size:.9rem;max-width:100%;padding:2px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.set-voice input[type=range]{accent-color:var(--crimson)}
 .fb .note{display:block;margin-top:6px;font-size:.92rem;color:var(--ink)}
 .fb .note b{color:var(--ink)}
 .kinwrap{overflow-x:auto}
@@ -248,7 +273,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-col
 .kin th{text-align:left;font-size:.75rem;letter-spacing:.04em;color:var(--muted);font-weight:500;padding:4px 8px;border-bottom:1px solid var(--line)}
 .kin td{padding:5px 8px;border-bottom:1px solid var(--line);vertical-align:baseline}
 .kin .dev{color:var(--muted);font-size:.85rem}
-@media (max-width:520px){.wxbtn small,.fambtn small{display:none}.scene{padding-top:58px}.wx-sun{right:14px;width:32px;height:32px}.opt.pick svg{width:48px;height:48px}}
+@media (max-width:520px){.wxbtn small,.fambtn small,.wdbtn small{display:none}.scene{padding-top:58px}.wx-sun{right:14px;width:32px;height:32px}.opt.pick svg{width:48px;height:48px}}
 .steam{animation:steam 2.4s ease-in-out infinite;transform-origin:center bottom}
 @keyframes steam{0%,100%{opacity:.25;transform:translateY(1px)}50%{opacity:.8;transform:translateY(-2px)}}
 </style>
@@ -265,6 +290,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-col
     <nav>
       <button class="ghost wxbtn" id="btnWx">Mausam <small>weather</small></button>
       <button class="ghost fambtn" id="btnFam">Pariwar <small>family</small></button>
+      <button class="ghost wdbtn" id="btnWd">Vishaya <small>topics</small></button>
       <button class="ghost" id="btnBook">Shabdakosh</button>
       <button class="ghost" id="btnSet">Settings</button>
     </nav>
@@ -286,7 +312,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-col
     </div>
     <div class="talk">
       <div class="queue" id="queue"></div>
-      <div class="bubble"><div class="say" id="say" aria-live="polite"></div><div class="say-en" id="sayEn" hidden></div></div>
+      <div class="bubble" id="bubble"><div class="say-pic" id="sayPic" hidden></div><div class="say" id="say" aria-live="polite"></div><div class="say-en" id="sayEn" hidden></div><button class="sayagain" id="sayAgain" hidden aria-label="Hear it again">🔊</button></div>
       <div class="gloss" id="gloss"></div>
     </div>
   </section>
@@ -321,6 +347,12 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work{grid-template-col
   <h2>Settings</h2>
   <label class="set"><input type="checkbox" id="optRelaxed"><span>Relaxed mode<small>Customers never run out of patience.</small></span></label>
   <label class="set"><input type="checkbox" id="optEnglish"><span>Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
+  <label class="set"><input type="checkbox" id="optVoice"><span>Read lines aloud<small id="voiceStatus">Uses a Nepali or Hindi voice installed on this device.</small></span></label>
+  <div class="set-voice" id="voiceBox">
+    <label id="voicePickRow">Voice <select id="optVoiceName"></select></label>
+    <label>Speed <input type="range" id="optRate" min="0.5" max="1.2" step="0.05"> <span id="optRateV"></span></label>
+    <button class="ghost" id="voiceTest" type="button">🔊 Test</button>
+  </div>
   <div class="row-end" style="justify-content:space-between">
     <button class="danger" id="btnReset">Erase progress</button>
     <button class="primary" id="closeSet">Done</button>
@@ -376,6 +408,26 @@ const VOCAB=[
  ['dhog','respectful bow to an elder (“dhog garchhu” = my respects)','ढोग',7],['bolnu','to speak','बोल्नु',7],['bolchhu','(I) speak','बोल्छु',7],
  ['bujhnubhayo','did (you) understand? (polite)','बुझ्नुभयो',7],['bujhina','I didn’t understand','बुझिनँ',7],['bhannus','please say','भन्नुस्',7],
  ['shubha','good / auspicious','शुभ',7],['ratri','night','रात्रि',7],
+ ['yo','this','यो',8],['kun','which','कुन',8],['rang','colour','रङ',8],['dekhaunus','please show (me)','देखाउनुस्',8],['anuhaar','face','अनुहार',8],
+ ['biralo','cat','बिरालो',8],['kukur','dog','कुकुर',8],['gai','cow','गाई',8],['machha','fish','माछा',8],['kukhura','chicken','कुखुरा',8],
+ ['hatti','elephant','हात्ती',8],['bakhra','goat','बाख्रा',8],['bandar','monkey','बाँदर',8],['chara','bird','चरा',8],['bagh','tiger','बाघ',8],
+ ['muso','mouse','मुसो',8],['ghoda','horse','घोडा',8],
+ ['rato','red','रातो',8],['nilo','blue','निलो',8],['hariyo','green','हरियो',8],['pahelo','yellow','पहेंलो',8],['seto','white','सेतो',8],
+ ['suntala','orange (the fruit; “suntala rang” = orange colour)','सुन्तला',8],['gulaafi','pink','गुलाफी',8],['khairo','brown','खैरो',8],['baijani','purple','बैजनी',8],
+ ['aankha','eye','आँखा',8],['naak','nose','नाक',8],['kaan','ear','कान',8],['mukh','mouth','मुख',8],['haat','hand','हात',8],
+ ['khutta','foot / leg','खुट्टा',8],['jibro','tongue','जिब्रो',8],['daant','tooth','दाँत',8],
+ ['topi','cap / hat','टोपी',8],['jutta','shoes','जुत्ता',8],['moja','socks','मोजा',8],['kamij','shirt','कमिज',8],['paint','trousers','पाइन्ट',8],
+ ['chasma','glasses','चस्मा',8],['chhata','umbrella','छाता',8],['jhola','bag','झोला',8],['panja','gloves','पन्जा',8],['phrak','dress','फ्रक',8],
+ ['kitab','book','किताब',8],['ghadi','clock / watch','घडी',8],['batti','light','बत्ती',8],['dhoka','door','ढोका',8],['khaat','bed','खाट',8],
+ ['kursi','chair','कुर्सी',8],['kalam','pen','कलम',8],['saancho','key','साँचो',8],['bhakundo','ball','भकुण्डो',8],['kainchi','scissors','कैंची',8],
+ ['jun','moon','जून',8],['tara','star','तारा',8],['phul','flower','फूल',8],['rukh','tree','रूख',8],['himal','snowy mountain','हिमाल',8],
+ ['indreni','rainbow','इन्द्रेणी',8],['aago','fire','आगो',8],
+ ['kaar','car','कार',8],['bas','bus','बस',8],['saikal','bicycle','साइकल',8],['rel','train','रेल',8],['hawaijahaj','aeroplane','हवाईजहाज',8],
+ ['dunga','boat','डुङ्गा',8],['trak','lorry / truck','ट्रक',8],['motorsaikal','motorbike','मोटरसाइकल',8],['helikoptar','helicopter','हेलिकप्टर',8],
+ ['khusi','happy','खुसी',8],['dukhi','sad','दुःखी',8],['risaayeko','angry','रिसाएको',8],['darayeko','scared','डराएको',8],
+ ['nindra','sleep','निद्रा',8],['lageko','having (a feeling) come on','लागेको',8],['chhakka','astonished','छक्क',8],['pareko','having happened (“chhakka pareko” = surprised)','परेको',8],
+ ['syau','apple','स्याउ',8],['kera','banana','केरा',8],['aanp','mango','आँप',8],['angur','grapes','अंगुर',8],['nariwal','coconut','नरिवल',8],
+ ['bhuinkatahar','pineapple','भुइँकटहर',8],['tarbuja','watermelon','तरबुजा',8],['anda','egg','अण्डा',8],
  ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
@@ -475,10 +527,39 @@ const fmt=n=>'रु '+n.toLocaleString('en-IN');
 
 // ---------- persistence ----------
 const KEY='chiya-pasal-v1';
-const fresh=()=>({day:1,rupees:0,mastery:{},settings:{relaxed:false,english:false}});
+const fresh=()=>({day:1,rupees:0,mastery:{},settings:{relaxed:false,english:false,voice:true,rate:0.9,voiceName:''}});
 let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh();}catch(e){S=fresh();}
-S.settings=Object.assign({relaxed:false,english:false},S.settings||{});S.mastery=S.mastery||{};
+S.settings=Object.assign({relaxed:false,english:false,voice:true,rate:0.9,voiceName:''},S.settings||{});S.mastery=S.mastery||{};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+
+// ---------- voice ----------
+// uses the device's own voices: a Nepali one if installed, else Hindi (reads Devanagari closely), else none
+const TTS='speechSynthesis' in window;
+let voices=[],npVoice=null;
+function loadVoices(){
+  if(!TTS)return;
+  voices=speechSynthesis.getVoices();
+  npVoice=voices.find(v=>v.name===S.settings.voiceName)||voices.find(v=>/^ne/i.test(v.lang))||voices.find(v=>/^hi/i.test(v.lang))||voices.find(v=>/^mr/i.test(v.lang))||null;
+  if(!$('#ovSet').hidden)renderVoiceSettings();
+}
+const voiceOn=()=>TTS&&S.settings.voice&&!!npVoice;
+// romanized line -> Devanagari, word by word from the dictionary
+function toDev(line){
+  return line.split(/\s+/).map((w,i)=>{
+    const m=w.match(/^(.*?)([.,!?]*)$/),t=m[1].toLowerCase();
+    const d=t==='ma'?(i===0?'म':'मा'):DICT[t]?DICT[t].dev:m[1];
+    return d+(m[2]==='.'?'।':m[2]);
+  }).join(' ');
+}
+function speak(line){
+  if(!voiceOn()||!line)return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(toDev(line));
+    u.voice=npVoice;u.lang=npVoice.lang;u.rate=S.settings.rate;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
 
 const E=()=>Math.min(S.day,5);
 const lvl=t=>S.mastery[t]||0;
@@ -573,6 +654,51 @@ function wxStep(w,kind){
   kind=kind||rnd(['ask','yn','place']);
   return kind==='ask'?wxAskStep(w):kind==='yn'?wxYesNoStep(w):wxPlaceStep();
 }
+// ---------- vishaya (picture topics): a neighbour's child quizzes you ----------
+const WD_DAY=8;
+// items: [romanized, english, picture]; q = how "show me" and "what is it" are asked
+const WORD_TOPICS=[
+ {id:'janawar',np:'Janawar',dev:'जनावर',en:'Animals',icon:'🐘',items:[['biralo','cat','🐱'],['kukur','dog','🐶'],['gai','cow','🐄'],['machha','fish','🐟'],
+   ['kukhura','chicken','🐔'],['hatti','elephant','🐘'],['bakhra','goat','🐐'],['bandar','monkey','🐒'],['chara','bird','🐦'],['bagh','tiger','🐯'],['muso','mouse','🐭'],['ghoda','horse','🐴']]},
+ {id:'rang',np:'Rang',dev:'रङ',en:'Colours',icon:'🎨',q:'rang',items:[['rato','red','#e8463a'],['nilo','blue','#3a7bf2'],['hariyo','green','#2fae6e'],
+   ['pahelo','yellow','#ffd23c'],['kalo','black','#2b2b2b'],['seto','white','#ffffff'],['suntala rang','orange','#ff8c2e'],['gulaafi','pink','#ff7eb6'],
+   ['khairo','brown','#8b5a3c'],['baijani','purple','#8e5be8']]},
+ {id:'sharir',np:'Sharir',dev:'शरीर',en:'Body',icon:'👃',items:[['aankha','eye','👁️'],['naak','nose','👃'],['kaan','ear','👂'],['mukh','mouth','👄'],
+   ['haat','hand','✋'],['khutta','foot','🦶'],['jibro','tongue','👅'],['daant','tooth','🦷']]},
+ {id:'kapada',np:'Kapada',dev:'कपडा',en:'Clothes',icon:'👕',items:[['topi','cap','🧢'],['jutta','shoes','👟'],['moja','socks','🧦'],['kamij','shirt','👕'],
+   ['paint','trousers','👖'],['chasma','glasses','👓'],['chhata','umbrella','☂️'],['jhola','bag','🎒'],['panja','gloves','🧤'],['phrak','dress','👗']]},
+ {id:'saman',np:'Saman',dev:'सामान',en:'Things at home',icon:'🏠',items:[['kitab','book','📖'],['ghadi','clock','⏰'],['batti','light','💡'],['dhoka','door','🚪'],
+   ['khaat','bed','🛏️'],['kursi','chair','🪑'],['kalam','pen','🖊️'],['saancho','key','🔑'],['bhakundo','ball','⚽'],['kainchi','scissors','✂️']]},
+ {id:'prakriti',np:'Prakriti',dev:'प्रकृति',en:'Nature',icon:'🌈',items:[['ghaam','sun','☀️'],['jun','moon','🌙'],['tara','star','⭐'],['phul','flower','🌸'],
+   ['rukh','tree','🌳'],['badal','cloud','☁️'],['hiu','snow','❄️'],['himal','snowy mountain','🏔️'],['indreni','rainbow','🌈'],['aago','fire','🔥']]},
+ {id:'savari',np:'Savari',dev:'सवारी',en:'Vehicles',icon:'🚌',items:[['kaar','car','🚗'],['bas','bus','🚌'],['saikal','bicycle','🚲'],['rel','train','🚆'],
+   ['hawaijahaj','aeroplane','✈️'],['dunga','boat','⛵'],['trak','lorry','🚚'],['motorsaikal','motorbike','🏍️'],['helikoptar','helicopter','🚁']]},
+ {id:'bhavana',np:'Bhavana',dev:'भावना',en:'Feelings',icon:'😊',q:'anuhaar',items:[['khusi','happy','😀'],['dukhi','sad','😢'],['risaayeko','angry','😠'],
+   ['darayeko','scared','😨'],['nindra lageko','sleepy','😴'],['chhakka pareko','surprised','😮']]},
+ {id:'phalphul',np:'Phalphul',dev:'फलफूल',en:'Fruit',icon:'🍎',items:[['syau','apple','🍎'],['kera','banana','🍌'],['aanp','mango','🥭'],['suntala','orange','🍊'],
+   ['angur','grapes','🍇'],['nariwal','coconut','🥥'],['bhuinkatahar','pineapple','🍍'],['tarbuja','watermelon','🍉']]},
+];
+const wdPic=(t,it,cls)=>t.q==='rang'?`<span class="wd-swatch ${cls||''}" style="background:${it[2]}"></span>`:`<span class="wd-pic ${cls||''}">${it[2]}</span>`;
+// "What is this?": you see the picture and name it in Nepali
+function wdNameStep(t,it){
+  const say=t.q==='rang'?'Yo kun rang ho?':t.q==='anuhaar'?'Yo kasto anuhaar ho?':'Yo ke ho?';
+  const en=t.q==='rang'?'What colour is this?':t.q==='anuhaar'?'What kind of face is this?':'What is this?';
+  const mk=x=>({t:cap(x[0])+'.',en:cap(x[1])+'.'});
+  return {type:'chat',say,en,show:wdPic(t,it,'big'),prompt:'Name it in Nepali:',answer:mk(it),
+    options:shuffle([mk(it),...shuffle(t.items.filter(x=>x!==it)).slice(0,2).map(mk)])};
+}
+// "Show me the ...": you hear or read the Nepali and pick the picture
+function wdShowStep(t,it){
+  const noun=x=>t.q==='anuhaar'?`${x[0]} anuhaar`:t.q==='rang'&&!x[0].includes('rang')?`${x[0]} rang`:x[0];
+  const mk=x=>({t:x[0],en:cap(x[1]),icon:wdPic(t,x)});
+  return {type:'pick',say:`${cap(noun(it))} dekhaunus.`,en:`Please show me the ${it[1]}${t.q==='anuhaar'?' face':''}.`,prompt:'Which picture do they mean?',
+    answer:mk(it),options:shuffle([mk(it),...shuffle(t.items.filter(x=>x!==it)).slice(0,2).map(mk)])};
+}
+function genWordsCustomer(t,a,b){
+  const steps=Math.random()<0.5?[wdNameStep(t,a),wdShowStep(t,b)]:[wdShowStep(t,a),wdNameStep(t,b)];
+  return withLook(steps,'');
+}
+
 // ---------- pariwar (family): visiting your wife's family ----------
 const FAM_DAY=7;
 // addr = what you call them; callsYou = what they call you; reg = which "you" to use with them
@@ -704,14 +830,19 @@ function renderTray(){
     b.onclick=()=>{if(C.lock)return;tray[k]--;if(!tray[k])delete tray[k];renderTray();};t.append(b);});
 }
 const glossHint='<span class="hint">Tap any word to see what it means. Peeking costs your tip.</span>';
-function renderBubble(say,en){
+let lastSay='';
+function renderBubble(say,en,pic){
   const el=$('#say');el.innerHTML='';
   say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=w;b.onclick=()=>peek(w,b);el.append(b);});
+  $('#sayPic').hidden=!pic;$('#sayPic').innerHTML=pic||'';
   $('#sayEn').textContent=en;$('#sayEn').hidden=!S.settings.english;
-  $('#gloss').innerHTML=G&&G.mode==='family'?'<span class="hint">Tap any word to see what it means.</span>':glossHint;
+  $('#gloss').innerHTML=calmMode()?'<span class="hint">Tap any word to see what it means.</span>':glossHint;
+  lastSay=say;
+  const v=voiceOn();$('#sayAgain').hidden=!v;$('#bubble').classList.toggle('has-voice',v);
 }
 function peek(w,b){
   const t=toks(w)[0],v=DICT[t];
+  speak(w);
   $('#gloss').innerHTML=v?`<b>${esc(t)}</b><span class="dev" lang="ne">${v.dev}</span>— ${esc(v.en)}`:`<b>${esc(t)}</b> — no entry`;
   b.classList.add('peek');
   if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];if(st)st.hinted=true;C.hinted=true;}
@@ -752,11 +883,12 @@ function startDay(){
    <h3>${title}</h3>
    ${wcards(words)}
    ${newItems.length?`<h3>Naya menu <small>new on the menu</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].np}</b> · ${ITEMS[k].short} · रु ${ITEMS[k].price}</span></div>`).join('')}</div>`:''}
-   <div class="row-end"><button class="ghost wxbtn" id="toWx">Mausam practice</button><button class="ghost fambtn" id="toFam">Pariwar practice</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+   <div class="row-end"><button class="ghost wxbtn" id="toWx">Mausam practice</button><button class="ghost fambtn" id="toFam">Pariwar practice</button><button class="ghost wdbtn" id="toWd">Vishaya practice</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
   show('#ovIntro');
   $('#go').onclick=()=>{hide('#ovIntro');G.started=true;nextCustomer();};
   $('#toWx').onclick=openWeatherIntro;
   $('#toFam').onclick=openFamilyIntro;
+  $('#toWd').onclick=openWordsIntro;
   $('#go').focus();
 }
 function openWeatherIntro(){
@@ -805,6 +937,41 @@ function openFamilyIntro(){
   $('#go').onclick=()=>{hide('#ovIntro');startFamily();};
   $('#go').focus();
 }
+function openWordsIntro(){
+  const midDay=G&&G.mode==='stall'&&G.started;
+  $('#introBody').innerHTML=`
+   <h2>Vishaya<small>picture topics</small></h2>
+   <p>A neighbour’s child brings you pictures. Name what you see in Nepali (“Yo ke ho?”, what is this?), or pick the picture they ask for (“… dekhaunus”, please show me …). There is no timer.</p>
+   <div class="wd-topics">${WORD_TOPICS.map(t=>`<button class="wd-topic" data-t="${t.id}"><span class="wd-ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><small>${t.en} · ${t.items.length} words</small></button>`).join('')}</div>
+   ${G&&G.mode==='stall'?`<p class="recap">${midDay?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`:''}
+   <div class="row-end"><button class="ghost" id="wdLater">Pachi <small>later</small></button></div>`;
+  show('#ovIntro');
+  $('#wdLater').onclick=()=>{if(G&&G.mode==='stall'&&!G.started)startDay();else hide('#ovIntro');};
+  $('#introBody').querySelectorAll('.wd-topic').forEach(b=>b.onclick=()=>openWordsTopic(WORD_TOPICS.find(t=>t.id===b.dataset.t)));
+  $('#introBody').querySelector('.wd-topic').focus();
+}
+function openWordsTopic(t){
+  $('#introBody').innerHTML=`
+   <h2>${t.icon} ${t.np}<small>${t.dev} · ${t.en}</small></h2>
+   <p class="recap">Tap a card to hear it.</p>
+   <div class="words">${t.items.map((it,i)=>`<button class="wcard wd-card" data-i="${i}">${wdPic(t,it,'small')}<b>${it[0]}</b><span class="dev" lang="ne">${it[0].split(' ').map(w=>DICT[w]?DICT[w].dev:w).join(' ')}</span><div class="en">${esc(it[1])}</div></button>`).join('')}</div>
+   <div class="row-end"><button class="ghost" id="wdBack">Other topics</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+  $('#introBody').querySelectorAll('.wd-card').forEach(b=>b.onclick=()=>speak(t.items[+b.dataset.i][0]));
+  $('#wdBack').onclick=openWordsIntro;
+  $('#go').onclick=()=>{hide('#ovIntro');startWords(t);};
+  $('#go').focus();
+}
+function startWords(t){
+  if(C){C.gone=true;C.lock=true;}
+  $('#cont').hidden=true;
+  S.wordsPlayed=true;save();
+  // 12 questions over 6 visitors, every word before any repeats, never the same word twice in a row
+  const order=[];while(order.length<12)order.push(...shuffle(t.items));
+  for(let i=1;i<12;i++)if(order[i]===order[i-1]){const j=order.findIndex((x,k)=>k>i&&x!==order[i-1]);if(j>0)[order[i],order[j]]=[order[j],order[i]];}
+  G={mode:'words',topic:t,order:order.slice(0,12),n:6,idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,weather:''};
+  nextCustomer();
+}
+const calmMode=()=>G&&(G.mode==='family'||G.mode==='words');
 function startFamily(){
   if(C){C.gone=true;C.lock=true;}
   $('#cont').hidden=true;
@@ -820,12 +987,15 @@ function nextCustomer(){
     C=genWeatherCustomer(w);setWeather(w);
   }else if(G.mode==='family'){
     C=genFamilyCustomer(G.roles[G.idx]);setWeather('');
+  }else if(G.mode==='words'){
+    C=genWordsCustomer(G.topic,G.order[G.idx*2],G.order[G.idx*2+1]);setWeather('');
   }else C=genCustomer();
   tray={};
   document.body.dataset.mode=G.mode;
-  $('#scene').classList.toggle('calm',G.mode==='family');
+  $('#scene').classList.toggle('calm',calmMode());
   const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
   $('#queue').textContent=G.mode==='family'?`Pariwar ${G.idx+1}/${G.n} · ${cap(FAMILY[C.role].kin)}, ${FAMILY[C.role].en}`
+    :G.mode==='words'?`Vishaya · ${G.topic.np} (${G.topic.en}) · ${G.idx+1}/${G.n}`
     :(G.mode==='weather'?'Mausam practice · ':'')+`Customer ${G.idx+1} of ${G.n}`;
   renderBar();renderStep();
 }
@@ -869,7 +1039,8 @@ addEventListener('resize',()=>startParticles());
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>startParticles());
 function renderStep(){
   const st=C.steps[C.i];st.hinted=false;st.tries=0;st.scored=false;C.lock=false;
-  renderBubble(st.say,st.en);setFb('');$('#cont').hidden=true;
+  renderBubble(st.say,st.en,st.show);setFb('');$('#cont').hidden=true;
+  speak(st.say);
   if(st.type==='order'){
     $('#counterWrap').hidden=false;$('#optWrap').hidden=true;tray={};renderTray();
     document.querySelectorAll('.item').forEach(b=>b.disabled=false);$('#serve').disabled=false;
@@ -878,9 +1049,9 @@ function renderStep(){
     $('#recap').innerHTML=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':(st.prompt||'Pick your reply:');
     const o=$('#opts');o.innerHTML='';o.classList.toggle('picks',st.type==='pick');
     st.options.forEach(op=>{const b=document.createElement('button');b.className=st.type==='pick'?'opt pick':'opt';b.dataset.t=op.t;
-      b.innerHTML=st.type==='pick'?`${WX_ICON[op.wx]}<span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`
+      b.innerHTML=st.type==='pick'?`${op.icon||WX_ICON[op.wx]}<span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`
         :`<span>${esc(op.t)}</span><span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
-      if(st.type==='pick')b.setAttribute('aria-label',S.settings.english?op.en:'Weather picture '+(st.options.indexOf(op)+1));
+      if(st.type==='pick')b.setAttribute('aria-label',S.settings.english?op.en:'Picture '+(st.options.indexOf(op)+1));
       b.onclick=()=>choose(st,op,b);o.append(b);});
   }
 }
@@ -930,7 +1101,7 @@ function advance(){
 function finishCustomer(){
   C.gone=true;C.lock=true;
   let tip=0;
-  const fam=G.mode==='family';
+  const fam=calmMode();
   if(!fam&&!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
   const earned=C.paid+tip;S.rupees+=earned;G.earned+=earned;G.served++;save();renderTop();
   const parts=[];
@@ -944,7 +1115,7 @@ function finishCustomer(){
 function leave(){
   if(C.gone)return;C.gone=true;C.lock=true;C.patience=0;renderBar();setMood();
   document.querySelectorAll('.item,.opt').forEach(x=>x.disabled=true);$('#serve').disabled=true;$('#cont').hidden=true;
-  renderBubble('Kasto dhilo!','So slow!');$('#sayEn').hidden=false;
+  renderBubble('Kasto dhilo!','So slow!');$('#sayEn').hidden=false;speak('Kasto dhilo!');
   G.left++;
   setFb('<b>The customer gave up and left.</b> “Kasto dhilo!” = So slow! Try Relaxed mode in Settings if you want more time.','bad');
   $('#cust').classList.add('exit');
@@ -954,6 +1125,21 @@ function nextOrEnd(g){if(g!==G)return;G.idx++;if(G.idx<G.n)nextCustomer();else e
 function endDay(){
   const acc=G.steps?Math.round(100*G.correct/G.steps):0;
   const missed=[...G.missed].slice(0,12);
+  if(G.mode==='words'){
+    const t=G.topic;
+    $('#sumBody').innerHTML=`
+     <h2>${t.np} sakiyo<small>${t.en} finished</small></h2>
+     <div class="sumgrid"><div><b>${G.correct}/${G.steps}</b><span>answers right</span></div>
+       <div><b>${acc}%</b><span>right first time</span></div>
+       <div><b>${t.items.length}</b><span>words in ${esc(t.en.toLowerCase())}</span></div></div>
+     ${missed.length?`<h3>Words to review</h3>${wcards(missed.map(x=>[x,DICT[x].en,DICT[x].dev]))}`:'<p>No mistakes. Syabaas!</p>'}
+     <div class="row-end"><button class="ghost" id="wdAgain">Pheri <small>again</small></button><button class="ghost" id="wdOther">Arko vishaya <small>another topic</small></button><button class="primary big" id="nextDay">Pasal ma <small>back to the stall</small></button></div>`;
+    show('#ovSum');$('#nextDay').focus();
+    $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+    $('#wdAgain').onclick=()=>{hide('#ovSum');startWords(t);};
+    $('#wdOther').onclick=()=>{hide('#ovSum');openWordsIntro();};
+    return;
+  }
   if(G.mode==='family'){
     $('#sumBody').innerHTML=`
      <h2>Pariwar sakiyo<small>family practice finished</small></h2>
@@ -1003,16 +1189,40 @@ function renderBook(){
   const fw=VOCAB.filter(v=>v[3]===FAM_DAY);
   if(!S.famPlayed)html+=`<p class="locked">Pariwar (family): ${fw.length} words unlock when you play Pariwar practice.</p>`;
   else html+=`<div class="book-day"><h3>Pariwar <small>family</small></h3>${fw.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
+  const ww=VOCAB.filter(v=>v[3]===WD_DAY);
+  if(!S.wordsPlayed)html+=`<p class="locked">Vishaya (picture topics): ${ww.length} words unlock when you play Vishaya practice.</p>`;
+  else html+=`<div class="book-day"><h3>Vishaya <small>picture topics</small></h3>${ww.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
+  if(voiceOn())html=html.replace('</p>',' Tap a word to hear it.</p>');
   html+=`<div class="row-end"><button class="primary" id="closeBook">Close</button></div>`;
   $('#bookBody').innerHTML=html;$('#closeBook').onclick=()=>hide('#ovBook');$('#closeBook').focus();
 }
 $('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
+$('#bookBody').addEventListener('click',e=>{const b=e.target.closest('.brow b');if(b)speak(b.textContent);});
 $('#btnWx').onclick=openWeatherIntro;
 $('#btnFam').onclick=openFamilyIntro;
-$('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');};
+$('#btnWd').onclick=openWordsIntro;
+$('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');renderVoiceSettings();};
+function renderVoiceSettings(){
+  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
+  $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice;
+  $('#voiceStatus').textContent=!TTS?'This browser cannot speak.'
+    :npVoice?`Using ${npVoice.name} (${npVoice.lang}).${/^ne/i.test(npVoice.lang)?'':' A Hindi voice reads the Nepali spelling closely, but not perfectly.'}`
+    :'No Nepali or Hindi voice is installed on this device. Microsoft Edge has Nepali voices built in; on Android, install Nepali in Google’s text-to-speech settings.';
+  $('#voiceBox').hidden=!npVoice;
+  $('#voicePickRow').hidden=list.length<2;
+  $('#optVoiceName').innerHTML=list.map(v=>`<option value="${esc(v.name)}" ${npVoice&&v.name===npVoice.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join('');
+  $('#optRate').value=S.settings.rate;$('#optRateV').textContent=S.settings.rate.toFixed(2);
+}
+$('#optVoice').onchange=e=>{S.settings.voice=e.target.checked;save();if(!S.settings.voice&&TTS)speechSynthesis.cancel();};
+$('#optVoiceName').onchange=e=>{S.settings.voiceName=e.target.value;save();loadVoices();};
+$('#optRate').oninput=e=>{S.settings.rate=+e.target.value;$('#optRateV').textContent=S.settings.rate.toFixed(2);save();};
+$('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak('Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
+$('#sayAgain').onclick=()=>speak(lastSay);
+if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 $('#closeSet').onclick=()=>{
   S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;save();hide('#ovSet');
   renderMenu();$('#sayEn').hidden=!S.settings.english;setWeather(wxNow);
+  const v=voiceOn();$('#sayAgain').hidden=!v;$('#bubble').classList.toggle('has-voice',v);
   document.querySelectorAll('.opt .en').forEach(e=>{if(S.settings.english)e.hidden=false;});
 };
 let resetArm=false;
@@ -1025,7 +1235,7 @@ document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
 
 // ---------- clock ----------
 setInterval(()=>{
-  if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed||G.mode==='family')return;
+  if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed||calmMode())return;
   C.patience-=(100/Math.max(26,50-3*S.day))*0.1;
   renderBar();setMood();
   if(C.patience<=0)leave();
