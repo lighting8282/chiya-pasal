@@ -6,6 +6,16 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Kids tap big pictures to hear Nepali words in 18 topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings and everyday sayings), then play "find it" games for stars. Each topic has three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3 choices) and *Gaaro* (hard, 4 choices, counting to 20, listen-only). Each child gets their own player profile with their own stars. **Akshar** teaches Devanagari letters with a picture word for each, and kids can trace every letter with a finger. **Kathaa** has three short read-aloud stories about Habre, each with a question at the end. Under ⚙, grown-ups get a progress page for each child: stars per topic and level, stories read, letters written, and the words they keep missing. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button lets a grown-up pick the voice and speed.
 
+### Install it as an app
+
+Chiya Pasal can be installed on a phone like an app. It gets its own icon, opens full-screen and works offline.
+
+- **Android (Chrome):** open the link above, then tap ⋮ → *Install app* (or *Add to Home screen*).
+- **iPhone / iPad (Safari):** open the link above, tap Share (the square with an arrow), then *Add to Home Screen*.
+- **Windows / Mac (Chrome or Edge):** click the install icon in the address bar.
+
+The game's **Settings** also has an install button where the browser supports one. Progress is kept separately in the app and in the browser.
+
 ## How to play
 
 Play online at the link above, or download `index.html` and open it in any modern browser. There is no build step and nothing to install.
@@ -92,4 +102,4 @@ Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peek
 
 ## Project layout
 
-The kids' game is a separate single file, `kids.html`. The main game lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.
+`manifest.webmanifest`, `sw.js` (offline cache) and `icons/` make the main game installable. Regenerate the icons with `python tools/make_icons.py`. The kids' game is a separate single file, `kids.html`. The main game lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.

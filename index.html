@@ -6,6 +6,13 @@
 <title>Chiya Pasal</title>
 <meta name="description" content="Run a Kathmandu tea stall and learn romanized Nepali by serving customers, chatting, and making change.">
 <meta name="theme-color" content="#c4122f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chiya Pasal">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -302,6 +309,8 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .tbl td,.tbl th{padding:4px 8px;border-bottom:1px solid var(--line);text-align:left}
 .tbl th{color:var(--muted);font-weight:500;font-size:.8rem}
 .tblwrap{overflow-x:auto}
+.set-install{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:.92rem}
+.set-install span{flex:1 1 240px;color:var(--muted)}
 .set-voice{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding-left:28px;font-size:.95rem}
 .set-voice label{display:flex;gap:8px;align-items:center}
 .set-voice select{font:inherit;font-size:.9rem;max-width:100%;padding:2px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
@@ -410,6 +419,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
     <label>Speed <input type="range" id="optRate" min="0.5" max="1.2" step="0.05"> <span id="optRateV"></span></label>
     <button class="ghost" id="voiceTest" type="button">🔊 Test</button>
   </div>
+  <div class="set-install" id="installBox"><b>📱 App</b> <span id="installText"></span> <button class="primary" id="installBtn" type="button" hidden>Install Chiya Pasal</button></div>
   <div class="row-end" style="justify-content:space-between">
     <button class="danger" id="btnReset">Erase progress</button>
     <button class="primary" id="closeSet">Done</button>
@@ -1754,7 +1764,7 @@ $('#btnPrac').onclick=openPractice;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
   $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;
   $('#optListen').disabled=!voiceOn();$('#listenStatus').textContent=voiceOn()?'The customer’s words stay hidden until you answer. Use 🔊 to hear them again.':'Needs a Nepali or Hindi voice on this device (see “Read lines aloud” below).';
-  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');renderVoiceSettings();};
+  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');renderVoiceSettings();renderInstall();};
 function renderVoiceSettings(){
   const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
   $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice;
@@ -1770,6 +1780,24 @@ $('#optVoice').onchange=e=>{S.settings.voice=e.target.checked;save();if(!S.setti
 $('#optVoiceName').onchange=e=>{S.settings.voiceName=e.target.value;save();loadVoices();};
 $('#optRate').oninput=e=>{S.settings.rate=+e.target.value;$('#optRateV').textContent=S.settings.rate.toFixed(2);save();};
 $('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak('Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
+// ---------- installable app ----------
+let installEvt=null;
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function renderInstall(){
+  const t=$('#installText'),b=$('#installBtn');b.hidden=true;
+  if(standalone())t.textContent='Installed. You’re using the app.';
+  else if(installEvt){t.textContent='Put it on your home screen: it opens full-screen and works offline.';b.hidden=false;}
+  else if(isIOS)t.textContent='On iPhone or iPad: open this page in Safari, tap Share (the square with an arrow), then “Add to Home Screen”.';
+  else t.textContent='To install, open lighting8282.github.io/chiya-pasal in Chrome or Edge and choose “Install app” from the menu. On iPhone: Safari → Share → Add to Home Screen.';
+}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;renderInstall();});
+addEventListener('appinstalled',()=>{installEvt=null;renderInstall();});
+$('#installBtn').onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;renderInstall();};
+// offline support only where service workers are allowed (the public https site or localhost; not file:// or the Claude preview)
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
 $('#sayAgain').onclick=()=>{const st=C&&!C.gone&&C.steps[C.i];if(st&&st.voice)speakDev(st.voice);else speak(lastSay);};
 if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 $('#closeSet').onclick=()=>{
