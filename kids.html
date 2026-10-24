@@ -160,7 +160,8 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .opt .pic{font-size:5rem;line-height:1.1}
 .opt .swatch{width:110px;height:110px}
 .opt .digit{font-size:3.6rem}
-.opt .w{font-size:1.2rem;font-weight:700}
+.opt .w{font-size:1.2rem;font-weight:700;line-height:1.1}
+.opt .w-en{font-size:.95rem;color:var(--soft);line-height:1.1}
 .opt .lab{font-size:.85rem;color:var(--soft);visibility:hidden}
 .opt.right{box-shadow:0 7px 0 var(--good),0 0 0 6px var(--good);animation:yay .6s cubic-bezier(.3,1.6,.5,1)}
 .opt.right .lab,.opt.show .lab{visibility:visible}
@@ -293,11 +294,11 @@ const TOPICS=[
 // sajilo = easy, thikka = just right, gaaro = hard
 const LEVELS={
  easy:{np:'Sajilo',dev:'सजिलो',en:'Easy',icon:'🐣',color:'#2fae6e',choices:2,n:6,words:6,count:5,listen:false,
-   about:'2 pictures to choose from, the first 6 words, counting to 5'},
+   about:'2 pictures to choose from, each labelled in Nepali and English; the first 6 words; counting to 5'},
  medium:{np:'Thikka',dev:'ठिक्क',en:'Medium',icon:'🐥',color:'#ff9f1c',choices:3,n:8,words:99,count:10,listen:false,
-   about:'3 pictures, every word, counting to 10'},
+   about:'3 pictures labelled in Nepali only, every word, counting to 10'},
  hard:{np:'Gaaro',dev:'गाह्रो',en:'Hard',icon:'🦅',color:'#e8463a',choices:4,n:10,words:99,count:20,listen:true,
-   about:'4 pictures, every word, counting to 20; the word is only spoken, not written, until you answer'},
+   about:'4 pictures with no labels, every word, counting to 20; the word is only spoken, not written, until you answer'},
 };
 const LV_KEYS=Object.keys(LEVELS);
 const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
@@ -567,6 +568,15 @@ function distractors(t,it,words,n){
   const far=shuffle(words.filter(x=>x!==it&&Math.abs(x[3]-it[3])>3));
   return [...near,...far].slice(0,n);
 }
+// what an answer button shows: easy = picture + Nepali + English, medium = picture + Nepali, hard = picture only.
+// Whatever is hidden is revealed (.lab) once the button is answered.
+function optionFace(t,o,lv){
+  const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o);
+  const np=lv!=='hard'?`<span class="w">${o[0]}</span>`:'';
+  const en=lv==='easy'?`<span class="w-en">${o[2]}</span>`:'';
+  const hidden=lv==='hard'?`${o[0]} · ${o[2]}`:lv==='medium'?o[2]:'';
+  return pic+np+en+(hidden?`<span class="lab">${hidden}</span>`:'');
+}
 function renderQ(){
   screen='quiz';const {t,L}=Q,it=Q.order[Q.i];Q.tries=0;Q.lock=false;
   const opts=shuffle([it,...distractors(t,it,Q.words,L.choices-1)]);
@@ -578,7 +588,7 @@ function renderQ(){
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
    ${t.kind==='num'?`<div class="counter">${countHtml(it[3],pic,`aria-label="${it[3]} things"`)}</div>`:''}
    <div class="opts${L.choices===3?' three':''}" style="--cols:${L.choices}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${t.kind==='num'?o[0]:o[2]}">
-     ${t.kind==='num'?`<span class="digit">${o[3]}</span><span class="w">${o[0]}</span>`:pictureOf(t,o)}<span class="lab">${o[0]}${S.english&&t.kind!=='num'?' · '+o[2]:''}</span></button>`).join('')}</div>`;
+     ${optionFace(t,o,Q.lv)}</button>`).join('')}</div>`;
   const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');say(rom,dev,Q.lv==='easy'?en:null);};
   $('#again').onclick=ask;
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k],it,[rom,dev,en]));
