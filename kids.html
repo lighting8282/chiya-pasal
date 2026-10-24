@@ -192,6 +192,30 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .grown select{font:inherit;font-size:1rem;padding:4px 8px;border-radius:10px;border:2px solid var(--line);max-width:100%}
 .grown input[type=checkbox]{width:22px;height:22px;accent-color:var(--red)}
 .grown input[type=range]{accent-color:var(--red)}
+.progwrap{overflow-x:auto}
+.prog{border-collapse:collapse;font-size:.92rem;width:100%}
+.prog th,.prog td{padding:4px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.prog th{color:var(--soft);font-weight:500}
+.prog td small{color:var(--soft)}
+.prog td.pass{color:var(--good);font-weight:800}
+.prog td.some{color:#b98900;font-weight:700}
+.practise{display:flex;flex-wrap:wrap;gap:8px}
+.practise span{background:var(--sky);border-radius:999px;padding:4px 12px;font-size:.95rem}
+.practise small{color:var(--soft)}
+.practise .dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle;border:1px solid var(--line)}
+/* letters and stories */
+.letter{font-family:'Mukta','Nirmala UI','Mangal',var(--f);font-size:6.5rem;line-height:1.05;font-weight:700;color:var(--ink);animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+.opt .letter{font-size:4rem}
+.ex{font-size:1.1rem;color:var(--soft)}
+.ex b{font-size:1.2rem;color:var(--ink)}
+.write{align-self:center;background:var(--purple);box-shadow:0 6px 0 #6a3fbe}
+.trace{position:relative;width:min(300px,82vw);aspect-ratio:1;margin:0 auto;background:var(--card);border-radius:24px;box-shadow:0 6px 0 var(--line);overflow:hidden}
+.trace canvas{position:absolute;inset:0;width:100%;height:100%}
+#trInk{touch-action:none;cursor:crosshair}
+#traceBox{display:flex;flex-direction:column;gap:12px;align-items:center}
+.story .story-pic{font-size:5.5rem;line-height:1.15;animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
+.story b{font-size:1.9rem;line-height:1.2;text-wrap:balance}
+.arrow:disabled{opacity:.35}
 .lvtable{border-collapse:collapse;font-size:.95rem}
 .lvtable td,.lvtable th{padding:4px 10px 4px 0;text-align:left;vertical-align:top}
 .lvtable th{color:var(--soft);font-weight:500}
@@ -321,6 +345,19 @@ const TOPICS=[
   ['chinta lageko','चिन्ता लागेको','worried','😟'],['maya lageko','माया लागेको','in love','😍'],['jhyau lageko','झ्याउ लागेको','bored','🥱'],
   ['jaado lageko','जाडो लागेको','cold','🥶'],['garmi lageko','गर्मी लागेको','hot','🥵']]},
  // everyday sayings people use now; the child hears one and picks the picture that fits
+ // letters: [sound, letter, sound again (unique label), picture, tier, example word, its Devanagari, its English]
+ {id:'akshar',np:'Akshar',dev:'अक्षर',en:'Letters',icon:'अ',color:'#e8463a',kind:'letter',q:'letter',tiers:true,items:[
+  ['a','अ','a','🥚',1,'anda','अण्डा','egg'],['aa','आ','aa','🥭',1,'aanp','आँप','mango'],['i','इ','i','🌈',1,'indreni','इन्द्रेणी','rainbow'],
+  ['u','उ','u','🦉',1,'ullu','उल्लु','owl'],['e','ए','e','1️⃣',1,'ek','एक','one'],['o','ओ','o','👄',1,'oth','ओठ','lips'],
+  ['ka','क','ka','🐶',2,'kukur','कुकुर','dog'],['kha','ख','kha','🐰',2,'kharayo','खरायो','rabbit'],['ga','ग','ga','🐄',2,'gai','गाई','cow'],
+  ['gha','घ','gha','⏰',2,'ghadi','घडी','clock'],['cha','च','cha','🐦',2,'chara','चरा','bird'],['chha','छ','chha','☂️',2,'chhata','छाता','umbrella'],
+  ['ja','ज','ja','👟',2,'jutta','जुत्ता','shoes'],['jha','झ','jha','🎒',2,'jhola','झोला','bag'],
+  ['Ta','ट','Ta','🧢',3,'topi','टोपी','cap'],['Da','ड','Da','⛵',3,'dunga','डुङ्गा','boat'],['ta','त','ta','⭐',3,'tara','तारा','star'],
+  ['da','द','da','🦷',3,'daant','दाँत','tooth'],['na','न','na','👃',3,'naak','नाक','nose'],['pa','प','pa','🦋',3,'putali','पुतली','butterfly'],
+  ['pha','फ','pha','🌸',3,'phul','फूल','flower'],['ba','ब','ba','🐯',3,'bagh','बाघ','tiger'],['bha','भ','bha','🐻',3,'bhalu','भालु','bear'],
+  ['ma','म','ma','🐟',3,'machha','माछा','fish'],['ra','र','ra','🌳',3,'rukh','रूख','tree'],['la','ल','la','🦟',3,'laamkhutte','लामखुट्टे','mosquito'],
+  ['sa','स','sa','🦁',3,'singha','सिंह','lion'],['ha','ह','ha','🐘',3,'hatti','हात्ती','elephant']]},
+ {id:'kathaa',np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',color:'#8e5be8',kind:'story',items:[]},
  {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',color:'#ff7eb6',kind:'pic',q:'phrase',items:[
   ['pakka','पक्का','for sure!','👍'],['sahi ho','सही हो','that’s right!','✅'],['ek chin','एक छिन','just a moment','⏳'],
   ['bye bye','बाइ बाइ','bye-bye!','👋'],['majja aayo','मज्जा आयो','that was fun!','🎉'],['chhito gara','छिटो गर','hurry up!','🏃'],
@@ -457,6 +494,7 @@ function renderTop(){
   $('#stars').textContent='★ '+starsOf(p);
 }
 function pictureOf(t,it){
+  if(t.kind==='letter')return `<span class="letter" lang="ne">${it[1]}</span>`;
   if(t.kind==='color')return `<span class="swatch" style="background:${it[3]}"></span>`;
   if(t.kind==='num')return `<span class="digit">${it[3]}</span>`;
   return `<span class="pic">${it[3]}</span>`;
@@ -543,11 +581,14 @@ function goHome(quiet){
   main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
    <div class="topics">${TOPICS.map((t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${i*45}ms" data-t="${t.id}">
      <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
-     <span class="medals" aria-label="Levels finished">${LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}</div>`;
+     <span class="medals" aria-label="${t.kind==='story'?'Stories finished':'Levels finished'}">${t.kind==='story'
+       ?STORIES.map(s=>`<span class="${bestOf(p,'kathaa',s.id)?'on':''}" title="${esc(s.en)}">📖</span>`).join('')
+       :LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}</div>`;
   main.querySelectorAll('.topic').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
   if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a picture.');mood('wave');}
 }
 function openTopic(t){
+  if(t.kind==='story'){openStories();return;}
   topic=t;screen='topic';
   const p=P(),cur=levelOf(t.id);
   main.innerHTML=`<h1>${t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
@@ -570,16 +611,20 @@ function openTopic(t){
 
 // learn: one big card at a time, through this level's words
 function renderLearn(){
-  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI];
+  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter';
   const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
-  main.innerHTML=`<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}<b>${it[0]}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${it[2]}</span>`:''}</div>
+  const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english?` · ${it[7]}`:''}</span>`
+    :`<b>${it[0]}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${it[2]}</span>`:''}`;
+  main.innerHTML=`<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}${text}</div>
+   ${isL?`<button class="listen write" id="writeBtn">✏️ Lekhaun <small style="font-weight:500">let’s write it</small></button><div id="traceBox" hidden></div>`:''}
    <div class="nav">
     <button class="arrow" id="prev" aria-label="Previous">◀</button>
     <button class="listen" id="listen">🔊 Suna <small style="font-weight:500">listen</small></button>
     <button class="arrow" id="next" aria-label="Next">▶</button>
    </div>
    <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
-  const hear=()=>{say(it[0],it[1],it[2]);mood('happy');};
+  const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,it[0]+', as in '+it[7]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
+  if(isL)$('#writeBtn').onclick=()=>{$('#writeBtn').hidden=true;openTrace(it);};
   $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
   $('#listen').onclick=hear;
   $('#prev').onclick=()=>{learnI=(learnI-1+words.length)%words.length;renderLearn();};
@@ -590,11 +635,137 @@ function renderLearn(){
   speech(it[0],it[1],it[2]);hear();
 }
 
+// ---------- kathaa (Habre's stories) ----------
+// pages: [picture, romanized, devanagari, english]; quiz options: [picture, romanized, english]
+const STORIES=[
+ {id:'bihana',np:'Habre ko bihana',dev:'हाब्रेको बिहान',en:'Habre’s morning',icon:'☀️',pages:[
+  ['☀️🌄','Bihana bhayo. Ghaam lagyo.','बिहान भयो। घाम लाग्यो।','Morning came. The sun came out.'],
+  ['🛏️','Habre uthyo.','हाब्रे उठ्यो।','Habre got up.'],
+  ['🦷✨','Habre daant majhchha.','हाब्रे दाँत माझ्छ।','Habre brushes his teeth.'],
+  ['🥛🍎','Habre dudh piunchha ra syau khanchha.','हाब्रे दूध पिउँछ र स्याउ खान्छ।','Habre drinks milk and eats an apple.'],
+  ['🎒','Habre jhola bokchha.','हाब्रे झोला बोक्छ।','Habre carries his school bag.'],
+  ['🏫👋','Habre school jaanchha. Bye bye!','हाब्रे स्कूल जान्छ। बाइ बाइ!','Habre goes to school. Bye-bye!']],
+  quiz:['Habre le ke khayo?','हाब्रेले के खायो?','What did Habre eat?',0,[['🍎','syau','apple'],['🍌','kera','banana'],['🥚','anda','egg']]]},
+ {id:'bazaar',np:'Bazaar ma',dev:'बजारमा',en:'At the market',icon:'🛍️',pages:[
+  ['👩🛍️','Habre aama sanga bazaar jaanchha.','हाब्रे आमासँग बजार जान्छ।','Habre goes to the market with Mum.'],
+  ['🍌🍌','Kera pahelo cha.','केरा पहेंलो छ।','The bananas are yellow.'],
+  ['🍎🍎','Syau rato cha.','स्याउ रातो छ।','The apples are red.'],
+  ['🐓','Kukhura “kukhurikaa” bhanchha.','कुखुरा “कुखुरीका” भन्छ।','The rooster says “cock-a-doodle-doo”.'],
+  ['🍎🍎🍎','Aama tin wota syau kinnuhunchha.','आमा तीन वटा स्याउ किन्नुहुन्छ।','Mum buys three apples.'],
+  ['😀','Habre khusi cha!','हाब्रे खुसी छ!','Habre is happy!']],
+  quiz:['Aama le kati wota syau kinnu bhayo?','आमाले कति वटा स्याउ किन्नुभयो?','How many apples did Mum buy?',1,[['🍎🍎','dui','two'],['🍎🍎🍎','tin','three'],['🍎🍎🍎🍎🍎','paanch','five']]]},
+ {id:'paani',np:'Paani paryo',dev:'पानी पर्‍यो',en:'It rained',icon:'🌧️',pages:[
+  ['☁️☁️','Aakash ma badal aayo.','आकाशमा बादल आयो।','Clouds came into the sky.'],
+  ['🌧️','Paani paryo!','पानी पर्‍यो!','It rained!'],
+  ['☂️','Habre chhata odhchha.','हाब्रे छाता ओढ्छ।','Habre holds up his umbrella.'],
+  ['🐸','Bhyaguto uphrinchha.','भ्यागुतो उफ्रिन्छ।','A frog jumps.'],
+  ['🌈','Paani rokiyo. Indreni aayo!','पानी रोकियो। इन्द्रेणी आयो!','The rain stopped. A rainbow came out!'],
+  ['😀','Habre lai majja aayo!','हाब्रेलाई मज्जा आयो!','Habre had fun!']],
+  quiz:['Habre le ke odhyo?','हाब्रेले के ओढ्यो?','What did Habre hold up?',0,[['☂️','chhata','umbrella'],['🧢','topi','cap'],['🎒','jhola','bag']]]},
+];
+let story=null,pageI=0;
+function openStories(){
+  screen='stories';const p=P();
+  main.innerHTML=`<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
+   <div class="topics">${STORIES.map((s,i)=>`<button class="topic" style="--tc:#8e5be8;animation-delay:${i*60}ms" data-s="${s.id}">
+     <span class="ic" aria-hidden="true">${s.icon}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}</span>
+     <span class="medals"><span class="${bestOf(p,'kathaa',s.id)?'on':''}">📖</span><span class="${bestOf(p,'kathaa',s.id)>=2?'on':''}">⭐</span></span></button>`).join('')}</div>`;
+  main.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{story=STORIES.find(s=>s.id===b.dataset.s);pageI=0;renderPage();});
+  speech('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');say('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');mood('wave');
+}
+function renderPage(){
+  screen='story';const pg=story.pages[pageI];
+  main.innerHTML=`<h2 class="sub">${story.np} <small>${pageI+1} / ${story.pages.length}</small></h2>
+   <div class="big story" id="card" role="button" tabindex="0" aria-label="Read it again">
+     <span class="story-pic" aria-hidden="true">${pg[0]}</span><b>${esc(pg[1])}</b><span class="dev" lang="ne">${pg[2]}</span>${S.english?`<span class="en">${esc(pg[3])}</span>`:''}</div>
+   <div class="nav">
+    <button class="arrow" id="prev" aria-label="Previous page" ${pageI?'':'disabled'}>◀</button>
+    <button class="listen" id="listen">🔊 Suna <small style="font-weight:500">listen</small></button>
+    <button class="arrow" id="next" aria-label="Next page">▶</button>
+   </div>
+   <div class="dots">${story.pages.map((_,i)=>`<i class="${i===pageI?'on':''}"></i>`).join('')}</div>`;
+  const read=()=>{speech(pg[1],pg[2],pg[3]);say(pg[1],pg[2],pg[3]);mood('happy');};
+  $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();read();}};
+  $('#listen').onclick=read;
+  $('#prev').onclick=()=>{if(pageI){pageI--;renderPage();}};
+  $('#next').onclick=()=>{if(pageI<story.pages.length-1){pageI++;renderPage();}else storyQuiz();};
+  read();
+}
+function storyQuiz(){
+  screen='storyq';const [rom,dev,en,ans,opts]=story.quiz;let tries=0,done=false;
+  main.innerHTML=`<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="opts three" style="--cols:3">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${o[2]}"><span class="pic">${o[0]}</span><span class="w">${o[1]}</span><span class="w-en">${o[2]}</span></button>`).join('')}</div>`;
+  const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
+  $('#again').onclick=ask;ask();
+  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(done)return;const k=+b.dataset.k;
+    if(k===ans){
+      done=true;b.classList.add('right');confetti();mood('happy');
+      const stars=tries===0?2:1,p=P();
+      if(stars>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=stars;save();renderTop();}
+      speech('Syabaas! '+cap(opts[ans][1])+'!','स्याबास!',`Well done! You finished “${story.en}”.`);say('Syabaas!','स्याबास!',null);
+      setTimeout(()=>{if(screen==='storyq')openStories();},2300);
+    }else{tries++;b.classList.add('wrong');b.disabled=true;mood('sad');speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
+  });
+}
+
+// ---------- letter tracing ----------
+// the child traces over a faint letter; it counts when the ink covers most of the letter and stays mostly inside it
+function openTrace(it){
+  const box=$('#traceBox');box.hidden=false;
+  box.innerHTML=`<div class="trace"><canvas id="trGuide" aria-hidden="true"></canvas><canvas id="trInk" aria-label="Trace the letter ${it[1]} with your finger"></canvas></div>
+   <div class="btns"><button class="btn ghost" id="trClear">↺ Pheri <small style="font-weight:500">again</small></button><button class="btn" style="background:var(--green)" id="trDone">✔ Sakiyo <small style="font-weight:500">done</small></button></div>`;
+  const wrap=box.querySelector('.trace'),size=Math.round(wrap.getBoundingClientRect().width)||260,dpr=window.devicePixelRatio||1;
+  const g=$('#trGuide'),k=$('#trInk');[g,k].forEach(c=>{c.width=size*dpr;c.height=size*dpr;});
+  const gx=g.getContext('2d'),kx=k.getContext('2d');gx.scale(dpr,dpr);kx.scale(dpr,dpr);
+  // a 1x copy of the ink for checking
+  const ink=document.createElement('canvas');ink.width=ink.height=size;const ix=ink.getContext('2d');
+  const font=`700 ${Math.round(size*0.6)}px 'Baloo 2','Nirmala UI','Mangal',sans-serif`,cy=size*0.56;
+  const drawGuide=()=>{gx.clearRect(0,0,size,size);gx.font=font;gx.textAlign='center';gx.textBaseline='middle';
+    gx.fillStyle='#e6f1fb';gx.fillText(it[1],size/2,cy);gx.setLineDash([5,6]);gx.lineWidth=2;gx.strokeStyle='#9fbfdc';gx.strokeText(it[1],size/2,cy);};
+  (document.fonts&&document.fonts.load?document.fonts.load(font):Promise.resolve()).then(drawGuide,drawGuide);
+  const lw=size*0.08;
+  [kx,ix].forEach(c=>{c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';c.strokeStyle='#e8463a';});
+  let down=false,last=null,won=false;
+  const pt=e=>{const r=k.getBoundingClientRect();return [(e.clientX-r.left)*size/r.width,(e.clientY-r.top)*size/r.height];};
+  const line=(a,b)=>[kx,ix].forEach(c=>{c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();});
+  k.onpointerdown=e=>{down=true;k.setPointerCapture(e.pointerId);last=pt(e);line(last,last);};
+  k.onpointermove=e=>{if(!down)return;const p=pt(e);line(last,p);last=p;};
+  k.onpointerup=k.onpointercancel=()=>{if(!down)return;down=false;if(!won&&check(false))celebrate();};
+  function check(loud){
+    const m=document.createElement('canvas');m.width=m.height=size;const mx=m.getContext('2d');
+    mx.font=font;mx.textAlign='center';mx.textBaseline='middle';mx.fillStyle='#000';mx.fillText(it[1],size/2,cy);
+    const d=document.createElement('canvas');d.width=d.height=size;const dx=d.getContext('2d');
+    dx.font=font;dx.textAlign='center';dx.textBaseline='middle';dx.fillText(it[1],size/2,cy);dx.lineWidth=lw*1.6;dx.lineJoin='round';dx.strokeText(it[1],size/2,cy);
+    const M=mx.getImageData(0,0,size,size).data,D=dx.getImageData(0,0,size,size).data,I=ix.getImageData(0,0,size,size).data;
+    let letter=0,covered=0,inkN=0,out=0;
+    for(let i=3;i<M.length;i+=4*3){const inL=M[i]>100,inI=I[i]>100;if(inL){letter++;if(inI)covered++;}if(inI){inkN++;if(D[i]<60)out++;}}
+    const cov=letter?covered/letter:0,outside=inkN?out/inkN:1;
+    if(cov>=0.5&&outside<=0.35)return true;
+    if(loud){
+      if(cov<0.5){speech('Pura lekha!','पूरा लेख!','Trace all of it!');say('Pura lekha!','पूरा लेख!','Trace all of it!');}
+      else{speech('Rekha bhitra lekha!','रेखा भित्र लेख!','Stay inside the lines!');say('Rekha bhitra lekha!','रेखा भित्र लेख!','Stay inside the lines!');}
+      mood('sad');
+    }
+    return false;
+  }
+  function celebrate(){
+    won=true;confetti();mood('happy');
+    const p=P();if(p){p.traced=p.traced||{};p.traced[it[1]]=(p.traced[it[1]]||0)+1;save();}
+    speech('Syabaas! '+it[0]+'!','स्याबास! '+it[1],'You wrote '+it[0]+'!');say('Syabaas! '+it[0],'स्याबास! '+it[1],null);
+  }
+  $('#trClear').onclick=()=>{kx.clearRect(0,0,size,size);ix.clearRect(0,0,size,size);won=false;};
+  $('#trDone').onclick=()=>{if(won||check(true))celebrate();};
+  speech('Lekhaun!','लेखौं!','Trace the letter with your finger.');say('Lekhaun!','लेखौं!','Trace the letter with your finger.');
+  wrap.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
+}
+
 // play: a round of questions with 2, 3 or 4 big choices
 function questionLine(t,it){
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
   if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
   if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
+  if(t.kind==='letter')return [`“${it[0]}” kun akshar?`,`${it[1]}। ${it[1]} कुन अक्षर?`,`Which letter says “${it[0]}”?`];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
 }
 function startQuiz(){
@@ -615,6 +786,11 @@ function distractors(t,it,words,n){
 // what an answer button shows: easy = picture + Nepali + English, medium = picture + Nepali, hard = picture only.
 // Whatever is hidden is revealed (.lab) once the button is answered.
 function optionFace(t,o,lv){
+  if(t.kind==='letter'){
+    const ex=`${o[3]} ${o[5]}`;
+    return pictureOf(t,o)+(lv!=='hard'?`<span class="w">${o[0]}</span>`:'')+(lv==='easy'?`<span class="w-en">${ex}</span>`:'')
+      +(lv==='hard'?`<span class="lab">${o[0]} · ${ex}</span>`:lv==='medium'?`<span class="lab">${ex}</span>`:'');
+  }
   const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o);
   const np=lv!=='hard'?`<span class="w">${o[0]}</span>`:'';
   const en=lv==='easy'?`<span class="w-en">${o[2]}</span>`:'';
@@ -640,14 +816,16 @@ function renderQ(){
 }
 function pick(b,o,it,line){
   if(Q.lock)return;
+  const pr=P(),stat=pr?(pr.stat=pr.stat||{plays:0,right:{},miss:{}}):null,key=Q.t.id+'|'+it[0];
   if(o===it){
-    Q.lock=true;if(Q.tries===0)Q.stars++;
+    Q.lock=true;if(Q.tries===0){Q.stars++;if(stat)stat.right[key]=(stat.right[key]||0)+1;}
     b.classList.add('right');confetti();mood('happy');
     $('#qSay').innerHTML=`${line[0]}<small lang="ne">${line[1]} · ${line[2]}</small>`;
     const p=rnd(PRAISE);speech(p[0]+' '+cap(it[0])+'!',p[1]+' '+it[1],p[2]+' '+cap(it[2])+'!');say(p[0]+' '+it[0],p[1]+' '+it[1],null);
     setTimeout(()=>{if(screen!=='quiz')return;Q.i++;if(Q.i<Q.L.n)renderQ();else endQuiz();},1900);
   }else{
     Q.tries++;b.classList.add('wrong','show');b.disabled=true;mood('sad');
+    if(stat&&Q.tries===1){stat.miss[key]=(stat.miss[key]||0)+1;save();}
     const left=[...main.querySelectorAll('.opt')].filter(x=>!x.disabled);
     if(Q.tries>=2||left.length===1){const right=left.find(x=>x.getAttribute('aria-label')===(Q.t.kind==='num'?it[0]:it[2]));right?.classList.add('hint');speech(cap(it[0]),it[1],'This one!');say(it[0],it[1],null);}
     else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
@@ -656,7 +834,9 @@ function pick(b,o,it,line){
 function endQuiz(){
   screen='end';const {t,lv,L}=Q,n=Q.stars,p=P(),frac=n/L.n;
   let newBest=false;
-  if(n>bestOf(p,t.id,lv)){p.best=p.best||{};p.best[t.id+':'+lv]=n;save();newBest=true;}
+  p.stat=p.stat||{plays:0,right:{},miss:{}};p.stat.plays++;p.stat.last=new Date().toISOString().slice(0,10);
+  if(n>bestOf(p,t.id,lv)){p.best=p.best||{};p.best[t.id+':'+lv]=n;newBest=true;}
+  save();
   renderTop();
   const next=LV_KEYS[LV_KEYS.indexOf(lv)+1];
   const offerNext=next&&frac>=0.7;
@@ -677,6 +857,22 @@ function endQuiz(){
   speech(...line);say(...line);
 }
 
+// per-player report for grown-ups: stars per topic and level, stories, letters written, words that keep tripping them up
+function renderProgress(p){
+  if(!p)return;
+  const st=p.stat||{plays:0,right:{},miss:{}},cell=(t,k)=>{const b=bestOf(p,t.id,k),n=LEVELS[k].n;return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
+  const find=key=>{const [tid,w]=key.split('|'),t=TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);return t&&it?{t,it}:null;};
+  const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:find(x.k)})).filter(x=>x.f);
+  const traced=Object.keys(p.traced||{});
+  $('#progBody').innerHTML=`
+   <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}</p>
+   <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}</tr></thead>
+    <tbody>${TOPICS.filter(t=>t.kind!=='story').map(t=>`<tr><td>${t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}</tr>`).join('')}</tbody></table></div>
+   <p><b>Stories:</b> ${STORIES.map(s=>`${s.icon} ${s.np} ${bestOf(p,'kathaa',s.id)>=2?'✓ read + quiz':bestOf(p,'kathaa',s.id)?'✓ read':'not yet'}`).join(' · ')}</p>
+   <p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>
+   <h3>Words to practise</h3>
+   ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}`;
+}
 // grown-ups panel
 function renderGrown(){
   screen='grown';
@@ -692,11 +888,15 @@ function renderGrown(){
       <button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button>
       <button class="btn" style="background:var(--blue)" id="vDone">Done</button>
     </div>
+    <h2>Progress</h2>
+    ${S.profiles.length?`<label>Player <select id="progSel">${S.profiles.map(x=>`<option value="${x.id}" ${p&&x.id===p.id?'selected':''}>${x.icon} ${esc(x.name)}</option>`).join('')}</select></label>
+    <div id="progBody"></div>`:'<p>No players yet.</p>'}
     <h2>Levels</h2>
     <table class="lvtable">${LV_KEYS.map(k=>`<tr><th>${LEVELS[k].icon} ${LEVELS[k].np} (${LEVELS[k].en})</th><td>${LEVELS[k].n} questions, ${LEVELS[k].about}.</td></tr>`).join('')}</table>
     <p>A level’s medal on the home screen lights up at 70% of its stars. Each player keeps their own stars and chosen levels. Everything is saved in this browser only.</p>
     ${p?`<div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="resetP">Reset ${esc(p.name)}’s stars</button></div><div class="warn" id="resetBox" hidden><b>Clear every star ${esc(p.name)} has earned?</b><div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="resetYes">Yes, clear</button><button class="btn ghost" id="resetNo">Keep</button></div></div>`:''}
   </div>`;
+  if($('#progSel')){const show=()=>renderProgress(S.profiles.find(x=>x.id===$('#progSel').value));$('#progSel').onchange=show;show();}
   $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
   $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
   $('#vRate').oninput=e=>{S.rate=+e.target.value;$('#vRateV').textContent=S.rate.toFixed(2);save();};
