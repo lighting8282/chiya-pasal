@@ -216,6 +216,12 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .story .story-pic{font-size:5.5rem;line-height:1.15;animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
 .story b{font-size:1.9rem;line-height:1.2;text-wrap:balance}
 .arrow:disabled{opacity:.35}
+.speedrow{display:flex;flex-direction:column;gap:6px}
+.speeds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.speeds button{display:flex;flex-direction:column;align-items:center;background:var(--sky);border:3px solid transparent;border-radius:16px;padding:6px 4px;line-height:1.15;box-shadow:0 3px 0 var(--line)}
+.speeds button small{color:var(--soft);font-size:.8rem}
+.speeds button[aria-checked="true"]{border-color:var(--red);background:#fff}
+@media (max-width:680px){.speeds{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .lvtable{border-collapse:collapse;font-size:.95rem}
 .lvtable td,.lvtable th{padding:4px 10px 4px 0;text-align:left;vertical-align:top}
 .lvtable th{color:var(--soft);font-weight:500}
@@ -375,6 +381,8 @@ const LEVELS={
    about:'4 pictures with no labels, every word, counting to 20; the word is only spoken, not written, until you answer'},
 };
 const LV_KEYS=Object.keys(LEVELS);
+// voice speed presets for the grown-ups panel (kids' speeds sit a little slower than the adult game's)
+const SPEEDS=[['Dherai bistarai','very slow',0.55],['Bistarai','slow',0.7],['Samanya','normal',0.85],['Chhito','fast',1.0]];
 const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
 const AVATARS=['🦊','🐼','🐯','🐰','🐸','🦁','🐨','🐵','🐶','🐱','🦄','🐧'];
 const PCOLORS=['#e8463a','#3a7bf2','#2fae6e','#8e5be8','#ff9f1c','#ff7eb6'];
@@ -883,7 +891,8 @@ function renderGrown(){
     <p><b>Voice in use:</b> ${!TTS?'none (this browser cannot speak)':npVoice?`${esc(npVoice.name)} (${npVoice.lang})`:'no Nepali or Hindi voice found'}</p>
     ${list.length>1?`<label>Choose voice <select id="vSel">${list.map(v=>`<option value="${esc(v.name)}" ${npVoice&&v.name===npVoice.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join('')}</select></label>`:''}
     <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
-    <label>Speed <input type="range" id="vRate" min="0.5" max="1.2" step="0.05" value="${S.rate}"> <span id="vRateV">${S.rate.toFixed(2)}</span></label>
+    <div class="speedrow"><b>Voice speed</b><div class="speeds" role="radiogroup" aria-label="Voice speed">${(()=>{const cur=SPEEDS.reduce((a,s)=>Math.abs(s[2]-S.rate)<Math.abs(a[2]-S.rate)?s:a);
+      return SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');})()}</div></div>
     <div class="btns" style="justify-content:flex-start">
       <button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button>
       <button class="btn" style="background:var(--blue)" id="vDone">Done</button>
@@ -899,7 +908,9 @@ function renderGrown(){
   if($('#progSel')){const show=()=>renderProgress(S.profiles.find(x=>x.id===$('#progSel').value));$('#progSel').onchange=show;show();}
   $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
   $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
-  $('#vRate').oninput=e=>{S.rate=+e.target.value;$('#vRateV').textContent=S.rate.toFixed(2);save();};
+  main.querySelectorAll('.speeds button').forEach(b=>b.onclick=()=>{S.rate=+b.dataset.r;save();
+    main.querySelectorAll('.speeds button').forEach(x=>x.setAttribute('aria-checked',String(x===b)));
+    say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।',null);});
   $('#vTest').onclick=()=>say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');
   $('#vDone').onclick=()=>goHome();
   if(p){

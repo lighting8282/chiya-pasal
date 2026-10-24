@@ -332,6 +332,13 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .tblwrap{overflow-x:auto}
 .set-install{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:.92rem}
 .set-install span{flex:1 1 240px;color:var(--muted)}
+.set-speed{display:flex;flex-direction:column;gap:6px;padding-left:28px;font-size:.95rem}
+.set-speed.novoice::after{content:"Applies once a Nepali or Hindi voice is available.";color:var(--muted);font-size:.8rem}
+.speeds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.speeds button{display:flex;flex-direction:column;align-items:center;background:var(--surface-2);border:2px solid var(--line);border-radius:10px;padding:6px 4px;line-height:1.15}
+.speeds button small{color:var(--muted);font-size:.75rem}
+.speeds button[aria-checked="true"]{border-color:var(--crimson);background:var(--surface)}
+@media (max-width:520px){.speeds{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .set-voice{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding-left:28px;font-size:.95rem}
 .set-voice label{display:flex;gap:8px;align-items:center}
 .set-voice select{font:inherit;font-size:.9rem;max-width:100%;padding:2px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
@@ -438,8 +445,10 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
   <label class="set"><input type="checkbox" id="optVoice"><span>Read lines aloud<small id="voiceStatus">Uses a Nepali or Hindi voice installed on this device.</small></span></label>
   <div class="set-voice" id="voiceBox">
     <label id="voicePickRow">Voice <select id="optVoiceName"></select></label>
-    <label>Speed <input type="range" id="optRate" min="0.5" max="1.2" step="0.05"> <span id="optRateV"></span></label>
     <button class="ghost" id="voiceTest" type="button">🔊 Test</button>
+  </div>
+  <div class="set-speed"><b>Voice speed</b>
+    <div class="speeds" id="speeds" role="radiogroup" aria-label="Voice speed"></div>
   </div>
   <div class="set-install" id="installBox"><b>📱 App</b> <span id="installText"></span> <button class="primary" id="installBtn" type="button" hidden>Install Chiya Pasal</button></div>
   <div class="row-end" style="justify-content:space-between">
@@ -1997,11 +2006,19 @@ function renderVoiceSettings(){
   $('#voiceBox').hidden=!npVoice;
   $('#voicePickRow').hidden=list.length<2;
   $('#optVoiceName').innerHTML=list.map(v=>`<option value="${esc(v.name)}" ${npVoice&&v.name===npVoice.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join('');
-  $('#optRate').value=S.settings.rate;$('#optRateV').textContent=S.settings.rate.toFixed(2);
+  renderSpeeds();
 }
 $('#optVoice').onchange=e=>{S.settings.voice=e.target.checked;save();if(!S.settings.voice&&TTS)speechSynthesis.cancel();};
 $('#optVoiceName').onchange=e=>{S.settings.voiceName=e.target.value;save();loadVoices();};
-$('#optRate').oninput=e=>{S.settings.rate=+e.target.value;$('#optRateV').textContent=S.settings.rate.toFixed(2);save();};
+// voice speed presets (the speech rate the browser uses; 1 = the voice's own normal speed)
+const SPEEDS=[['Dherai bistarai','very slow',0.6],['Bistarai','slow',0.75],['Samanya','normal',0.9],['Chhito','fast',1.1]];
+function renderSpeeds(){
+  const cur=SPEEDS.reduce((a,s)=>Math.abs(s[2]-S.settings.rate)<Math.abs(a[2]-S.settings.rate)?s:a);
+  $('#speeds').innerHTML=SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');
+  $('#speeds').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.settings.rate=+b.dataset.r;save();renderSpeeds();
+    if(voiceOn())speak('Ek cup chiya dinus.');});
+  $('.set-speed').classList.toggle('novoice',!voiceOn());
+}
 $('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak('Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
 // ---------- installable app ----------
 let installEvt=null;
