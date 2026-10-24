@@ -428,6 +428,22 @@ const VOCAB=[
  ['nindra','sleep','निद्रा',8],['lageko','having (a feeling) come on','लागेको',8],['chhakka','astonished','छक्क',8],['pareko','having happened (“chhakka pareko” = surprised)','परेको',8],
  ['syau','apple','स्याउ',8],['kera','banana','केरा',8],['aanp','mango','आँप',8],['angur','grapes','अंगुर',8],['nariwal','coconut','नरिवल',8],
  ['bhuinkatahar','pineapple','भुइँकटहर',8],['tarbuja','watermelon','तरबुजा',8],['anda','egg','अण्डा',8],
+ ['singha','lion','सिंह',8],['bhalu','bear','भालु',8],['gaida','rhino','गैंडा',8],['kharayo','rabbit','खरायो',8],['harin','deer','हरिण',8],
+ ['phyauro','fox','फ्याउरो',8],['jiraph','giraffe','जिराफ',8],['jebra','zebra','जेब्रा',8],['chituwa','leopard','चितुवा',8],['panda','panda','पान्डा',8],
+ ['suga','parrot','सुगा',8],['hans','duck','हाँस',8],['ullu','owl','उल्लु',8],['mayur','peacock','मयूर',8],['parewa','pigeon','परेवा',8],
+ ['challa','chick','चल्ला',8],['chil','eagle','चिल',8],['bhangera','sparrow','भँगेरा',8],['penguin','penguin','पेङ्गुइन',8],
+ ['saanp','snake','साँप',8],['kachhuwa','turtle','कछुवा',8],['gohi','crocodile','गोही',8],['bhyaguto','frog','भ्यागुतो',8],['chheparo','lizard','छेपारो',8],
+ ['dainosor','dinosaur','डायनोसर',8],
+ ['hvel','whale','ह्वेल',8],['dalphin','dolphin','डल्फिन',8],['gangato','crab','गँगटो',8],['aktopas','octopus','अक्टोपस',8],['shark','shark','सार्क',8],
+ ['jhinge','shrimp-like (“jhinge machha” = shrimp)','झिंगे',8],['sankha','seashell / conch','शङ्ख',8],['rangichangi','colourful','रङ्गीचङ्गी',8],
+ ['putali','butterfly','पुतली',8],['kamila','ant','कमिला',8],['mauri','bee','मौरी',8],['makura','spider','माकुरा',8],['laamkhutte','mosquito','लामखुट्टे',8],
+ ['fatyangro','grasshopper','फट्याङ्ग्रो',8],['bichchhi','scorpion','बिच्छी',8],
+ ['haseko','laughing','हाँसेको',8],['biraami','sick','बिरामी',8],['laaj','shyness (“laaj lageko” = shy)','लाज',8],['chinta','worry','चिन्ता',8],
+ ['jhyau','boredom (“jhyau lageko” = bored)','झ्याउ',8],
+ ['majja','fun','मज्जा',8],['aayo','came (“majja aayo” = that was fun)','आयो',8],['khatra','danger; slang: awesome!','खतरा',8],
+ ['dami','pricey; slang: cool!','दामी',8],['pakka','for sure','पक्का',8],['sahi','right / correct','सही',8],['chill','chill (borrowed from English)','चिल',8],
+ ['gara','do! (familiar)','गर',8],['selfie','selfie','सेल्फी',8],['khichau','let’s take (a photo)','खिचौं',8],['bye','bye (borrowed from English)','बाइ',8],
+ ['chitra','picture','चित्र',8],['janmadin','birthday','जन्मदिन',8],['shubhakamana','best wishes','शुभकामना',8],['bela','moment / time','बेला',8],['bhanne','(to) say','भन्ने',8],
  ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
@@ -674,15 +690,30 @@ const WORD_TOPICS=[
  {id:'savari',np:'Savari',dev:'सवारी',en:'Vehicles',icon:'🚌',items:[['kaar','car','🚗'],['bas','bus','🚌'],['saikal','bicycle','🚲'],['rel','train','🚆'],
    ['hawaijahaj','aeroplane','✈️'],['dunga','boat','⛵'],['trak','lorry','🚚'],['motorsaikal','motorbike','🏍️'],['helikoptar','helicopter','🚁']]},
  {id:'bhavana',np:'Bhavana',dev:'भावना',en:'Feelings',icon:'😊',q:'anuhaar',items:[['khusi','happy','😀'],['dukhi','sad','😢'],['risaayeko','angry','😠'],
-   ['darayeko','scared','😨'],['nindra lageko','sleepy','😴'],['chhakka pareko','surprised','😮']]},
+   ['darayeko','scared','😨'],['nindra lageko','sleepy','😴'],['chhakka pareko','surprised','😮'],['haseko','laughing','😂'],['thakeko','tired','😩'],
+   ['biraami','sick','🤒'],['laaj lageko','shy','😳'],['chinta lageko','worried','😟'],['maya lageko','in love','😍'],['jhyau lageko','bored','🥱'],
+   ['jaado lageko','cold','🥶'],['garmi lageko','hot','🥵']]},
+ {id:'jangali',np:'Jangali',dev:'जङ्गली',en:'Wild animals',icon:'🦁',items:[['singha','lion','🦁'],['bhalu','bear','🐻'],['gaida','rhino','🦏'],['kharayo','rabbit','🐰'],
+   ['harin','deer','🦌'],['phyauro','fox','🦊'],['jiraph','giraffe','🦒'],['jebra','zebra','🦓'],['chituwa','leopard','🐆'],['panda','panda','🐼']]},
+ {id:'chara',np:'Chara',dev:'चरा',en:'Birds',icon:'🦜',items:[['suga','parrot','🦜'],['hans','duck','🦆'],['ullu','owl','🦉'],['mayur','peacock','🦚'],
+   ['parewa','pigeon','🕊️'],['challa','chick','🐤'],['chil','eagle','🦅'],['bhangera','sparrow','🐦'],['penguin','penguin','🐧']]},
+ {id:'sarisrip',np:'Sarisrip',dev:'सरीसृप',en:'Reptiles & frogs',icon:'🐢',items:[['saanp','snake','🐍'],['kachhuwa','turtle','🐢'],['gohi','crocodile','🐊'],
+   ['bhyaguto','frog','🐸'],['chheparo','lizard','🦎'],['dainosor','dinosaur','🦖']]},
+ {id:'samundra',np:'Samundra',dev:'समुद्र',en:'Sea animals',icon:'🐳',items:[['machha','fish','🐟'],['hvel','whale','🐋'],['dalphin','dolphin','🐬'],['gangato','crab','🦀'],
+   ['aktopas','octopus','🐙'],['shark','shark','🦈'],['jhinge machha','shrimp','🦐'],['sankha','seashell','🐚'],['rangichangi machha','tropical fish','🐠']]},
+ {id:'kira',np:'Kira',dev:'कीरा',en:'Bugs',icon:'🦋',items:[['putali','butterfly','🦋'],['kamila','ant','🐜'],['mauri','bee','🐝'],['makura','spider','🕷️'],
+   ['laamkhutte','mosquito','🦟'],['fatyangro','grasshopper','🦗'],['bichchhi','scorpion','🦂']]},
+ {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',q:'phrase',items:[['pakka','for sure!','👍'],['sahi ho','that’s right!','✅'],['ek chin','just a moment','⏳'],
+   ['bye bye','bye-bye!','👋'],['majja aayo','that was fun!','🎉'],['chhito gara','hurry up!','🏃'],['khatra','awesome! (slang)','🤩'],['dami','cool! (slang)','😎'],
+   ['chill gara','chill out','😌'],['jhyau lagyo','I’m bored','🥱'],['selfie khichau','let’s take a selfie!','🤳'],['janmadin ko shubhakamana','happy birthday!','🎂']]},
  {id:'phalphul',np:'Phalphul',dev:'फलफूल',en:'Fruit',icon:'🍎',items:[['syau','apple','🍎'],['kera','banana','🍌'],['aanp','mango','🥭'],['suntala','orange','🍊'],
    ['angur','grapes','🍇'],['nariwal','coconut','🥥'],['bhuinkatahar','pineapple','🍍'],['tarbuja','watermelon','🍉']]},
 ];
 const wdPic=(t,it,cls)=>t.q==='rang'?`<span class="wd-swatch ${cls||''}" style="background:${it[2]}"></span>`:`<span class="wd-pic ${cls||''}">${it[2]}</span>`;
 // "What is this?": you see the picture and name it in Nepali
 function wdNameStep(t,it){
-  const say=t.q==='rang'?'Yo kun rang ho?':t.q==='anuhaar'?'Yo kasto anuhaar ho?':'Yo ke ho?';
-  const en=t.q==='rang'?'What colour is this?':t.q==='anuhaar'?'What kind of face is this?':'What is this?';
+  const say=t.q==='rang'?'Yo kun rang ho?':t.q==='anuhaar'?'Yo kasto anuhaar ho?':t.q==='phrase'?'Yo bela ke bhanne?':'Yo ke ho?';
+  const en=t.q==='rang'?'What colour is this?':t.q==='anuhaar'?'What kind of face is this?':t.q==='phrase'?'What do you say at a moment like this?':'What is this?';
   const mk=x=>({t:cap(x[0])+'.',en:cap(x[1])+'.'});
   return {type:'chat',say,en,show:wdPic(t,it,'big'),prompt:'Name it in Nepali:',answer:mk(it),
     options:shuffle([mk(it),...shuffle(t.items.filter(x=>x!==it)).slice(0,2).map(mk)])};
@@ -691,7 +722,9 @@ function wdNameStep(t,it){
 function wdShowStep(t,it){
   const noun=x=>t.q==='anuhaar'?`${x[0]} anuhaar`:t.q==='rang'&&!x[0].includes('rang')?`${x[0]} rang`:x[0];
   const mk=x=>({t:x[0],en:cap(x[1]),icon:wdPic(t,x)});
-  return {type:'pick',say:`${cap(noun(it))} dekhaunus.`,en:`Please show me the ${it[1]}${t.q==='anuhaar'?' face':''}.`,prompt:'Which picture do they mean?',
+  const say=t.q==='phrase'?`Kun chitra? ${cap(it[0])}!`:`${cap(noun(it))} dekhaunus.`;
+  const en=t.q==='phrase'?`Which picture fits “${it[1]}”?`:`Please show me the ${it[1]}${t.q==='anuhaar'?' face':''}.`;
+  return {type:'pick',say,en,prompt:'Which picture do they mean?',
     answer:mk(it),options:shuffle([mk(it),...shuffle(t.items.filter(x=>x!==it)).slice(0,2).map(mk)])};
 }
 function genWordsCustomer(t,a,b){

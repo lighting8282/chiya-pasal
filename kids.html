@@ -134,6 +134,8 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .swatch{width:150px;height:150px;border-radius:44% 56% 52% 48%/50% 44% 56% 50%;border:5px solid rgba(0,0,0,.08);animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
 .count{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;font-size:2.6rem;max-width:360px;line-height:1.1}
 .count.many{font-size:1.8rem;max-width:300px}
+.count.tens{flex-direction:column;align-items:flex-start;gap:2px;font-size:1.15rem;max-width:none}
+.ten-row{display:flex;gap:2px;padding:1px 6px;border-radius:10px;background:var(--sky)}
 .count i{font-style:normal;animation:drop .4s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes drop{from{transform:translateY(-40px) scale(.4);opacity:0}}
 .digit{font-size:4rem;font-weight:800;line-height:1;color:var(--blue)}
@@ -252,6 +254,24 @@ const TOPICS=[
   ['biralo','बिरालो','cat','🐱'],['kukur','कुकुर','dog','🐶'],['gai','गाई','cow','🐄'],['machha','माछा','fish','🐟'],
   ['kukhura','कुखुरा','chicken','🐔'],['hatti','हात्ती','elephant','🐘'],['bakhra','बाख्रा','goat','🐐'],['bandar','बाँदर','monkey','🐒'],
   ['chara','चरा','bird','🐦'],['bagh','बाघ','tiger','🐯'],['muso','मुसो','mouse','🐭'],['ghoda','घोडा','horse','🐴']]},
+ {id:'jangali',np:'Jangali',dev:'जङ्गली',en:'Wild animals',icon:'🦁',color:'#c27c2c',kind:'pic',q:'kahaa',items:[
+  ['singha','सिंह','lion','🦁'],['bhalu','भालु','bear','🐻'],['gaida','गैंडा','rhino','🦏'],['kharayo','खरायो','rabbit','🐰'],
+  ['harin','हरिण','deer','🦌'],['phyauro','फ्याउरो','fox','🦊'],['jiraph','जिराफ','giraffe','🦒'],['jebra','जेब्रा','zebra','🦓'],
+  ['chituwa','चितुवा','leopard','🐆'],['panda','पान्डा','panda','🐼']]},
+ {id:'chara',np:'Chara',dev:'चरा',en:'Birds',icon:'🦜',color:'#2fae6e',kind:'pic',q:'kahaa',items:[
+  ['suga','सुगा','parrot','🦜'],['hans','हाँस','duck','🦆'],['ullu','उल्लु','owl','🦉'],['mayur','मयूर','peacock','🦚'],
+  ['parewa','परेवा','pigeon','🕊️'],['challa','चल्ला','chick','🐤'],['chil','चिल','eagle','🦅'],['bhangera','भँगेरा','sparrow','🐦'],
+  ['penguin','पेङ्गुइन','penguin','🐧']]},
+ {id:'sarisrip',np:'Sarisrip',dev:'सरीसृप',en:'Reptiles & frogs',icon:'🐢',color:'#6b8e23',kind:'pic',q:'kahaa',items:[
+  ['saanp','साँप','snake','🐍'],['kachhuwa','कछुवा','turtle','🐢'],['gohi','गोही','crocodile','🐊'],['bhyaguto','भ्यागुतो','frog','🐸'],
+  ['chheparo','छेपारो','lizard','🦎'],['dainosor','डायनोसर','dinosaur','🦖']]},
+ {id:'samundra',np:'Samundra',dev:'समुद्र',en:'Sea animals',icon:'🐳',color:'#00a6b8',kind:'pic',q:'kahaa',items:[
+  ['machha','माछा','fish','🐟'],['hvel','ह्वेल','whale','🐋'],['dalphin','डल्फिन','dolphin','🐬'],['gangato','गँगटो','crab','🦀'],
+  ['aktopas','अक्टोपस','octopus','🐙'],['shark','सार्क','shark','🦈'],['jhinge machha','झिंगे माछा','shrimp','🦐'],
+  ['sankha','शङ्ख','seashell','🐚'],['rangichangi machha','रङ्गीचङ्गी माछा','tropical fish','🐠']]},
+ {id:'kira',np:'Kira',dev:'कीरा',en:'Bugs',icon:'🦋',color:'#8e5be8',kind:'pic',q:'kahaa',items:[
+  ['putali','पुतली','butterfly','🦋'],['kamila','कमिला','ant','🐜'],['mauri','मौरी','bee','🐝'],['makura','माकुरा','spider','🕷️'],
+  ['laamkhutte','लामखुट्टे','mosquito','🦟'],['fatyangro','फट्याङ्ग्रो','grasshopper','🦗'],['bichchhi','बिच्छी','scorpion','🦂']]},
  {id:'rang',np:'Rang',dev:'रङ',en:'Colours',icon:'🎨',color:'#8e5be8',kind:'color',q:'kun',items:[
   ['rato','रातो','red','#e8463a'],['nilo','निलो','blue','#3a7bf2'],['hariyo','हरियो','green','#2fae6e'],['pahelo','पहेंलो','yellow','#ffd23c'],
   ['kalo','कालो','black','#2b2b2b'],['seto','सेतो','white','#ffffff'],['suntala rang','सुन्तला रङ','orange','#ff8c2e'],
@@ -262,6 +282,13 @@ const TOPICS=[
   ['eghaara','एघार','eleven',11],['baahra','बाह्र','twelve',12],['tehra','तेह्र','thirteen',13],['chaudha','चौध','fourteen',14],
   ['pandhra','पन्ध्र','fifteen',15],['sohra','सोह्र','sixteen',16],['satra','सत्र','seventeen',17],['athaara','अठार','eighteen',18],
   ['unnais','उन्नाइस','nineteen',19],['bis','बीस','twenty',20]]},
+ // tier (5th field): 1 = easy, 2 = medium, 3 = hard; groups of ten are drawn as rows of ten
+ {id:'thulo',np:'Thulo ganti',dev:'ठूलो गन्ती',en:'Big numbers',icon:'💯',color:'#3a7bf2',kind:'num',q:'kati',tiers:true,items:[
+  ['das','दस','ten',10,1],['bis','बीस','twenty',20,1],['tis','तीस','thirty',30,1],['chalis','चालीस','forty',40,1],['pachas','पचास','fifty',50,1],
+  ['saathi','साठी','sixty',60,2],['sattari','सत्तरी','seventy',70,2],['assi','असी','eighty',80,2],['nabbe','नब्बे','ninety',90,2],['ek saya','एक सय','one hundred',100,2],
+  ['ekkais','एक्काइस','twenty-one',21,3],['baais','बाइस','twenty-two',22,3],['teis','तेइस','twenty-three',23,3],['chaubis','चौबिस','twenty-four',24,3],
+  ['pachchis','पच्चिस','twenty-five',25,3],['chhabbis','छब्बिस','twenty-six',26,3],['sattais','सत्ताइस','twenty-seven',27,3],
+  ['atthais','अट्ठाइस','twenty-eight',28,3],['unantis','उनन्तीस','twenty-nine',29,3]]},
  {id:'pariwar',np:'Pariwar',dev:'परिवार',en:'Family',icon:'👪',color:'#ff7eb6',kind:'pic',q:'kahaa',items:[
   ['aama','आमा','mum','👩'],['buwa','बुवा','dad','👨'],['hajuraama','हजुरआमा','grandma','👵'],['hajurbuwa','हजुरबुवा','grandpa','👴'],
   ['dai','दाइ','big brother','👦'],['didi','दिदी','big sister','👧'],['bhai','भाइ','little brother','👶']]},
@@ -289,7 +316,17 @@ const TOPICS=[
   ['motorsaikal','मोटरसाइकल','motorbike','🏍️'],['helikoptar','हेलिकप्टर','helicopter','🚁']]},
  {id:'bhavana',np:'Bhavana',dev:'भावना',en:'Feelings',icon:'😊',color:'#ffb000',kind:'pic',q:'kun',items:[
   ['khusi','खुसी','happy','😀'],['dukhi','दुःखी','sad','😢'],['risaayeko','रिसाएको','angry','😠'],['darayeko','डराएको','scared','😨'],
-  ['nindra lageko','निद्रा लागेको','sleepy','😴'],['chhakka pareko','छक्क परेको','surprised','😮']]},
+  ['nindra lageko','निद्रा लागेको','sleepy','😴'],['chhakka pareko','छक्क परेको','surprised','😮'],
+  ['haseko','हाँसेको','laughing','😂'],['thakeko','थाकेको','tired','😩'],['biraami','बिरामी','sick','🤒'],['laaj lageko','लाज लागेको','shy','😳'],
+  ['chinta lageko','चिन्ता लागेको','worried','😟'],['maya lageko','माया लागेको','in love','😍'],['jhyau lageko','झ्याउ लागेको','bored','🥱'],
+  ['jaado lageko','जाडो लागेको','cold','🥶'],['garmi lageko','गर्मी लागेको','hot','🥵']]},
+ // everyday sayings people use now; the child hears one and picks the picture that fits
+ {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',color:'#ff7eb6',kind:'pic',q:'phrase',items:[
+  ['pakka','पक्का','for sure!','👍'],['sahi ho','सही हो','that’s right!','✅'],['ek chin','एक छिन','just a moment','⏳'],
+  ['bye bye','बाइ बाइ','bye-bye!','👋'],['majja aayo','मज्जा आयो','that was fun!','🎉'],['chhito gara','छिटो गर','hurry up!','🏃'],
+  ['khatra','खतरा','awesome! (slang)','🤩'],['dami','दामी','cool! (slang)','😎'],['chill gara','चिल गर','chill out','😌'],
+  ['jhyau lagyo','झ्याउ लाग्यो','I’m bored','🥱'],['selfie khichau','सेल्फी खिचौं','let’s take a selfie!','🤳'],
+  ['janmadin ko shubhakamana','जन्मदिनको शुभकामना','happy birthday!','🎂']]},
 ];
 // sajilo = easy, thikka = just right, gaaro = hard
 const LEVELS={
@@ -427,10 +464,16 @@ function pictureOf(t,it){
 // the words a level uses
 function wordsFor(t,lv){
   const L=LEVELS[lv];
+  if(t.tiers)return t.items.filter(it=>it[4]<=LV_KEYS.indexOf(lv)+1);
   if(t.kind==='num')return t.items.filter(it=>it[3]<=L.count);
   return t.items.slice(0,Math.min(L.words,t.items.length));
 }
 function countHtml(n,pic,cls){
+  // more than 20: rows of ten, so tens can be counted at a glance
+  if(n>20){
+    const rows=[];for(let r=0;r<n;r+=10)rows.push(Math.min(10,n-r));
+    return `<div class="count tens" ${cls||''}>${rows.map((k,r)=>`<div class="ten-row">${Array.from({length:k},()=>`<i style="animation-delay:${Math.min(r,9)*90}ms">${pic}</i>`).join('')}</div>`).join('')}</div>`;
+  }
   return `<div class="count${n>10?' many':''}" ${cls||''}>${Array.from({length:n},(_,i)=>`<i style="animation-delay:${Math.min(i,14)*80}ms">${pic}</i>`).join('')}</div>`;
 }
 
@@ -551,6 +594,7 @@ function renderLearn(){
 function questionLine(t,it){
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
   if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
+  if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
 }
 function startQuiz(){
