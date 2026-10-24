@@ -301,6 +301,27 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .lipi-grid button{display:flex;flex-direction:column;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:4px}
 .lipi-grid button span{font-size:1.8rem;line-height:1.2;font-family:'Mukta','Nirmala UI','Mangal',sans-serif}
 .lipi-grid button small{font-size:.8rem;color:var(--muted)}
+.lipi-sent{font-size:1.7rem;line-height:1.35;font-family:'Mukta','Nirmala UI','Mangal',sans-serif;text-align:center;text-wrap:balance}
+.lipi-card{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.5rem;font-weight:700}
+.say.dev-say{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.7rem}
+.lipi-path{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.lp{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:8px;text-align:left;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.lp .lp-n{grid-row:1/4;align-self:center;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--surface);border:2px solid var(--line)}
+.lp .lp-g{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.25rem;line-height:1.2}
+.lp small{color:var(--muted);font-size:.78rem;line-height:1.2}
+.lp.ok .lp-n{background:var(--good);border-color:var(--good);color:var(--surface)}
+.lp.open{border-color:var(--crimson)}
+.lp.open .lp-n{border-color:var(--crimson);color:var(--crimson)}
+.lp.locked{opacity:.55;cursor:default}
+.lipi-pass{background:var(--good-bg);border-radius:10px;padding:8px 12px;margin:0}
+.lipi-fail{background:var(--bad-bg);border-radius:10px;padding:8px 12px;margin:0}
+#buildWrap.spell .tile{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.6rem;min-width:52px;line-height:1.2}
+.spell-preview{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.8rem;font-weight:700;margin-left:8px;color:var(--good)}
+.trace-a{position:relative;width:min(240px,70vw);aspect-ratio:1;margin:8px 0;border:2px dashed var(--line);border-radius:14px;background:var(--surface)}
+.trace-a canvas{position:absolute;inset:0;width:100%;height:100%}
+.trace-a .ti{touch-action:none;cursor:crosshair}
+.trace-msg{align-self:center;font-size:.9rem}
+.trace-msg.good{color:var(--good)} .trace-msg.bad{color:var(--bad)}
 .cal-card{display:inline-flex;flex-direction:column;align-items:center;border:2px solid var(--crimson);border-radius:12px;overflow:hidden;min-width:120px;background:var(--surface)}
 .cal-card small{background:var(--crimson);color:var(--on-crimson);width:100%;text-align:center;font-size:.8rem;letter-spacing:.06em}
 .cal-card b{font-size:1.5rem;padding:4px 12px}
@@ -392,7 +413,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
         <button class="linkish" id="typeShow" type="button">Show choices instead</button>
       </div>
       <div id="buildWrap" hidden>
-        <div class="recap">Tap the words in the right order. One word doesn’t belong.</div>
+        <div class="recap" id="buildRecap">Tap the words in the right order. One word doesn’t belong.</div>
         <div class="build-target" id="buildTarget"></div>
         <div class="build-line" id="buildLine" aria-label="Your sentence"></div>
         <div class="build-bank" id="buildBank" aria-label="Words"></div>
@@ -411,6 +432,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
   <label class="set"><input type="checkbox" id="optRelaxed"><span>Relaxed mode<small>Customers never run out of patience.</small></span></label>
   <label class="set"><input type="checkbox" id="optEnglish"><span>Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
   <label class="set"><input type="checkbox" id="optType"><span>Type your answers<small>Type the reply in romanized Nepali instead of picking from three. Spelling is forgiving (aa/a, chh/ch…).</small></span></label>
+  <label class="set"><input type="checkbox" id="optDev"><span>Show customers in Devanagari<small>Customers’ lines appear in Nepali script. Tap any word to see it in romanized letters. Best after the Lipi lessons.</small></span></label>
   <label class="set"><input type="checkbox" id="optListen"><span>Listening mode<small id="listenStatus">The customer’s words stay hidden until you answer. Needs a voice.</small></span></label>
   <label class="set"><input type="checkbox" id="optMic"><span>Answer by speaking<small id="micStatus">Shows a 🎤 button: say your answer out loud.</small></span></label>
   <label class="set"><input type="checkbox" id="optVoice"><span>Read lines aloud<small id="voiceStatus">Uses a Nepali or Hindi voice installed on this device.</small></span></label>
@@ -545,7 +567,7 @@ const VOCAB=[
  ['kattik','Kattik (7th month, Oct–Nov)','कात्तिक',9],['mangsir','Mangsir (8th month, Nov–Dec)','मंसिर',9],['push','Push (9th month, Dec–Jan)','पुस',9],
  ['magh','Magh (10th month, Jan–Feb)','माघ',9],['phagun','Phagun (11th month, Feb–Mar)','फागुन',9],['chait','Chait (12th month, Mar–Apr)','चैत',9],
  ['pachhi','after','पछि',9],['mahina','month','महिना',9],['aauchha','comes','आउँछ',9],
- ['akshar','letter (of the alphabet)','अक्षर',9],['lekhiyeko','written','लेखिएको',9],['kasari','how (in what way)','कसरी',9],
+ ['akshar','letter (of the alphabet)','अक्षर',9],['shabda','word','शब्द',9],['banaunus','please make / build','बनाउनुस्',9],['padhne','(to) read','पढ्ने',9],['lekhiyeko','written','लेखिएको',9],['kasari','how (in what way)','कसरी',9],
  ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
@@ -1178,19 +1200,202 @@ function readStep(){
   return {type:'chat',say:'Yahaa ke lekhiyeko cha?',en:'What does this say?',show:`<span class="lipi-word" lang="ne">${w[2]}</span>`,prompt:'Pick what it says:',answer:mk(w),options:shuffle([mk(w),...near.map(mk)]),
     voice:'यहाँ के लेखिएको छ?'};
 }
+// ================= Lipi path: Devanagari step by step =================
+// Each lesson adds a few symbols; exercises only ever use words made entirely of symbols already taught.
+// new: [symbol, sound, kind] kind: c = consonant (carries "a"), v = vowel letter, m = vowel sign (matra), x = mark
+// words: [devanagari, romanized, english, picture]
+const LIPI=[
+ {title:'Consonants carry “a”',np:'Akshar',new:[['क','ka','c'],['ल','la','c'],['म','ma','c'],['न','na','c'],['र','ra','c'],['स','sa','c'],['घ','gha','c'],['ब','ba','c']],
+  tips:['Every consonant already includes an “a” sound: क is ka, म is ma. So कलम is ka-la-ma, read “kalam” (a final “a” is usually not pronounced).','The line along the top (shirorekha) joins the letters of one word. Read left to right.'],
+  words:[['घर','ghar','house','🏠'],['कलम','kalam','pen','🖊️'],['बस','bas','bus','🚌'],['मन','man','heart / mind','❤️'],['नल','nal','tap','🚰'],['रस','ras','juice','🧃'],['कमल','kamal','lotus','🌸'],['सरल','saral','easy','👌']]},
+ {title:'The “aa” sign',np:'Aa-kar',new:[['ा','aa','m'],['आ','aa','v'],['त','ta','c'],['द','da','c'],['प','pa','c'],['ह','ha','c']],
+  tips:['A vowel after a consonant is a small sign (matra) stuck to it. ा turns क (ka) into का (kaa).','At the start of a word the vowel is a full letter instead: आ, as in आमा (aama).'],
+  words:[['काम','kaam','work','💼'],['नाम','naam','name','📛'],['आमा','aama','mum','👩'],['बाघ','baagh','tiger','🐯'],['घाम','ghaam','sunshine','☀️'],['दाल','daal','lentils','🥣'],['हात','haat','hand','✋'],['तारा','taara','star','⭐'],['पसल','pasal','shop','🏪']]},
+ {title:'The “i” signs',np:'Ikaar',new:[['ि','i','m'],['ी','ii','m'],['इ','i','v'],['ई','ii','v'],['च','cha','c'],['ज','ja','c'],['य','ya','c']],
+  tips:['Watch out: ि is written BEFORE the letter but said AFTER it. कि = k + i.','ी (long ii) comes after the letter. In everyday Nepali, ि and ी sound almost the same.'],
+  words:[['दिदी','didi','big sister','👧'],['पानी','paani','water','💧'],['किताब','kitaab','book','📖'],['चिया','chiya','tea','🍵'],['दिन','din','day','📅'],['बिहान','bihaan','morning','🌅'],['इनाम','inaam','prize','🏆']]},
+ {title:'The “u” signs',np:'Ukaar',new:[['ु','u','m'],['ू','uu','m'],['उ','u','v'],['ऊ','uu','v'],['ख','kha','c'],['ग','ga','c'],['फ','pha','c'],['ध','dha','c']],
+  tips:['ु and ू hang below the letter: कु (ku), कू (kuu).','फ is “pha”, a puffed p (not f), though many people say f.'],
+  words:[['कुकुर','kukur','dog','🐶'],['दूध','dudh','milk','🥛'],['फूल','phul','flower','🌸'],['खुसी','khusi','happy','😀'],['सुगा','suga','parrot','🦜'],['गुलाफी','gulaaphi','pink','🌷'],['ऊन','un','wool','🧶']]},
+ {title:'The “e” and “o” signs',np:'Ekaar, Okaar',new:[['े','e','m'],['ै','ai','m'],['ो','o','m'],['ौ','au','m'],['ए','e','v'],['ओ','o','v'],['भ','bha','c'],['छ','chha','c'],['ड','Da','c']],
+  tips:['े and ै sit on top of the letter; ो and ौ add a stroke after it: को (ko), कौ (kau).','छ (chha) is breathy “ch”. It is also the word “is” (cha).'],
+  words:[['केरा','kera','banana','🍌'],['मेरो','mero','my','🙋'],['बिरालो','biraalo','cat','🐱'],['नौ','nau','nine','9️⃣'],['भालु','bhaalu','bear','🐻'],['घोडा','ghoda','horse','🐴'],['छाता','chhaata','umbrella','☂️'],['मोजा','moja','socks','🧦'],['एक','ek','one','1️⃣'],['ओखर','okhar','walnut','🌰']]},
+ {title:'The rest of the consonants',np:'Baki byanjan',new:[['ट','Ta','c'],['ठ','Tha','c'],['ढ','Dha','c'],['ण','Na','c'],['थ','tha','c'],['झ','jha','c'],['व','wa','c'],['श','sha','c'],['ष','Sha','c'],['अ','a','v']],
+  tips:['ट ठ ड ढ ण: curl the tongue back (written T, Th, D, Dh, N). त थ द ध न: tongue on the teeth (t, th, d, dh, n).','श, ष and स all sound like “s” in everyday Nepali. व is often said “b” (वन = ban).'],
+  words:[['टोपी','topi','cap','🧢'],['ठूलो','thulo','big','🐘'],['ढोका','dhoka','door','🚪'],['झोला','jhola','bag','🎒'],['धेरै','dherai','a lot','➕'],['बाटो','baato','road','🛣️'],['भात','bhaat','cooked rice','🍚'],['वन','ban','forest','🌲'],['शहर','sahar','city','🏙️']]},
+ {title:'Nasal marks',np:'Chandrabindu',new:[['ँ','n (nasal)','x'],['ं','m/n','x'],['अं','am','v']],
+  tips:['ँ (a moon with a dot) makes the vowel nasal, as in French “bon”: आँप = aanp.','ं (a dot on top) is an n or m sound before the next letter: अंगुर = angur.'],
+  words:[['आँप','aanp','mango','🥭'],['दाँत','daant','tooth','🦷'],['हाँस','haans','duck','🦆'],['आँखा','aankha','eye','👁️'],['अंगुर','angur','grapes','🍇'],['गाउँ','gaaun','village','🏘️'],['सिंह','singha','lion','🦁']]},
+ {title:'Half letters',np:'Halanta',new:[['्','(no “a”)','x']],
+  tips:['् under a letter removes its built-in “a”: स् = s. At the end of a word: दिनुस् = dinus.','Inside a word the letter often shrinks to a half form and leans on the next one: स्त in नमस्ते, ल्ल in उल्लु.'],
+  words:[['नमस्ते','namaste','hello','🙏'],['स्याउ','syaau','apple','🍎'],['दिनुस्','dinus','please give','🤲'],['बिस्तारै','bistaarai','slowly','🐢'],['पन्जा','panja','gloves','🧤'],['उल्लु','ullu','owl','🦉'],['चल्ला','challa','chick','🐤'],['कस्तो','kasto','how','❓']]},
+ {title:'Joined letters',np:'Sanyukta akshar',new:[['क्ष','ksha','c'],['त्र','tra','c'],['ज्ञ','gya','c'],['श्र','shra','c'],['प्र','pra','c'],['र्','r (on top)','x'],['ृ','ri','m']],
+  tips:['Some pairs have their own shapes: क्ष (ksha), त्र (tra), ज्ञ (gya).','र changes shape: before a consonant it is a hook on top (गर्छु = garchhu); after one it is a slash at the bottom (प्र = pra). ृ is the vowel “ri”: प्रकृति = prakriti.'],
+  words:[['मित्र','mitra','friend','🤝'],['श्रीमती','shrimati','wife','💍'],['गर्छु','garchhu','I do','💪'],['प्रकृति','prakriti','nature','🌳'],['ज्ञान','gyaan','knowledge','📚'],['सर्प','sarpa','snake','🐍'],['क्षमा','kshama','forgiveness / sorry','🙇']]},
+ {title:'Reading sentences',np:'Vakya padhne',new:[],tips:['Now read whole lines from the tea stall, written the way Nepali is really written. The । (purna biram) is the full stop.'],words:[]},
+];
+const MATRA_V={'ा':'aa','ि':'i','ी':'ii','ु':'u','ू':'uu','े':'e','ै':'ai','ो':'o','ौ':'au','ृ':'ri'};
+const ZWJ='‍';
+// every symbol taught up to lesson i (inclusive); punctuation is always allowed
+function lipiChars(i){
+  const s=new Set(['।','?','!',',',' ']);
+  for(let k=0;k<=i;k++)for(const n of LIPI[k].new)for(const ch of n[0])s.add(ch);
+  if(i>=8)s.add(ZWJ);
+  return s;
+}
+const readable=(dev,set)=>[...dev].every(ch=>set.has(ch));
+// words for lesson i: its own list, earlier lessons' lists, plus every game word that only uses taught symbols
+function lipiWords(i){
+  const set=lipiChars(i),seen=new Set(),out=[];
+  for(let k=0;k<=i;k++)for(const w of LIPI[k].words)if(!seen.has(w[0])){seen.add(w[0]);out.push({dev:w[0],rom:w[1],en:w[2],pic:w[3],lesson:k});}
+  VOCAB.forEach(v=>{if(v[3]>0&&!/[\/ ]/.test(v[2])&&readable(v[2],set)&&!seen.has(v[2])){seen.add(v[2]);out.push({dev:v[2],rom:v[0],en:v[1],pic:'',lesson:-1});}});
+  return out;
+}
+const lipiState=()=>(S.lipi=S.lipi||{best:{}});
+const lipiOpen=i=>i===0||(lipiState().best[i-1]||0)>=80;
+// tiles for word building: each base letter keeps its signs and any ् joins it to the next letter
+function pieces(dev){
+  const out=[];
+  for(const ch of dev){
+    if(ch===ZWJ){out[out.length-1]+=ch;continue;}
+    const prev=out[out.length-1];
+    if(prev&&prev.endsWith('्')&&!/[ािीुूेैोौृँंः्]/.test(ch)){out.push(ch);continue;}
+    if(/[्ँंः]/.test(ch)&&prev){out[out.length-1]+=ch;continue;}
+    out.push(ch);
+  }
+  return out;
+}
+const showMark=g=>/^[ािीुूेैोौृँंः्]/.test(g)?'◌'+g:g;
+function syllRom(c,v){return c[1].replace(/a$/,'')+(v?MATRA_V[v[0]]:'a');}
+
+function lipiSeeStep(i){
+  const L=LIPI[i],cons=LIPI.slice(0,i+1).flatMap(x=>x.new).filter(n=>n[2]==='c'&&n[0].length===1);
+  const n=rnd(L.new.filter(x=>x[2]!=='x'));
+  if(n[2]==='m'){ // a vowel sign: read it on a consonant, among other vowel sounds on the same consonant
+    const c=rnd(cons),vs=Object.keys(MATRA_V).filter(v=>LIPI.slice(0,i+1).some(x=>x.new.some(y=>y[0]===v)));
+    const others=shuffle([null,...vs.filter(v=>v!==n[0])]).slice(0,2);
+    const mk=v=>({t:syllRom(c,v?[v]:null),en:c[0]+(v||'')});
+    const opts=shuffle([mk(n[0]),...others.map(mk)]);
+    return {type:'chat',say:'Yo kasari padhne?',en:'How do you read this?',show:`<span class="lipi-big">${c[0]+n[0]}</span>`,prompt:'Pick the sound:',answer:mk(n[0]),options:dedupeOpts(opts),
+      voice:'यो कसरी पढ्ने?',noType:true,fb:`${c[0]+n[0]} = ${syllRom(c,[n[0]])} (${c[0]} ${c[1]} + ${showMark(n[0])} ${n[1]})`};
+  }
+  const pool=LIPI.slice(0,i+1).flatMap(x=>x.new).filter(x=>(x[2]==='c'||x[2]==='v')&&x!==n&&x[1]!==n[1]);
+  const mk=x=>({t:x[1],en:x[0]});
+  return {type:'chat',say:'Yo kun akshar ho?',en:'Which letter is this?',show:`<span class="lipi-big">${n[0]}</span>`,prompt:'Pick its sound:',answer:mk(n),options:shuffle([mk(n),...shuffle(pool).slice(0,2).map(mk)]),
+    voice:'यो कुन अक्षर हो?',noType:true,fb:`${n[0]} = ${n[1]}`};
+}
+// only taught sounds are ever offered, so early lessons can have just two choices
+function dedupeOpts(opts){const seen=new Set();return opts.filter(x=>!seen.has(x.t)&&seen.add(x.t));}
+function lipiHearStep(i){
+  const L=LIPI[i],n=rnd(L.new.filter(x=>x[2]==='c'||x[2]==='v'))||rnd(L.new);
+  const pool=LIPI.slice(0,i+1).flatMap(x=>x.new).filter(x=>(x[2]==='c'||x[2]==='v')&&x!==n&&x[1]!==n[1]);
+  const mk=x=>({t:x[0],en:x[1],icon:`<span class="lipi-opt">${x[0]}</span>`});
+  return {type:'pick',say:`“${n[1]}” kun akshar ho?`,en:`Which letter says “${n[1]}”?`,prompt:'Listen, then pick the letter:',answer:mk(n),options:shuffle([mk(n),...shuffle(pool).slice(0,2).map(mk)]),
+    voice:`${n[0]}। ${n[0]} कुन अक्षर हो?`,fb:`${n[0]} = ${n[1]}`};
+}
+function lipiReadStep(i){
+  const words=lipiWords(i),fresh=words.filter(w=>w.lesson===i),w=rnd(fresh.length&&Math.random()<0.7?fresh:words);
+  const mk=x=>({t:cap(x.en),en:x.rom});
+  const others=shuffle(words.filter(x=>x!==w&&x.en!==w.en)).slice(0,2);
+  return {type:'chat',say:'Yahaa ke lekhiyeko cha?',en:'What does this say?',show:`<span class="lipi-word" lang="ne">${w.dev}</span>`,prompt:'Pick what it means:',answer:mk(w),options:shuffle([mk(w),...others.map(mk)]),
+    voice:'यहाँ के लेखिएको छ?',noType:true,fb:`${w.dev} = ${w.rom} (${w.en})`};
+}
+function lipiSpellStep(i){
+  const words=lipiWords(i).filter(w=>w.lesson>=0&&!w.dev.includes(ZWJ)&&pieces(w.dev).length<=6),fresh=words.filter(w=>w.lesson===i);
+  const w=rnd(fresh.length?fresh:words),p=pieces(w.dev);
+  const decoys=shuffle(LIPI[i].new.map(n=>n[0]).filter(g=>!p.includes(g)).concat(LIPI.slice(0,i+1).flatMap(x=>x.new).map(n=>n[0]).filter(g=>!p.includes(g))));
+  return {type:'spell',say:'Yo shabda banaunus.',en:'Build this word.',show:`<span class="wd-pic big">${w.pic||'✍️'}</span>`,answer:{t:w.dev,en:`${w.rom} (${w.en})`},target:w,tiles:shuffle([...p,decoys[0]].filter(Boolean)),voice:'यो शब्द बनाउनुस्।'};
+}
+function lipiSentenceStep(){
+  const pool=vakyaPool().map(l=>({dev:toDev(l.t),rom:l.t,en:l.en})).filter(l=>!l.dev.includes(ZWJ));
+  const l=rnd(pool),mk=x=>({t:x.en,en:x.rom});
+  return {type:'chat',say:'Yahaa ke lekhiyeko cha?',en:'What does this say?',show:`<span class="lipi-sent" lang="ne">${l.dev}</span>`,prompt:'Pick what it means:',answer:mk(l),
+    options:shuffle([mk(l),...shuffle(pool.filter(x=>x.en!==l.en)).slice(0,2).map(mk)]),voice:'यहाँ के लेखिएको छ?',noType:true,fb:`${l.dev} = ${l.rom}`};
+}
+function lipiLessonSteps(i){
+  if(i===LIPI.length-1)return [lipiSentenceStep(),lipiSentenceStep()];
+  const kinds=i===6||i===7?['read','spell','read','see']:['see','hear','read','spell'];
+  const k=shuffle(kinds).slice(0,2);
+  return k.map(x=>x==='see'?(LIPI[i].new.some(n=>n[2]!=='x')?lipiSeeStep(i):lipiReadStep(i)):x==='hear'?lipiHearStep(i):x==='read'?lipiReadStep(i):lipiSpellStep(i));
+}
 function openLipiIntro(){
-  const grid=set=>`<div class="lipi-grid">${set.map(L=>`<button type="button" data-l="${L[0]}"><span lang="ne">${L[0]}</span><small>${L[1]}</small></button>`).join('')}</div>`;
-  practiceSheet('Lipi','Nepali script (Devanagari)',`<p>Nepali is written in Devanagari. Tap a letter to hear it, then pick a round.</p>
-   <h3>Swar <small>vowels</small></h3>${grid(LETTERS.swar)}
-   <h3>Byanjan <small>consonants (each has a built-in “a”)</small></h3>${grid(LETTERS.byanjan)}
-   <p class="recap">Capital <b>T, Th, D, Dh, N</b> mean the tongue curls back (ट ठ ड ढ ण). Small <b>t, th, d, dh, n</b> mean the tongue touches the teeth (त थ द ध न). श, ष and स all sound like “s” in everyday Nepali.</p>
+  const st=lipiState();
+  const passedAll=LIPI.every((_,i)=>(st.best[i]||0)>=80),doneN=LIPI.filter((_,i)=>(st.best[i]||0)>=80).length;
+  practiceSheet('Lipi','Nepali script, step by step',`<p>Ten short lessons. Each adds a few symbols, and you only ever read words made from what you’ve learned. Score 80% to unlock the next lesson.</p>
+   <p class="recap">${doneN?`${doneN} of ${LIPI.length} lessons done · you can read about <b>${doneN?lipiWords(doneN-1).length:0}</b> words.`:'Start with lesson 1.'}</p>
+   <div class="lipi-path">${LIPI.map((L,i)=>{const b=st.best[i]||0,open=lipiOpen(i),ok=b>=80;
+     return `<button class="lp ${ok?'ok':open?'open':'locked'}" data-i="${i}" ${open?'':'disabled'}><span class="lp-n">${ok?'✓':open?i+1:'🔒'}</span><span class="lp-g" lang="ne">${L.new.slice(0,4).map(n=>showMark(n[0])).join(' ')||'।'}</span><b>${L.np}</b><small>${L.title}${b?` · best ${b}%`:''}</small></button>`;}).join('')}</div>
+   <h3>Free practice <small>all letters, any time</small></h3>
    <div class="prac">
-    <button data-r="swar"><span class="pi">अ</span><b>Swar</b><small>Vowels: see a letter, pick its sound, and the other way round.</small></button>
-    <button data-r="byanjan"><span class="pi">क</span><b>Byanjan</b><small>Consonants, both ways.</small></button>
-    <button data-r="padhne"><span class="pi">📖</span><b>Shabda padhne</b><small>Read words you’ve learned, written in Devanagari.</small></button>
-   </div>`);
-  $('#introBody').querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>speakDev(b.dataset.l));
+    <button data-r="swar"><span class="pi">अ</span><b>Swar</b><small>All vowels, both ways.</small></button>
+    <button data-r="byanjan"><span class="pi">क</span><b>Byanjan</b><small>All consonants, both ways.</small></button>
+    <button data-r="padhne"><span class="pi">📖</span><b>Shabda padhne</b><small>Read any game word in Devanagari.</small></button>
+   </div>
+   ${passedAll?'<p class="recap">All lessons done. Try <b>Settings → Show customers in Devanagari</b> to read the stall in Nepali script.</p>':''}`);
+  $('#introBody').querySelectorAll('.lp').forEach(b=>b.onclick=()=>openLipiLesson(+b.dataset.i));
   $('#introBody').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{hide('#ovIntro');startLipi(b.dataset.r);});
+}
+function openLipiLesson(i){
+  const L=LIPI[i],words=lipiWords(i).filter(w=>w.lesson===i);
+  practiceSheet(`${i+1}. ${L.np}`,L.title,`
+   ${L.new.length?`<h3>Naya <small>new · tap to hear, ✏️ to practise writing</small></h3>
+   <div class="lipi-grid">${L.new.map((n,k)=>`<button type="button" data-k="${k}"><span lang="ne">${showMark(n[0])}</span><small>${n[1]}</small></button>`).join('')}</div>
+   <div id="lipiTrace"></div>`:''}
+   <ul class="howto">${L.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+   ${words.length?`<h3>Padhnus <small>words you can read now · tap to hear</small></h3><div class="words">${words.map((w,k)=>`<button class="wcard wd-card" data-w="${k}"><span class="wd-pic small">${w.pic}</span><b lang="ne" class="lipi-card">${w.dev}</b><span>${w.rom}</span><div class="en">${esc(w.en)}</div></button>`).join('')}</div>`:''}
+   ${i===LIPI.length-1?`<p class="recap">Example: <span lang="ne" class="lipi-card">${toDev('Malai dui cup chiya chahiyo.')}</span> = Malai dui cup chiya chahiyo.</p>`:''}`,
+   null,()=>startLipiLesson(i));
+  $('#introBody').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
+    const n=L.new[+b.dataset.k],host=n[2]==='m'||n[0]==='्'||n[0]==='ँ'||n[0]==='ं'?'क':'',g=n[0]==='्'?'क्':host+n[0];
+    speakDev(g);traceIn($('#lipiTrace'),g);
+  });
+  $('#introBody').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>speakDev(words[+b.dataset.w].dev));
+}
+function startLipiLesson(i){
+  const L=LIPI[i];
+  startPractice({key:'lipi',np:`Lipi ${i+1}`,en:L.title,n:5,again:()=>startLipiLesson(i),label:k=>`अ Lipi ${i+1} · ${L.np} · ${k+1}/5`,
+    gen:()=>withLook(lipiLessonSteps(i),''),
+    after:acc=>{
+      const st=lipiState(),prev=st.best[i]||0;st.best[i]=Math.max(prev,acc);save();
+      const pass=acc>=80,last=i===LIPI.length-1;
+      return {html:pass?`<p class="lipi-pass">✓ <b>Lesson ${i+1} passed.</b> ${last?'You’ve finished the script path! Turn on <b>Settings → Show customers in Devanagari</b> to keep reading at the stall.':`Lesson ${i+2} is unlocked. You can now read about ${lipiWords(i).length} words.`}</p>`
+          :`<p class="lipi-fail">Score 80% to pass (you got ${acc}%). Have another go, or review the lesson first.</p>`,
+        next:pass&&!last?{label:`Lesson ${i+2} <small>${LIPI[i+1].np}</small>`,go:()=>openLipiLesson(i+1)}:{label:'Lipi path',go:openLipiIntro}};
+    }});
+}
+// finger/mouse tracing over a faint symbol (same check as the kids' game)
+function traceIn(box,text){
+  box.innerHTML=`<div class="trace-a"><canvas class="tg" aria-hidden="true"></canvas><canvas class="ti" aria-label="Trace ${text}"></canvas></div>
+   <div class="typerow"><button class="ghost" type="button" data-t="clear">Clear</button><button class="primary" type="button" data-t="done">Check</button><span class="trace-msg" aria-live="polite"></span></div>`;
+  const wrap=box.querySelector('.trace-a'),g=box.querySelector('.tg'),k=box.querySelector('.ti'),msg=box.querySelector('.trace-msg');
+  const size=Math.round(wrap.getBoundingClientRect().width)||220,dpr=window.devicePixelRatio||1;
+  [g,k].forEach(c=>{c.width=size*dpr;c.height=size*dpr;});
+  const gx=g.getContext('2d'),kx=k.getContext('2d');gx.scale(dpr,dpr);kx.scale(dpr,dpr);
+  const ink=document.createElement('canvas');ink.width=ink.height=size;const ix=ink.getContext('2d');
+  const fs=Math.round(size*(text.length>1?0.5:0.6)),font=`700 ${fs}px 'Mukta','Nirmala UI','Mangal',sans-serif`,cy=size*0.55;
+  const css=getComputedStyle(document.documentElement);
+  const drawGuide=()=>{gx.clearRect(0,0,size,size);gx.font=font;gx.textAlign='center';gx.textBaseline='middle';
+    gx.fillStyle=css.getPropertyValue('--surface-2').trim()||'#eee';gx.fillText(text,size/2,cy);gx.setLineDash([5,6]);gx.lineWidth=2;gx.strokeStyle=css.getPropertyValue('--muted').trim()||'#999';gx.strokeText(text,size/2,cy);};
+  (document.fonts&&document.fonts.load?document.fonts.load(font):Promise.resolve()).then(drawGuide,drawGuide);
+  const lw=size*0.075;
+  [kx,ix].forEach(c=>{c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';c.strokeStyle=css.getPropertyValue('--crimson').trim()||'#c4122f';});
+  let down=false,last=null;
+  const pt=e=>{const r=k.getBoundingClientRect();return [(e.clientX-r.left)*size/r.width,(e.clientY-r.top)*size/r.height];};
+  const line=(a,b)=>[kx,ix].forEach(c=>{c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();});
+  k.onpointerdown=e=>{down=true;k.setPointerCapture(e.pointerId);last=pt(e);line(last,last);};
+  k.onpointermove=e=>{if(!down)return;const p=pt(e);line(last,p);last=p;};
+  k.onpointerup=k.onpointercancel=()=>{down=false;};
+  box.querySelector('[data-t="clear"]').onclick=()=>{kx.clearRect(0,0,size,size);ix.clearRect(0,0,size,size);msg.textContent='';};
+  box.querySelector('[data-t="done"]').onclick=()=>{
+    const m=document.createElement('canvas');m.width=m.height=size;const mx=m.getContext('2d');mx.font=font;mx.textAlign='center';mx.textBaseline='middle';mx.fillText(text,size/2,cy);
+    const d=document.createElement('canvas');d.width=d.height=size;const dx=d.getContext('2d');dx.font=font;dx.textAlign='center';dx.textBaseline='middle';dx.fillText(text,size/2,cy);dx.lineWidth=lw*1.6;dx.lineJoin='round';dx.strokeText(text,size/2,cy);
+    const M=mx.getImageData(0,0,size,size).data,D=dx.getImageData(0,0,size,size).data,I=ix.getImageData(0,0,size,size).data;
+    let letter=0,cov=0,n=0,out=0;
+    for(let q=3;q<M.length;q+=12){const inL=M[q]>100,inI=I[q]>100;if(inL){letter++;if(inI)cov++;}if(inI){n++;if(D[q]<60)out++;}}
+    const c=letter?cov/letter:0,o=n?out/n:1;
+    msg.textContent=c>=0.5&&o<=0.35?'✓ Syabaas! Well written.':c<0.5?'Trace all of it.':'Stay inside the dotted outline.';
+    msg.className='trace-msg '+(c>=0.5&&o<=0.35?'good':'bad');
+  };
 }
 function startLipi(r){
   const names={swar:'Swar (vowels)',byanjan:'Byanjan (consonants)',padhne:'Shabda padhne (reading)'};
@@ -1272,7 +1477,12 @@ function renderBubble(say,en,pic,reveal){
   if(!reveal&&listenHide()){
     C.hiddenSay={say,en,pic};
     el.innerHTML='<span class="listen-ph">🔊 Suna… <small>listen, then answer · tap 🔊 to hear it again</small></span>';
-  }else say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=w;b.onclick=()=>peek(w,b);el.append(b);});
+  }else{
+    // Devanagari mode: show each word in Nepali script; tapping still gives the romanized word and meaning
+    const dv=S.settings.devanagari?toDev(say).split(' '):null;
+    el.classList.toggle('dev-say',!!dv);
+    say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=dv?dv[i]:w;if(dv)b.lang='ne';b.onclick=()=>peek(w,b);el.append(b);});
+  }
   $('#sayPic').hidden=!pic;$('#sayPic').innerHTML=pic||'';
   $('#sayEn').textContent=en;$('#sayEn').hidden=!S.settings.english||!!(C&&C.hiddenSay);
   $('#gloss').innerHTML=calmMode()?'<span class="hint">Tap any word to see what it means.</span>':glossHint;
@@ -1283,6 +1493,7 @@ function peek(w,b){
   const t=toks(w)[0],v=DICT[t];
   speak(w);
   $('#gloss').innerHTML=v?`<b>${esc(t)}</b><span class="dev" lang="ne">${v.dev}</span>— ${esc(v.en)}`:`<b>${esc(t)}</b> — no entry`;
+  if(!v&&S.settings.devanagari)$('#gloss').innerHTML=`<b>${esc(w.replace(/[.,!?]/g,''))}</b>`;
   b.classList.add('peek');
   if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];if(st)st.hinted=true;C.hinted=true;}
 }
@@ -1488,13 +1699,13 @@ function renderStep(){
 function renderInputs(st){
   const typing=S.settings.typing&&(st.type==='chat'||st.type==='pay')&&!st.showChoices&&!st.noType;
   $('#counterWrap').hidden=st.type!=='order';
-  $('#buildWrap').hidden=st.type!=='build';
+  $('#buildWrap').hidden=st.type!=='build'&&st.type!=='spell';
   $('#typeWrap').hidden=!typing;
-  $('#optWrap').hidden=st.type==='order'||st.type==='build'||typing;
+  $('#optWrap').hidden=st.type==='order'||st.type==='build'||st.type==='spell'||typing;
   const recap=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':(st.prompt||'Pick your reply:');
   if(st.type==='order'){
     tray={};renderTray();document.querySelectorAll('.item').forEach(b=>b.disabled=false);$('#serve').disabled=false;
-  }else if(st.type==='build'){
+  }else if(st.type==='build'||st.type==='spell'){
     renderBuild(st);
   }else if(typing){
     $('#typeRecap').innerHTML=recap.replace('Pick your reply:','Type your reply:').replace('Name it in Nepali:','Type it in Nepali:');
@@ -1536,7 +1747,10 @@ function answerDone(st,ok,extra){
   if(st.type==='pay')C.paid=st.order.total;
   renderBar();setMood();revealSay();
   if(st.type==='build')speak(st.answer.t);
-  const line=st.type==='build'?`“${esc(st.answer.t)}” = ${esc(st.answer.en)}`:`“${esc(st.say)}” = ${esc(st.en)}`;
+  if(st.type==='spell')speakDev(st.answer.t);
+  const line=st.fb?`<span lang="ne">${esc(st.fb)}</span>`
+    :st.type==='spell'?`<span lang="ne">${esc(st.answer.t)}</span> = ${esc(st.answer.en)}`
+    :st.type==='build'?`“${esc(st.answer.t)}” = ${esc(st.answer.en)}`:`“${esc(st.say)}” = ${esc(st.en)}`;
   const note=st.note?`<span class="note"><b>Tip:</b> ${esc(st.note)}</span>`:'';
   const pre=extra?extra+' ':'';
   const c=C;
@@ -1603,22 +1817,28 @@ $('#micBtn').onclick=()=>{
 // ---------- sentence builder ----------
 function renderBuild(st){
   st.line=[];
-  $('#buildTarget').innerHTML=`“${esc(st.answer.en)}”`;
+  const sp=st.type==='spell';
+  $('#buildRecap').textContent=sp?'Tap the pieces in order to write the word. One piece doesn’t belong.':'Tap the words in the right order. One word doesn’t belong.';
+  $('#buildTarget').innerHTML=sp?`Write <b>${esc(st.target.rom)}</b> (${esc(st.target.en)})`:`“${esc(st.answer.en)}”`;
+  $('#buildWrap').classList.toggle('spell',sp);
   drawBuild(st);
 }
 function drawBuild(st){
-  const bank=$('#buildBank'),line=$('#buildLine');bank.innerHTML='';line.innerHTML='';
-  st.tiles.forEach((w,i)=>{if(st.line.includes(i))return;const b=document.createElement('button');b.type='button';b.className='tile';b.textContent=w;
-    b.onclick=()=>{if(C.lock)return;st.line.push(i);drawBuild(st);};bank.append(b);});
-  st.line.forEach((i,k)=>{const b=document.createElement('button');b.type='button';b.className='tile on';b.textContent=st.tiles[i];
+  const sp=st.type==='spell',bank=$('#buildBank'),line=$('#buildLine');bank.innerHTML='';line.innerHTML='';
+  const label=w=>sp?showMark(w):w;
+  st.tiles.forEach((w,i)=>{if(st.line.includes(i))return;const b=document.createElement('button');b.type='button';b.className='tile';b.textContent=label(w);if(sp)b.lang='ne';
+    b.onclick=()=>{if(C.lock)return;st.line.push(i);if(sp)speakDev(st.line.map(x=>st.tiles[x]).join(''));drawBuild(st);};bank.append(b);});
+  st.line.forEach((i,k)=>{const b=document.createElement('button');b.type='button';b.className='tile on';b.textContent=label(st.tiles[i]);if(sp)b.lang='ne';
     b.onclick=()=>{if(C.lock)return;st.line.splice(k,1);drawBuild(st);};line.append(b);});
-  if(!st.line.length)line.innerHTML='<span class="empty">Tap words below…</span>';
+  if(sp&&st.line.length){const pv=document.createElement('span');pv.className='spell-preview';pv.lang='ne';pv.textContent='= '+st.line.map(x=>st.tiles[x]).join('');line.append(pv);}
+  if(!st.line.length)line.innerHTML=`<span class="empty">Tap ${sp?'pieces':'words'} below…</span>`;
   $('#buildCheck').disabled=!st.line.length;
 }
 $('#buildClear').onclick=()=>{if(!C||C.lock)return;const st=C.steps[C.i];st.line=[];drawBuild(st);};
 $('#buildCheck').onclick=()=>{
   if(!C||C.lock)return;const st=C.steps[C.i];
-  const made=st.line.map(i=>st.tiles[i]).join(' '),want=toks(st.answer.t).join(' ');
+  const sp=st.type==='spell';
+  const made=st.line.map(i=>st.tiles[i]).join(sp?'':' '),want=sp?st.answer.t:toks(st.answer.t).join(' ');
   document.querySelectorAll('#buildWrap .tile').forEach(b=>b.disabled=true);
   answerDone(st,made===want,made===want?'':`You made “${esc(made)}”.`);
 };
@@ -1670,16 +1890,19 @@ function endDay(){
   const acc=G.steps?Math.round(100*G.correct/G.steps):0;
   const missed=[...G.missed].slice(0,12);
   if(G.mode==='practice'){
-    const cfg=G.cfg;
+    const cfg=G.cfg,after=cfg.after?cfg.after(acc):null;
     $('#sumBody').innerHTML=`
      <h2>${esc(cfg.np)} sakiyo<small>${esc(cfg.en)} finished</small></h2>
      <div class="sumgrid"><div><b>${G.correct}/${G.steps}</b><span>answers right</span></div>
        <div><b>${acc}%</b><span>right first time</span></div>
        <div><b>${G.n}</b><span>people talked to</span></div></div>
-     ${missed.length?`<h3>Words to review</h3>${wcards(missed.map(x=>[x,DICT[x].en,DICT[x].dev]))}`:'<p>No mistakes. Syabaas!</p>'}
-     <div class="row-end"><button class="ghost" id="pAgain">Pheri <small>again</small></button><button class="ghost" id="pOther">Arko abhyas <small>other practice</small></button><button class="primary big" id="nextDay">Pasal ma <small>back to the stall</small></button></div>`;
-    show('#ovSum');$('#nextDay').focus();
-    $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+     ${after?after.html:''}
+     ${missed.length?`<h3>Words to review</h3>${wcards(missed.map(x=>[x,DICT[x].en,DICT[x].dev]))}`:after?'':'<p>No mistakes. Syabaas!</p>'}
+     <div class="row-end"><button class="ghost" id="pAgain">Pheri <small>again</small></button><button class="ghost" id="pOther">Arko abhyas <small>other practice</small></button>
+       ${after&&after.next?`<button class="primary big" id="pNext">${after.next.label}</button>`:`<button class="primary big" id="nextDay">Pasal ma <small>back to the stall</small></button>`}</div>`;
+    show('#ovSum');
+    if(after&&after.next){$('#pNext').onclick=()=>{hide('#ovSum');after.next.go();};$('#pNext').focus();}
+    else{$('#nextDay').onclick=()=>{hide('#ovSum');startDay();};$('#nextDay').focus();}
     $('#pAgain').onclick=()=>{hide('#ovSum');cfg.again();};
     $('#pOther').onclick=()=>{hide('#ovSum');openPractice();};
     return;
@@ -1762,7 +1985,7 @@ $('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
 $('#bookBody').addEventListener('click',e=>{const b=e.target.closest('.brow b');if(b)speak(b.textContent);});
 $('#btnPrac').onclick=openPractice;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
-  $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;
+  $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;$('#optDev').checked=!!S.settings.devanagari;
   $('#optListen').disabled=!voiceOn();$('#listenStatus').textContent=voiceOn()?'The customer’s words stay hidden until you answer. Use 🔊 to hear them again.':'Needs a Nepali or Hindi voice on this device (see “Read lines aloud” below).';
   $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');renderVoiceSettings();renderInstall();};
 function renderVoiceSettings(){
@@ -1802,7 +2025,7 @@ $('#sayAgain').onclick=()=>{const st=C&&!C.gone&&C.steps[C.i];if(st&&st.voice)sp
 if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 $('#closeSet').onclick=()=>{
   S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;
-  S.settings.typing=$('#optType').checked;S.settings.listen=$('#optListen').checked;S.settings.mic=$('#optMic').checked;
+  S.settings.typing=$('#optType').checked;S.settings.listen=$('#optListen').checked;S.settings.mic=$('#optMic').checked;S.settings.devanagari=$('#optDev').checked;
   save();hide('#ovSet');
   if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];renderBubble(st.say,st.en,st.show);renderInputs(st);}
   renderMenu();$('#sayEn').hidden=!S.settings.english;setWeather(wxNow);

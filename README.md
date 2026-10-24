@@ -47,7 +47,9 @@ See an English sentence and build it in Nepali from word tiles, which teaches Ne
 
 ### Lipi (Nepali script)
 
-Learn the Devanagari vowels and consonants (see a letter and pick its sound, hear a sound and pick the letter), then read words you already know written in Devanagari.
+A step-by-step path through Devanagari in ten short lessons: consonants and their built-in "a", then the vowel signs one family at a time (ा, ि ी, ु ू, े ै ो ौ), the remaining consonants, nasal marks, half letters (्), joined letters (क्ष त्र प्र र्…), and finally whole sentences. Each lesson reads real words from the start (घर, कलम, काम, चिया…) and never shows a symbol that hasn't been taught yet. Exercises: read a letter, hear a sound and pick the letter, read a word and pick its meaning, build a word from its pieces (क + ा + म → काम), and trace letters with a finger. Score 80% to unlock the next lesson. Free-practice rounds with every letter are still there.
+
+After the path, **Settings → Show customers in Devanagari** puts the stall's lines in Nepali script; tap any word to see it romanized.
 
 ### Mausam (weather)
 
