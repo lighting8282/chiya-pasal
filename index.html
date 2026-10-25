@@ -14,6 +14,10 @@
 <meta name="apple-mobile-web-app-title" content="Chiya Pasal">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="claude:viewport-fit-sides" content="cover">
+<script>
+// apply the saved theme before anything draws (Auto = follow the device)
+try{const t=localStorage.getItem('chiya-pasal-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;700&family=Yatra+One&display=swap">
@@ -419,6 +423,8 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .set-install{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:.92rem}
 .set-install span{flex:1 1 240px;color:var(--muted)}
 .set-speed{display:flex;flex-direction:column;gap:6px;padding-left:28px;font-size:.95rem}
+.set-theme{padding-left:0}
+.set-theme .speeds{grid-template-columns:repeat(3,minmax(0,1fr))}
 .set-speed.novoice::after{content:"Applies once a Nepali or Hindi voice is available.";color:var(--muted);font-size:.8rem}
 .speeds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .speeds button{display:flex;flex-direction:column;align-items:center;background:var(--surface-2);border:2px solid var(--line);border-radius:10px;padding:6px 4px;line-height:1.15}
@@ -528,6 +534,9 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 <div class="overlay" id="ovBook" hidden><div class="sheet" id="bookBody"></div></div>
 <div class="overlay" id="ovSet" hidden><div class="sheet">
   <h2>Settings</h2>
+  <div class="set-speed set-theme"><b>Theme</b>
+    <div class="speeds" id="themes" role="radiogroup" aria-label="Theme"></div>
+  </div>
   <label class="set"><input type="checkbox" id="optRelaxed"><span>Relaxed mode<small>Customers never run out of patience.</small></span></label>
   <label class="set"><input type="checkbox" id="optEnglish"><span>Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
   <label class="set"><input type="checkbox" id="optType"><span>Type your answers<small>Type the reply in romanized Nepali instead of picking from three. Spelling is forgiving (aa/a, chh/ch…).</small></span></label>
@@ -2461,7 +2470,19 @@ $('#btnPrac').onclick=openPractice;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
   $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;$('#optDev').checked=!!S.settings.devanagari;
   $('#optListen').disabled=!voiceOn();$('#listenStatus').textContent=voiceOn()?'The customer’s words stay hidden until you answer. Use 🔊 to hear them again.':'Needs a Nepali or Hindi voice on this device (see “Read lines aloud” below).';
-  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent=`Erase ${curProf().name}’s progress`;show('#ovSet');renderVoiceSettings();renderInstall();};
+  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent=`Erase ${curProf().name}’s progress`;show('#ovSet');renderVoiceSettings();renderInstall();renderThemes();};
+// theme: Auto follows the device; Light/Dark override it on this device (shared by all players)
+const THEMES=[['auto','🖥️','Auto','follow device'],['light','☀️','Light','always light'],['dark','🌙','Dark','always dark']];
+function renderThemes(){
+  const cur=document.documentElement.dataset.theme||'auto';
+  $('#themes').innerHTML=THEMES.map(t=>`<button type="button" role="radio" aria-checked="${t[0]===cur}" data-th="${t[0]}"><b>${t[1]} ${t[2]}</b><small>${t[3]}</small></button>`).join('');
+  $('#themes').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.th;
+    if(v==='auto')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=v;
+    try{if(v==='auto')localStorage.removeItem('chiya-pasal-theme');else localStorage.setItem('chiya-pasal-theme',v);}catch(e){}
+    renderThemes();startParticles();
+  });
+}
 function renderVoiceSettings(){
   const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
   $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice;
@@ -2482,7 +2503,7 @@ function renderSpeeds(){
   $('#speeds').innerHTML=SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');
   $('#speeds').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.settings.rate=+b.dataset.r;save();renderSpeeds();
     if(voiceOn())speak('Ek cup chiya dinus.');});
-  $('.set-speed').classList.toggle('novoice',!voiceOn());
+  $('#speeds').parentElement.classList.toggle('novoice',!voiceOn());
 }
 $('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak('Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
 // ---------- installable app ----------
