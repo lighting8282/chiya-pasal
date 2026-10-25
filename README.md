@@ -27,7 +27,15 @@ Play online at the link above, or download `index.html` and open it in any moder
 
 ## Abhyas (practice)
 
-The **Abhyas** button in the header opens eight short practice rounds with no timer: Mausam, Pariwar, Vishaya, Chad-parba, Dainik jivan, Samaya, Vakya and Lipi.
+The **Abhyas** button in the header opens the practice sections, none of which have a timer: Mausam, Pariwar, Vishaya, Chad-parba, Dainik jivan, Samaya, Vakya, Vyakaran, Patti and Lipi.
+
+### Vyakaran (grammar)
+
+Eleven short lessons on how Nepali sentences work: word order (verb last), the little words after nouns (*ma, lai, ko, bata, sanga, samma*), the two ways to say "is" (*ho* and *cha*), pronouns and respect levels, present, past (with *-le*) and future tenses, polite and familiar requests, question words, saying no, and counting words (*wota, jana*). Each lesson has the rule, a table of forms, examples you can tap to hear, and a practice round of fill-in-the-gap and word-order exercises.
+
+### Patti (flashcards)
+
+A flashcard deck for every section: each tea-stall day, family words, festival and daily-life phrases, days and months, script letters, every picture topic and every grammar lesson. There's also a deck of the words you keep getting wrong. Flip a card, then mark it *Pheri* (again) or *Thaha cha* (got it); missed cards come back until you know them. You can also flip the decks to show English first.
 
 ### Chad-parba (festivals)
 

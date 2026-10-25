@@ -154,6 +154,8 @@ nav{display:flex;gap:8px;flex-wrap:wrap}
 /* overlays */
 .overlay{position:fixed;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;z-index:10;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .sheet{background:var(--surface);color:var(--ink);border-radius:16px;max-width:640px;width:100%;max-height:100%;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px;border:2px solid var(--stroke);box-shadow:6px 6px 0 var(--stroke)}
+/* the sheet scrolls as a whole; without this, scrollable children (wide tables) shrink to zero height */
+.sheet>*{flex-shrink:0}
 .sheet h2{font-family:var(--f-display);font-weight:400;font-size:2rem;margin:0;color:var(--crimson);line-height:1.1;text-wrap:balance}
 .sheet h3{margin:0;font-size:1.05rem}
 .sheet h3 small,.sheet h2 small{font-family:var(--f-body);font-size:.85rem;color:var(--muted);font-weight:400;margin-left:6px}
@@ -322,6 +324,32 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .trace-a .ti{touch-action:none;cursor:crosshair}
 .trace-msg{align-self:center;font-size:.9rem}
 .trace-msg.good{color:var(--good)} .trace-msg.bad{color:var(--bad)}
+/* grammar */
+.tbl.gram td:first-child{font-weight:500}
+.gram-ex{display:grid;gap:6px}
+.gram-ex button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.gram-ex b{font-size:1.1rem}
+.gram-ex .dev{color:var(--muted);font-family:'Mukta','Nirmala UI','Mangal',sans-serif}
+.gram-ex small{color:var(--muted)}
+/* flashcards */
+.fc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+.fc-top label{display:flex;gap:6px;align-items:center}
+.fc{display:block;width:100%;min-height:240px;border:0;background:none;padding:0;perspective:1200px}
+.fc-in{position:relative;display:block;width:100%;min-height:240px;transition:transform .45s;transform-style:preserve-3d}
+.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:16px;
+  border:2px solid var(--stroke);box-shadow:5px 5px 0 var(--stroke);background:var(--surface);backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
+.fc-back{transform:rotateY(180deg);background:var(--surface-2)}
+.fc-np{font-family:var(--f-display);font-size:2rem;line-height:1.2;text-wrap:balance}
+.fc-dev{font-family:'Mukta','Nirmala UI','Mangal',sans-serif;font-size:1.3rem;color:var(--muted)}
+.fc-en{font-size:1.4rem;font-weight:500;text-wrap:balance}
+.fc-small{color:var(--muted);font-size:.95rem}
+.fc-pic{font-size:3rem;line-height:1.1}
+.fc-hint{position:absolute;bottom:8px;font-size:.75rem;color:var(--muted)}
+.fc-btns{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px}
+.fc-btns .danger{display:flex;flex-direction:column;align-items:center;line-height:1.1;font-weight:700}
+.fc-btns small{font-weight:400;font-size:.75rem}
+@media (prefers-reduced-motion: reduce){.fc-in{transition:none}}
 .cal-card{display:inline-flex;flex-direction:column;align-items:center;border:2px solid var(--crimson);border-radius:12px;overflow:hidden;min-width:120px;background:var(--surface)}
 .cal-card small{background:var(--crimson);color:var(--on-crimson);width:100%;text-align:center;font-size:.8rem;letter-spacing:.06em}
 .cal-card b{font-size:1.5rem;padding:4px 12px}
@@ -577,6 +605,22 @@ const VOCAB=[
  ['magh','Magh (10th month, Jan–Feb)','माघ',9],['phagun','Phagun (11th month, Feb–Mar)','फागुन',9],['chait','Chait (12th month, Mar–Apr)','चैत',9],
  ['pachhi','after','पछि',9],['mahina','month','महिना',9],['aauchha','comes','आउँछ',9],
  ['akshar','letter (of the alphabet)','अक्षर',9],['shabda','word','शब्द',9],['banaunus','please make / build','बनाउनुस्',9],['padhne','(to) read','पढ्ने',9],['lekhiyeko','written','लेखिएको',9],['kasari','how (in what way)','कसरी',9],
+ // day 10: grammar words (verb forms, pronouns, little words)
+ ['u','he / she (familiar)','ऊ',10],['uniharu','they','उनीहरू',10],['hamro','our','हाम्रो',10],['maile','I (doing something, past) · ma + le','मैले',10],
+ ['timile','you (doing something, past) · timi + le','तिमीले',10],['harile','Hari (doing something, past) · Hari + le','हरिले',10],
+ ['chhaun','(we) are','छौं',10],['chhan','(they) are','छन्',10],['bata','from','बाट',10],['sanga','with','सँग',10],['samma','up to, until','सम्म',10],
+ ['hijo','yesterday','हिजो',10],['kahile','when','कहिले',10],['kina','why','किन',10],['jana','counting word for people','जना',10],['manchhe','person, people','मान्छे',10],
+ ['jaanu','to go (“jaanu hunchha” = goes, polite)','जानु',10],['aaunu','to come (“aaunu bhayo” = came, polite)','आउनु',10],
+ ['khanchhu','I eat / drink','खान्छु',10],['khanchhau','you eat (familiar)','खान्छौ',10],['khancha','he / she eats','खान्छ',10],['khanchhaun','we eat','खान्छौं',10],
+ ['jaancha','he / she goes','जान्छ',10],['jaanchhau','you go (familiar)','जान्छौ',10],['jaanchhan','they go','जान्छन्',10],
+ ['bolchhau','you speak (familiar)','बोल्छौ',10],['bolcha','he / she speaks','बोल्छ',10],
+ ['khayo','he / she ate','खायो',10],['khayau','you ate (familiar)','खायौ',10],['gaye','I went','गएँ',10],['gayo','he / she went','गयो',10],
+ ['aaye','came (“ma aaye” = I came)','आए',10],['gare','I did','गरेँ',10],['diyo','gave','दियो',10],['basyo','sat','बस्यो',10],['paryo','fell (rain / snow)','पर्‍यो',10],
+ ['jaanechhu','I will go','जानेछु',10],['jaanechha','he / she will go','जानेछ',10],['aaunechhu','I will come','आउनेछु',10],['aaunechha','he / she will come','आउनेछ',10],
+ ['garnechhu','I will do','गर्नेछु',10],['garnechha','he / she will do','गर्नेछ',10],['parla','will probably fall (rain)','पर्ला',10],
+ ['basa','sit! (familiar)','बस',10],['aau','come! (familiar)','आऊ',10],['khau','eat! (familiar)','खाऊ',10],['deu','give! (familiar)','देऊ',10],
+ ['najaanus','please don’t go','नजानुस्',10],['najaau','don’t go! (familiar)','नजाऊ',10],
+ ['khanna','I don’t eat','खान्न',10],['bujhchhu','I understand','बुझ्छु',10],['bujhdina','I don’t understand','बुझ्दिनँ',10],['bujhe','I understood','बुझेँ',10],
  ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
@@ -957,6 +1001,8 @@ const PRACTICES=[
  {key:'dainik',icon:'🚕',np:'Dainik jivan',en:'Daily life',about:'Phone calls, bargaining, taxis, the doctor, directions.',open:()=>openDailyIntro()},
  {key:'samaya',icon:'🕒',np:'Samaya',en:'Time & dates',about:'Telling the time, days of the week, Nepali months.',open:()=>openTimeIntro()},
  {key:'vakya',icon:'🧩',np:'Vakya',en:'Sentences',about:'Put the words in the right order (the verb goes last).',open:()=>openVakyaIntro()},
+ {key:'vyakaran',icon:'📘',np:'Vyakaran',en:'Grammar',about:'Word order, “is”, verb endings, past and future, questions, saying no.',open:()=>openGrammar()},
+ {key:'patti',icon:'🃏',np:'Patti',en:'Flashcards',about:'A deck for every section, plus the words you keep missing.',open:()=>openCards()},
  {key:'lipi',icon:'अ',np:'Lipi',en:'Nepali script',about:'Learn Devanagari letters and read words you know.',open:()=>openLipiIntro()},
 ];
 function stallNote(){
@@ -1411,6 +1457,206 @@ function startLipi(r){
   startPractice({key:'lipi',np:'Lipi',en:names[r],n:6,again:()=>startLipi(r),label:i=>`अ Lipi · ${names[r]} · ${i+1}/6`,
     gen:()=>withLook(r==='padhne'?[readStep(),readStep()]:[lipiStep('see',LETTERS[r]),lipiStep('hear',LETTERS[r])],'')});
 }
+// ================= Vyakaran (grammar) =================
+// drill: [sentence with ___, english, answer, [wrong, wrong], tip]; build: [sentence, english] for word-order tiles
+const GRAMMAR=[
+ {id:'kram',np:'Shabda kram',en:'Word order',icon:'🧩',
+  rules:['Nepali puts the verb LAST: subject, then object, then verb.','“I drink tea” is “Ma chiya khanchhu”, literally “I tea drink”.','Time and place usually come early: “Ma bholi Pokhara jaanchhu” (I tomorrow Pokhara go).','Describing words come before the noun, as in English: ramro chiya (good tea).'],
+  table:{head:['Subject','Object / place','Verb'],rows:[['Ma','chiya','khanchhu'],['Hari','ghar','jaancha'],['Malai','paani','chahiyo']]},
+  examples:[['Ma chiya khanchhu.','I drink tea.'],['Hari ghar jaancha.','Hari goes home.'],['Yo ramro chiya ho.','This is good tea.']],
+  drill:[],
+  build:[['Ma chiya khanchhu.','I drink tea.'],['Ma bholi Pokhara jaanchhu.','I’m going to Pokhara tomorrow.'],['Hari ghar jaancha.','Hari goes home.'],['Malai paani chahiyo.','I need water.'],
+   ['Yo ramro chiya ho.','This is good tea.'],['Hami momo khanchhaun.','We eat momo.'],['Didi bazaar jaanu hunchha.','Big sister goes to the market.'],['Ma Nepali sikdai chhu.','I’m learning Nepali.']]},
+ {id:'naam-yogi',np:'Ma, lai, ko, bata',en:'Little words after nouns',icon:'📍',
+  rules:['Words like in, to, of, from and with come AFTER the noun in Nepali, not before it.','They are often written joined to the noun: ghar ma = घरमा.','lai also marks who receives something, and is used with feelings: “Malai bhok lagyo” (hunger came to me = I’m hungry).'],
+  table:{head:['Word','Meaning','Example'],rows:[['ma','in, at','ghar ma (at home)'],['lai','to, for','aama lai (to Mum)'],['ko','of, ’s','Hari ko kitab (Hari’s book)'],['bata','from','Pokhara bata (from Pokhara)'],['sanga','with','didi sanga (with big sister)'],['samma','up to, until','Thamel samma (as far as Thamel)']]},
+  examples:[['Ma ghar ma chhu.','I’m at home.'],['Aama lai chiya dinus.','Please give Mum some tea.'],['Yo Hari ko kitab ho.','This is Hari’s book.']],
+  drill:[['Ma ghar ___ chhu.','I’m at home.','ma',['lai','bata']],['Yo kitab Hari ___ ho.','This book is Hari’s.','ko',['ma','sanga']],['Ma Pokhara ___ aaye.','I came from Pokhara.','bata',['ko','lai']],
+   ['Aama ___ chiya dinus.','Please give Mum tea.','lai',['ko','bata']],['Ma didi ___ bazaar jaanchhu.','I go to the market with big sister.','sanga',['ko','ma']],['Thamel ___ kati lagchha?','How much is it to Thamel?','samma',['sanga','ko']]],
+  build:[['Ma ghar ma chhu.','I’m at home.'],['Aama lai chiya dinus.','Please give Mum some tea.']]},
+ {id:'cha-ho',np:'Cha ra ho',en:'Two ways to say “is”',icon:'⚖️',
+  rules:['ho says what something IS (identity): “Yo chiya ho” = This is tea. “Hari mero dai ho” = Hari is my big brother.','cha says where something is, that it exists, or what it is like: “Chiya taato cha” = The tea is hot. “Ghar ma paani cha” = There is water at home.','Their negatives are different too: ho → hoina, cha → chaina.','With “I” they become hu and chhu: “Ma Hari hu” (I am Hari), “Ma ghar ma chhu” (I am at home).'],
+  table:{head:['','is','is not'],rows:[['identity: what it is','ho','hoina'],['place, existence, description','cha','chaina']]},
+  examples:[['Yo chiya ho.','This is tea.'],['Chiya taato cha.','The tea is hot.'],['Yo kafi hoina.','This isn’t coffee.']],
+  drill:[['Yo chiya ___.','This is tea.','ho',['cha','chaina']],['Chiya taato ___.','The tea is hot.','cha',['ho','hoina']],['Ghar ma paani ___.','There is water at home.','cha',['ho','hoina']],
+   ['Hari mero dai ___.','Hari is my big brother.','ho',['cha','chaina']],['Momo ___?','Do you have momo? (Is there momo?)','cha',['ho','hoina']],['Yo kukur ___, biralo hoina.','This is a dog, not a cat.','ho',['cha','chaina']]],
+  build:[['Yo chiya ho.','This is tea.'],['Ghar ma paani cha.','There is water at home.']]},
+ {id:'sarvanam',np:'Ma, timi, tapai',en:'I, you, he and she',icon:'👥',
+  rules:['The verb ending changes with the person: ma → -chhu, timi → -chhau, u → -cha, hami → -chhaun, uniharu → -chhan.','There are three levels of “you”: timi (family, friends, children), tapai (polite), hajur (most respectful: elders, in-laws).','Polite tapai, hajur and uhaa (he/she, polite) take “hunuhunchha” instead of cha.'],
+  table:{head:['Who','Word','“is well”'],rows:[['I','ma','sanchai chhu'],['you (familiar)','timi','sanchai chhau'],['you (polite)','tapai','sanchai hunuhunchha'],['you (most respectful)','hajur','sanchai hunuhunchha'],['he / she','u','sanchai cha'],['he / she (polite)','uhaa','sanchai hunuhunchha'],['we','hami','sanchai chhaun'],['they','uniharu','sanchai chhan']]},
+  examples:[['Ma sanchai chhu.','I’m well.'],['Timi kahaa chhau?','Where are you? (familiar)'],['Tapai sanchai hunuhunchha?','Are you well? (polite)']],
+  drill:[['Ma sanchai ___.','I’m well.','chhu',['chhau','cha']],['Timi kahaa ___?','Where are you? (familiar)','chhau',['chhu','cha']],['Tapai sanchai ___?','Are you well? (polite)','hunuhunchha',['cha','chhau']],
+   ['Hami ghar ma ___.','We’re at home.','chhaun',['chhu','chhan']],['U bazaar ma ___.','He / she is at the market.','cha',['chhau','chhu']],
+   ['___ sanchai hunuhunchha?','(to your mother-in-law) Are you well?','Hajur',['Timi','U'],'Use hajur with parents- and grandparents-in-law. Timi would sound too familiar.']],
+  build:[['Ma sanchai chhu.','I’m well.'],['Tapai sanchai hunuhunchha?','Are you well?']]},
+ {id:'vartaman',np:'Aba',en:'Present tense',icon:'▶️',
+  rules:['Present tense = verb stem + ending: khanu (to eat) → khan- → khanchhu (I eat).','The same form is used for things you do regularly AND the near future: “Ma bholi jaanchhu” = I’m going tomorrow.','khanu covers eating AND drinking: chiya khanchhu = I drink tea.'],
+  table:{head:['','khanu (eat)','jaanu (go)','bolnu (speak)'],rows:[['ma','khanchhu','jaanchhu','bolchhu'],['timi','khanchhau','jaanchhau','bolchhau'],['u','khancha','jaancha','bolcha'],['hami','khanchhaun','jaanchhaun','bolchhaun'],['uniharu','khanchhan','jaanchhan','bolchhan']]},
+  examples:[['Ma Nepali bolchhu.','I speak Nepali.'],['Timi chiya khanchhau?','Do you drink tea?'],['Hari bazaar jaancha.','Hari goes to the market.']],
+  drill:[['Ma Nepali ___.','I speak Nepali. (bolnu)','bolchhu',['bolchhau','bolcha']],['Timi chiya ___?','Do you drink tea? (khanu)','khanchhau',['khanchhu','khancha']],['Hari bazaar ___.','Hari goes to the market. (jaanu)','jaancha',['jaanchhu','jaanchhaun']],
+   ['Hami momo ___.','We eat momo. (khanu)','khanchhaun',['khancha','khanchhu']],['Uniharu ghar ___.','They go home. (jaanu)','jaanchhan',['jaancha','jaanchhau']]],
+  build:[['Ma Nepali bolchhu.','I speak Nepali.'],['Hami momo khanchhaun.','We eat momo.']]},
+ {id:'bhut',np:'Bhut kaal',en:'Past tense',icon:'⏪',
+  rules:['Past endings: khaye (I ate), khayau (you ate), khayo (he / she ate), khayaun (we ate).','jaanu (go) is irregular: gaye (I went), gayau, gayo, gayaun.','With past verbs that have an object (eat, buy, do…), the doer takes -le: “Maile momo khaye” (I ate momo). ma → maile, Hari → Harile.','Verbs without an object (go, come) don’t take -le: “Ma ghar gaye” (I went home). In casual speech -le is often dropped.'],
+  table:{head:['','khanu (eat)','jaanu (go)'],rows:[['ma / maile','khaye','gaye'],['timi / timile','khayau','gayau'],['u / usle','khayo','gayo'],['hami / hamile','khayaun','gayaun']]},
+  examples:[['Maile momo khaye.','I ate momo.'],['Hari ghar gayo.','Hari went home.'],['Ma hijo Pokhara gaye.','Yesterday I went to Pokhara.']],
+  drill:[['Maile momo ___.','I ate momo.','khaye',['khayo','khayau']],['Hari ghar ___.','Hari went home.','gayo',['gaye','khayo']],['Ma hijo Pokhara ___.','Yesterday I went to Pokhara.','gaye',['gayo','jaancha']],
+   ['___ chiya khayo.','Hari drank tea.','Harile',['Hari ma','Hari lai'],'Drinking tea has an object (tea), so in the past the drinker takes -le.'],['Timile khana ___?','Did you eat? (familiar)','khayau',['khaye','khayo']]],
+  build:[['Maile momo khaye.','I ate momo.'],['Hari ghar gayo.','Hari went home.']]},
+ {id:'bhavishya',np:'Bhavishya',en:'Future',icon:'⏩',
+  rules:['For a definite future add -nechhu: jaanechhu (I will go), garnechhu (I will do), aaunechha (he / she will come).','In everyday talk the present tense often does the job: “Ma bholi jaanchhu” = I’m going tomorrow.','-la means “probably will”: “Paani parla” = It’ll probably rain. You met it in the weather section.'],
+  table:{head:['','jaanu (go)','aaunu (come)','garnu (do)'],rows:[['ma','jaanechhu','aaunechhu','garnechhu'],['timi','jaanechhau','aaunechhau','garnechhau'],['u','jaanechha','aaunechha','garnechha'],['probably','jaala','aaula','garla']]},
+  examples:[['Ma bholi jaanechhu.','I will go tomorrow.'],['U bholi aaunechha.','He / she will come tomorrow.'],['Aaja paani parla.','It’ll probably rain today.']],
+  drill:[['Ma bholi ___.','I will go tomorrow. (jaanu)','jaanechhu',['jaanechha','gaye']],['U bholi ___.','He / she will come tomorrow. (aaunu)','aaunechha',['aaunechhu','aayo']],
+   ['Ma kaam ___.','I will do the work. (garnu)','garnechhu',['garnechha','gare']],['Aaja paani ___.','It’ll probably rain today.','parla',['paryo','pardaina']]],
+  build:[['Ma bholi jaanechhu.','I will go tomorrow.'],['Aaja paani parla.','It’ll probably rain today.']]},
+ {id:'aagya',np:'Aagya',en:'Asking and telling',icon:'🙏',
+  rules:['Polite requests end in -nus: dinus (please give), basnus (please sit), khanus (please eat), aaunus (please come).','With family and friends (timi) the short forms are: deu (give), basa (sit), khau (eat), aau (come), jaau (go).','Add na to soften: “Dinus na” = Please give it, won’t you?','“Don’t” = na- in front: najaanus (please don’t go), nakhau (don’t eat, familiar).'],
+  table:{head:['Verb','Polite (tapai)','Familiar (timi)'],rows:[['dinu (give)','dinus','deu'],['basnu (sit)','basnus','basa'],['khanu (eat)','khanus','khau'],['aaunu (come)','aaunus','aau'],['jaanu (go)','jaanus','jaau']]},
+  examples:[['Basnus.','Please sit.'],['Chiya khanus.','Please have some tea.'],['Yahaa aau!','Come here! (familiar)']],
+  drill:[['___.','(to your mother-in-law) Please sit.','Basnus',['Basa','Basyo']],['___!','(to your little brother) Come!','Aau',['Aaunus','Aayo']],['Chiya ___.','(to a guest) Please have tea.','khanus',['khau','khayo']],
+   ['___.','(politely) Please don’t go.','Najaanus',['Jaanus','Najaau']],['Chiya ___.','(to your wife, familiar) Give me the tea.','deu',['dinus','diyo'],'With your wife the familiar deu is normal. Dinus would sound formal but polite.']],
+  build:[['Chiya khanus.','Please have some tea.'],['Yahaa aau!','Come here!']]},
+ {id:'prashna',np:'Prashna',en:'Questions',icon:'❓',
+  rules:['Question words: ke (what), ko (who), kahaa (where), kahile (when), kina (why), kati (how much, how many), kasto (how, what kind), kun (which).','They usually sit just before the verb: “Tapai kahaa jaanu hunchha?” (You where go?).','A yes/no question is just the sentence with your voice going up: “Chiya cha?” (Is there tea?).'],
+  table:{head:['Word','Meaning','Example'],rows:[['ke','what','Yo ke ho?'],['ko','who','Ko aayo?'],['kahaa','where','Kahaa jaane?'],['kahile','when','Bas kahile aauchha?'],['kina','why','Kina aaunu bhayo?'],['kati','how much / many','Yo kati ho?'],['kasto','how, what like','Kasto cha?'],['kun','which','Kun chahiyo?']]},
+  examples:[['Yo ke ho?','What is this?'],['Tapai kahaa jaanu hunchha?','Where are you going?'],['Bas kahile aauchha?','When does the bus come?']],
+  drill:[['Yo ___ ho?','What is this?','ke',['ko','kahaa']],['Tapai ___ jaanu hunchha?','Where are you going?','kahaa',['ke','kati']],['Yo ___ ho?','How much is this?','kati',['kina','ko']],
+   ['Tapai ___ aaunu bhayo?','Why did you come?','kina',['kahile','kun']],['Bas ___ aauchha?','When does the bus come?','kahile',['kahaa','kasto']],['___ aayo?','Who came?','Ko',['Ke','Kati']]],
+  build:[['Yo ke ho?','What is this?'],['Bas kahile aauchha?','When does the bus come?']]},
+ {id:'nishedh',np:'Nishedh',en:'Saying no',icon:'🚫',
+  rules:['cha → chaina (there isn’t), ho → hoina (it isn’t).','“I don’t …” in the present: khanna (I don’t eat), jaanna (I don’t go), bujhdina (I don’t understand).','“I didn’t …” in the past: bujhina (I didn’t understand).','“Don’t!” to someone: na- in front: najaanus (please don’t go).'],
+  table:{head:['Yes','No','Meaning'],rows:[['cha','chaina','there is / there isn’t'],['ho','hoina','it is / it isn’t'],['khanchhu','khanna','I eat / I don’t eat'],['bujhchhu','bujhdina','I understand / I don’t understand'],['jaanus','najaanus','please go / please don’t go']]},
+  examples:[['Paani chaina.','There’s no water.'],['Ma masu khanna.','I don’t eat meat.'],['Malai thaha chaina.','I don’t know.']],
+  drill:[['Paani ___.','There’s no water.','chaina',['hoina','cha']],['Yo chiya ___, kafi ho.','This isn’t tea, it’s coffee.','hoina',['chaina','ho']],['Ma masu ___.','I don’t eat meat.','khanna',['khanchhu','khaye']],
+   ['Malai thaha ___.','I don’t know.','chaina',['hoina','cha']],['Ma ___.','I don’t understand.','bujhdina',['bujhchhu','bujhe']]],
+  build:[['Ma masu khanna.','I don’t eat meat.'],['Malai thaha chaina.','I don’t know.']]},
+ {id:'gantika',np:'Wota ra jana',en:'Counting words',icon:'🔢',
+  rules:['When you count things, add a counting word after the number: dui wota syau (two apples).','wota is for things, jana is for people: tin jana manchhe (three people).','Drinks and dishes are counted by their container: ek cup chiya, ek gilas paani, ek plate momo.','choti means “times”: din ko tin choti (three times a day).'],
+  table:{head:['Counter','Used for','Example'],rows:[['wota','things','dui wota syau'],['jana','people','tin jana manchhe'],['cup / gilas / plate','drinks and food','ek cup chiya'],['choti','times','tin choti']]},
+  examples:[['Tin wota syau dinus.','Three apples, please.'],['Dui jana manchhe aaye.','Two people came.'],['Ek gilas paani dinus.','A glass of water, please.']],
+  drill:[['Dui ___ manchhe aaye.','Two people came.','jana',['wota','cup']],['Tin ___ syau dinus.','Three apples, please.','wota',['jana','choti']],['Ek ___ paani dinus.','A glass of water, please.','gilas',['jana','choti']],
+   ['Din ko tin ___ khanus.','Take it three times a day.','choti',['jana','wota']],['Hamro pariwar ma paanch ___ chhan.','There are five people in our family.','jana',['wota','choti']]],
+  build:[['Tin wota syau dinus.','Three apples, please.'],['Dui jana manchhe aaye.','Two people came.']]},
+];
+const gramState=()=>(S.gram=S.gram||{best:{}});
+function gramFillStep(d){
+  const [say,en,ans,wrong,tip]=d,filled=say.replace('___',ans);
+  const mk=t=>({t,en:''});
+  return {type:'chat',say,en,prompt:'Fill the gap:',answer:mk(ans),options:shuffle([mk(ans),...wrong.map(mk)]),fill:true,noSpeak:true,noHide:true,
+    fb:`${filled} = ${en}`,note:tip||''};
+}
+function gramSteps(g){
+  const pool=[...g.drill.map(gramFillStep)];
+  const bpool=vakyaPool();
+  g.build.forEach(b=>pool.push(buildStep({t:b[0],en:b[1]},bpool.length?bpool:[{t:'chiya'}])));
+  return shuffle(pool);
+}
+function openGrammar(){
+  const st=gramState();
+  practiceSheet('Vyakaran','grammar',`<p>Short lessons on how Nepali sentences work. Read the rule, tap the examples to hear them, then practise. Do them in order, or pick what you need.</p>
+   <div class="lipi-path">${GRAMMAR.map((g,i)=>{const b=st.best[g.id]||0;return `<button class="lp ${b>=80?'ok':'open'}" data-g="${i}"><span class="lp-n">${b>=80?'✓':i+1}</span><span class="lp-g">${g.icon}</span><b>${g.np}</b><small>${g.en}${b?` · best ${b}%`:''}</small></button>`;}).join('')}</div>`);
+  $('#introBody').querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>openGrammarLesson(+b.dataset.g));
+}
+function openGrammarLesson(i){
+  const g=GRAMMAR[i],tbl=g.table;
+  practiceSheet(`${g.icon} ${g.np}`,g.en,`
+   <ul class="howto">${g.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+   <div class="tblwrap"><table class="tbl gram"><tr>${tbl.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>${tbl.rows.map(r=>`<tr>${r.map((c,k)=>`<td>${k===0&&tbl.head[0]===''?`<b>${esc(c)}</b>`:esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>
+   <h3>Udaharan <small>examples · tap to hear</small></h3>
+   <div class="gram-ex">${g.examples.map((e,k)=>`<button type="button" data-e="${k}"><b>${esc(e[0])}</b><span class="dev" lang="ne">${toDev(e[0])}</span><small>${esc(e[1])}</small></button>`).join('')}</div>
+   <div class="row-end" style="justify-content:flex-start"><button class="ghost" id="gCards">🃏 Flashcards for this lesson</button></div>`,
+   'Abhyas garaun! <small>let’s practise</small>',()=>startGrammar(i));
+  $('#introBody').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>speak(g.examples[+b.dataset.e][0]));
+  $('#gCards').onclick=()=>startCards(cardDecks().find(d=>d.id==='gram-'+g.id),()=>openGrammarLesson(i));
+}
+function startGrammar(i){
+  const g=GRAMMAR[i],steps=gramSteps(g);
+  while(steps.length<8)steps.push(...gramSteps(g));
+  startPractice({key:'vyakaran',np:g.np,en:g.en,n:4,again:()=>startGrammar(i),label:k=>`${g.icon} ${g.np} · ${k+1}/4`,
+    gen:k=>withLook([steps[k*2],steps[k*2+1]],''),
+    after:acc=>{const st=gramState();st.best[g.id]=Math.max(st.best[g.id]||0,acc);save();
+      const next=GRAMMAR[i+1];
+      return {html:acc>=80?`<p class="lipi-pass">✓ <b>${esc(g.en)}</b>: done.</p>`:`<p class="lipi-fail">Try for 80% (you got ${acc}%). Re-read the rule, then go again.</p>`,
+        next:next?{label:`Next: ${esc(next.np)} <small>${esc(next.en)}</small>`,go:()=>openGrammarLesson(i+1)}:{label:'Vyakaran',go:openGrammar}};}});
+}
+
+// ================= Patti (flashcards) =================
+// a card: f = front (romanized Nepali), dev = Devanagari, b = back (English), pic = picture, k = dictionary key for mastery
+const vocabCard=v=>({k:v[0],f:v[0],dev:v[2],b:v[1]});
+function cardDecks(){
+  const D=[];
+  for(let d=1;d<=6;d++)D.push({id:'din'+d,group:'Tea stall days',np:'Din '+d,en:d===6?'Day 6: weather':`Day ${d} words`,icon:d===6?'🌦️':'🍵',cards:()=>VOCAB.filter(v=>v[3]===d).map(vocabCard)});
+  D.push({id:'pariwar',group:'Practice',np:'Pariwar',en:'Family words',icon:'👪',cards:()=>VOCAB.filter(v=>v[3]===7).map(vocabCard)});
+  D.push({id:'chad',group:'Practice',np:'Chad-parba',en:'Festival phrases',icon:'🪔',cards:()=>FEST_CHATS.flatMap(c=>{const r=c.roles.find(x=>FAMILY[x].addr)||c.roles[0];
+    return [{f:c.say,dev:toDev(c.say),b:c.en},{f:festSub(c.ans,r),dev:toDev(festSub(c.ans,r)),b:festSub(c.ansEn,r)}];}).filter((c,i,a)=>a.findIndex(x=>x.f===c.f)===i)});
+  D.push({id:'dainik',group:'Practice',np:'Dainik jivan',en:'Daily-life phrases',icon:'🚕',cards:()=>Object.values(DAILY).flatMap(d=>d.lines.flatMap(l=>[{f:l[0],dev:toDev(l[0]),b:l[1]},{f:l[2],dev:toDev(l[2]),b:l[3]}])).filter((c,i,a)=>a.findIndex(x=>x.f===c.f)===i)});
+  D.push({id:'samaya',group:'Practice',np:'Samaya',en:'Days and months',icon:'🕒',cards:()=>[...DAYS.map(x=>({k:x[0],f:cap(x[0]),dev:x[1],b:x[2]})),...MONTHS.map((x,i)=>({k:x[0],f:cap(x[0]),dev:x[1],b:`Month ${i+1} of the Nepali year (${x[2]})`}))]});
+  D.push({id:'lipi',group:'Practice',np:'Lipi',en:'Letters and signs',icon:'अ',cards:()=>LIPI.flatMap(L=>L.new).map(n=>({f:showMark(n[0]),dev:'',b:n[1],glyph:true}))});
+  WORD_TOPICS.forEach(t=>D.push({id:'vis-'+t.id,group:'Vishaya',np:t.np,en:t.en,icon:t.icon,cards:()=>t.items.map(it=>({k:toks(it[0]).length===1?it[0]:'',f:it[0],dev:toDev(it[0]),b:it[1],
+    pic:t.q==='rang'?`<span class="wd-swatch" style="background:${it[2]}"></span>`:it[2]}))}));
+  GRAMMAR.forEach(g=>D.push({id:'gram-'+g.id,group:'Vyakaran',np:g.np,en:g.en,icon:g.icon,cards:()=>[...g.examples,...g.build,...g.drill.map(d=>[d[0].replace('___',d[2]),d[1].replace(/ \([^)]*\)$/,'')])]
+    .filter((x,i,a)=>a.findIndex(y=>y[0]===x[0])===i).map(x=>({f:x[0],dev:toDev(x[0]),b:x[1]}))}));
+  D.push({id:'weak',group:'For you',np:'Kamjor shabda',en:'Words you keep missing',icon:'🎯',cards:()=>VOCAB.filter(v=>v[3]>0&&v[0] in S.mastery&&lvl(v[0])<=1).map(vocabCard)});
+  return D;
+}
+function openCards(){
+  const decks=cardDecks(),groups=[...new Set(decks.map(d=>d.group))];
+  practiceSheet('Patti','flashcards',`<p>Flip through a deck: see the Nepali, guess the meaning, flip to check. Cards you miss come back until you know them.</p>
+   ${groups.map(gr=>`<h3>${gr}</h3><div class="prac">${decks.filter(d=>d.group===gr).map(d=>{const n=d.cards().length;
+     return `<button data-d="${d.id}" ${n?'':'disabled'}><span class="pi" aria-hidden="true">${d.icon}</span><b>${esc(d.np)}</b><small>${esc(d.en)} · ${n} card${n===1?'':'s'}${!n&&d.id==='weak'?' (none yet)':''}</small></button>`;}).join('')}</div>`).join('')}`);
+  $('#introBody').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>startCards(decks.find(d=>d.id===b.dataset.d),openCards));
+}
+let FC=null;
+function startCards(deck,back){
+  const cards=deck.cards();
+  FC={deck,back,queue:shuffle(cards),total:cards.length,known:0,missed:new Set(),flipped:false,rev:!!S.settings.cardsRev};
+  drawCard();
+}
+function drawCard(){
+  const c=FC.queue[0];
+  if(!c){
+    const again=[...FC.missed];
+    $('#introBody').innerHTML=`<h2>Sakiyo!<small>${esc(FC.deck.np)} · ${esc(FC.deck.en)}</small></h2>
+     <div class="sumgrid"><div><b>${FC.total}</b><span>cards</span></div><div><b>${FC.total-again.length}</b><span>knew first time</span></div><div><b>${again.length}</b><span>needed again</span></div></div>
+     <div class="row-end">${again.length?'<button class="ghost" id="fcMissed">Just the missed ones</button>':''}<button class="ghost" id="fcAgain">Whole deck again</button><button class="primary" id="fcBack">Done</button></div>`;
+    if(again.length)$('#fcMissed').onclick=()=>{const d={...FC.deck,cards:()=>again};startCards(d,FC.back);};
+    $('#fcAgain').onclick=()=>startCards(FC.deck,FC.back);
+    $('#fcBack').onclick=()=>{const b=FC.back;FC=null;b();};
+    $('#fcBack').focus();return;
+  }
+  const pos=FC.total-FC.queue.length+1,np=`<span class="fc-np">${c.glyph?`<span class="lipi-big" lang="ne">${esc(c.f)}</span>`:esc(c.f)}</span>${c.dev&&!c.glyph?`<span class="fc-dev" lang="ne">${c.dev}</span>`:''}`;
+  const en=`<span class="fc-en">${esc(c.b)}</span>`,pic=c.pic?`<span class="fc-pic">${c.pic}</span>`:'';
+  const front=FC.rev?pic+en:pic+np,back=FC.rev?np+en:en+`<span class="fc-small">${esc(c.glyph?c.f:c.f)}</span>`;
+  $('#introBody').innerHTML=`<h2>${FC.deck.icon} ${esc(FC.deck.np)}<small>${esc(FC.deck.en)} · flashcards</small></h2>
+   <div class="fc-top"><span>${pos} / ${FC.total}${FC.queue.length>FC.total-pos+1?' · some coming back':''}</span>
+     <label><input type="checkbox" id="fcRev" ${FC.rev?'checked':''}> English first</label></div>
+   <button class="fc ${FC.flipped?'flipped':''}" id="fcCard" type="button" aria-label="${FC.flipped?'Card back':'Card front'}. Tap to flip.">
+     <span class="fc-in"><span class="fc-face fc-front">${front}<span class="fc-hint">tap to flip</span></span><span class="fc-face fc-back">${back}</span></span></button>
+   <div class="fc-btns"><button class="ghost" id="fcSay" type="button">🔊</button><button class="danger" id="fcNo" type="button">Pheri <small>again</small></button><button class="primary" id="fcYes" type="button">Thaha cha <small>got it</small></button></div>
+   <div class="row-end"><button class="ghost" id="fcQuit" type="button">Stop</button></div>`;
+  const sayIt=()=>{if(c.glyph)speakDev(c.f.replace('◌',''));else speak(c.f);};
+  if(!FC.rev&&!FC.flipped)sayIt();
+  $('#fcCard').onclick=()=>{FC.flipped=!FC.flipped;$('#fcCard').classList.toggle('flipped',FC.flipped);if(FC.flipped&&FC.rev)sayIt();};
+  $('#fcSay').onclick=sayIt;
+  $('#fcRev').onchange=e=>{FC.rev=e.target.checked;S.settings.cardsRev=FC.rev;save();FC.flipped=false;drawCard();};
+  $('#fcYes').onclick=()=>cardDone(true);$('#fcNo').onclick=()=>cardDone(false);
+  $('#fcQuit').onclick=()=>{const b=FC.back;FC=null;b();};
+  $('#fcCard').focus();
+}
+function cardDone(ok){
+  const c=FC.queue.shift(),first=!FC.missed.has(c);
+  if(c.k&&DICT[c.k]&&DICT[c.k].day>0&&first){S.mastery[c.k]=ok?Math.min(5,lvl(c.k)+1):Math.max(0,lvl(c.k)-1);save();}
+  if(!ok){FC.missed.add(c);FC.queue.splice(Math.min(3,FC.queue.length),0,c);}
+  FC.flipped=false;drawCard();
+}
+addEventListener('keydown',e=>{
+  if(!FC||$('#ovIntro').hidden||!$('#fcCard'))return;
+  if(e.key===' '||e.key==='Enter'){if(document.activeElement&&document.activeElement.id==='fcCard'){return;}e.preventDefault();$('#fcCard').click();}
+  else if(e.key==='ArrowLeft'||e.key==='1')cardDone(false);
+  else if(e.key==='ArrowRight'||e.key==='2')cardDone(true);
+});
+
 const SKIN=['#f0c8a2','#dba57a','#bd8058','#916040','#6d432b'];
 const HAIR=['#1c1410','#2b1d16','#3c2b20','#5e5a57','#d4d2cf'];
 const SHIRT=['#2f5d8a','#a8323e','#3f7a4f','#7a4b8c','#c27c2c','#3c4a5c','#b85c7a'];
@@ -1479,7 +1725,7 @@ function renderTray(){
 const glossHint='<span class="hint">Tap any word to see what it means. Peeking costs your tip.</span>';
 let lastSay='';
 // listening mode: the line stays hidden (but is spoken) until the step is answered
-const listenHide=()=>S.settings.listen&&voiceOn()&&C&&!C.gone&&!C.lock;
+const listenHide=()=>S.settings.listen&&voiceOn()&&C&&!C.gone&&!C.lock&&!(C.steps[C.i]&&C.steps[C.i].noHide);
 function revealSay(){if(C&&C.hiddenSay){const h=C.hiddenSay;C.hiddenSay=null;renderBubble(h.say,h.en,h.pic,true);}}
 function renderBubble(say,en,pic,reveal){
   const el=$('#say');el.innerHTML='';
@@ -1701,7 +1947,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>startPa
 function renderStep(){
   const st=C.steps[C.i];st.hinted=false;st.tries=0;st.scored=false;st.showChoices=false;C.lock=false;C.hiddenSay=null;
   renderBubble(st.say,st.en,st.show);setFb('');$('#cont').hidden=true;
-  if(st.voice)speakDev(st.voice);else speak(st.say);
+  if(st.noSpeak){}else if(st.voice)speakDev(st.voice);else speak(st.say);
   renderInputs(st);
 }
 // which way this step is answered: food tray, choices (+ mic), typing, or word tiles
@@ -1757,6 +2003,7 @@ function answerDone(st,ok,extra){
   renderBar();setMood();revealSay();
   if(st.type==='build')speak(st.answer.t);
   if(st.type==='spell')speakDev(st.answer.t);
+  if(st.fill)speak(st.say.replace('___',st.answer.t));
   const line=st.fb?`<span lang="ne">${esc(st.fb)}</span>`
     :st.type==='spell'?`<span lang="ne">${esc(st.answer.t)}</span> = ${esc(st.answer.en)}`
     :st.type==='build'?`“${esc(st.answer.t)}” = ${esc(st.answer.en)}`:`“${esc(st.say)}” = ${esc(st.en)}`;
@@ -1986,6 +2233,9 @@ function renderBook(){
   const pw=VOCAB.filter(v=>v[3]===9);
   if(!Object.keys(S.practiced||{}).some(k=>['chad','dainik','samaya','vakya','lipi'].includes(k)))html+=`<p class="locked">Abhyas (practice rounds): ${pw.length} words unlock when you play festivals, daily life, time, sentences or script practice.</p>`;
   else html+=`<div class="book-day"><h3>Abhyas <small>festivals, daily life, time</small></h3>${pw.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
+  const gw=VOCAB.filter(v=>v[3]===10);
+  if(!Object.keys((S.gram||{}).best||{}).length)html+=`<p class="locked">Vyakaran (grammar): ${gw.length} words unlock when you practise a grammar lesson.</p>`;
+  else html+=`<div class="book-day"><h3>Vyakaran <small>grammar words</small></h3>${gw.map(v=>`<div class="brow"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><span>${esc(v[1])}</span><span class="mdots" aria-label="mastery ${lvl(v[0])} of 5">${[1,2,3,4,5].map(i=>`<i class="${lvl(v[0])>=i?'on':''}"></i>`).join('')}</span></div>`).join('')}</div>`;
   if(voiceOn())html=html.replace('</p>',' Tap a word to hear it.</p>');
   html+=`<div class="row-end"><button class="primary" id="closeBook">Close</button></div>`;
   $('#bookBody').innerHTML=html;$('#closeBook').onclick=()=>hide('#ovBook');$('#closeBook').focus();
@@ -2038,7 +2288,9 @@ $('#installBtn').onclick=async()=>{if(!installEvt)return;installEvt.prompt();try
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
   addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
-$('#sayAgain').onclick=()=>{const st=C&&!C.gone&&C.steps[C.i];if(st&&st.voice)speakDev(st.voice);else speak(lastSay);};
+$('#sayAgain').onclick=()=>{const st=C&&!C.gone&&C.steps[C.i];
+  if(st&&st.fill){if(C.lock)speak(st.say.replace('___',st.answer.t));}
+  else if(st&&st.voice)speakDev(st.voice);else speak(lastSay);};
 if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 $('#closeSet').onclick=()=>{
   S.settings.relaxed=$('#optRelaxed').checked;S.settings.english=$('#optEnglish').checked;
