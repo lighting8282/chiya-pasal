@@ -423,6 +423,34 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 .set-install{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:.92rem}
 .set-install span{flex:1 1 240px;color:var(--muted)}
 .set-speed{display:flex;flex-direction:column;gap:6px;padding-left:28px;font-size:.95rem}
+.sumgrid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:520px){.sumgrid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.shop-nudge{background:var(--surface-2);border-radius:10px;padding:8px 12px;margin:0}
+/* bazaar */
+.shop-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.wallet{font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-variant-numeric:tabular-nums}
+.shop-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.shop-item{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:start;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.shop-item.own{border-color:var(--good)}
+.si-ic{grid-row:1/4;font-size:2.2rem;line-height:1.1}
+.si-name b{font-size:1.05rem}
+.si-name .dev{color:var(--muted);margin-left:6px;font-family:'Mukta','Nirmala UI','Mangal',sans-serif}
+.si-about{font-size:.85rem;color:var(--muted)}
+.si-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.si-row .price{font-weight:700;font-variant-numeric:tabular-nums}
+.si-row button{padding:4px 12px;font-size:.9rem}
+.si-row .have{font-size:.85rem;color:var(--good);font-weight:700}
+.shop-msg{min-height:1.4em;font-size:.95rem}
+/* stall decorations */
+.decor{position:absolute;inset:0;pointer-events:none;z-index:2}
+.decor .garland{position:absolute;top:22px;left:4px;right:4px;display:flex;justify-content:space-between;font-size:1.2rem;line-height:1;overflow:hidden}
+.decor .garland span:nth-child(odd){transform:translateY(3px)}
+.decor .ledge{position:absolute;right:12px;bottom:6px;display:flex;gap:8px;align-items:flex-end;font-size:1.7rem;line-height:1}
+.decor .ledge button{pointer-events:auto;background:none;border:0;padding:0;font-size:inherit;cursor:pointer}
+.decor .ledge .glow{filter:drop-shadow(0 0 6px #ffcf5a)}
+.scene.has-ledge{padding-bottom:46px}
+.emo-ico{font-size:2.6rem;line-height:1.1}
+.tchip .emo-ico{font-size:1.6rem}
 .set-theme{padding-left:0}
 .set-theme .speeds{grid-template-columns:repeat(3,minmax(0,1fr))}
 .set-speed.novoice::after{content:"Applies once a Nepali or Hindi voice is available.";color:var(--muted);font-size:.8rem}
@@ -477,6 +505,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
     <canvas id="wxCanvas" aria-hidden="true"></canvas>
     <div class="wx wx-frost" aria-hidden="true"></div>
     <div class="flags" id="flags" aria-hidden="true"></div>
+    <div class="decor" id="decor"></div>
     <div class="wx-cap" id="wxCap" hidden></div>
     <div class="left">
       <div class="cust" id="cust"></div>
@@ -694,6 +723,7 @@ const VOCAB=[
  ['basa','sit! (familiar)','बस',10],['aau','come! (familiar)','आऊ',10],['khau','eat! (familiar)','खाऊ',10],['deu','give! (familiar)','देऊ',10],
  ['najaanus','please don’t go','नजानुस्',10],['najaau','don’t go! (familiar)','नजाऊ',10],
  ['khanna','I don’t eat','खान्न',10],['bujhchhu','I understand','बुझ्छु',10],['bujhdina','I don’t understand','बुझ्दिनँ',10],['bujhe','I understood','बुझेँ',10],
+ ['lassi','lassi (yogurt drink)','लस्सी',0],['pakauda','pakauda (fritters)','पकौडा',0],['chaumin','chaumin (fried noodles)','चाउमिन',0],['myaau','meow','म्याउँ',0],
  ['nepali','Nepali','नेपाली',0],['cricket','cricket','क्रिकेट',0],['sukhi','happy','सुखी',0],['rahanu','stay / be','रहनु',0],
  ['pokhara','Pokhara (lakeside city)','पोखरा',0],['chitwan','Chitwan (hot southern plains)','चितवन',0],['janakpur','Janakpur (city on the plains)','जनकपुर',0],
  ['mustang','Mustang (windy high desert)','मुस्ताङ',0],['namche','Namche (village near Everest)','नाम्चे',0],['ilam','Ilam (misty tea hills)','इलाम',0],
@@ -717,6 +747,10 @@ const ITEMS={
  jeri:{np:'jeri',short:'jeri',price:10,p5:15,unit:'wota',day:4},
  kafi:{np:'kafi',short:'coffee',price:50,p5:55,unit:'cup',day:4},
  dalbhaat:{np:'dal bhaat',short:'dal bhaat',price:150,p5:175,unit:'plate',day:5},
+ // bought in the Bazaar (shop:true): on the menu only once owned
+ lassi:{np:'lassi',short:'lassi',price:60,p5:65,unit:'gilas',day:1,shop:true},
+ pakauda:{np:'pakauda',short:'pakauda',price:40,p5:45,unit:'plate',day:1,shop:true},
+ chaumin:{np:'chaumin',short:'chaumin',price:120,p5:125,unit:'plate',day:1,shop:true},
 };
 const UNIT_EN={cup:['cup','cups'],gilas:['glass','glasses'],plate:['plate','plates']};
 const TEMPLATES=[
@@ -779,6 +813,7 @@ const ICON={
  momo:`<svg viewBox="0 0 64 64" aria-hidden="true">${plate}<path d="M8 46c0-10 6-15 11-15s11 5 11 15z" fill="#f4e8d2" stroke="#8c7550" stroke-width="2"/><path d="M34 46c0-10 6-15 11-15s11 5 11 15z" fill="#f4e8d2" stroke="#8c7550" stroke-width="2"/><path d="M20 44c0-12 7-18 12-18s12 6 12 18z" fill="#faf1e1" stroke="#8c7550" stroke-width="2"/><path d="M32 26v5M28 28l2 4M36 28l-2 4" stroke="#8c7550" stroke-width="1.6"/></svg>`,
  chana:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 30h48a24 22 0 0 1-48 0z" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2.5"/><ellipse cx="32" cy="30" rx="24" ry="5" fill="#b8742f" stroke="var(--stroke)" stroke-width="2.5"/><circle cx="22" cy="29" r="2.4" fill="#e8c27a"/><circle cx="30" cy="31" r="2.4" fill="#e8c27a"/><circle cx="38" cy="28.5" r="2.4" fill="#e8c27a"/><circle cx="45" cy="30.5" r="2.2" fill="#e8c27a"/></svg>`,
  jeri:`<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M30 33a3 3 0 1 1 6 0a6 6 0 1 1 -12 0a9 9 0 1 1 18 0a12 12 0 1 1 -24 0a15 15 0 1 1 30 0" fill="none" stroke="#c9600f" stroke-width="6" stroke-linecap="round"/><path d="M30 33a3 3 0 1 1 6 0a6 6 0 1 1 -12 0a9 9 0 1 1 18 0a12 12 0 1 1 -24 0a15 15 0 1 1 30 0" fill="none" stroke="#f39a32" stroke-width="3" stroke-linecap="round"/></svg>`,
+ lassi:'<span class="emo-ico" aria-hidden="true">🥤</span>',pakauda:'<span class="emo-ico" aria-hidden="true">🍤</span>',chaumin:'<span class="emo-ico" aria-hidden="true">🍜</span>',
  dalbhaat:`<svg viewBox="0 0 64 64" aria-hidden="true">${plate}<path d="M8 46c2-14 22-14 26 0z" fill="#fdfbf4" stroke="#a69f8e" stroke-width="2"/><path d="M38 34h18a9 9 0 0 1-18 0z" fill="var(--cup)" stroke="var(--stroke)" stroke-width="2"/><ellipse cx="47" cy="34" rx="9" ry="2.6" fill="#e2b02f" stroke="var(--stroke)" stroke-width="2"/><path d="M36 46c2-5 8-6 12-3" stroke="#3f8a3a" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
 };
 
@@ -856,7 +891,8 @@ const E=()=>Math.min(S.day,5);
 const lvl=t=>S.mastery[t]||0;
 const need=t=>DICT[t]&&DICT[t].day>0?6-lvl(t):1;
 const avgNeed=ts=>{const k=ts.filter(t=>DICT[t]&&DICT[t].day>0);return k.length?k.reduce((a,t)=>a+need(t),0)/k.length:1;};
-const unlocked=()=>Object.keys(ITEMS).filter(k=>ITEMS[k].day<=E());
+const owns=id=>!!(S.shop&&S.shop.owned&&S.shop.owned[id]);
+const unlocked=()=>Object.keys(ITEMS).filter(k=>ITEMS[k].day<=E()&&(!ITEMS[k].shop||owns(k)));
 const maxNum=()=>E()>=5?10:E()>=4?7:E()>=2?5:3;
 
 // ---------- step generators ----------
@@ -909,7 +945,7 @@ function pickChat(slot){
 function haveStep(){
   let np,en,has;
   if(Math.random()<0.5){const k=rnd(unlocked());np=ITEMS[k].np;en=ITEMS[k].short;has=true;}
-  else{const locked=Object.keys(ITEMS).filter(k=>ITEMS[k].day>E()).map(k=>[ITEMS[k].np,ITEMS[k].short]);const x=rnd([...NOT_SERVED,...locked]);np=x[0];en=x[1];has=false;}
+  else{const locked=Object.keys(ITEMS).filter(k=>!unlocked().includes(k)).map(k=>[ITEMS[k].np,ITEMS[k].short]);const x=rnd([...NOT_SERVED,...locked]);np=x[0];en=x[1];has=false;}
   const yes={t:'Cha.',en:'Yes, we have it.'},no={t:'Chaina.',en:'No, we don’t.'};
   const foil=rnd(FOILS.filter(f=>f.day<=E()&&f.t!=='Chaina.'));
   return {type:'chat',say:`${cap(np)} cha?`,en:`Do you have ${en}?`,answer:has?yes:no,options:shuffle([yes,no,foil])};
@@ -1797,6 +1833,7 @@ function avatar(l){
   </svg>`;
 }
 function renderTop(){
+  renderDecor();
   const p=curProf();$('#whoBtn').innerHTML=`${avatarHtml(p,'sm')}<span>${esc(p.name)}</span>`;
   $('#dayChip').innerHTML=`Din ${S.day} <small>day</small>`;
   $('#money').textContent=fmt(S.rupees);
@@ -1847,7 +1884,13 @@ function peek(w,b){
   $('#gloss').innerHTML=v?`<b>${esc(t)}</b><span class="dev" lang="ne">${v.dev}</span>— ${esc(v.en)}`:`<b>${esc(t)}</b> — no entry`;
   if(!v&&S.settings.devanagari)$('#gloss').innerHTML=`<b>${esc(w.replace(/[.,!?]/g,''))}</b>`;
   b.classList.add('peek');
-  if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];if(st)st.hinted=true;C.hinted=true;}
+  if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];
+    // a free-peek token covers every peek on this step; otherwise peeking costs the tip
+    const sh=shopState();
+    if(st&&(st.freePeek||(!st.hinted&&!calmMode()&&sh.peek>0))){
+      if(!st.freePeek){st.freePeek=true;sh.peek--;save();}
+      $('#gloss').insertAdjacentHTML('beforeend',` <span class="hint">🔍 free peek${sh.peek?` (${sh.peek} left)`:''}</span>`);
+    }else{if(st)st.hinted=true;C.hinted=true;}}
 }
 function setFb(html,cls){const f=$('#fb');f.className='fb '+(cls||'');f.innerHTML=html;}
 function setMood(){const m=document.getElementById('mouth');if(!m||!C)return;
@@ -1874,14 +1917,15 @@ function startDay(){
   const d=S.day;let words,title;
   if(d<=WX_DAY){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
   else{words=LEARN.map(t=>DICT[t]).sort((a,b)=>lvl(a.t)-lvl(b.t)).slice(0,9).map(v=>[v.t,v.en,v.dev,v.day]);title=`Dohoryaune shabda <small>words to practise</small>`;}
-  const newItems=Object.keys(ITEMS).filter(k=>ITEMS[k].day===d);
+  const newItems=Object.keys(ITEMS).filter(k=>ITEMS[k].day===d&&!ITEMS[k].shop);
   $('#introBody').innerHTML=`
    <h2>Din ${d}<small>day ${d} at your tea stall</small></h2>
    ${d===1?`<ol class="howto">
      <li>Customers speak romanized Nepali. Tap any word in their speech bubble to see its meaning.</li>
      <li>For orders, tap food onto the tray, then press <b>Linus!</b> (“here you go”).</li>
      <li>When they ask <b>Kati bhayo?</b> (“how much?”), add up the menu prices and pick the total.</li>
-     <li>Answer fast and without peeking to earn <b>baksis</b> (a tip).</li></ol>`:''}
+     <li>Answer fast and without peeking to earn <b>baksis</b> (a tip). Tips in a row earn a bonus.</li>
+     <li>Spend your rupees in the <b>Bazaar</b> (on the home screen): decorations, new menu items and helpers.</li></ol>`:''}
    ${d===WX_DAY?`<p>From today the weather changes, and customers talk about it while they order.</p>${WX_HOWTO}`:''}
    <h3>${title}</h3>
    ${wcards(words)}
@@ -2000,6 +2044,7 @@ function nextCustomer(){
   document.body.dataset.mode=G.mode;
   $('#scene').classList.toggle('calm',calmMode());
   const cu=$('#cust');cu.className='cust';cu.innerHTML=avatar(C.look);void cu.offsetWidth;cu.classList.add('enter');
+  if(G.mode==='stall')ringBell();
   $('#queue').textContent=G.mode==='family'?`Pariwar ${G.idx+1}/${G.n} · ${cap(FAMILY[C.role].kin)}, ${FAMILY[C.role].en}`
     :G.mode==='words'?`Vishaya · ${G.topic.np} (${G.topic.en}) · ${G.idx+1}/${G.n}`
     :G.mode==='practice'?G.cfg.label(G.idx)
@@ -2088,8 +2133,16 @@ function score(st,ok){
 }
 function praise(){const p=rnd(PRAISE);return `<b>${p[0]}</b> <span class="recap">(${p[1]})</span>`;}
 function choose(st,op,btn,said){
-  if(C.lock)return;C.lock=true;$('#micBtn').disabled=true;
-  const ok=op.t===st.answer.t;
+  if(C.lock)return;
+  const ok=op.t===st.answer.t,sh=shopState();
+  // second chance: the wrong choice is struck out and doesn't count
+  if(!ok&&sh.chance>0&&!st.usedChance&&!st.scored){
+    sh.chance--;st.usedChance=true;save();
+    btn.classList.add('wrong');btn.disabled=true;
+    setFb(`<b>🔁 Arko mauka!</b> Second chance used${sh.chance?` (${sh.chance} left)`:''}. That one isn’t it: try again.`,'bad');
+    return;
+  }
+  C.lock=true;$('#micBtn').disabled=true;
   document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;b.querySelector('.en').hidden=false;
     if(b.dataset.t===st.answer.t)b.classList.add('right');});
   if(!ok)btn.classList.add('wrong');
@@ -2222,11 +2275,16 @@ function finishCustomer(){
   C.gone=true;C.lock=true;
   let tip=0;
   const fam=calmMode();
-  if(!fam&&!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?20:C.patience>30?10:0;
-  const earned=C.paid+tip;S.rupees+=earned;G.earned+=earned;G.served++;save();renderTop();
+  // baksis: a share of the order for a quick, clean answer, plus a bonus for a run of tipped customers
+  const r5=n=>Math.max(5,Math.round(n/5)*5);
+  if(!fam&&!C.hinted&&!C.mistakes&&!S.settings.english)tip=C.patience>60?r5(Math.max(10,C.paid*0.2)):C.patience>30?r5(C.paid*0.1):0;
+  let bonus=0;
+  if(!fam){G.tipStreak=tip?(G.tipStreak||0)+1:0;if(G.tipStreak>=2)bonus=Math.min(3,G.tipStreak-1)*10;}
+  const earned=C.paid+tip+bonus;S.rupees+=earned;G.earned+=earned;G.tips=(G.tips||0)+tip+bonus;S.tipsTotal=(S.tipsTotal||0)+tip+bonus;G.served++;save();renderTop();
   const parts=[];
   if(C.paid)parts.push(`<b>+${fmt(C.paid)}</b> for the order`);
   if(tip)parts.push(`<b>+${fmt(tip)} baksis</b> (tip)`);
+  if(bonus)parts.push(`<b>🔥 +${fmt(bonus)}</b> for ${G.tipStreak} tips in a row`);
   if(fam)setFb(C.mistakes?'<b>They smile and move on.</b> Practice makes perfect.':'<b>Ekdam ramro!</b> They look very pleased with you.','good');
   else setFb((parts.length?parts.join(' and ')+'.':'<b>Happy customer.</b>')+(!tip&&(C.hinted||C.mistakes)?' No baksis this time.':''),'good');
   $('#cust').classList.add('exit');
@@ -2306,14 +2364,17 @@ function endDay(){
   }
   $('#sumBody').innerHTML=`
    <h2>Din ${S.day} sakiyo<small>day ${S.day} finished</small></h2>
-   <div class="sumgrid"><div><b>${fmt(G.earned)}</b><span>kamai · earnings</span></div>
+   <div class="sumgrid four"><div><b>${fmt(G.earned)}</b><span>kamai · earnings</span></div>
+     <div><b>${fmt(G.tips||0)}</b><span>baksis · tips</span></div>
      <div><b>${G.served}/${G.n}</b><span>customers served</span></div>
      <div><b>${acc}%</b><span>right first time</span></div></div>
+   ${(()=>{const n=nextBuy();return n?`<p class="shop-nudge">🛍️ ${n.can?`You can buy <b>${esc(n.it.en)}</b> in the Bazaar now.`:`${fmt(n.it.price-S.rupees)} more and you can buy <b>${esc(n.it.en)}</b> in the Bazaar.`}</p>`:'';})()}
    ${missed.length?`<h3>Words to review</h3><div class="words">${missed.map(t=>`<div class="wcard"><b>${t}</b><span class="dev" lang="ne">${DICT[t].dev}</span><div class="en">${esc(DICT[t].en)}</div></div>`).join('')}</div>`:'<p>No mistakes today. Syabaas!</p>'}
-   <div class="row-end"><button class="primary big" id="nextDay">Bholi <small>next day</small></button></div>`;
+   <div class="row-end"><button class="ghost" id="sumShop">🛍️ Bazaar</button><button class="primary big" id="nextDay">Bholi <small>next day</small></button></div>`;
   S.day++;save();
   show('#ovSum');$('#nextDay').focus();
   $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
+  $('#sumShop').onclick=()=>{hide('#ovSum');goHome();openShop();};
 }
 
 // ---------- home screen ----------
@@ -2330,6 +2391,8 @@ function goHome(){
   const lipiDone=LIPI.filter((_,i)=>((S.lipi||{best:{}}).best[i]||0)>=80).length,gramDone=GRAMMAR.filter(g=>(((S.gram||{}).best||{})[g.id]||0)>=80).length;
   // suggestions: the next step in each path, plus weak words
   const sug=[];
+  const nb=nextBuy();
+  if(nb&&nb.can)sug.push({icon:'🛍️',t:`You can buy: ${nb.it.en}`,s:`${fmt(nb.it.price)} in the Bazaar · you have ${fmt(S.rupees)}`,go:()=>openShop()});
   const li=LIPI.findIndex((_,i)=>!(((S.lipi||{best:{}}).best[i]||0)>=80));
   if(li>=0)sug.push({icon:'अ',t:`Lipi lesson ${li+1}: ${LIPI[li].np}`,s:LIPI[li].title,go:()=>openLipiLesson(li)});
   const gi=GRAMMAR.findIndex(g=>!((((S.gram||{}).best||{})[g.id]||0)>=80));
@@ -2351,15 +2414,89 @@ function goHome(){
    </section>
    <button class="hmain" id="hStall" type="button"><span class="hm-ic" aria-hidden="true">🍵</span><span><b>Pasal kholnus</b><small>Open the tea stall · Day ${S.day}</small></span><span class="hm-go" aria-hidden="true">→</span></button>
    <section class="hgrid">
-     ${[['hPrac','🧭','Abhyas','Practice rounds'],['hCards','🃏','Patti','Flashcards'],['hGram','📘','Vyakaran','Grammar'],['hLipi','अ','Lipi','Nepali script'],['hBook','📖','Shabdakosh','Your dictionary'],['hSet','⚙️','Settings','Voice, answers, app']]
+     ${[['hShop','🛍️','Bazaar','Spend your rupees'],['hPrac','🧭','Abhyas','Practice rounds'],['hCards','🃏','Patti','Flashcards'],['hGram','📘','Vyakaran','Grammar'],['hLipi','अ','Lipi','Nepali script'],['hBook','📖','Shabdakosh','Your dictionary'],['hSet','⚙️','Settings','Voice, answers, app']]
        .map(([id,ic,np,en])=>`<button class="hcard" id="${id}" type="button"><span class="hc-ic" aria-hidden="true">${ic}</span><b>${np}</b><small>${en}</small></button>`).join('')}
    </section>
    ${sug.length?`<h2 class="hsub">Aaja ko lagi <small>suggested for today</small></h2><section class="hsug">${sug.slice(0,3).map((x,i)=>`<button type="button" data-s="${i}"><span class="hc-ic" aria-hidden="true">${x.icon}</span><span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></button>`).join('')}</section>`:''}`;
   $('#hWho').onclick=()=>openWho();
   $('#hStall').onclick=()=>startDay();
+  $('#hShop').onclick=()=>openShop();
   $('#hPrac').onclick=openPractice;$('#hCards').onclick=openCards;$('#hGram').onclick=openGrammar;$('#hLipi').onclick=openLipiIntro;
   $('#hBook').onclick=()=>{renderBook();show('#ovBook');};$('#hSet').onclick=()=>$('#btnSet').click();
   $('#home').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>sug[+b.dataset.s].go());
+}
+
+// ---------- Bazaar: spend rupees ----------
+// cat: saja = decorates the stall window, menu = adds a dish, help = changes play; uses = consumable pack size
+const SHOP=[
+ {id:'mala',cat:'saja',np:'sayapatri ko mala',dev:'सयपत्रीको माला',en:'Marigold garland',icon:'🌼',price:200,about:'Hangs across the window, like at Tihar.'},
+ {id:'gamala',cat:'saja',np:'gamala',dev:'गमला',en:'Flower pot',icon:'🌷',price:150,about:'Flowers on the window ledge.'},
+ {id:'diyo',cat:'saja',np:'diyo',dev:'दियो',en:'Oil lamps',icon:'🪔',price:250,about:'Two little lamps glow on the ledge.'},
+ {id:'radio',cat:'saja',np:'radio',dev:'रेडियो',en:'Radio',icon:'📻',price:350,about:'An old radio on the ledge.'},
+ {id:'ghanti',cat:'saja',np:'ghanti',dev:'घण्टी',en:'Bell',icon:'🛎️',price:300,about:'Rings softly when a customer arrives.'},
+ {id:'biralo',cat:'saja',np:'pasal ko biralo',dev:'पसलको बिरालो',en:'Shop cat',icon:'🐈',price:400,about:'Naps on the ledge. Tap it and it says “myaau”.'},
+ {id:'pakauda',cat:'menu',np:'pakauda',dev:'पकौडा',en:'Pakauda (fritters)',icon:'🍤',price:400,about:'New on the menu: रु 40 a plate. Customers start ordering it.'},
+ {id:'lassi',cat:'menu',np:'lassi',dev:'लस्सी',en:'Lassi (yogurt drink)',icon:'🥤',price:500,about:'New on the menu: रु 60 a glass.'},
+ {id:'chaumin',cat:'menu',np:'chaumin',dev:'चाउमिन',en:'Chaumin (fried noodles)',icon:'🍜',price:800,about:'New on the menu: रु 120 a plate. Big orders, big tips.'},
+ {id:'bench',cat:'help',np:'bench',dev:'बेन्च',en:'Bench for customers',icon:'🪑',price:500,about:'Customers can sit down, so they wait 25% longer.'},
+ {id:'peek',cat:'help',np:'shabda chit',dev:'शब्द चिट',en:'3 free peeks',icon:'🔍',price:100,uses:3,about:'Tap a word for its meaning and still get the tip.'},
+ {id:'chance',cat:'help',np:'arko mauka',dev:'अर्को मौका',en:'3 second chances',icon:'🔁',price:150,uses:3,about:'A wrong reply doesn’t count: try again.'},
+];
+const SHOP_CATS=[['saja','Pasal sajaunus','Decorate the stall'],['menu','Naya menu','New dishes'],['help','Sahayog','Helpers']];
+const shopState=()=>(S.shop=S.shop||{owned:{},hidden:{},peek:0,chance:0});
+const showsDecor=id=>owns(id)&&!shopState().hidden[id];
+// the cheapest thing still worth buying (for nudges on the summary and home screens)
+function nextBuy(){
+  const st=shopState(),open=SHOP.filter(x=>x.uses?st[x.id]<1:!st.owned[x.id]).sort((a,b)=>a.price-b.price);
+  if(!open.length)return null;
+  const can=open.filter(x=>x.price<=S.rupees);
+  return can.length?{it:can[can.length-1],can:true}:{it:open[0],can:false};
+}
+function openShop(msg){
+  const st=shopState();
+  const card=x=>{const own=!x.uses&&st.owned[x.id],n=x.uses?st[x.id]:0,afford=S.rupees>=x.price;
+    return `<div class="shop-item ${own?'own':''}"><span class="si-ic" aria-hidden="true">${x.icon}</span>
+      <div class="si-name"><b>${esc(x.np)}</b><span class="dev" lang="ne">${x.dev}</span></div>
+      <div class="si-about"><b>${esc(x.en)}.</b> ${esc(x.about)}</div>
+      <div class="si-row">${own
+        ?(x.cat==='saja'?`<span class="have">✓ Yours</span><button type="button" class="ghost" data-toggle="${x.id}">${st.hidden[x.id]?'Show it':'Hide it'}</button>`:`<span class="have">✓ Yours</span>`)
+        :`<span class="price">${fmt(x.price)}</span><button type="button" class="${afford?'primary':'ghost'}" data-buy="${x.id}" ${afford?'':'disabled'}>${afford?'Kinnus <small>buy</small>':`Need ${fmt(x.price-S.rupees)} more`}</button>${x.uses?`<span class="have">${n?`You have ${n}`:''}</span>`:''}`}</div></div>`;};
+  $('#introBody').innerHTML=`<h2>🛍️ Bazaar<small>spend your rupees</small></h2>
+   <div class="shop-top"><p class="recap" style="margin:0">Earn rupees at the tea stall. Fast answers without peeking earn <b>baksis</b> (tips), and tips in a row earn a bonus.</p><span class="wallet">${fmt(S.rupees)}</span></div>
+   <div class="shop-msg" id="shopMsg" aria-live="polite">${msg||''}</div>
+   ${SHOP_CATS.map(([c,np,en])=>`<h3>${np} <small>${en}</small></h3><div class="shop-list">${SHOP.filter(x=>x.cat===c).map(card).join('')}</div>`).join('')}
+   <div class="row-end"><button class="ghost" id="shopClose" type="button">Done</button></div>`;
+  show('#ovIntro');
+  $('#introBody').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(SHOP.find(x=>x.id===b.dataset.buy)));
+  $('#introBody').querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{const id=b.dataset.toggle;st.hidden[id]=!st.hidden[id];save();renderDecor();openShop();});
+  $('#shopClose').onclick=()=>{hide('#ovIntro');if(!$('#home').hidden)goHome();};
+}
+function buy(x){
+  const st=shopState();
+  if(S.rupees<x.price)return;
+  S.rupees-=x.price;
+  if(x.uses)st[x.id]=(st[x.id]||0)+x.uses;else st.owned[x.id]=true;
+  save();renderTop();renderDecor();
+  if(x.cat==='menu'){renderMenu();renderCounter();}
+  speakDev(x.dev);
+  openShop(`<b>Kinyo!</b> You bought: ${esc(x.en)}. ${x.cat==='saja'?'Look at the stall window.':x.cat==='menu'?'Customers will start ordering it.':''}`);
+}
+function renderDecor(){
+  const d=$('#decor');if(!d)return;
+  const ledge=['radio','gamala','diyo','biralo','ghanti'].filter(showsDecor);
+  d.innerHTML=(showsDecor('mala')?`<div class="garland" aria-hidden="true">${'<span>🌼</span>'.repeat(22)}</div>`:'')
+    +(ledge.length?`<div class="ledge">${ledge.map(id=>id==='biralo'?'<button type="button" id="shopCat" aria-label="The shop cat">🐈</button>'
+      :`<span class="${id==='diyo'?'glow':''}" aria-hidden="true">${id==='diyo'?'🪔':SHOP.find(x=>x.id===id).icon}</span>`).join('')}</div>`:'');
+  $('#scene').classList.toggle('has-ledge',ledge.length>0);
+  if($('#shopCat'))$('#shopCat').onclick=()=>speak('Myaau!');
+}
+// a soft two-tone chime for the bell
+function ringBell(){
+  if(!showsDecor('ghanti'))return;
+  try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const a=ringBell.ctx||(ringBell.ctx=new A());
+    [[1320,0],[990,0.12]].forEach(([f,t])=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.type='sine';
+      g.gain.setValueAtTime(0.0001,a.currentTime+t);g.gain.exponentialRampToValueAtTime(0.18,a.currentTime+t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+t+0.6);
+      o.connect(g).connect(a.destination);o.start(a.currentTime+t);o.stop(a.currentTime+t+0.65);});}catch(e){}
 }
 
 // ---------- players: pick, add, edit ----------
@@ -2548,7 +2685,7 @@ document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
 // ---------- clock ----------
 setInterval(()=>{
   if(!C||C.lock||C.gone||overlayOpen()||S.settings.relaxed||calmMode())return;
-  C.patience-=(100/Math.max(26,50-3*S.day))*0.1;
+  C.patience-=(100/Math.max(26,50-3*S.day))*0.1*(owns('bench')?0.75:1);
   renderBar();setMood();
   if(C.patience<=0)leave();
 },100);

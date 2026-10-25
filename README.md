@@ -103,6 +103,16 @@ Settings has three extra ways to answer, which you can combine:
 
 Tap any word in a speech bubble to see its meaning and Devanagari spelling. Peeking costs that customer's tip (*baksis*).
 
+### Tips and the Bazaar
+
+Customers tip (*baksis*) when you serve them quickly and cleanly: no peeking, no mistakes and Show English turned off. A fast answer earns about 20% of the bill and a slower one 10%. Tipping customers in a row adds a streak bonus of up to Rs 30. The end-of-day summary shows your tips.
+
+Spend your rupees in the **Bazaar** (from the home screen or the day summary):
+
+- **Saja (decorations):** a marigold garland, a flower pot, a diyo lamp, a radio, a bell that rings when a customer arrives, and a cat. They appear at your stall, and you can hide any of them.
+- **Menu:** add pakauda, lassi and chaumin. Customers order them once you sell them.
+- **Help:** a bench that makes customers more patient, packs of free peeks that don't cost the tip, and second chances that let you try again after a wrong answer.
+
 ## Learning design
 
 - New vocabulary comes in over six days: numbers, foods, counting words (*cup, gilas, plate, wota*), polite phrases, and on day 6 the weather. Each day opens with a card of the new words. Day 7 onward is review.
