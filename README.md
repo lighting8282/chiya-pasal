@@ -16,6 +16,12 @@ Chiya Pasal can be installed on a phone like an app. It gets its own icon, opens
 
 The game's **Settings** also has an install button where the browser supports one. Progress is kept separately in the app and in the browser.
 
+### Home screen and players
+
+The game opens on a home screen that greets you and shows your day at the stall, your money, how many words you know well, your progress in script and grammar, and your streak. From there you can open the stall or jump to any section, and it suggests what to do next.
+
+Several people can play on one device. Each player has a name, an emoji avatar or a photo, and their own progress, money, settings and streak. With more than one player, the game asks "Ko khelcha?" (who's playing?) when it opens. Photos are shrunk to a small square and stay on the device.
+
 ## How to play
 
 Play online at the link above, or download `index.html` and open it in any modern browser. There is no build step and nothing to install.

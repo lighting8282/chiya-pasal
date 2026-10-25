@@ -70,7 +70,65 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 
 /* header */
 .top{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
-.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;background:none;border:0;padding:0}
+.game{display:flex;flex-direction:column;gap:12px}
+/* avatars */
+.pav{display:inline-grid;place-items:center;border-radius:50%;overflow:hidden;color:#fff;flex:0 0 auto;line-height:1}
+.pav img{width:100%;height:100%;object-fit:cover;display:block}
+.pav.sm{width:30px;height:30px;font-size:1.05rem}
+.pav.mid{width:64px;height:64px;font-size:2rem}
+.pav.big{width:96px;height:96px;font-size:3rem;box-shadow:0 0 0 4px var(--surface),0 0 0 6px var(--line)}
+.pav.add{background:var(--surface-2);color:var(--muted);border:2px dashed var(--line)}
+.who-chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 12px 2px 2px;font-weight:700;max-width:180px}
+.who-chip span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* home */
+.home{display:flex;flex-direction:column;gap:14px}
+.hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(var(--sky-top),var(--sky-bot));border:8px solid var(--wood);border-radius:14px;padding:16px}
+.hero-t{flex:1 1 220px;min-width:0}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:1.9rem;line-height:1.15;color:var(--ink);text-wrap:balance}
+.hero h1 small{display:block;font-family:var(--f-body);font-size:.95rem;color:var(--muted);margin-top:2px}
+.hstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hstats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.hstats b{display:block;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.hstats span{font-size:.8rem;color:var(--muted)}
+.hmain{display:flex;align-items:center;gap:14px;text-align:left;background:var(--crimson);color:var(--on-crimson);border:0;border-radius:14px;padding:14px 18px;border-bottom:6px solid color-mix(in srgb,var(--crimson) 70%,#000)}
+.hmain .hm-ic{font-size:2.6rem;line-height:1}
+.hmain b{display:block;font-family:var(--f-display);font-weight:400;font-size:1.6rem;line-height:1.1}
+.hmain small{opacity:.9}
+.hmain .hm-go{margin-left:auto;font-size:1.8rem}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.hcard{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.hcard:hover,.hsug button:hover{border-color:var(--muted)}
+.hc-ic{font-size:1.8rem;line-height:1.1;font-family:'Mukta','Nirmala UI','Mangal',sans-serif}
+.hcard b{font-size:1.1rem}
+.hcard small{color:var(--muted);font-size:.82rem}
+.hsub{margin:4px 0 0;font-size:1.1rem}
+.hsub small{color:var(--muted);font-weight:400;font-size:.85rem;margin-left:6px}
+.hsug{display:grid;gap:8px}
+.hsug button{display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.hsug b{display:block}
+.hsug small{color:var(--muted);font-size:.85rem}
+/* players */
+.who-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.who-card{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface-2);border:2px solid var(--line);border-radius:14px;padding:10px 6px}
+.who-card.cur{border-color:var(--crimson)}
+.who-pick{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;width:100%}
+.who-pick b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who-pick small{color:var(--muted);font-size:.8rem}
+.pform{display:flex;flex-direction:column;gap:10px}
+.pform input[type=text]{font:inherit;font-size:1.15rem;padding:8px 12px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);max-width:340px}
+.pf-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pf-photo{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.filebtn{position:relative;overflow:hidden;cursor:pointer}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+.av-grid button{font-size:1.6rem;height:48px;border-radius:10px;background:var(--surface-2);border:2px solid transparent}
+.av-grid button[aria-pressed="true"]{border-color:var(--crimson);background:var(--surface)}
+.av-colors{display:flex;gap:8px;flex-wrap:wrap}
+.av-colors button{width:36px;height:36px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line)}
+.av-colors button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.warn-box{background:var(--bad-bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:620px){.hstats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{font-size:1.5rem}.pav.big{width:72px;height:72px;font-size:2.3rem}.who-chip span:last-child{max-width:70px}}
 .brand-np{font-family:var(--f-display);font-size:1.7rem;color:var(--crimson);line-height:1}
 .brand-dev{color:var(--muted);font-size:1rem}
 .chip{display:inline-flex;align-items:baseline;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -387,18 +445,23 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
 
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="brand-np">Chiya Pasal</span><span class="brand-dev" lang="ne">चिया पसल</span></div>
+    <button class="brand" id="brandBtn" type="button" aria-label="Home"><span class="brand-np">Chiya Pasal</span><span class="brand-dev" lang="ne">चिया पसल</span></button>
+    <button class="who-chip" id="whoBtn" type="button" aria-label="Switch player"></button>
     <div class="stats">
       <span class="chip" id="dayChip">Din 1</span>
       <span class="chip" id="money">रु 0</span>
     </div>
     <nav>
+      <button class="ghost" id="homeBtn">⌂ Ghar <small>home</small></button>
       <button class="ghost wdbtn" id="btnPrac">Abhyas <small>practice</small></button>
       <button class="ghost" id="btnBook">Shabdakosh</button>
       <button class="ghost" id="btnSet">Settings</button>
     </nav>
   </header>
 
+  <main class="home" id="home" hidden></main>
+
+  <div class="game" id="game">
   <section class="scene" id="scene" aria-label="Customer at the window">
     <div class="wx wx-tint" aria-hidden="true"></div>
     <div class="wx-sun" aria-hidden="true"></div>
@@ -457,6 +520,7 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
       <button class="primary cont" id="cont" hidden>Continue</button>
     </div>
   </section>
+  </div>
 </div>
 
 <div class="overlay" id="ovIntro" hidden><div class="sheet" id="introBody"></div></div>
@@ -722,9 +786,31 @@ const fmt=n=>'रु '+n.toLocaleString('en-IN');
 // ---------- persistence ----------
 const KEY='chiya-pasal-v1';
 const fresh=()=>({day:1,rupees:0,mastery:{},settings:{relaxed:false,english:false,voice:true,rate:0.9,voiceName:'',typing:false,listen:false,mic:false}});
-let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh();}catch(e){S=fresh();}
-S.settings=Object.assign({relaxed:false,english:false,voice:true,rate:0.9,voiceName:'',typing:false,listen:false,mic:false},S.settings||{});S.mastery=S.mastery||{};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+// ---------- players ----------
+// The player list lives under its own key; each player's progress is a separate saved state.
+// The first player ("p1") keeps the original key, so progress from before players existed is kept.
+const PKEY='chiya-pasal-profiles';
+const AV_EMOJI=['🦊','🐼','🐯','🦁','🐸','🐵','🐨','🦉','🐘','🦚','🦜','🐢','🧑','👩','👨','👵','👴','🧒','🌸','⛰️','🍵','🥟','🪁','⭐'];
+const AV_COLORS=['#c4122f','#1d3a8a','#1f7d4b','#8e5be8','#c27c2c','#00a6b8','#d4557a','#5a6476'];
+let PR=null;try{PR=JSON.parse(localStorage.getItem(PKEY));}catch(e){}
+if(!PR||!Array.isArray(PR.list)||!PR.list.length)PR={cur:'p1',list:[{id:'p1',name:'Player 1',av:'🦊',color:AV_COLORS[0],photo:''}]};
+if(!PR.list.some(p=>p.id===PR.cur))PR.cur=PR.list[0].id;
+const profKey=id=>id==='p1'?KEY:KEY+':'+id;
+const saveProfiles=()=>{try{localStorage.setItem(PKEY,JSON.stringify(PR));}catch(e){}};
+const curProf=()=>PR.list.find(p=>p.id===PR.cur)||PR.list[0];
+function loadState(id){
+  let s;try{s=JSON.parse(localStorage.getItem(profKey(id)))||fresh();}catch(e){s=fresh();}
+  s.settings=Object.assign({relaxed:false,english:false,voice:true,rate:0.9,voiceName:'',typing:false,listen:false,mic:false},s.settings||{});s.mastery=s.mastery||{};
+  return s;
+}
+let S=loadState(PR.cur);
+const save=()=>{try{localStorage.setItem(profKey(PR.cur),JSON.stringify(S));}catch(e){}};
+// days in a row with at least one answer
+function markActive(){
+  const d=new Date(),day=d.toISOString().slice(0,10),y=new Date(d-864e5).toISOString().slice(0,10);
+  const st=S.streak||{last:'',n:0};
+  if(st.last!==day){st.n=st.last===y?st.n+1:1;st.last=day;S.streak=st;}
+}
 
 // ---------- voice ----------
 // uses the device's own voices: a Nepali one if installed, else Hindi (reads Devanagari closely), else none
@@ -1610,6 +1696,7 @@ function openCards(){
 let FC=null;
 function startCards(deck,back){
   const cards=deck.cards();
+  S.practiced=S.practiced||{};S.practiced.patti=true;save();
   FC={deck,back,queue:shuffle(cards),total:cards.length,known:0,missed:new Set(),flipped:false,rev:!!S.settings.cardsRev};
   drawCard();
 }
@@ -1701,6 +1788,7 @@ function avatar(l){
   </svg>`;
 }
 function renderTop(){
+  const p=curProf();$('#whoBtn').innerHTML=`${avatarHtml(p,'sm')}<span>${esc(p.name)}</span>`;
   $('#dayChip').innerHTML=`Din ${S.day} <small>day</small>`;
   $('#money').textContent=fmt(S.rupees);
 }
@@ -1769,6 +1857,7 @@ const WX_HOWTO=`<ol class="howto">
      <li>Yes/no questions like <b>Paani pardai cha?</b> (“Is it raining?”): answer <b>Ho</b> (yes) or <b>Hoina</b> (no).</li>
      <li>Reports from around Nepal like <b>Mustang ma hawa chaldai cha</b>: pick the weather picture they mean.</li></ol>`;
 function startDay(){
+  showGame();if(C){C.gone=true;C.lock=true;}C=null;
   G={mode:'stall',n:Math.min(8,4+S.day),idx:0,served:0,left:0,steps:0,correct:0,missed:new Set(),earned:0,
      weather:S.day>=WX_DAY?rnd(WX_KEYS):''};
   setWeather(G.weather);document.body.dataset.mode='stall';
@@ -1789,10 +1878,11 @@ function startDay(){
    ${wcards(words)}
    ${newItems.length?`<h3>Naya menu <small>new on the menu</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].np}</b> · ${ITEMS[k].short} · रु ${priceOf(k)}</span></div>`).join('')}</div>`:''}
    ${d===PRICE_DAY?`<p><b>Prices went up today.</b> Some now end in 5, so you’ll need the numbers ending in five (15, 25, 35…). Check the menu board.</p>`:''}
-   <div class="row-end"><button class="ghost wdbtn" id="toPrac">Abhyas <small>other practice</small></button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
+   <div class="row-end"><button class="ghost" id="toHome">⌂ Ghar <small>home</small></button><button class="ghost wdbtn" id="toPrac">Abhyas <small>other practice</small></button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
   show('#ovIntro');
   $('#go').onclick=()=>{hide('#ovIntro');G.started=true;nextCustomer();};
   $('#toPrac').onclick=openPractice;
+  $('#toHome').onclick=goHome;
   $('#go').focus();
 }
 function openWeatherIntro(){
@@ -1885,6 +1975,7 @@ function startFamily(){
   nextCustomer();
 }
 function nextCustomer(){
+  showGame();
   if(G.mode==='weather'){
     const prev=C&&C.weather;
     const w=rnd(WX_KEYS.filter(k=>k!==prev));
@@ -1981,7 +2072,7 @@ function renderInputs(st){
 function score(st,ok){
   if(st.scored)return;st.scored=true;
   const keys=[...toks(st.say),...(st.answer?toks(st.answer.t):[])].filter(t=>DICT[t]&&DICT[t].day>0);
-  G.steps++;
+  G.steps++;markActive();
   if(ok){G.correct++;if(!st.hinted)keys.forEach(t=>S.mastery[t]=Math.min(5,lvl(t)+1));C.patience=Math.min(100,C.patience+15);}
   else{C.mistakes++;keys.forEach(t=>{S.mastery[t]=Math.max(0,lvl(t)-1);G.missed.add(t);});}
   save();
@@ -2216,6 +2307,130 @@ function endDay(){
   $('#nextDay').onclick=()=>{hide('#ovSum');startDay();};
 }
 
+// ---------- home screen ----------
+const avatarHtml=(p,cls)=>`<span class="pav ${cls||''}" style="background:${p.color}" aria-hidden="true">${p.photo?`<img src="${p.photo}" alt="">`:p.av}</span>`;
+function showGame(){$('#home').hidden=true;$('#game').hidden=false;}
+function wordsKnown(){return VOCAB.filter(v=>v[3]>0&&lvl(v[0])>=3).length;}
+function goHome(){
+  if(C){C.gone=true;C.lock=true;}
+  G=null;FC=null;['#ovIntro','#ovSum','#ovBook'].forEach(hide);$('#cont').hidden=true;
+  if(TTS)speechSynthesis.cancel();
+  $('#game').hidden=true;$('#home').hidden=false;document.body.dataset.mode='home';
+  renderTop();
+  const p=curProf(),streak=S.streak&&S.streak.n&&[new Date().toISOString().slice(0,10),new Date(Date.now()-864e5).toISOString().slice(0,10)].includes(S.streak.last)?S.streak.n:0;
+  const lipiDone=LIPI.filter((_,i)=>((S.lipi||{best:{}}).best[i]||0)>=80).length,gramDone=GRAMMAR.filter(g=>(((S.gram||{}).best||{})[g.id]||0)>=80).length;
+  // suggestions: the next step in each path, plus weak words
+  const sug=[];
+  const li=LIPI.findIndex((_,i)=>!(((S.lipi||{best:{}}).best[i]||0)>=80));
+  if(li>=0)sug.push({icon:'अ',t:`Lipi lesson ${li+1}: ${LIPI[li].np}`,s:LIPI[li].title,go:()=>openLipiLesson(li)});
+  const gi=GRAMMAR.findIndex(g=>!((((S.gram||{}).best||{})[g.id]||0)>=80));
+  if(gi>=0)sug.push({icon:GRAMMAR[gi].icon,t:`Grammar: ${GRAMMAR[gi].np}`,s:GRAMMAR[gi].en,go:()=>openGrammarLesson(gi)});
+  const weak=VOCAB.filter(v=>v[3]>0&&v[0] in S.mastery&&lvl(v[0])<=1).length;
+  if(weak)sug.push({icon:'🎯',t:`${weak} word${weak===1?'':'s'} to practise`,s:'Flashcards of the words you keep missing',go:()=>startCards(cardDecks().find(d=>d.id==='weak'),openCards)});
+  const untried=PRACTICES.find(x=>!((S.practiced||{})[x.key]||{mausam:S.wxPlayed,pariwar:S.famPlayed,vishaya:S.wordsPlayed}[x.key]));
+  if(untried)sug.push({icon:untried.icon,t:`Try ${untried.np}`,s:untried.en+'. '+untried.about,go:untried.open});
+  const greet=new Date().getHours()<12?['Shubha prabhat','Good morning']:new Date().getHours()<18?['Namaste','Hello']:['Shubha sandhya','Good evening'];
+  $('#home').innerHTML=`
+   <section class="hero">${avatarHtml(p,'big')}
+     <div class="hero-t"><h1>${greet[0]}, ${esc(p.name)}!<small>${greet[1]} · ${streak?`🔥 ${streak} day${streak===1?'':'s'} in a row`:'Ready for some Nepali?'}</small></h1></div>
+     <button class="ghost" id="hWho" type="button">Change player</button></section>
+   <section class="hstats">
+     <div><b>Din ${S.day}</b><span>at the tea stall</span></div>
+     <div><b>${fmt(S.rupees)}</b><span>earned</span></div>
+     <div><b>${wordsKnown()}</b><span>words known well</span></div>
+     <div><b>${lipiDone}/${LIPI.length} · ${gramDone}/${GRAMMAR.length}</b><span>script · grammar lessons</span></div>
+   </section>
+   <button class="hmain" id="hStall" type="button"><span class="hm-ic" aria-hidden="true">🍵</span><span><b>Pasal kholnus</b><small>Open the tea stall · Day ${S.day}</small></span><span class="hm-go" aria-hidden="true">→</span></button>
+   <section class="hgrid">
+     ${[['hPrac','🧭','Abhyas','Practice rounds'],['hCards','🃏','Patti','Flashcards'],['hGram','📘','Vyakaran','Grammar'],['hLipi','अ','Lipi','Nepali script'],['hBook','📖','Shabdakosh','Your dictionary'],['hSet','⚙️','Settings','Voice, answers, app']]
+       .map(([id,ic,np,en])=>`<button class="hcard" id="${id}" type="button"><span class="hc-ic" aria-hidden="true">${ic}</span><b>${np}</b><small>${en}</small></button>`).join('')}
+   </section>
+   ${sug.length?`<h2 class="hsub">Aaja ko lagi <small>suggested for today</small></h2><section class="hsug">${sug.slice(0,3).map((x,i)=>`<button type="button" data-s="${i}"><span class="hc-ic" aria-hidden="true">${x.icon}</span><span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></button>`).join('')}</section>`:''}`;
+  $('#hWho').onclick=()=>openWho();
+  $('#hStall').onclick=()=>startDay();
+  $('#hPrac').onclick=openPractice;$('#hCards').onclick=openCards;$('#hGram').onclick=openGrammar;$('#hLipi').onclick=openLipiIntro;
+  $('#hBook').onclick=()=>{renderBook();show('#ovBook');};$('#hSet').onclick=()=>$('#btnSet').click();
+  $('#home').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>sug[+b.dataset.s].go());
+}
+
+// ---------- players: pick, add, edit ----------
+function openWho(first){
+  $('#introBody').innerHTML=`<h2>Ko khelcha?<small>who’s playing?</small></h2>
+   <div class="who-list">${PR.list.map(p=>{const s=p.id===PR.cur?S:loadState(p.id);
+     return `<div class="who-card ${p.id===PR.cur?'cur':''}"><button type="button" class="who-pick" data-id="${p.id}">${avatarHtml(p,'mid')}<b>${esc(p.name)}</b><small>Din ${s.day} · ${fmt(s.rupees)}</small></button>
+       <button type="button" class="linkish" data-edit="${p.id}">Change</button></div>`;}).join('')}
+     <div class="who-card"><button type="button" class="who-pick" id="whoNew"><span class="pav mid add" aria-hidden="true">＋</span><b>Naya</b><small>New player</small></button></div></div>
+   <p class="recap">Each player has their own progress, money, settings and streak on this device.</p>
+   ${first?'':'<div class="row-end"><button class="ghost" id="whoClose" type="button">Close</button></div>'}`;
+  show('#ovIntro');
+  $('#introBody').querySelectorAll('.who-pick[data-id]').forEach(b=>b.onclick=()=>{hide('#ovIntro');switchPlayer(b.dataset.id);});
+  $('#introBody').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editPlayer(PR.list.find(p=>p.id===b.dataset.edit)));
+  $('#whoNew').onclick=()=>editPlayer(null);
+  if(!first)$('#whoClose').onclick=()=>hide('#ovIntro');
+}
+function switchPlayer(id){
+  if(id!==PR.cur){save();PR.cur=id;saveProfiles();S=loadState(id);loadVoices();renderMenu();renderCounter();}
+  goHome();
+}
+// photos are cropped to a small square so they fit comfortably in browser storage
+function photoToData(file){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();fr.onerror=rej;
+    fr.onload=()=>{const img=new Image();img.onerror=rej;img.onload=()=>{
+      const n=160,c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d');
+      const s=Math.min(img.width,img.height);x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,n,n);
+      res(c.toDataURL('image/jpeg',0.82));};img.src=fr.result;};
+    fr.readAsDataURL(file);
+  });
+}
+function editPlayer(p){
+  const isNew=!p,d=p?{...p}:{name:'',av:AV_EMOJI[PR.list.length%AV_EMOJI.length],color:AV_COLORS[PR.list.length%AV_COLORS.length],photo:''};
+  const draw=()=>{
+    $('#introBody').innerHTML=`<h2>${isNew?'Naya khelaadi':'Change player'}<small>${isNew?'new player':esc(p.name)}</small></h2>
+     <form class="pform" id="pForm" autocomplete="off">
+       <div class="pf-top">${avatarHtml(d,'big')}<div class="pf-photo">
+         <label class="ghost filebtn">📷 ${d.photo?'Change photo':'Add a photo'}<input type="file" id="pPhoto" accept="image/*"></label>
+         ${d.photo?'<button type="button" class="linkish" id="pNoPhoto">Remove photo</button>':''}<small class="recap" id="pMsg">A photo stays on this device only.</small></div></div>
+       <label for="pName2"><b>Naam</b> <small class="recap">name</small></label>
+       <input type="text" id="pName2" maxlength="18" value="${esc(d.name)}" placeholder="Your name">
+       <div><b>Avatar</b> <small class="recap">used when there’s no photo</small></div>
+       <div class="av-grid">${AV_EMOJI.map(a=>`<button type="button" aria-pressed="${a===d.av}" data-a="${a}">${a}</button>`).join('')}</div>
+       <div><b>Rang</b> <small class="recap">colour</small></div>
+       <div class="av-colors">${AV_COLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour ${c}"></button>`).join('')}</div>
+       <div class="row-end" style="justify-content:space-between">
+         ${isNew||PR.list.length<2?'<span></span>':'<button type="button" class="danger" id="pDel">Delete player</button>'}
+         <span style="display:flex;gap:8px"><button type="button" class="ghost" id="pBack">Back</button><button type="submit" class="primary">Save</button></span></div>
+       <div class="warn-box" id="pDelBox" hidden><b>Delete ${esc(d.name||'this player')} and all their progress?</b> This can’t be undone.
+         <div class="row-end"><button type="button" class="ghost" id="pDelNo">Keep</button><button type="button" class="danger" id="pDelYes">Yes, delete</button></div></div>
+     </form>`;
+    const keepName=()=>{d.name=$('#pName2').value;};
+    $('#introBody').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{keepName();d.av=b.dataset.a;d.photo=d.photo;draw();});
+    $('#introBody').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{keepName();d.color=b.dataset.c;draw();});
+    $('#pPhoto').onchange=async e=>{const f=e.target.files[0];if(!f)return;keepName();
+      try{d.photo=await photoToData(f);draw();}catch(err){$('#pMsg').textContent='That picture couldn’t be read. Try a JPG or PNG.';}};
+    if($('#pNoPhoto'))$('#pNoPhoto').onclick=()=>{keepName();d.photo='';draw();};
+    $('#pBack').onclick=()=>openWho();
+    $('#pForm').onsubmit=e=>{e.preventDefault();keepName();
+      const name=d.name.trim()||`Player ${PR.list.length+(isNew?1:0)}`;
+      if(isNew){const np={id:'p'+Date.now(),name,av:d.av,color:d.color,photo:d.photo};PR.list.push(np);saveProfiles();hide('#ovIntro');switchPlayer(np.id);return;}
+      Object.assign(p,{name,av:d.av,color:d.color,photo:d.photo});
+      try{localStorage.setItem(PKEY,JSON.stringify(PR));}catch(err){p.photo='';saveProfiles();}
+      renderTop();if(!$('#home').hidden)goHome();openWho();};
+    if($('#pDel')){
+      $('#pDel').onclick=()=>{$('#pDelBox').hidden=false;$('#pDelNo').focus();};
+      $('#pDelNo').onclick=()=>{$('#pDelBox').hidden=true;};
+      $('#pDelYes').onclick=()=>{try{localStorage.removeItem(profKey(p.id));}catch(err){}
+        PR.list=PR.list.filter(x=>x!==p);const wasCur=PR.cur===p.id;if(wasCur)PR.cur=PR.list[0].id;saveProfiles();
+        if(wasCur){S=loadState(PR.cur);renderMenu();renderCounter();}
+        goHome();openWho();};
+    }
+  };
+  draw();setTimeout(()=>$('#pName2')&&$('#pName2').focus(),30);
+}
+$('#whoBtn').onclick=()=>openWho();
+$('#homeBtn').onclick=goHome;
+$('#brandBtn').onclick=goHome;
+
 // ---------- journal & settings ----------
 function renderBook(){
   const maxD=E();let html=`<h2>Shabdakosh<small>your dictionary</small></h2><p class="recap">Dots fill as you answer correctly without peeking. Mistakes take a dot away.</p>`;
@@ -2246,7 +2461,7 @@ $('#btnPrac').onclick=openPractice;
 $('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
   $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;$('#optDev').checked=!!S.settings.devanagari;
   $('#optListen').disabled=!voiceOn();$('#listenStatus').textContent=voiceOn()?'The customer’s words stay hidden until you answer. Use 🔊 to hear them again.':'Needs a Nepali or Hindi voice on this device (see “Read lines aloud” below).';
-  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent='Erase progress';show('#ovSet');renderVoiceSettings();renderInstall();};
+  $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent=`Erase ${curProf().name}’s progress`;show('#ovSet');renderVoiceSettings();renderInstall();};
 function renderVoiceSettings(){
   const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
   $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice;
@@ -2304,7 +2519,7 @@ $('#closeSet').onclick=()=>{
 let resetArm=false;
 $('#btnReset').onclick=()=>{
   if(!resetArm){resetArm=true;$('#btnReset').textContent='Tap again to erase everything';return;}
-  S=fresh();save();hide('#ovSet');startDay();
+  S=fresh();save();hide('#ovSet');goHome();
 };
 $('#serve').onclick=serve;
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o&&(o.id==='ovBook'||o.id==='ovSet'))o.hidden=true;}));
@@ -2322,7 +2537,9 @@ $('#flags').innerHTML=Array.from({length:60},(_,i)=>`<i style="background:var(--
 renderTop();renderMenu();renderCounter();
 C=null;$('#cust').innerHTML=avatar({skin:SKIN[1],hair:HAIR[0],shirt:SHIRT[0],topi:true});
 renderBubble('Namaste!','Hello!');renderTray();
-startDay();
+// everyone arrives on the home screen; with several players, ask who is playing first
+goHome();
+if(PR.list.length>1)openWho(true);
 </script>
 </body>
 </html>
