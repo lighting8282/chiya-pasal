@@ -4,7 +4,33 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
-**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Kids tap big pictures to hear Nepali words in 18 topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings and everyday sayings), then play "find it" games for stars. Each topic has three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3 choices) and *Gaaro* (hard, 4 choices, counting to 20, listen-only). Each child gets their own player profile with their own stars. **Akshar** teaches Devanagari letters with a picture word for each, and kids can trace every letter with a finger. **Kathaa** has three short read-aloud stories about Habre, each with a question at the end. **Vyakaran** teaches grammar with pictures in six topics: one and many (*-haru*), big and small, colour + thing, where things are (on, under, in, out of a box), doing words (*-dai cha*) and opposites. Each topic has a one-line rule card. **Patti** gives every topic a flashcard deck: see the picture, say the word, flip to hear it. Under ⚙, grown-ups get a progress page for each child: stars per topic and level, stories read, letters written, and the words they keep missing. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button lets a grown-up pick the voice and speed.
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The home screen has six doors, each with a ring that fills up as the child gets through it:
+
+- **Kathaa (stories):** ten short stories. A voice reads each page aloud and lights up every word as it's spoken. Tap any word to hear it and see what it means. Two of the stories let the child choose what Habre does next, and each has two endings to find. The rest end with a question, then a game where the child puts four scenes back in order. Finishing one story opens the next. A "Kun chitra?" switch hides each page's picture so the child has to pick it.
+- **Shabda (words):** 18 picture topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings and everyday sayings). Each topic goes Learn → Play → Check, with three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3) and *Gaaro* (hard, 4, listen-only). There's also a memory-match game. Every word a child gets right twice becomes a sticker in their sticker book.
+- **Akshar (letters):** Devanagari letters, each with a picture word. Children trace each letter with a finger.
+- **Vyakaran (grammar):** twelve picture lessons, each with a one-line rule:
+  - one and many (*-haru*)
+  - big and small
+  - colour + thing
+  - where things are
+  - doing words
+  - opposites
+  - whose (*-ko*)
+  - is it there? (*cha / chaina*)
+  - yes or no (*ho / hoina*)
+  - question words
+  - things that already happened (*-yo*)
+  - a "fix the ending" game
+- **Vakya (sentences):** the sentence train. Words are colour-coded by their job (who, what kind, what, where, doing word), and the doing word is always the engine at the end. Five activities:
+  - build the train
+  - grow a sentence one word at a time
+  - hear a sentence and find its picture
+  - fix Habre's muddled sentence
+  - pick the right answer to a question
+- **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks. Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
+
+**Aajako abhyas** is a five-minute mixed practice with a day streak. Stars unlock outfits for Habre to wear. Under ⚙, grown-ups get a progress page for each child: how far through each door they are, stars per topic and level, stories, sentences, flashcard baskets, letters written and the words they keep missing. Grown-ups also build their flashcard deck there. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 
 ### Install it as an app
 

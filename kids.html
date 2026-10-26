@@ -230,7 +230,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .practise{display:flex;flex-wrap:wrap;gap:8px}
 .practise span{background:var(--sky);border-radius:999px;padding:4px 12px;font-size:.95rem}
 .practise small{color:var(--soft)}
-.practise .dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle;border:1px solid var(--line)}
+.practise .dot,.cd .dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle;border:1px solid var(--line)}
 /* letters and stories */
 .letter{font-family:'Mukta','Nirmala UI','Mangal',var(--f);font-size:6.5rem;line-height:1.05;font-weight:700;color:var(--ink);animation:pop .5s cubic-bezier(.3,1.5,.5,1)}
 .opt .letter{font-size:4rem}
@@ -253,6 +253,140 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .lvtable{border-collapse:collapse;font-size:.95rem}
 .lvtable td,.lvtable th{padding:4px 10px 4px 0;text-align:left;vertical-align:top}
 .lvtable th{color:var(--soft);font-weight:500}
+
+/* home: six doors with a progress ring each */
+.back{align-self:flex-start;background:var(--card);border-radius:999px;padding:4px 16px;font-weight:800;box-shadow:0 4px 0 var(--line)}
+.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.door{background:var(--card);border-radius:90px 90px 26px 26px;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 8px 0 var(--dc);transition:transform .12s;animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.door:hover{transform:translateY(-3px)}
+.door:active{transform:translateY(4px);box-shadow:0 4px 0 var(--dc)}
+.door b{font-size:1.5rem;line-height:1.05}
+.door .dev{color:var(--soft)}
+.door .en{font-size:.85rem;color:var(--soft)}
+.ring{width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--dc) calc(var(--p)*1%),#e6eef6 0);display:grid;place-items:center;margin-bottom:4px}
+.ring>span{width:82px;height:82px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:2.8rem;line-height:1}
+.ring>span.lt{font-family:'Nirmala UI','Mangal',var(--f);font-weight:700;color:var(--red)}
+.today{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}
+.daily{background:linear-gradient(135deg,#ff9f1c,#e8463a);color:#fff;border-radius:28px;padding:14px 18px;text-align:left;display:flex;align-items:center;gap:14px;box-shadow:0 7px 0 var(--red-dark)}
+.daily .ic{font-size:3rem;line-height:1}
+.daily b{font-size:1.5rem;display:block;line-height:1.1}
+.daily small{display:block;font-size:.9rem}
+.daily:active,.wod:active,.reward:active{transform:translateY(4px)}
+.wod{background:var(--card);border-radius:28px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 7px 0 var(--line);text-align:left}
+.wod .pic{font-size:3.2rem;line-height:1}
+.wod .swatch{width:56px;height:56px;animation:none}
+.wod small{display:block;color:var(--soft);font-size:.8rem}
+.wod b{font-size:1.4rem;display:block;line-height:1.1}
+.reward{background:#fff7d6;border-radius:24px;padding:10px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #f0d77a;flex-wrap:wrap;text-align:left}
+.reward .next{font-size:2.2rem;line-height:1}
+.bar2{display:block;height:14px;border-radius:99px;background:#fff;overflow:hidden;margin-top:4px}
+.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),#ff9f1c)}
+/* topic page: learn, play, check + extras */
+.path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.extras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mode em{font-style:normal;font-size:.85rem;background:#fff;color:var(--green);border-radius:999px;padding:0 10px;font-weight:800}
+.memo{background:var(--purple)} .check{background:#ff9f1c}
+.ans{font-size:1.4rem;font-weight:800;color:var(--green)}
+.ans small{display:block;font-weight:500;font-size:.95rem;color:var(--soft)}
+.blank{display:inline-block;min-width:2.2em;border-bottom:4px dashed var(--red);color:var(--red);text-align:center}
+.opts.yesno .opt,.opts.ending .opt{min-height:130px}
+.opts.ending .w{font-size:2rem}
+/* memory match */
+.mem{display:grid;grid-template-columns:repeat(var(--mc,4),minmax(0,1fr));gap:10px}
+.mc{aspect-ratio:3/4;perspective:800px;padding:0}
+.mc-in{position:relative;display:block;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.mc.up .mc-in,.mc.done .mc-in{transform:rotateY(180deg)}
+.mc-f{position:absolute;inset:0;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 5px 0 var(--line);padding:4px;text-align:center;overflow:hidden}
+.mc-back{background:repeating-linear-gradient(45deg,#e8463a 0 10px,#f05a4b 10px 20px);color:#fff;font-size:2.2rem;font-weight:800}
+.mc-face{background:var(--card);transform:rotateY(180deg)}
+.mc-face .pic{font-size:2.8rem;line-height:1.1}
+.mc-face .swatch{width:56px;height:56px}
+.mc-face .digit{font-size:2.4rem}
+.mc-face .letter{font-size:3rem}
+.mc-face b{font-size:1rem;line-height:1.1;overflow-wrap:anywhere}
+.mc-face .dev{font-size:.8rem;color:var(--soft)}
+.mc.done .mc-face{box-shadow:0 5px 0 var(--good),0 0 0 4px var(--good)}
+/* sticker book */
+.book{background:#fffaf0;border-radius:24px;padding:12px 14px;box-shadow:0 6px 0 #ecd9b5;display:flex;flex-direction:column;gap:8px}
+.book h3{margin:0;font-size:1.1rem}
+.stk{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:8px}
+.stk button{height:66px;border-radius:16px;display:grid;place-items:center;background:#fff;box-shadow:0 3px 0 #ecd9b5}
+.stk .pic{font-size:2.3rem;line-height:1;animation:none}
+.stk .swatch{width:40px;height:40px;border-width:3px;animation:none}
+.stk .digit{font-size:1.7rem}
+.stk button.got{transform:rotate(var(--r));box-shadow:0 0 0 3px #fff,0 3px 8px rgba(0,0,0,.2)}
+.stk button:not(.got)>*{filter:brightness(0);opacity:.12}
+/* patti baskets */
+.baskets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-size:.85rem;font-weight:700}
+.baskets span{display:inline-flex;align-items:center;gap:4px}
+.baskets i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.b0{background:var(--red)} .b1{background:var(--yellow)} .b2{background:var(--green)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{border-radius:999px;padding:6px 14px;background:var(--card);box-shadow:0 4px 0 var(--line);font-weight:700;border:3px solid transparent}
+.seg button[aria-pressed="true"]{border-color:var(--red)}
+/* vakya: sentence train */
+.legend{display:flex;flex-wrap:wrap;gap:8px}
+.legend span{border-radius:999px;padding:3px 12px;color:#fff;font-weight:700;font-size:.95rem}
+.legend small{font-weight:500}
+.train{display:flex;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:16px 6px;padding:14px 0 6px;min-height:96px}
+.car{position:relative;min-width:96px;min-height:62px;padding:8px 12px;border-radius:14px;background:var(--rc,#fff);color:#fff;font-weight:800;font-size:1.25rem;line-height:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 0 rgba(0,0,0,.2);margin-bottom:14px}
+.car small{font-size:.8rem;font-weight:500}
+.car::before,.car::after{content:"";position:absolute;bottom:-16px;width:18px;height:18px;border-radius:50%;background:#3b3550;border:3px solid #fff}
+.car::before{left:12px}.car::after{right:12px}
+.car.plain{background:#fff;color:var(--ink);box-shadow:0 5px 0 var(--line)}
+.car.empty{background:transparent;border:3px dashed var(--rc,#9fb6c8);color:var(--rc,var(--soft));box-shadow:none}
+.car.engine{border-top-right-radius:30px}
+.car .chim{position:absolute;top:-16px;right:18px;width:16px;height:16px;border-radius:4px 4px 0 0;background:#3b3550}
+.car.sel{outline:5px solid var(--yellow);outline-offset:2px}
+.car.bad{animation:shake .5s}
+.car.good{box-shadow:0 5px 0 rgba(0,0,0,.2),0 0 0 4px var(--good)}
+.pool{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;min-height:60px}
+.tile{border-radius:14px;padding:10px 16px;font-weight:800;font-size:1.25rem;color:#fff;background:var(--rc,#fff);box-shadow:0 5px 0 rgba(0,0,0,.2)}
+.tile.plain{background:#fff;color:var(--ink);box-shadow:0 5px 0 var(--line)}
+.tile.new{font-size:1.5rem;padding:12px 22px}
+.tile small{display:block;font-weight:500;font-size:.8rem}
+.gap{width:38px;height:38px;border-radius:50%;background:var(--yellow);font-weight:800;font-size:1.4rem;box-shadow:0 3px 0 #e0a800;align-self:center;margin-bottom:14px}
+.gap.hint{animation:glow .6s ease-in-out infinite alternate;outline:4px solid var(--green)}
+.ansopts{display:grid;gap:12px}
+.ansopt{background:var(--card);border-radius:20px;padding:12px 18px;text-align:left;box-shadow:0 5px 0 var(--line);font-size:1.3rem;font-weight:800;line-height:1.2;animation:pop .4s cubic-bezier(.3,1.5,.5,1) backwards}
+.ansopt small{display:block;font-weight:500;font-size:.95rem;color:var(--soft)}
+.ansopt.right{box-shadow:0 5px 0 var(--good),0 0 0 5px var(--good)}
+.ansopt.wrong{animation:shake .5s;opacity:.55}
+.ansopt.hint{box-shadow:0 5px 0 var(--good),0 0 0 5px var(--yellow)}
+/* kathaa: read-along, picture guess, order */
+.tok{display:inline;padding:0 3px;border-radius:8px;font:inherit;color:inherit;line-height:inherit;transition:background .15s}
+.tok.on,.dtok.on{background:var(--yellow)}
+.dtok{border-radius:6px;padding:0 1px}
+.story .qpic{color:var(--soft)}
+.topic.lock{filter:grayscale(1);opacity:.6}
+.toggle{display:flex;align-items:center;gap:8px;font-weight:700;background:var(--card);border-radius:999px;padding:6px 16px;box-shadow:0 4px 0 var(--line);align-self:flex-start}
+.toggle input{width:22px;height:22px;accent-color:var(--red)}
+.order{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ocard{position:relative;background:var(--card);border-radius:24px;padding:12px;box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:1rem;line-height:1.2}
+.ocard .pic{font-size:3.2rem;line-height:1.1}
+.ocard .num{position:absolute;top:-10px;left:-10px;width:42px;height:42px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:1.4rem;display:grid;place-items:center}
+.ocard.done{box-shadow:0 6px 0 var(--good),0 0 0 4px var(--good)}
+.ocard.wrong{animation:shake .5s}
+.wardrobe{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.wardrobe button{background:var(--card);border-radius:22px;padding:10px;box-shadow:0 5px 0 var(--line);display:flex;flex-direction:column;align-items:center;border:4px solid transparent}
+.wardrobe button span{font-size:2.8rem;line-height:1.2}
+.wardrobe button[aria-pressed="true"]{border-color:var(--green)}
+.wardrobe button:disabled{opacity:.55}
+.deckrow{display:flex;gap:10px;flex-wrap:wrap}
+.cd{display:flex;flex-wrap:wrap;gap:6px}
+.cd label{background:var(--sky);border-radius:999px;padding:3px 12px;gap:6px;font-size:.95rem}
+.hbAcc text{font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif}
+@media (max-width:680px){
+  .doors{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .today{grid-template-columns:minmax(0,1fr)}
+  .ring{width:84px;height:84px}.ring>span{width:66px;height:66px;font-size:2.2rem}
+  .door b{font-size:1.25rem}
+  .path,.extras{gap:8px}
+  .car{min-width:74px;font-size:1.05rem;padding:6px 8px}
+  .tile{font-size:1.05rem;padding:8px 12px}
+  .mem{gap:6px}
+  .mc-face .pic{font-size:2rem}
+}
 
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
@@ -429,6 +563,45 @@ const TOPICS=[
   rule:['Words come in pairs: taato ↔ chiso (hot ↔ cold).','शब्दका जोडी: तातो ↔ चिसो।','Words come in pairs: hot and cold.'],items:[
   ['taato','तातो','hot','🔥'],['chiso','चिसो','cold','🧊'],['din','दिन','day','☀️'],['raat','रात','night','🌙'],['khusi','खुसी','happy','😀'],['dukhi','दुःखी','sad','😢'],
   ['chhito','छिटो','fast','🐇'],['bistarai','बिस्तारै','slow','🐢'],['thulo','ठूलो','big','🐘'],['sano','सानो','small','🐭']]},
+ {id:'g-kasko',section:'gram',np:'Kasko?',dev:'कसको?',en:'Whose is it?',icon:'☂️',color:'#3a7bf2',kind:'pic',q:'phrase',
+  rule:['-ko means whose: aamako chhata = Mum’s umbrella.','-को ले कसको भन्छ: आमाको छाता।','-ko means whose: Mum’s umbrella.'],items:[
+  ['aamako chhata','आमाको छाता','Mum’s umbrella','👩☂️'],['buwako chasma','बुवाको चस्मा','Dad’s glasses','👨👓'],['didiko kitab','दिदीको किताब','big sister’s book','👧📖'],
+  ['bhaiko bhakundo','भाइको भकुण्डो','little brother’s ball','👶⚽'],['hajurbuwako topi','हजुरबुवाको टोपी','grandpa’s cap','👴🧢'],['kukurko haddi','कुकुरको हड्डी','the dog’s bone','🐶🦴'],
+  ['biraloko dudh','बिरालोको दूध','the cat’s milk','🐱🥛'],['daiko saikal','दाइको साइकल','big brother’s bicycle','👦🚲']]},
+ // yes/no topics: items are [question, devanagari, english, picture, 1 = yes / 0 = no]; yes/no hold the two answer words
+ {id:'g-cha',section:'gram',np:'Cha ki chaina?',dev:'छ कि छैन?',en:'Is it there?',icon:'🌳',color:'#2fae6e',kind:'yesno',q:'yesno',
+  yes:['Cha','छ','Yes, it’s there'],no:['Chaina','छैन','No, it isn’t'],
+  rule:['Cha = it’s there. Chaina = it isn’t there.','छ भनेको त्यहाँ छ, छैन भनेको त्यहाँ छैन।','Cha means it’s there. Chaina means it isn’t.'],items:[
+  ['Rukhma chara cha?','रूखमा चरा छ?','Is there a bird in the tree?','🌳🐦',1],['Thaalma momo cha?','थालमा मोमो छ?','Is there a momo on the plate?','🍽️',0],
+  ['Paanima machha cha?','पानीमा माछा छ?','Is there a fish in the water?','🌊🐟',1],['Aakashma indreni cha?','आकाशमा इन्द्रेणी छ?','Is there a rainbow in the sky?','☁️',0],
+  ['Baakasma biralo cha?','बाकसमा बिरालो छ?','Is there a cat in the box?','<span class="place in"><span>📦</span><span class="inner">🐱</span></span>',1],
+  ['Rukhma bandar cha?','रूखमा बाँदर छ?','Is there a monkey in the tree?','🌳🐦',0],
+  ['Aakashma jun cha?','आकाशमा जून छ?','Is the moon in the sky?','🌙⭐',1],['Paanima hans cha?','पानीमा हाँस छ?','Is there a duck in the water?','🌊🐟',0]]},
+ {id:'g-ho',section:'gram',np:'Ho ki hoina?',dev:'हो कि होइन?',en:'Yes or no?',icon:'✅',color:'#ff7eb6',kind:'yesno',q:'yesno',
+  yes:['Ho','हो','Yes, it is'],no:['Hoina','होइन','No, it isn’t'],
+  rule:['Ho = yes, it is. Hoina = no, it isn’t.','हो भनेको हो, होइन भनेको होइन।','Ho means yes, it is. Hoina means no, it isn’t.'],items:[
+  ['Yo biralo ho?','यो बिरालो हो?','Is this a cat?','🐱',1],['Yo kukur ho?','यो कुकुर हो?','Is this a dog?','🐴',0],
+  ['Yo syau ho?','यो स्याउ हो?','Is this an apple?','🍎',1],['Yo kera ho?','यो केरा हो?','Is this a banana?','🥭',0],
+  ['Yo hatti ho?','यो हात्ती हो?','Is this an elephant?','🐘',1],['Yo jutta ho?','यो जुत्ता हो?','Are these shoes?','🧦',0],
+  ['Yo jun ho?','यो जून हो?','Is this the moon?','🌙',1],['Yo machha ho?','यो माछा हो?','Is this a fish?','🐸',0]]},
+ {id:'g-prashna',section:'gram',np:'Prashna',dev:'प्रश्न',en:'Question words',icon:'❓',color:'#8e5be8',kind:'pic',q:'phrase',
+  rule:['Question words: ke = what, ko = who, kahaa = where, kati = how many.','प्रश्न गर्ने शब्द: के, को, कहाँ, कति।','Question words: what, who, where, how many.'],items:[
+  ['ke','के','what','❓📦'],['ko','को','who','❓🧑'],['kahaa','कहाँ','where','❓📍'],['kati','कति','how many','❓🔢'],
+  ['kahile','कहिले','when','❓⏰'],['kina','किन','why','❓🤔'],['kasto','कस्तो','what kind','❓🌈']]},
+ {id:'g-bhayo',section:'gram',np:'Bhaisakyo',dev:'भइसक्यो',en:'It already happened',icon:'🐸',color:'#c27c2c',kind:'pic',q:'phrase',
+  rule:['-yo means it already happened: udchha (flies) → udyo (flew).','-यो ले भइसकेको कुरा भन्छ: उड्छ → उड्यो।','-yo means it already happened: flies, flew.'],items:[
+  ['Chara udyo.','चरा उड्यो।','The bird flew away.','🐦💨'],['Bhyaguto uphriyo.','भ्यागुतो उफ्रियो।','The frog jumped.','🐸'],['Biralo sutyo.','बिरालो सुत्यो।','The cat fell asleep.','🐱💤'],
+  ['Bachcha royo.','बच्चा रोयो।','The baby cried.','😭'],['Paani paryo.','पानी पर्‍यो।','It rained.','🌧️'],['Ghaam lagyo.','घाम लाग्यो।','The sun came out.','☀️'],
+  ['Habre haansyo.','हाब्रे हाँस्यो।','Habre laughed.','😂'],['Phul phulyo.','फूल फुल्यो।','The flower bloomed.','🌸']]},
+ // endings: [whole phrase, devanagari, english, picture, phrase with a gap (___), the missing ending]
+ {id:'g-tukra',section:'gram',np:'Tukra jod',dev:'टुक्रा जोड',en:'Fix the ending',icon:'🔗',color:'#e8463a',kind:'ending',q:'ending',
+  rule:['Little endings stick onto words: -haru many, -ko whose, -ma in, -lai to.','सानो टुक्रा शब्दमा जोडिन्छ: -हरू, -को, -मा, -लाई।','Little endings stick onto words: many, whose, in, to.'],items:[
+  ['kukurharu','कुकुरहरू','dogs','🐶🐶🐶','kukur___','haru'],['aamako chhata','आमाको छाता','Mum’s umbrella','👩☂️','aama___ chhata','ko'],
+  ['Biralo gharma cha.','बिरालो घरमा छ।','The cat is in the house.','<span class="place in"><span>🏠</span><span class="inner">🐱</span></span>','Biralo ghar___ cha.','ma'],
+  ['bhailai bhakundo','भाइलाई भकुण्डो','a ball for little brother','⚽➡️👶','bhai___ bhakundo','lai'],
+  ['charaharu','चराहरू','birds','🐦🐦🐦','chara___','haru'],['kukurko haddi','कुकुरको हड्डी','the dog’s bone','🐶🦴','kukur___ haddi','ko'],
+  ['Machha paanima cha.','माछा पानीमा छ।','The fish is in the water.','🌊🐟','Machha paani___ cha.','ma'],
+  ['didilai phul','दिदीलाई फूल','a flower for big sister','🌸➡️👧','didi___ phul','lai']]},
  {id:'kathaa',np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',color:'#8e5be8',kind:'story',items:[]},
  {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',color:'#ff7eb6',kind:'pic',q:'phrase',items:[
   ['pakka','पक्का','for sure!','👍'],['sahi ho','सही हो','that’s right!','✅'],['ek chin','एक छिन','just a moment','⏳'],
@@ -499,15 +672,26 @@ function loadVoices(){
 }
 if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 // say a Nepali line (Devanagari for a Nepali/Hindi voice, romanized otherwise), then optionally the English
-function say(rom,dev,en){
-  if(!TTS||!S.sound)return;
+// o.keep: queue after what is already being said; o.onWord(i): called with the index of the word being spoken (-1 at the end),
+// from the voice's word boundaries when it reports them, otherwise from a timer that guesses the pace
+function say(rom,dev,en,o){
+  o=o||{};
+  if(!TTS||!S.sound){o.onWord&&o.onWord(-1);return;}
   try{
-    speechSynthesis.cancel();
+    if(!o.keep)speechSynthesis.cancel();
     const h=$('#habre'),stop=()=>h.classList.remove('talking');
-    const u=new SpeechSynthesisUtterance(npVoice?dev:rom);
+    const text=npVoice?dev:rom,u=new SpeechSynthesisUtterance(text);
     if(npVoice){u.voice=npVoice;u.lang=npVoice.lang;}
     u.rate=S.rate;u.pitch=1.15;
     u.onstart=()=>h.classList.add('talking');u.onend=stop;u.onerror=stop;
+    if(o.onWord){
+      const starts=[],toks=[];text.replace(/\S+/g,(m,i)=>{starts.push(i);toks.push(m);return m;});
+      let timer=0,byVoice=false,k=0;
+      const step=()=>{if(byVoice||k>=toks.length)return;o.onWord(k);const ms=(toks[k].length*(npVoice?95:70)+170)/S.rate;k++;timer=setTimeout(step,ms);};
+      const end=()=>{clearTimeout(timer);o.onWord(-1);};
+      u.onboundary=e=>{if(e.name&&e.name!=='word')return;byVoice=true;clearTimeout(timer);let j=0;while(j+1<starts.length&&starts[j+1]<=e.charIndex)j++;o.onWord(j);};
+      u.addEventListener('start',step);u.addEventListener('end',end);u.addEventListener('error',end);
+    }
     speechSynthesis.speak(u);
     if(en&&S.english){
       const e=new SpeechSynthesisUtterance(en);
@@ -566,6 +750,30 @@ function renderTop(){
   $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
   $('#whoNm').textContent=p?p.name:'Ko?';
   $('#stars').textContent='★ '+starsOf(p);
+  // a new outfit for Habre at each reward step; Habre puts it on straight away
+  if(p){
+    const got=REWARDS.filter(r=>starsOf(p)>=r[0]).length;
+    if((p.rw||0)<got){
+      const r=REWARDS[got-1];p.rw=got;p.outfit=p.outfit||{};p.outfit[r[2]]=r[1];save();
+      setTimeout(()=>{speech('Naya lugaa! '+r[1],'नयाँ लुगा!',`Habre got a new ${r[3]}!`);say('Naya lugaa!','नयाँ लुगा!',`Habre got a new ${r[3]}!`);confetti();mood('happy');},2600);
+    }
+  }
+  renderOutfit();
+}
+// rewards: [stars needed, emoji, where Habre wears it, name]
+const REWARDS=[[10,'🧢','hat','cap'],[20,'🎀','neck','bow'],[30,'🕶️','eyes','sunglasses'],[45,'👑','hat','crown'],[60,'🎩','hat','top hat'],[80,'🎓','hat','graduation cap'],[100,'🏅','neck','medal'],[130,'🌼','hat','flower']];
+const ACC_POS={hat:[80,22,46,'.hb-head'],eyes:[80,68,52,'.hb-head'],neck:[80,114,30,'.hb-body']};
+function renderOutfit(){
+  document.querySelectorAll('.hbAcc').forEach(x=>x.remove());
+  const p=P();if(!p||!p.outfit)return;
+  for(const [slot,e] of Object.entries(p.outfit)){
+    if(!e||!ACC_POS[slot])continue;
+    const [x,y,s,parent]=ACC_POS[slot],g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','hbAcc');g.id=slot==='neck'?'hbAccN':'hbAcc';
+    g.innerHTML=`<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central">${e}</text>`;
+    // the bow/medal goes in front of the body but behind the head
+    const host=$('#habre '+parent);if(slot==='neck')host.insertBefore(g,host.querySelector('.hb-head'));else host.append(g);
+  }
 }
 function pictureOf(t,it){
   if(t.kind==='letter')return `<span class="letter" lang="ne">${it[1]}</span>`;
@@ -647,59 +855,148 @@ function editProfile(p){
   setTimeout(()=>$('#pName')&&$('#pName').focus(),50);
 }
 
+// ---------- sections ----------
+const WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
+const GRAM_T=()=>TOPICS.filter(t=>t.section==='gram');
+const AKSHAR=()=>TOPICS.find(t=>t.id==='akshar');
+const CHECK_N=6,STICKER_AT=2,V_N=5;
+const MEM_PAIRS={easy:3,medium:4,hard:6};
+const dayStr=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>dayStr(new Date());
+const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayStr(d);};
+const stat=p=>(p.stat=p.stat||{plays:0,right:{},miss:{}});
+const keyOf=(t,it)=>t.id+'|'+it[0];
+const checked=(p,t)=>bestOf(p,'check',t.id)>=CHECK_N-1;
+const topicDone=(p,t)=>(LV_KEYS.filter(k=>passed(p,t.id,k)).length+(checked(p,t)?1:0))/4;
+const ynOf=(t,it)=>it[4]?t.yes:t.no;
+const backBtn=label=>`<button class="back" id="backBtn">◀ ${label}</button>`;
+function hearItem(t,it){
+  if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
+  else if(t.kind==='yesno'){const a=ynOf(t,it);say(it[0]+' '+a[0],it[1]+' '+a[1],null);}
+  else say(it[0],it[1],null);
+}
+function findCard(key){
+  const i=key.indexOf('|'),tid=key.slice(0,i),w=key.slice(i+1),t=tid==='vakya'?VAKYA_T:TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);
+  return t&&it?{t,it}:null;
+}
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+// how far a player is through each door (0 to 1), for the rings on the home screen and the grown-ups page
+function progressOf(p){
+  const ak=AKSHAR(),all=allCards();
+  return {
+    kathaa:avg(STORIES.map(s=>s.choice?Math.min(2,bestOf(p,'kathaa',s.id))/2:(Math.min(2,bestOf(p,'kathaa',s.id))+Math.min(1,bestOf(p,'krama',s.id)))/3)),
+    shabda:avg(WORD_T().map(t=>topicDone(p,t))),
+    akshar:topicDone(p,ak)*0.7+Math.min(1,Object.keys(p.traced||{}).length/ak.items.length)*0.3,
+    vyakaran:avg(GRAM_T().map(t=>topicDone(p,t))),
+    vakya:avg(V_ACTS.flatMap(a=>LV_KEYS.map(k=>bestOf(p,'vakya:'+a.id,k)>=V_N-1?1:0)))*0.75+avg(GROW.map((_,i)=>bestOf(p,'badhau',i)>=2?1:0))*0.25,
+    patti:all.length?all.filter(c=>boxOf(p,c)===2).length/all.length:0,
+  };
+}
+const DOORS=[
+ {id:'kathaa',np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',color:'#8e5be8',open:()=>openStories()},
+ {id:'shabda',np:'Shabda',dev:'शब्द',en:'Words',icon:'🍎',color:'#2fae6e',open:()=>openWords()},
+ {id:'akshar',np:'Akshar',dev:'अक्षर',en:'Letters',icon:'अ',color:'#e8463a',open:()=>openTopic(AKSHAR())},
+ {id:'vyakaran',np:'Vyakaran',dev:'व्याकरण',en:'Grammar',icon:'🧩',color:'#00a6b8',open:()=>openGram()},
+ {id:'vakya',np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',color:'#ff9f1c',open:()=>openVakya()},
+ {id:'patti',np:'Patti',dev:'पत्ती',en:'Flashcards',icon:'🃏',color:'#3a7bf2',open:()=>openPatti()},
+];
+// the same word all day, different each day
+function wordOfDay(){
+  const all=WORD_T().filter(t=>t.kind==='pic').flatMap(t=>t.items.map(it=>({t,it})));
+  const d=new Date(),n=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+  return all[(n*7919)%all.length];
+}
+
 // ---------- screens ----------
 function goHome(quiet){
   if(!P()){goWho();return;}
   screen='home';topic=null;if(!quiet)speechSynthesis?.cancel?.();
-  const p=P();
-  const tile=(t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}">
-     <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
-     <span class="medals" aria-label="${t.kind==='story'?'Stories finished':'Levels finished'}">${t.kind==='story'
-       ?STORIES.map(s=>`<span class="${bestOf(p,'kathaa',s.id)?'on':''}" title="${esc(s.en)}">📖</span>`).join('')
-       :LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`;
-  const words=TOPICS.filter(t=>!t.section&&t.kind!=='story'),gram=TOPICS.filter(t=>t.section==='gram'),story=TOPICS.find(t=>t.kind==='story');
+  const p=P(),pr=progressOf(p),d=p.daily||{},done=d.last===today(),w=wordOfDay(),stars=starsOf(p);
+  const streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
+  const nx=REWARDS.find(r=>r[0]>stars),from=nx?(REWARDS[REWARDS.indexOf(nx)-1]||[0])[0]:0;
   main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
-   <h2 class="sub">Shabda <small>words</small></h2><div class="topics">${words.map(tile).join('')}</div>
-   <h2 class="sub">Vyakaran <small>how Nepali fits together</small></h2><div class="topics">${gram.map(tile).join('')}</div>
-   <h2 class="sub">Kathaa ra Patti <small>stories and flashcards</small></h2><div class="topics">${tile(story,0)}
-     <button class="topic" style="--tc:#00a6b8" id="pattiTile"><span class="ic" aria-hidden="true">🃏</span><b>Patti</b><span class="dev" lang="ne">पत्ती</span><span class="en">Flashcards</span><span class="medals"><span class="on">✨</span></span></button></div>`;
-  main.querySelectorAll('.topic[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
-  $('#pattiTile').onclick=openPatti;
-  if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a picture.');mood('wave');}
+   <div class="today">
+    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
+    <button class="wod" id="wodBtn" aria-label="Word of the day: ${esc(w.it[2])}"><span aria-hidden="true">${pictureOf(w.t,w.it)}</span><span><small>Aajako shabda · word of the day</small><b>${esc(w.it[0])}</b><span class="dev" lang="ne">${w.it[1]}</span>${S.english?`<small>${esc(w.it[2])}</small>`:''}</span></button>
+   </div>
+   <div class="doors">${DOORS.map((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="door" style="--dc:${o.color};animation-delay:${i*60}ms" data-d="${o.id}">
+     <span class="ring" style="--p:${v}" aria-hidden="true"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span>
+     <b>${o.np}</b><span class="dev" lang="ne">${o.dev}</span><span class="en">${o.en} · ${v}%</span></button>`;}).join('')}</div>
+   <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?nx[1]:'🏆'}</span>
+     <span style="flex:1;min-width:150px"><b>${nx?`${nx[0]-stars} more ★ and Habre gets a ${nx[3]}!`:'Habre has every outfit!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx[0]-from)*100):100}%"></i></span></span>
+     <span class="mini">👕 Habreko lugaa</span></button>`;
+  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>DOORS.find(o=>o.id===b.dataset.d).open());
+  $('#dailyBtn').onclick=startDaily;
+  $('#wodBtn').onclick=()=>{speech(w.it[0],w.it[1],w.it[2]);say(w.it[0],w.it[1],w.it[2]);mood('happy');};
+  $('#wardBtn').onclick=openWardrobe;
+  if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a door.');mood('wave');}
 }
+function topicTile(t,i,p){
+  return `<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}">
+   <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
+   <span class="medals" aria-label="Levels finished">${LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}<span class="${checked(p,t)?'on':''}" title="Check">✅</span></span></button>`;
+}
+function openWords(){
+  screen='words';topic=null;const p=P(),st=stat(p),all=stickerItems(),got=all.filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length;
+  main.innerHTML=`${backBtn('Ghar')}<h1>🍎 Shabda <small>शब्द · Words</small></h1>
+   <button class="toggle" id="bookBtn">📒 Mero sticker kitab <small style="font-weight:500;color:var(--soft)">my sticker book · ${got} / ${all.length}</small></button>
+   <div class="topics">${WORD_T().map((t,i)=>topicTile(t,i,p)).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome();$('#bookBtn').onclick=openStickers;
+  main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
+  speech('Shabda!','शब्द!','Pick a topic.');say('Shabda!','शब्द!',null);mood('wave');
+}
+function openGram(){
+  screen='gram';topic=null;const p=P();
+  main.innerHTML=`${backBtn('Ghar')}<h1>🧩 Vyakaran <small>व्याकरण · How Nepali fits together</small></h1>
+   <div class="topics">${GRAM_T().map((t,i)=>topicTile(t,i,p)).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome();
+  main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
+  speech('Vyakaran!','व्याकरण!','Pick a little lesson.');say('Vyakaran!','व्याकरण!',null);mood('wave');
+}
+const topicBack=t=>t.section==='gram'?['Vyakaran',openGram]:t.kind==='letter'?['Ghar',()=>goHome()]:['Shabda',openWords];
+// a topic: pick a level, then learn → play → check, plus memory match and flashcards
 function openTopic(t){
   if(t.kind==='story'){openStories();return;}
   topic=t;screen='topic';
-  const p=P(),cur=levelOf(t.id);
-  main.innerHTML=`<h1>${t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
+  const p=P(),cur=levelOf(t.id),[bl,bf]=topicBack(t),tick='<em>✔</em>';
+  const seen=(p.seen||{})[t.id],played=LV_KEYS.some(k=>passed(p,t.id,k));
+  main.innerHTML=`${backBtn(bl)}<h1>${t.kind==='letter'?'<span lang="ne">अ</span>':t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
    ${t.rule?`<button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>${esc(t.rule[0])}</b><small lang="ne">${t.rule[1]}</small></span></button>`:''}
    <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
    <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}">
      <span aria-hidden="true">${L.icon}</span><b>${L.np}</b><small>${L.en}</small><small class="best">★ ${bestOf(p,t.id,k)}/${L.n}</small></button>`;}).join('')}</div>
-   <div class="modes">
-    <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>Let’s learn</small></button>
-    <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>Let’s play</small></button>
-    <button class="mode cards" id="mCards" style="animation-delay:160ms"><span aria-hidden="true">🃏</span>Patti<small>Flashcards</small></button>
+   <div class="path">
+    <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>1 · Learn</small>${seen?tick:''}</button>
+    <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>2 · Play</small>${played?tick:''}</button>
+    <button class="mode check" id="mCheck" style="animation-delay:160ms"><span aria-hidden="true">✅</span>Jaanch<small>3 · Check · ★ ${bestOf(p,'check',t.id)}/${CHECK_N}</small>${checked(p,t)?tick:''}</button>
+   </div>
+   <div class="extras">
+    ${t.kind!=='yesno'?`<button class="mode memo" id="mMemo" style="animation-delay:240ms"><span aria-hidden="true">🧠</span>Jodi<small>Memory match · ★ ${bestOf(p,'jodi',t.id)}/3</small></button>`:''}
+    <button class="mode cards" id="mCards" style="animation-delay:300ms"><span aria-hidden="true">🃏</span>Patti<small>Flashcards</small></button>
    </div>`;
+  $('#backBtn').onclick=bf;
   if(t.rule)$('#ruleCard').onclick=()=>{speech(...t.rule);say(...t.rule);mood('happy');};
-  $('#mCards').onclick=()=>startKCards(t,()=>openTopic(t));
   main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{
     p.lv=p.lv||{};p.lv[t.id]=b.dataset.lv;save();
     main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
     const L=LEVELS[b.dataset.lv];speech(L.np,L.dev,L.en);say(L.np,L.dev,L.en);
   });
+  const cards=()=>wordsFor(t,levelOf(t.id)).map(it=>({t,it}));
   $('#mLearn').onclick=()=>{learnI=0;renderLearn();};
-  $('#mPlay').onclick=startQuiz;
+  $('#mPlay').onclick=()=>startQuiz({mode:'play',t});
+  $('#mCheck').onclick=()=>startQuiz({mode:'check',t});
+  if($('#mMemo'))$('#mMemo').onclick=()=>startMemory(cards(),{key:'jodi:'+t.id,title:t.np,pairs:MEM_PAIRS[levelOf(t.id)],back:()=>openTopic(t)});
+  $('#mCards').onclick=()=>startKCards(cards(),()=>openTopic(t),t.np);
   speech(t.np,t.dev,t.en);say(t.np,t.dev,t.en);
 }
 
 // learn: one big card at a time, through this level's words
 function renderLearn(){
-  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter';
+  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter',yn=t.kind==='yesno'?ynOf(t,it):null;
   const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
   const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english?` · ${it[7]}`:''}</span>`
-    :`<b>${it[0]}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${it[2]}</span>`:''}`;
-  main.innerHTML=`<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}${text}</div>
+    :`<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${esc(it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!<small lang="ne">${yn[1]}${S.english?' · '+esc(yn[2]):''}</small></span>`:''}`;
+  main.innerHTML=`${backBtn(t.np)}<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}${text}</div>
    ${isL?`<button class="listen write" id="writeBtn">✏️ Lekhaun <small style="font-weight:500">let’s write it</small></button><div id="traceBox" hidden></div>`:''}
    <div class="nav">
     <button class="arrow" id="prev" aria-label="Previous">◀</button>
@@ -707,33 +1004,153 @@ function renderLearn(){
     <button class="arrow" id="next" aria-label="Next">▶</button>
    </div>
    <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
-  const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,it[0]+', as in '+it[7]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
+  const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,it[0]+', as in '+it[7]);mood('happy');}
+    :yn?()=>{say(it[0]+' '+yn[0],it[1]+' '+yn[1],it[2]+' '+yn[2]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
+  $('#backBtn').onclick=()=>openTopic(t);
   if(isL)$('#writeBtn').onclick=()=>{$('#writeBtn').hidden=true;openTrace(it);};
   $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
   $('#listen').onclick=hear;
   $('#prev').onclick=()=>{learnI=(learnI-1+words.length)%words.length;renderLearn();};
   $('#next').onclick=()=>{
-    if(learnI===words.length-1){speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;}
+    if(learnI===words.length-1){
+      const p=P();p.seen=p.seen||{};p.seen[t.id]=1;save();
+      speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;
+    }
     learnI++;renderLearn();
   };
   speech(it[0],it[1],it[2]);hear();
 }
 
+// generic finish card: stars, then buttons
+function endCard(n,N,o){
+  screen='end';const frac=N?n/N:1;
+  const line=frac>=0.9?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:frac>=0.6?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
+  main.innerHTML=`<div class="end"><div class="trophy" aria-hidden="true">${o.trophy||(frac>=0.9?'🏆':frac>=0.6?'🥇':'🌟')}</div>
+    <h1>${esc(o.title||line[0])}<small>${esc(o.sub||line[2])}${o.newBest?' · new best!':''}</small></h1>
+    ${N?`<div class="row" aria-label="${n} of ${N} stars">${Array.from({length:N},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>`:''}
+    <div class="btns">${o.extra||''}
+      ${o.again?`<button class="btn" style="background:var(--green)" id="eAgain">🔁 Pheri <small style="font-weight:500">again</small></button>`:''}
+      <button class="btn" style="background:var(--red)" id="eBack">◀ ${esc(o.backLabel||'Back')}</button></div></div>`;
+  if(o.again)$('#eAgain').onclick=o.again;
+  $('#eBack').onclick=o.back;
+  confetti();setTimeout(confetti,500);mood('happy');
+  const said=o.title?[o.title,o.titleDev||o.title,o.sub||null]:line;speech(...said);say(...said);
+}
+
+// ---------- jodi (memory match): each picture has a twin card with its word ----------
+let M=null;
+function memFace(x){
+  const {t,it}=x.c;
+  if(x.side==='pic')return t.kind==='num'?`<span class="digit">${it[3]}</span>`:pictureOf(t,it);
+  if(t.kind==='letter')return `<span class="pic" style="font-size:2rem">${it[3]}</span><b>${esc(it[5])}</b><span class="dev" lang="ne">${it[6]}</span>`;
+  return `<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>`;
+}
+function startMemory(cards,o){
+  const uniq=shuffle(cards).filter((c,i,a)=>a.findIndex(x=>x.it[3]===c.it[3]||keyOf(x.t,x.it)===keyOf(c.t,c.it))===i);
+  const pick=uniq.slice(0,o.pairs||4);
+  M={cards,deck:shuffle(pick.flatMap((c,i)=>[{c,i,side:'pic'},{c,i,side:'word'}])),o,open:[],done:0,moves:0,lock:false,pairs:pick.length};
+  drawMemory();
+}
+function drawMemory(){
+  screen='memory';const cols=M.deck.length<=6?3:4;
+  main.innerHTML=`${backBtn('Back')}<h2 class="sub">🧠 Jodi milau <small>${esc(M.o.title||'')} · find each picture’s word · tries: <span id="mMoves">0</span></small></h2>
+   <div class="mem" style="--mc:${cols}">${M.deck.map((x,k)=>`<button class="mc" data-k="${k}" aria-label="Card ${k+1}"><span class="mc-in"><span class="mc-f mc-back" aria-hidden="true">?</span><span class="mc-f mc-face">${memFace(x)}</span></span></button>`).join('')}</div>`;
+  $('#backBtn').onclick=M.o.back;
+  main.querySelectorAll('.mc').forEach(b=>b.onclick=()=>memFlip(b,+b.dataset.k));
+  speech('Jodi milau!','जोडी मिलाऊ!','Find each picture and its word.');say('Jodi milau!','जोडी मिलाऊ!','Find each picture and its word.');mood('wave');
+}
+function memFlip(b,k){
+  if(M.lock||b.classList.contains('up')||b.classList.contains('done'))return;
+  b.classList.add('up');M.open.push(k);
+  const x=M.deck[k];if(x.side==='word')hearItem(x.c.t,x.c.it);
+  if(M.open.length<2)return;
+  M.moves++;$('#mMoves').textContent=M.moves;
+  const [a,c]=M.open,A=M.deck[a],C=M.deck[c],btns=main.querySelectorAll('.mc');M.open=[];
+  if(A.i===C.i){
+    btns[a].classList.add('done');btns[c].classList.add('done');M.done++;
+    const {t,it}=A.c;speech(t.kind==='letter'?it[5]:it[0],t.kind==='letter'?it[6]:it[1],t.kind==='letter'?it[7]:it[2]);hearItem(t,it);mood('happy');
+    if(M.done===M.pairs){const m=M;setTimeout(()=>{if(screen==='memory'&&M===m)memEnd();},1100);}
+  }else{M.lock=true;mood('sad');setTimeout(()=>{btns[a].classList.remove('up');btns[c].classList.remove('up');M.lock=false;},1000);}
+}
+function memEnd(){
+  const n=M.moves<=M.pairs+2?3:M.moves<=M.pairs*2+1?2:1,p=P(),o=M.o;let nb=false;
+  if(o.key&&n>((p.best||{})[o.key]||0)){p.best=p.best||{};p.best[o.key]=n;nb=true;save();renderTop();}
+  endCard(n,3,{newBest:nb,sub:`${M.pairs} pairs in ${M.moves} tries`,again:()=>startMemory(M.cards,o),back:o.back});
+}
+
+// ---------- sticker book: a word becomes a sticker once it's been got right twice ----------
+const stickerItems=()=>WORD_T().flatMap(t=>t.items.map(it=>({t,it})));
+function openStickers(){
+  screen='stickers';const p=P(),st=stat(p),all=stickerItems(),has=c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT,got=all.filter(has).length;
+  main.innerHTML=`${backBtn('Shabda')}<h1>📒 Mero sticker kitab <small>My sticker book · ${got} / ${all.length}</small></h1>
+   <p style="margin:0;color:var(--soft)">Get a word right twice, in a game, a check or a flashcard, and its sticker is yours.</p>
+   ${WORD_T().map(t=>`<div class="book"><h3>${t.icon} ${t.np} <small style="color:var(--soft);font-weight:500">${t.en} · ${t.items.filter(it=>has({t,it})).length}/${t.items.length}</small></h3>
+     <div class="stk">${t.items.map((it,k)=>{const g=has({t,it});return `<button class="${g?'got':''}" data-t="${t.id}" data-k="${k}" style="--r:${(k*37)%11-5}deg" aria-label="${g?esc(it[2]):'Not found yet'}">${t.kind==='num'?`<span class="digit">${it[3]}</span>`:pictureOf(t,it)}</button>`;}).join('')}</div></div>`).join('')}`;
+  $('#backBtn').onclick=openWords;
+  main.querySelectorAll('.stk button').forEach(b=>b.onclick=()=>{
+    const t=TOPICS.find(x=>x.id===b.dataset.t),it=t.items[+b.dataset.k];
+    if(b.classList.contains('got')){speech(it[0],it[1],it[2]);say(it[0],it[1],it[2]);mood('happy');}
+    else{speech('Khelera paau!','खेलेर पाऊ!','Play to win this one!');say('Khelera paau!','खेलेर पाऊ!','Play to win this one!');}
+  });
+  speech('Mero sticker kitab!','मेरो स्टिकर किताब!',`${got} stickers so far!`);say('Mero sticker kitab!','मेरो स्टिकर किताब!',null);mood('happy');
+}
+
 // ---------- patti (flashcards) ----------
+// every card sits in one of Habre's three baskets: 0 = new / again, 1 = practising, 2 = I know it
+const boxOf=(p,c)=>((p.box||{})[keyOf(c.t,c.it)])||0;
+const allCards=()=>[...WORD_T(),AKSHAR(),...GRAM_T(),VAKYA_T].flatMap(t=>t.items.map(it=>({t,it})));
+function deckSession(cards,p){
+  const by=[[],[],[]];cards.forEach(c=>by[boxOf(p,c)].push(c));
+  if(!by[0].length&&!by[1].length)return shuffle(cards).slice(0,12);
+  return [...shuffle(by[0]),...shuffle(by[1]),...shuffle(by[2]).slice(0,2)].slice(0,12);
+}
+function trickyCards(p){
+  const st=stat(p);
+  return Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,12).map(x=>findCard(x.k)).filter(Boolean);
+}
+// story words that are also picture words
+function storyWordCards(){
+  const out=[],seen=new Set();
+  STORIES.forEach(s=>pagesOf(s).forEach(pg=>pg[1].split(' ').forEach(w=>{const L=lookup(w);if(L&&!seen.has(keyOf(L.t,L.it))){seen.add(keyOf(L.t,L.it));out.push(L);}})));
+  return out;
+}
+const PATTI_MODES=[['flip','🃏 Palta','flip'],['jodi','🧠 Jodi','match pairs'],['suna','👂 Suna ra chhana','listen and tap']];
 function openPatti(){
-  screen='patti';const p=P();
-  const words=TOPICS.filter(t=>!t.section&&t.kind!=='story'),gram=TOPICS.filter(t=>t.section==='gram');
-  const tile=(t,i)=>`<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}"><span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="en">${t.en} · ${wordsFor(t,levelOf(t.id)).length} cards</span></button>`;
-  main.innerHTML=`<h1>🃏 Patti <small>पत्ती · Flashcards: look, say it, flip!</small></h1>
-   <h2 class="sub">Shabda <small>words</small></h2><div class="topics">${words.map(tile).join('')}</div>
-   <h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${gram.map(tile).join('')}</div>`;
-  main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>startKCards(TOPICS.find(t=>t.id===b.dataset.t),openPatti));
+  screen='patti';const p=P(),mode=S.pattiMode||'flip',decks=[];
+  const add=(id,icon,np,en,color,cards)=>{if(cards.length)decks.push({id,icon,np,en,color,cards});};
+  const tricky=trickyCards(p),custom=(p.custom||[]).map(findCard).filter(Boolean);
+  add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
+  add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
+  add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
+  add('vakya','🚂','Vakya','Sentences','#ff9f1c',VAKYA_T.items.map(it=>({t:VAKYA_T,it})));
+  const special=decks.length;
+  [...WORD_T(),AKSHAR()].forEach(t=>add(t.id,t.kind==='letter'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
+  const words=decks.length;
+  GRAM_T().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
+  const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
+    return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(d.np)}</b><span class="en">${esc(d.en)} · ${d.cards.length}</span>
+      <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
+  main.innerHTML=`${backBtn('Ghar')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
+   <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
+   <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
+   <h2 class="sub">Mero patti <small>my decks</small></h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
+   <h2 class="sub">Shabda ra Akshar <small>words and letters</small></h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
+   <h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome();
+  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
+  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
+    const d=decks.find(x=>x.id===b.dataset.k),pics=new Set(d.cards.map(c=>c.it[3])).size;
+    if(mode==='jodi'&&pics>=2&&d.cards.every(c=>c.t.kind!=='yesno'))startMemory(d.cards,{title:d.np,pairs:4,back:openPatti});
+    else if(mode==='suna'&&pics>=3)startQuiz({mode:'listen',cards:d.cards,title:d.np,back:openPatti});
+    else startKCards(d.cards,openPatti,d.np);
+  });
   speech('Patti!','पत्ती!','Pick a deck.');say('Patti!','पत्ती!',null);mood('wave');
 }
 let KF=null;
-function startKCards(t,back,only){
-  const cards=only||wordsFor(t,levelOf(t.id));
-  KF={t,back,queue:shuffle(cards),total:cards.length,missed:new Set(),flipped:false,wordFirst:!!S.wordFirst};
+function startKCards(cards,back,title,only){
+  const p=P();
+  KF={cards,back,title,queue:only?shuffle(only):deckSession(cards,p),missed:new Set(),flipped:false,wordFirst:!!S.wordFirst};
+  KF.total=KF.queue.length;
   drawKCard();
 }
 function kPicture(t,it){
@@ -742,24 +1159,21 @@ function kPicture(t,it){
   return pictureOf(t,it);
 }
 function drawKCard(){
-  screen='kcards';const {t}=KF,it=KF.queue[0];
-  if(!it){
-    const again=[...KF.missed];confetti();mood('happy');
-    main.innerHTML=`<div class="end"><div class="trophy" aria-hidden="true">🃏</div>
-     <h1>Sakiyo!<small>${t.np} · ${KF.total} cards · ${KF.total-again.length} you knew straight away</small></h1>
-     <div class="btns">${again.length?`<button class="btn" style="background:var(--yellow);color:var(--ink)" id="kMissed">🔁 Missed ones (${again.length})</button>`:''}
-      <button class="btn" style="background:var(--green)" id="kAgain">🃏 Pheri <small style="font-weight:500">again</small></button>
-      <button class="btn" style="background:var(--red)" id="kBack">⌂ Back</button></div></div>`;
-    if(again.length)$('#kMissed').onclick=()=>startKCards(t,KF.back,again);
-    $('#kAgain').onclick=()=>startKCards(t,KF.back);
-    $('#kBack').onclick=()=>{const b=KF.back;KF=null;b();};
-    speech('Sakiyo! Syabaas!','सकियो! स्याबास!','All done! Well done!');say('Sakiyo! Syabaas!','सकियो! स्याबास!',null);return;
+  screen='kcards';const c=KF.queue[0],p=P();
+  if(!c){
+    const again=[...KF.missed],n=[0,0,0];KF.cards.forEach(x=>n[boxOf(p,x)]++);
+    endCard(0,0,{trophy:'🃏',title:'Sakiyo!',titleDev:'सकियो!',sub:`${KF.title} · ${KF.total} cards · ${KF.total-again.length} you knew straight away`,
+      extra:`<div class="baskets" style="width:100%;font-size:1rem"><span><i class="b0"></i> ${n[0]} naya</span><span><i class="b1"></i> ${n[1]} abhyas</span><span><i class="b2"></i> ${n[2]} aayo!</span></div>
+        ${again.length?`<button class="btn" style="background:var(--yellow);color:var(--ink)" id="kMissed">🔁 Missed ones (${again.length})</button>`:''}`,
+      again:()=>startKCards(KF.cards,KF.back,KF.title),back:()=>{const b=KF.back;KF=null;b();}});
+    if(again.length)$('#kMissed').onclick=()=>startKCards(KF.cards,KF.back,KF.title,again);
+    return;
   }
-  const isL=t.kind==='letter',pic=kPicture(t,it);
-  const word=`<b>${isL?it[0]:it[0]}</b><span class="dev" lang="ne">${isL?it[1]+' · '+it[6]:it[1]}</span>${S.english?`<span class="en">${isL?it[5]+' = '+it[7]:it[2]}</span>`:''}`;
-  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+`<span class="en">${isL?it[5]:it[2]}</span>`:pic+word;
+  const {t,it}=c,isL=t.kind==='letter',pic=kPicture(t,it),yn=t.kind==='yesno'?ynOf(t,it):null;
+  const word=`<b>${esc(it[0])}</b><span class="dev" lang="ne">${isL?it[1]+' · '+it[6]:it[1]}</span>${S.english?`<span class="en">${esc(isL?it[5]+' = '+it[7]:it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!</span>`:''}`;
+  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+`<span class="en">${esc(isL?it[5]:it[2])}</span>`:pic+word;
   const pos=KF.total-KF.queue.length+1;
-  main.innerHTML=`<div class="kfc-top"><span>${t.icon} ${t.np} · ${Math.min(pos,KF.total)}/${KF.total}</span><label><input type="checkbox" id="kWordFirst" ${KF.wordFirst?'checked':''}> Word first</label></div>
+  main.innerHTML=`<div class="kfc-top"><span>${esc(KF.title)} · ${Math.min(pos,KF.total)}/${KF.total} <span class="baskets" style="display:inline-flex"><span><i class="b${boxOf(p,c)}"></i></span></span></span><label><input type="checkbox" id="kWordFirst" ${KF.wordFirst?'checked':''}> Word first</label></div>
    <button class="kfc ${KF.flipped?'flipped':''}" id="kCard" type="button" aria-label="Tap to flip">
     <span class="kfc-in"><span class="kfc-face">${front}<span class="hint">${KF.wordFirst?'What does it mean? Tap to flip!':'Can you say it in Nepali? Tap to flip!'}</span></span><span class="kfc-face kfc-back">${back}</span></span></button>
    <div class="nav">
@@ -767,23 +1181,27 @@ function drawKCard(){
     <button class="listen" id="kSay" aria-label="Listen">🔊</button>
     <button class="btn" style="background:var(--green)" id="kYes">⭐ Aayo! <small style="font-weight:500">I knew it</small></button>
    </div>`;
-  const hear=()=>{if(isL)say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);else say(it[0],it[1],null);};
+  const hear=()=>hearItem(t,it);
   if(KF.wordFirst)hear();
   $('#kCard').onclick=()=>{KF.flipped=!KF.flipped;$('#kCard').classList.toggle('flipped',KF.flipped);if(KF.flipped&&!KF.wordFirst){hear();mood('happy');}};
   $('#kSay').onclick=hear;
   $('#kWordFirst').onchange=e=>{KF.wordFirst=e.target.checked;S.wordFirst=KF.wordFirst;save();KF.flipped=false;drawKCard();};
   $('#kYes').onclick=()=>kDone(true);$('#kNo').onclick=()=>kDone(false);
-  speech(t.np,t.dev,KF.wordFirst?'What does it mean?':'What is it called?');
+  speech(KF.title,'',KF.wordFirst?'What does it mean?':'What is it called?');
 }
 function kDone(ok){
-  const it=KF.queue.shift(),first=!KF.missed.has(it),p=P(),key=KF.t.id+'|'+it[0];
-  if(p&&first){p.stat=p.stat||{plays:0,right:{},miss:{}};const s=ok?p.stat.right:p.stat.miss;s[key]=(s[key]||0)+1;save();}
-  if(ok){mood('happy');}else{KF.missed.add(it);KF.queue.splice(Math.min(3,KF.queue.length),0,it);mood('sad');}
+  const c=KF.queue.shift(),first=!KF.missed.has(c),p=P(),key=keyOf(c.t,c.it);
+  if(p&&first){
+    const st=stat(p),s=ok?st.right:st.miss;s[key]=(s[key]||0)+1;
+    p.box=p.box||{};p.box[key]=ok?Math.min(2,boxOf(p,c)+1):0;save();
+  }
+  if(ok){mood('happy');}else{KF.missed.add(c);KF.queue.splice(Math.min(3,KF.queue.length),0,c);mood('sad');}
   KF.flipped=false;drawKCard();
 }
 
 // ---------- kathaa (Habre's stories) ----------
-// pages: [picture, romanized, devanagari, english]; quiz options: [picture, romanized, english]
+// pages: [picture, romanized, devanagari, english]; romanized and Devanagari have the same number of words, so each word can be lit up and tapped.
+// quiz options: [picture, romanized, english]. Stories with a choice branch: choice = [question, dev, english, [[pic, rom, dev, english], ...]]
 const STORIES=[
  {id:'bihana',np:'Habre ko bihana',dev:'हाब्रेको बिहान',en:'Habre’s morning',icon:'☀️',pages:[
   ['☀️🌄','Bihana bhayo. Ghaam lagyo.','बिहान भयो। घाम लाग्यो।','Morning came. The sun came out.'],
@@ -792,68 +1210,465 @@ const STORIES=[
   ['🥛🍎','Habre dudh piunchha ra syau khanchha.','हाब्रे दूध पिउँछ र स्याउ खान्छ।','Habre drinks milk and eats an apple.'],
   ['🎒','Habre jhola bokchha.','हाब्रे झोला बोक्छ।','Habre carries his school bag.'],
   ['🏫👋','Habre school jaanchha. Bye bye!','हाब्रे स्कूल जान्छ। बाइ बाइ!','Habre goes to school. Bye-bye!']],
-  quiz:['Habre le ke khayo?','हाब्रेले के खायो?','What did Habre eat?',0,[['🍎','syau','apple'],['🍌','kera','banana'],['🥚','anda','egg']]]},
+  quiz:['Habrele ke khayo?','हाब्रेले के खायो?','What did Habre eat?',0,[['🍎','syau','apple'],['🍌','kera','banana'],['🥚','anda','egg']]]},
  {id:'bazaar',np:'Bazaar ma',dev:'बजारमा',en:'At the market',icon:'🛍️',pages:[
-  ['👩🛍️','Habre aama sanga bazaar jaanchha.','हाब्रे आमासँग बजार जान्छ।','Habre goes to the market with Mum.'],
+  ['👩🛍️','Habre aamasanga bazaar jaanchha.','हाब्रे आमासँग बजार जान्छ।','Habre goes to the market with Mum.'],
   ['🍌🍌','Kera pahelo cha.','केरा पहेंलो छ।','The bananas are yellow.'],
   ['🍎🍎','Syau rato cha.','स्याउ रातो छ।','The apples are red.'],
   ['🐓','Kukhura “kukhurikaa” bhanchha.','कुखुरा “कुखुरीका” भन्छ।','The rooster says “cock-a-doodle-doo”.'],
   ['🍎🍎🍎','Aama tin wota syau kinnuhunchha.','आमा तीन वटा स्याउ किन्नुहुन्छ।','Mum buys three apples.'],
   ['😀','Habre khusi cha!','हाब्रे खुसी छ!','Habre is happy!']],
-  quiz:['Aama le kati wota syau kinnu bhayo?','आमाले कति वटा स्याउ किन्नुभयो?','How many apples did Mum buy?',1,[['🍎🍎','dui','two'],['🍎🍎🍎','tin','three'],['🍎🍎🍎🍎🍎','paanch','five']]]},
+  quiz:['Aamale kati wota syau kinnubhayo?','आमाले कति वटा स्याउ किन्नुभयो?','How many apples did Mum buy?',1,[['🍎🍎','dui','two'],['🍎🍎🍎','tin','three'],['🍎🍎🍎🍎🍎','paanch','five']]]},
  {id:'paani',np:'Paani paryo',dev:'पानी पर्‍यो',en:'It rained',icon:'🌧️',pages:[
-  ['☁️☁️','Aakash ma badal aayo.','आकाशमा बादल आयो।','Clouds came into the sky.'],
+  ['☁️☁️','Aakashma badal aayo.','आकाशमा बादल आयो।','Clouds came into the sky.'],
   ['🌧️','Paani paryo!','पानी पर्‍यो!','It rained!'],
   ['☂️','Habre chhata odhchha.','हाब्रे छाता ओढ्छ।','Habre holds up his umbrella.'],
   ['🐸','Bhyaguto uphrinchha.','भ्यागुतो उफ्रिन्छ।','A frog jumps.'],
   ['🌈','Paani rokiyo. Indreni aayo!','पानी रोकियो। इन्द्रेणी आयो!','The rain stopped. A rainbow came out!'],
-  ['😀','Habre lai majja aayo!','हाब्रेलाई मज्जा आयो!','Habre had fun!']],
-  quiz:['Habre le ke odhyo?','हाब्रेले के ओढ्यो?','What did Habre hold up?',0,[['☂️','chhata','umbrella'],['🧢','topi','cap'],['🎒','jhola','bag']]]},
+  ['😀','Habrelai majja aayo!','हाब्रेलाई मज्जा आयो!','Habre had fun!']],
+  quiz:['Habrele ke odhyo?','हाब्रेले के ओढ्यो?','What did Habre hold up?',0,[['☂️','chhata','umbrella'],['🧢','topi','cap'],['🎒','jhola','bag']]]},
+ {id:'janmadin',np:'Habreko janmadin',dev:'हाब्रेको जन्मदिन',en:'Habre’s birthday',icon:'🎂',pages:[
+  ['🎂','Aaja Habreko janmadin ho.','आज हाब्रेको जन्मदिन हो।','Today is Habre’s birthday.'],
+  ['🎈🎈','Gharma rangichangi bellun chhan.','घरमा रङ्गीचङ्गी बेलुन छन्।','There are colourful balloons at home.'],
+  ['👵🎁','Hajuraamale upahaar dinubhayo.','हजुरआमाले उपहार दिनुभयो।','Grandma gave him a present.'],
+  ['⚽','Upahaarma naya bhakundo thiyo!','उपहारमा नयाँ भकुण्डो थियो!','In the present was a new ball!'],
+  ['🕯️🕯️🕯️🕯️🕯️','Habre paanch wota mainbatti nibhauchha.','हाब्रे पाँच वटा मैनबत्ती निभाउँछ।','Habre blows out five candles.'],
+  ['🎉','Sabai gaaunchhan: Janmadinko shubhakamana!','सबै गाउँछन्: जन्मदिनको शुभकामना!','Everyone sings: Happy birthday!']],
+  quiz:['Habrele kati wota mainbatti nibhayo?','हाब्रेले कति वटा मैनबत्ती निभायो?','How many candles did Habre blow out?',2,[['🕯️🕯️🕯️','tin','three'],['🕯️🕯️🕯️🕯️','char','four'],['🕯️🕯️🕯️🕯️🕯️','paanch','five']]]},
+ {id:'bagaicha',np:'Bagaichama',dev:'बगैंचामा',en:'In the garden',icon:'🌻',pages:[
+  ['🌻','Habre bagaichama jaanchha.','हाब्रे बगैंचामा जान्छ।','Habre goes into the garden.'],
+  ['🦋','Ek wota putali udchha.','एक वटा पुतली उड्छ।','A butterfly flies by.'],
+  ['🐝🌸','Mauri phulma baschha.','मौरी फूलमा बस्छ।','A bee sits on a flower.'],
+  ['🐌','Chiplekira bistarai hidchha.','चिप्लेकीरा बिस्तारै हिँड्छ।','A snail moves slowly.'],
+  ['💧🌱','Habre botlai paani dinchha.','हाब्रे बोटलाई पानी दिन्छ।','Habre waters the plant.'],
+  ['🌈😀','Bagaicha kati sundar!','बगैंचा कति सुन्दर!','The garden is so beautiful!']],
+  quiz:['Phulma ko basyo?','फूलमा को बस्यो?','Who sat on the flower?',0,[['🐝','mauri','bee'],['🦋','putali','butterfly'],['🐌','chiplekira','snail']]]},
+ {id:'mimi',np:'Haraeko biralo',dev:'हराएको बिरालो',en:'The lost cat',icon:'🐱',pages:[
+  ['🔍🐱','Habreko biralo Mimi harayo.','हाब्रेको बिरालो मिमी हरायो।','Habre’s cat Mimi is lost.'],
+  ['🛏️','Mimi khaat muni chaina.','मिमी खाट मुनि छैन।','Mimi isn’t under the bed.'],
+  ['📦','Mimi baakas bhitra chaina.','मिमी बाकस भित्र छैन।','Mimi isn’t in the box.'],
+  ['🌳','Mimi rukh maathi pani chaina.','मिमी रूख माथि पनि छैन।','Mimi isn’t up the tree either.'],
+  ['🧺🐱','La! Mimi tokari bhitra sutdai cha!','ल! मिमी टोकरी भित्र सुत्दै छ!','Look! Mimi is asleep in the basket!'],
+  ['🤗','Habre Mimilai angalo haalchha.','हाब्रे मिमीलाई अँगालो हाल्छ।','Habre gives Mimi a hug.']],
+  quiz:['Mimi kahaa thiyo?','मिमी कहाँ थियो?','Where was Mimi?',2,[['🛏️','khaat muni','under the bed'],['🌳','rukh maathi','up the tree'],['🧺','tokari bhitra','in the basket']]]},
+ {id:'bhok',np:'Bhok lagyo!',dev:'भोक लाग्यो!',en:'I’m hungry!',icon:'🍽️',pages:[
+  ['😋','Habrelai bhok lagyo.','हाब्रेलाई भोक लाग्यो।','Habre is hungry.'],
+  ['🍽️','Aama sodhnuhunchha: Ke khane?','आमा सोध्नुहुन्छ: के खाने?','Mum asks: What would you like to eat?']],
+  choice:['Habre ke khanchha?','हाब्रे के खान्छ?','What does Habre eat? You choose!',[['🥟','Momo!','मोमो!','Momos!'],['🍎','Syau!','स्याउ!','An apple!']]],
+  branches:[
+   [['🥟🥟','Aamale taato momo banaunubhayo.','आमाले तातो मोमो बनाउनुभयो।','Mum made hot momos.'],
+    ['😋','Habre das wota momo khanchha!','हाब्रे दस वटा मोमो खान्छ!','Habre eats ten momos!'],
+    ['😴','Pet bhariyo. Habrelai nindra lagyo.','पेट भरियो। हाब्रेलाई निद्रा लाग्यो।','His tummy is full. Habre feels sleepy.']],
+   [['🍎','Habre rato syau tipchha.','हाब्रे रातो स्याउ टिप्छ।','Habre picks a red apple.'],
+    ['🐒','Bandar pani syau maagchha!','बाँदर पनि स्याउ माग्छ!','A monkey asks for an apple too!'],
+    ['🤝','Habre ra bandar syau baadchhan.','हाब्रे र बाँदर स्याउ बाँड्छन्।','Habre and the monkey share the apple.']]]},
+ {id:'himal',np:'Himalko yatra',dev:'हिमालको यात्रा',en:'Trip to the mountains',icon:'🏔️',pages:[
+  ['🚌','Habre buwasanga basma chadhchha.','हाब्रे बुवासँग बसमा चढ्छ।','Habre gets on the bus with Dad.'],
+  ['🏔️','Tadha thulo himal dekhinchha.','टाढा ठूलो हिमाल देखिन्छ।','Far away, a big snowy mountain can be seen.'],
+  ['❄️','Himalma seto hiu cha.','हिमालमा सेतो हिउँ छ।','There is white snow on the mountain.'],
+  ['🥶🧤','Habrelai jaado lagyo. U panja lagauchha.','हाब्रेलाई जाडो लाग्यो। ऊ पन्जा लगाउँछ।','Habre feels cold. He puts on gloves.'],
+  ['🍵','Buwa taato chiya dinuhunchha.','बुवा तातो चिया दिनुहुन्छ।','Dad gives him hot tea.'],
+  ['😊','Habre bhanchha: Himal kati ramro!','हाब्रे भन्छ: हिमाल कति राम्रो!','Habre says: The mountains are so beautiful!']],
+  quiz:['Habrele ke lagayo?','हाब्रेले के लगायो?','What did Habre put on?',1,[['🧢','topi','cap'],['🧤','panja','gloves'],['👟','jutta','shoes']]]},
+ {id:'tihar',np:'Tihar aayo',dev:'तिहार आयो',en:'Tihar is here',icon:'🪔',pages:[
+  ['🪔','Tihar aayo! Ghar gharma diyo balchha.','तिहार आयो! घर घरमा दियो बल्छ।','Tihar is here! Lamps shine in every house.'],
+  ['🐦','Pahilo din kaaglai khana dinchhan.','पहिलो दिन कागलाई खाना दिन्छन्।','On the first day, people feed the crows.'],
+  ['🐶🌼','Dosro din kukurlai mala lagaunchhan.','दोस्रो दिन कुकुरलाई माला लगाउँछन्।','On the second day, dogs get flower garlands.'],
+  ['🐄','Gailai pani puja garchhan.','गाईलाई पनि पूजा गर्छन्।','People honour the cows too.'],
+  ['👧👦','Didile bhailai tika lagaunuhunchha.','दिदीले भाइलाई टीका लगाउनुहुन्छ।','Big sister puts tika on her little brother.'],
+  ['🎶','Raati sabai deusi khelchhan.','राति सबै देउसी खेल्छन्।','At night everyone goes singing deusi.']],
+  quiz:['Dosro din kaslai mala lagaunchhan?','दोस्रो दिन कसलाई माला लगाउँछन्?','Who gets a garland on the second day?',1,[['🐦','kaag','crow'],['🐶','kukur','dog'],['🐄','gai','cow']]]},
+ {id:'bida',np:'Kahaa jaane?',dev:'कहाँ जाने?',en:'Where shall we go?',icon:'🗺️',pages:[
+  ['🌞','Aaja bida ho.','आज बिदा हो।','Today is a holiday.'],
+  ['🤔','Habre sochchha: Kahaa jaane?','हाब्रे सोच्छ: कहाँ जाने?','Habre wonders: Where shall I go?']],
+  choice:['Habre kahaa jaanchha?','हाब्रे कहाँ जान्छ?','Where does Habre go? You choose!',[['🏞️','Taal!','ताल!','The lake!'],['🦁','Chidiyakhana!','चिडियाखाना!','The zoo!']]],
+  branches:[
+   [['🏞️','Habre taalma jaanchha.','हाब्रे तालमा जान्छ।','Habre goes to the lake.'],
+    ['🦆','Taalma hans paudinchha.','तालमा हाँस पौडिन्छ।','A duck swims in the lake.'],
+    ['⛵','Habre dungama chadhchha. Majja aayo!','हाब्रे डुङ्गामा चढ्छ। मज्जा आयो!','Habre rides in a boat. What fun!']],
+   [['🦁','Habre chidiyakhanama jaanchha.','हाब्रे चिडियाखानामा जान्छ।','Habre goes to the zoo.'],
+    ['🐘','Thulo hatti paani chhyapchha!','ठूलो हात्ती पानी छ्याप्छ!','A big elephant splashes water!'],
+    ['🦒','Jiraphko ghaati kati laamo!','जिराफको घाँटी कति लामो!','The giraffe’s neck is so long!']]]},
 ];
-let story=null,pageI=0;
+const pagesOf=s=>[...s.pages,...(s.branches||[]).flat()];
+// picture words, so a tapped story word can show its meaning
+const ENDINGS=['haru','sanga','lai','ko','ma','le'];
+let LEX=null;
+function lookup(w){
+  if(!LEX){LEX={};WORD_T().forEach(t=>t.items.forEach(it=>{if(!/\s/.test(it[0])&&!LEX[it[0]])LEX[it[0]]={t,it};}));}
+  w=w.toLowerCase().replace(/[^a-z]/g,'');
+  if(LEX[w])return LEX[w];
+  for(const e of ENDINGS)if(w.endsWith(e)&&LEX[w.slice(0,-e.length)])return LEX[w.slice(0,-e.length)];
+  return null;
+}
+let story=null,pageI=0,path=null,branchK=-1,guessed=null;
+const storyOpen=(p,i)=>i===0||bestOf(p,'kathaa',STORIES[i-1].id)>=1;
 function openStories(){
   screen='stories';const p=P();
-  main.innerHTML=`<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
-   <div class="topics">${STORIES.map((s,i)=>`<button class="topic" style="--tc:#8e5be8;animation-delay:${i*60}ms" data-s="${s.id}">
-     <span class="ic" aria-hidden="true">${s.icon}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}</span>
-     <span class="medals"><span class="${bestOf(p,'kathaa',s.id)?'on':''}">📖</span><span class="${bestOf(p,'kathaa',s.id)>=2?'on':''}">⭐</span></span></button>`).join('')}</div>`;
-  main.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{story=STORIES.find(s=>s.id===b.dataset.s);pageI=0;renderPage();});
+  main.innerHTML=`${backBtn('Ghar')}<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
+   <label class="toggle"><input type="checkbox" id="guessT" ${S.storyGuess?'checked':''}> 🧩 Kun chitra? <small style="font-weight:500;color:var(--soft)">guess each page’s picture</small></label>
+   <div class="topics">${STORIES.map((s,i)=>{const open=storyOpen(p,i),b=bestOf(p,'kathaa',s.id);
+     return `<button class="topic${open?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-s="${s.id}" aria-label="${esc(s.en)}${open?'':' (locked)'}">
+     <span class="ic" aria-hidden="true">${open?s.icon:'🔒'}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}${s.choice?' · you choose!':''}</span>
+     <span class="medals">${s.choice?`<span class="${b>=1?'on':''}" title="One ending">🌿</span><span class="${b>=2?'on':''}" title="Both endings">🌿</span>`
+       :`<span class="${b?'on':''}" title="Read">📖</span><span class="${b>=2?'on':''}" title="Question right first time">⭐</span><span class="${bestOf(p,'krama',s.id)?'on':''}" title="Put in order">🧩</span>`}</span></button>`;}).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome();
+  $('#guessT').onchange=e=>{S.storyGuess=e.target.checked;save();};
+  main.querySelectorAll('[data-s]').forEach((b,i)=>b.onclick=()=>{
+    if(!storyOpen(p,i)){speech('Pahile aghillo kathaa!','पहिले अघिल्लो कथा!','Finish the story before this one first!');say('Pahile aghillo kathaa!','पहिले अघिल्लो कथा!','Finish the story before this one first!');mood('sad');return;}
+    story=STORIES[i];pageI=0;path=story.pages.slice();branchK=-1;guessed=new Set();renderPage();
+  });
   speech('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');say('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');mood('wave');
 }
-function renderPage(){
-  screen='story';const pg=story.pages[pageI];
-  main.innerHTML=`<h2 class="sub">${story.np} <small>${pageI+1} / ${story.pages.length}</small></h2>
+function renderPage(quiet){
+  screen='story';const pg=path[pageI],rt=pg[1].split(' '),dt=pg[2].split(' '),same=rt.length===dt.length;
+  const guess=S.storyGuess&&!guessed.has(pageI),more=story.choice&&branchK<0;
+  let gopts=[];
+  if(guess){const others=[...new Set(pagesOf(story).map(x=>x[0]).filter(x=>x!==pg[0]))];gopts=shuffle([pg[0],...shuffle(others).slice(0,2)]);}
+  main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">${story.np} <small>${pageI+1} / ${path.length}${more?'+':''}</small></h2>
    <div class="big story" id="card" role="button" tabindex="0" aria-label="Read it again">
-     <span class="story-pic" aria-hidden="true">${pg[0]}</span><b>${esc(pg[1])}</b><span class="dev" lang="ne">${pg[2]}</span>${S.english?`<span class="en">${esc(pg[3])}</span>`:''}</div>
+     <span class="story-pic${guess?' qpic':''}" aria-hidden="true">${guess?'❓':pg[0]}</span>
+     <b>${rt.map((w,k)=>`<button type="button" class="tok" data-w="${k}">${esc(w)}</button>`).join(' ')}</b>
+     <span class="dev" lang="ne">${dt.map((w,k)=>`<span class="dtok" data-d="${k}">${w}</span>`).join(' ')}</span>${S.english?`<span class="en">${esc(pg[3])}</span>`:''}</div>
+   ${guess?`<h2 class="sub">Kun chitra? <small>Which picture goes with this page?</small></h2><div class="opts three" style="--cols:3">${gopts.map((g,k)=>`<button class="opt" data-g="${k}" style="animation-delay:${k*90}ms"><span class="pic">${g}</span></button>`).join('')}</div>`:''}
    <div class="nav">
     <button class="arrow" id="prev" aria-label="Previous page" ${pageI?'':'disabled'}>◀</button>
     <button class="listen" id="listen">🔊 Suna <small style="font-weight:500">listen</small></button>
-    <button class="arrow" id="next" aria-label="Next page">▶</button>
+    <button class="arrow" id="next" aria-label="Next page" ${guess?'disabled':''}>▶</button>
    </div>
-   <div class="dots">${story.pages.map((_,i)=>`<i class="${i===pageI?'on':''}"></i>`).join('')}</div>`;
-  const read=()=>{speech(pg[1],pg[2],pg[3]);say(pg[1],pg[2],pg[3]);mood('happy');};
-  $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();read();}};
+   <div class="dots">${path.map((_,i)=>`<i class="${i===pageI?'on':''}"></i>`).join('')}</div>`;
+  const toks=[...main.querySelectorAll('.tok')],dtoks=[...main.querySelectorAll('.dtok')];
+  const map=(k,from,to)=>same?k:Math.round(k*(to-1)/Math.max(1,from-1));
+  // light up the word being read (the voice reads the Devanagari when it has a Nepali or Hindi voice)
+  const hl=k=>{toks.concat(dtoks).forEach(x=>x.classList.remove('on'));if(k<0)return;
+    const nD=dt.length,nR=rt.length;
+    if(npVoice){dtoks[k]?.classList.add('on');toks[map(k,nD,nR)]?.classList.add('on');}
+    else{toks[k]?.classList.add('on');dtoks[map(k,nR,nD)]?.classList.add('on');}};
+  const read=()=>{speech(story.np,story.dev,'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');};
+  $('#backBtn').onclick=openStories;
+  $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();read();}};
+  toks.forEach(b=>b.onclick=ev=>{
+    ev.stopPropagation();const k=+b.dataset.w,w=rt[k].replace(/[.,!?:;“”"]/g,''),L=lookup(w);
+    const d=(same?dt[k]:'').replace(/[।,!?:;“”"]/g,'')||(L&&L.it[1])||w;
+    speech((L&&L.t.kind==='pic'?L.it[3]+' ':'')+w,d,L?L.it[2]:null);say(w,d,null);hl(-1);b.classList.add('on');
+  });
   $('#listen').onclick=read;
   $('#prev').onclick=()=>{if(pageI){pageI--;renderPage();}};
-  $('#next').onclick=()=>{if(pageI<story.pages.length-1){pageI++;renderPage();}else storyQuiz();};
-  read();
+  $('#next').onclick=()=>{
+    if(pageI<path.length-1){pageI++;renderPage();}
+    else if(more)renderChoice();
+    else if(story.choice)branchEnd();
+    else storyQuiz();
+  };
+  main.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{
+    if(gopts[+b.dataset.g]===pg[0]){b.classList.add('right');guessed.add(pageI);confetti();mood('happy');speech('Syabaas!','स्याबास!','That’s the one!');say('Syabaas!','स्याबास!',null);setTimeout(()=>{if(screen==='story')renderPage(true);},900);}
+    else{b.classList.add('wrong');b.disabled=true;mood('sad');speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
+  });
+  if(!quiet)read();
+}
+function renderChoice(){
+  screen='storyc';const [rom,dev,en,opts]=story.choice;
+  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="opts" style="--cols:2">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms"><span class="pic">${o[0]}</span><span class="w">${esc(o[1])}</span>${S.english?`<span class="w-en">${esc(o[3])}</span>`:''}</button>`).join('')}</div>`;
+  const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
+  $('#backBtn').onclick=openStories;$('#again').onclick=ask;
+  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=+b.dataset.k,o=opts[k];say(o[1],o[2],null);goBranch(k);});
+  ask();mood('wave');
+}
+function goBranch(k){branchK=k;path=[...story.pages,...story.branches[k]];pageI=story.pages.length;renderPage();}
+// a story with a choice: each ending found is a star; then try the other way
+function branchEnd(){
+  const p=P();p.endings=p.endings||{};const f=new Set(p.endings[story.id]||[]);f.add(branchK);p.endings[story.id]=[...f];
+  let nb=false;if(f.size>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=f.size;nb=true;}
+  save();renderTop();
+  const other=1-branchK,o=story.choice[3][other];
+  endCard(f.size,2,{trophy:'🌿',title:'Kathaa sakiyo!',titleDev:'कथा सकियो!',sub:f.size>=2?'You found both endings!':'Now try the other way!',newBest:nb,
+    extra:`<button class="btn" style="background:var(--purple)" id="otherWay">${o[0]} Arko baato <small style="font-weight:500">the other way</small></button>`,back:openStories,backLabel:'Kathaa'});
+  $('#otherWay').onclick=()=>goBranch(other);
 }
 function storyQuiz(){
   screen='storyq';const [rom,dev,en,ans,opts]=story.quiz;let tries=0,done=false;
-  main.innerHTML=`<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="opts three" style="--cols:3">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${o[2]}"><span class="pic">${o[0]}</span><span class="w">${o[1]}</span><span class="w-en">${o[2]}</span></button>`).join('')}</div>`;
   const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
-  $('#again').onclick=ask;ask();
+  $('#backBtn').onclick=openStories;$('#again').onclick=ask;ask();
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(done)return;const k=+b.dataset.k;
     if(k===ans){
       done=true;b.classList.add('right');confetti();mood('happy');
       const stars=tries===0?2:1,p=P();
       if(stars>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=stars;save();renderTop();}
-      speech('Syabaas! '+cap(opts[ans][1])+'!','स्याबास!',`Well done! You finished “${story.en}”.`);say('Syabaas!','स्याबास!',null);
-      setTimeout(()=>{if(screen==='storyq')openStories();},2300);
+      speech('Syabaas! '+cap(opts[ans][1])+'!','स्याबास!','Well done! Now put the story in order.');say('Syabaas!','स्याबास!',null);
+      setTimeout(()=>{if(screen==='storyq')storyOrder();},2100);
     }else{tries++;b.classList.add('wrong');b.disabled=true;mood('sad');speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
   });
+}
+// put four scenes from the story in order: tap what happened first
+function storyOrder(){
+  screen='storyo';const pg=story.pages,mid=shuffle(pg.slice(1,-1).map((_,i)=>i+1)).slice(0,2).sort((a,b)=>a-b),pick=[0,...mid,pg.length-1];
+  const cards=shuffle(pick.map((pi,ord)=>({pi,ord})));let nextOrd=0;
+  main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">🧩 Kun pahile? <small>Tap what happened first, then next…</small></h2>
+   <div class="order">${cards.map((c,k)=>`<button class="ocard" data-k="${k}" style="animation:pop .45s ${k*80}ms backwards"><span class="pic" aria-hidden="true">${pg[c.pi][0]}</span><span>${esc(pg[c.pi][1])}</span></button>`).join('')}</div>`;
+  $('#backBtn').onclick=openStories;
+  main.querySelectorAll('.ocard').forEach(b=>b.onclick=()=>{
+    const c=cards[+b.dataset.k];if(b.classList.contains('done'))return;
+    if(c.ord===nextOrd){
+      nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=pg[c.pi];say(l[1],l[2],null);mood('happy');
+      if(nextOrd===pick.length){
+        const p=P();if(!bestOf(p,'krama',story.id)){p.best=p.best||{};p.best['krama:'+story.id]=1;save();renderTop();}
+        confetti();speech('Ekdam ramro!','एकदम राम्रो!','You put the story in order!');setTimeout(()=>{say('Ekdam ramro!','एकदम राम्रो!','You put the story in order!');},1400);
+        setTimeout(()=>{if(screen==='storyo')openStories();},3600);
+      }
+    }else{b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');mood('sad');speech(nextOrd?'Ani ke bhayo?':'Pahile ke bhayo?',nextOrd?'अनि के भयो?':'पहिले के भयो?',nextOrd?'What happened next?':'What happened first?');say(nextOrd?'Ani ke bhayo?':'Pahile ke bhayo?',nextOrd?'अनि के भयो?':'पहिले के भयो?',null);}
+  });
+  speech('Kun pahile?','कुन पहिले?','What happened first?');say('Kun pahile?','कुन पहिले?','What happened first?');mood('wave');
+}
+
+// ---------- vakya (sentences): the sentence train ----------
+// roles: w = who, a = what kind, t = what, p = where, d = the doing word, which always comes last (the engine)
+const ROLES={w:['Ko?','को?','who','#3a7bf2'],a:['Kasto?','कस्तो?','what kind','#8e5be8'],t:['Ke?','के?','what','#2fae6e'],p:['Kahaa?','कहाँ?','where','#00a6b8'],d:['Ke garchha?','के गर्छ?','doing word','#e8463a']};
+const W=(rom,dev,r)=>({rom,dev,r});
+const sRom=w=>cap(w.map(x=>x.rom).join(' '))+(w.length>1?'.':'');
+const sDev=w=>w.map(x=>x.dev).join(' ')+(w.length>1?'।':'');
+const SENTS=[
+ ['🐱💤','The cat sleeps.',W('biralo','बिरालो','w'),W('sutchha','सुत्छ','d')],
+ ['🐶','The dog barks.',W('kukur','कुकुर','w'),W('bhukchha','भुक्छ','d')],
+ ['🐦','The bird flies.',W('chara','चरा','w'),W('udchha','उड्छ','d')],
+ ['🐟','The fish swims.',W('machha','माछा','w'),W('paudinchha','पौडिन्छ','d')],
+ ['🐸','The frog jumps.',W('bhyaguto','भ्यागुतो','w'),W('uphrinchha','उफ्रिन्छ','d')],
+ ['🐴','The horse runs.',W('ghoda','घोडा','w'),W('daudanchha','दौडन्छ','d')],
+ ['😭','The baby cries.',W('bachcha','बच्चा','w'),W('runchha','रुन्छ','d')],
+ ['💃','Habre dances.',W('Habre','हाब्रे','w'),W('naachchha','नाच्छ','d')],
+ ['🍎','Habre eats an apple.',W('Habre','हाब्रे','w'),W('syau','स्याउ','t'),W('khanchha','खान्छ','d')],
+ ['🐱🥛','The cat drinks milk.',W('biralo','बिरालो','w'),W('dudh','दूध','t'),W('piunchha','पिउँछ','d')],
+ ['🐒🍌','The monkey eats a banana.',W('bandar','बाँदर','w'),W('kera','केरा','t'),W('khanchha','खान्छ','d')],
+ ['📖','Habre reads a book.',W('Habre','हाब्रे','w'),W('kitab','किताब','t'),W('padhchha','पढ्छ','d')],
+ ['🐶⚽','The dog plays with a ball.',W('kukur','कुकुर','w'),W('bhakundo','भकुण्डो','t'),W('khelchha','खेल्छ','d')],
+ ['🐄🌿','The cow eats grass.',W('gai','गाई','w'),W('ghaans','घाँस','t'),W('khanchha','खान्छ','d')],
+ ['🎨','Habre draws a picture.',W('Habre','हाब्रे','w'),W('chitra','चित्र','t'),W('korchha','कोर्छ','d')],
+ ['🐘','The big elephant walks.',W('thulo','ठूलो','a'),W('hatti','हात्ती','w'),W('hidchha','हिँड्छ','d')],
+ ['🏠🍚','Habre eats rice at home.',W('Habre','हाब्रे','w'),W('gharma','घरमा','p'),W('bhaat','भात','t'),W('khanchha','खान्छ','d')],
+ ['🐱🥛','The little cat drinks milk.',W('sano','सानो','a'),W('biralo','बिरालो','w'),W('dudh','दूध','t'),W('piunchha','पिउँछ','d')],
+ ['🐘💧','The big elephant drinks water.',W('thulo','ठूलो','a'),W('hatti','हात्ती','w'),W('paani','पानी','t'),W('piunchha','पिउँछ','d')],
+ ['🐶⚽🌳','The dog plays ball in the garden.',W('kukur','कुकुर','w'),W('bagaichama','बगैंचामा','p'),W('bhakundo','भकुण्डो','t'),W('khelchha','खेल्छ','d')],
+ ['🏫📖','Habre reads a book at school.',W('Habre','हाब्रे','w'),W('schoolma','स्कूलमा','p'),W('kitab','किताब','t'),W('padhchha','पढ्छ','d')],
+ ['🐦🌳','The red bird sits in the tree.',W('rato','रातो','a'),W('chara','चरा','w'),W('rukhma','रूखमा','p'),W('baschha','बस्छ','d')],
+].map(([pic,en,...w])=>({pic,en,w,rom:sRom(w),dev:sDev(w)}));
+const VAKYA_T={id:'vakya',np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',color:'#ff9f1c',kind:'pic',q:'phrase',items:SENTS.map(s=>[s.rom,s.dev,s.en,s.pic])};
+const V_LEN={easy:2,medium:3,hard:4};
+const vSents=lv=>SENTS.filter(s=>s.w.length===V_LEN[lv]);
+// grow a sentence one word at a time
+const GROW=[
+ {pic:'🐱',en:['cat','The cat sleeps.','The little cat sleeps.','The little cat sleeps on the bed.'],steps:[
+  [W('biralo','बिरालो','w')],[W('biralo','बिरालो','w'),W('sutchha','सुत्छ','d')],
+  [W('sano','सानो','a'),W('biralo','बिरालो','w'),W('sutchha','सुत्छ','d')],[W('sano','सानो','a'),W('biralo','बिरालो','w'),W('khaatma','खाटमा','p'),W('sutchha','सुत्छ','d')]]},
+ {pic:'🥟',en:['Habre','Habre eats.','Habre eats momos.','Habre eats momos at home.'],steps:[
+  [W('Habre','हाब्रे','w')],[W('Habre','हाब्रे','w'),W('khanchha','खान्छ','d')],
+  [W('Habre','हाब्रे','w'),W('momo','मोमो','t'),W('khanchha','खान्छ','d')],[W('Habre','हाब्रे','w'),W('gharma','घरमा','p'),W('momo','मोमो','t'),W('khanchha','खान्छ','d')]]},
+ {pic:'🐦',en:['bird','The bird flies.','The little bird flies.','The little bird flies in the sky.'],steps:[
+  [W('chara','चरा','w')],[W('chara','चरा','w'),W('udchha','उड्छ','d')],
+  [W('sano','सानो','a'),W('chara','चरा','w'),W('udchha','उड्छ','d')],[W('sano','सानो','a'),W('chara','चरा','w'),W('aakashma','आकाशमा','p'),W('udchha','उड्छ','d')]]},
+ {pic:'🐶',en:['dog','The dog plays.','The dog plays with a ball.','The black dog plays with a ball.'],steps:[
+  [W('kukur','कुकुर','w')],[W('kukur','कुकुर','w'),W('khelchha','खेल्छ','d')],
+  [W('kukur','कुकुर','w'),W('bhakundo','भकुण्डो','t'),W('khelchha','खेल्छ','d')],[W('kalo','कालो','a'),W('kukur','कुकुर','w'),W('bhakundo','भकुण्डो','t'),W('khelchha','खेल्छ','d')]]},
+];
+// ask and answer: [question, dev, english, picture, answer, dev, english]
+const QA=[
+ ['Timro naam ke ho?','तिम्रो नाम के हो?','What’s your name?','🙂','Mero naam Habre ho.','मेरो नाम हाब्रे हो।','My name is Habre.'],
+ ['Biralo kahaa cha?','बिरालो कहाँ छ?','Where is the cat?','<span class="place v"><span>🐱</span><span>🛏️</span></span>','Biralo khaat maathi cha.','बिरालो खाट माथि छ।','The cat is on the bed.'],
+ ['Yo ke ho?','यो के हो?','What is this?','🍎','Yo syau ho.','यो स्याउ हो।','This is an apple.'],
+ ['Ko aayo?','को आयो?','Who came?','👵','Hajuraama aaunubhayo.','हजुरआमा आउनुभयो।','Grandma came.'],
+ ['Timi ke khanchhau?','तिमी के खान्छौ?','What do you eat?','🥟','Ma momo khanchhu.','म मोमो खान्छु।','I eat momos.'],
+ ['Timilai kasto cha?','तिमीलाई कस्तो छ?','How are you?','😀','Malai sanchai cha.','मलाई सन्चै छ।','I’m fine.'],
+ ['Timro jhola kun rangko ho?','तिम्रो झोला कुन रङको हो?','What colour is your bag?','🎒','Mero jhola rato ho.','मेरो झोला रातो हो।','My bag is red.'],
+ ['Kati wota kera chhan?','कति वटा केरा छन्?','How many bananas are there?','🍌🍌🍌','Tin wota kera chhan.','तीन वटा केरा छन्।','There are three bananas.'],
+ ['Aaja mausam kasto cha?','आज मौसम कस्तो छ?','What’s the weather like today?','🌧️','Aaja paani pardai cha.','आज पानी पर्दै छ।','It’s raining today.'],
+ ['Timi kahaa jaanchhau?','तिमी कहाँ जान्छौ?','Where are you going?','🏫','Ma school jaanchhu.','म स्कूल जान्छु।','I’m going to school.'],
+];
+const V_ACTS=[
+ {id:'build',icon:'🚂',np:'Rel banau',dev:'रेल बनाऊ',en:'Build the sentence train'},
+ {id:'chitra',icon:'🖼️',np:'Kun chitra?',dev:'कुन चित्र?',en:'Hear it, find the picture'},
+ {id:'ulto',icon:'🤪',np:'Ulto-pulto',dev:'उल्टोपुल्टो',en:'Fix Habre’s silly sentence'},
+ {id:'sodhau',icon:'❓',np:'Sodhau',dev:'सोधौं',en:'Ask and answer'},
+];
+const V_ABOUT={easy:'2-word sentences, the colours show where each word goes',medium:'3-word sentences',hard:'4-word sentences, one extra tile that doesn’t belong'};
+function openVakya(){
+  screen='vakya';const p=P(),cur=levelOf('vakya'),grown=GROW.filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
+  const rule=['Kaam janaaune shabda sadhai antyama aauchha.','काम जनाउने शब्द सधैं अन्त्यमा आउँछ।','The doing word always comes last, like the engine of a train.'];
+  main.innerHTML=`${backBtn('Ghar')}<h1>🚂 Vakya <small>वाक्य · Sentences</small></h1>
+   <button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>The doing word is the engine: it always goes last. Biralo sutchha = the cat sleeps.</b><small lang="ne">${rule[1]}</small></span></button>
+   <div class="legend">${Object.values(ROLES).map(r=>`<span style="background:${r[3]}">${r[0]} <small>${r[2]}</small></span>`).join('')}</div>
+   <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
+   <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}"><span aria-hidden="true">${L.icon}</span><b>${L.np}</b><small>${V_ABOUT[k]}</small></button>`;}).join('')}</div>
+   <div class="topics">${V_ACTS.map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${a.np}</b><span class="dev" lang="ne">${a.dev}</span><span class="en">${a.en}</span>
+      <span class="medals">${LV_KEYS.map(k=>`<span class="${bestOf(p,'vakya:'+a.id,k)>=V_N-1?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}
+     <button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>Badhau</b><span class="dev" lang="ne">बढाऊ</span><span class="en">Grow a sentence</span><span class="medals"><span class="on">🌱 ${grown}/${GROW.length}</span></span></button></div>`;
+  $('#backBtn').onclick=()=>goHome();
+  $('#ruleCard').onclick=()=>{speech(...rule);say(...rule);mood('happy');};
+  main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{p.lv=p.lv||{};p.lv.vakya=b.dataset.lv;save();
+    main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));const L=LEVELS[b.dataset.lv];speech(L.np,L.dev,L.en);say(L.np,L.dev,L.en);});
+  main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>vStart(b.dataset.a));
+  speech('Vakya!','वाक्य!','Let’s build sentences!');say('Vakya!','वाक्य!','Let’s build sentences!');mood('wave');
+}
+let V=null;
+function vStart(act){
+  const lv=levelOf('vakya');
+  if(act==='chitra'){startQuiz({mode:'vchitra',back:openVakya});return;}
+  if(act==='grow'){vGrowStart();return;}
+  const pool=act==='sodhau'?QA:vSents(lv);
+  V={act,lv,list:shuffle(pool).slice(0,V_N),i:0,stars:0,cur:null};
+  vNext();
+}
+function vNext(){if(V.i>=V.list.length){vEnd();return;}V.tries=0;V.cur=null;({build:vBuild,ulto:vSilly,sodhau:vAsk})[V.act]();}
+const vBar=()=>`<div class="progress" aria-label="Sentence ${V.i+1} of ${V.list.length}"><i style="width:${V.i/V.list.length*100}%"></i></div>`;
+function carHtml(tile,k,n,o){
+  const col=tile?(o.colour?ROLES[tile.r][3]:''):(o.hint?ROLES[o.want[k].r][3]:'');
+  const cls=['car',tile?'':'empty',tile&&!o.colour?'plain':'',k===n-1?'engine':'',o.cls&&o.cls[k]||''].filter(Boolean).join(' ');
+  return `<button class="${cls}" data-c="${k}" ${col?`style="--rc:${col}"`:''} aria-label="${tile?esc(tile.rom):'Empty car '+(k+1)}">${k===n-1?'<span class="chim" aria-hidden="true"></span>':''}${tile?`${esc(tile.rom)}<small lang="ne">${tile.dev}</small>`:(o.hint?`<small>${ROLES[o.want[k].r][0]}</small>`:'')}</button>`;
+}
+// build: tap the word tiles into the train cars in the right order
+function vBuild(){
+  screen='vbuild';const s=V.list[V.i],n=s.w.length,colour=V.lv!=='hard',hint=V.lv==='easy';
+  if(!V.cur){
+    const tiles=[...s.w];
+    if(V.lv==='hard'){const dec=shuffle(SENTS.flatMap(x=>x.w)).find(x=>!s.w.some(y=>y.rom===x.rom));if(dec)tiles.push(dec);}
+    V.cur={slots:Array(n).fill(null),pool:shuffle(tiles).map(t=>({...t,used:false})),cls:[]};
+  }
+  const C=V.cur;
+  main.innerHTML=`${backBtn('Vakya')}${vBar()}
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">${S.english?esc(s.en):'Rel banau!'}<small>Rel banau · build the sentence train</small></div><button class="again" id="again" aria-label="Hear the sentence">🔊</button></div>
+   <div class="train">${C.slots.map((t,k)=>carHtml(t&&t.tile,k,n,{colour,hint,want:s.w,cls:C.cls})).join('')}</div>
+   <div class="pool">${C.pool.map((t,k)=>t.used?'':`<button class="tile${colour?'':' plain'}" data-p="${k}" ${colour?`style="--rc:${ROLES[t.r][3]}"`:''}>${esc(t.rom)}<small lang="ne">${t.dev}</small></button>`).join('')}</div>`;
+  const hear=()=>say(s.rom,s.dev,null);
+  $('#backBtn').onclick=openVakya;$('#again').onclick=hear;
+  main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
+    if(C.done)return;const k=+b.dataset.p,slot=C.slots.findIndex(x=>!x);if(slot<0)return;
+    C.pool[k].used=true;C.slots[slot]={tile:C.pool[k],p:k};C.cls=[];say(C.pool[k].rom,C.pool[k].dev,null);
+    if(C.slots.every(Boolean))vCheckBuild();else vBuild();
+  });
+  main.querySelectorAll('.car').forEach(b=>b.onclick=()=>{
+    if(C.done)return;const k=+b.dataset.c,x=C.slots[k];if(!x)return;C.pool[x.p].used=false;C.slots[k]=null;C.cls=[];vBuild();
+  });
+  if(!C.spoke){C.spoke=true;if(V.lv!=='hard')hear();speech('Rel banau!','रेल बनाऊ!','Put the words in the train. The doing word is the engine!');mood('wave');}
+}
+function vCheckBuild(){
+  const s=V.list[V.i],C=V.cur,ok=C.slots.every((x,k)=>x.tile.rom===s.w[k].rom);
+  if(ok){
+    C.done=true;C.cls=s.w.map(()=>'good');if(V.tries===0)V.stars++;vBuild();confetti();mood('happy');
+    const p=rnd(PRAISE);speech(p[0]+' '+s.rom,p[1]+' '+s.dev,s.en);say(s.rom,s.dev,null);
+    const v=V;setTimeout(()=>{if(screen==='vbuild'&&V===v){V.i++;vNext();}},2300);return;
+  }
+  V.tries++;mood('sad');
+  if(V.tries>=2){
+    C.done=true;C.slots=s.w.map(w=>({tile:C.pool.find(t=>t.rom===w.rom),p:-1}));C.cls=s.w.map(()=>'good');vBuild();
+    speech(s.rom,s.dev,'Like this!');say(s.rom,s.dev,null);const v=V;setTimeout(()=>{if(screen==='vbuild'&&V===v){V.i++;vNext();}},3200);return;
+  }
+  // send the wrong ones back to the pile, keep the right ones
+  const engineWrong=C.slots[C.slots.length-1].tile.r!=='d';
+  C.cls=C.slots.map((x,k)=>x.tile.rom===s.w[k].rom?'good':'bad');
+  C.slots=C.slots.map((x,k)=>{if(x.tile.rom===s.w[k].rom)return x;C.pool[x.p].used=false;return null;});
+  vBuild();
+  if(engineWrong){speech('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');say('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');}
+  else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
+}
+// silly sentence: Habre muddled the order; tap two cars to swap them
+function vSilly(){
+  screen='vsilly';const s=V.list[V.i],n=s.w.length,colour=V.lv!=='hard';
+  if(!V.cur){let o;do{o=shuffle(s.w);}while(o.every((x,k)=>x.rom===s.w[k].rom));V.cur={order:o,sel:-1,swaps:0};}
+  const C=V.cur,right=C.order.every((x,k)=>x.rom===s.w[k].rom);
+  main.innerHTML=`${backBtn('Vakya')}${vBar()}
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">Ulto-pulto bhayo!<small>${S.english?esc(s.en)+' · ':''}Tap two cars to swap them</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
+   <div class="train">${C.order.map((t,k)=>carHtml(t,k,n,{colour,cls:C.order.map((x,j)=>right?'good':j===C.sel?'sel':'')})).join('')}</div>`;
+  $('#backBtn').onclick=openVakya;
+  $('#again').onclick=()=>say(C.order.map(x=>x.rom).join(' '),C.order.map(x=>x.dev).join(' '),null);
+  main.querySelectorAll('.car').forEach(b=>b.onclick=()=>{
+    if(right)return;const k=+b.dataset.c;
+    if(C.sel<0){C.sel=k;say(C.order[k].rom,C.order[k].dev,null);vSilly();return;}
+    if(C.sel!==k){[C.order[C.sel],C.order[k]]=[C.order[k],C.order[C.sel]];C.swaps++;}
+    C.sel=-1;
+    if(C.order.every((x,j)=>x.rom===s.w[j].rom)){
+      if(C.swaps<=n-1)V.stars++;vSilly();confetti();mood('happy');speech('Milyo! '+s.rom,s.dev,s.en);say(s.rom,s.dev,null);
+      const v=V;setTimeout(()=>{if(screen==='vsilly'&&V===v){V.i++;vNext();}},2300);
+    }else vSilly();
+  });
+  if(!C.spoke){C.spoke=true;speech('Ulto-pulto bhayo!','उल्टोपुल्टो भयो!','Oops, I mixed it up! Can you fix it?');say('Ulto-pulto bhayo!','उल्टोपुल्टो भयो!','Oops, I mixed it up!');mood('sad');}
+}
+// ask and answer: hear the question, pick the answer that fits
+function vAsk(){
+  screen='vask';const qa=V.list[V.i],c=Math.min(3,LEVELS[V.lv].choices),hide=V.lv==='hard'&&canListen();
+  if(!V.cur)V.cur={opts:shuffle([qa,...shuffle(QA.filter(x=>x!==qa)).slice(0,c-1)]),lock:false};
+  const C=V.cur;
+  main.innerHTML=`${backBtn('Vakya')}${vBar()}
+   <div class="q${hide?' listenonly':''}"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${qa[3]}</span><div class="say" id="qSay">${hide?'Suna ra jawaaf deu!<small>Listen and answer</small>':`${esc(qa[0])}<small lang="ne">${qa[1]}${S.english&&V.lv==='easy'?` · ${esc(qa[2])}`:''}</small>`}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <button class="btn ghost" id="hearAns" style="align-self:center">👂 Hear the answers</button>
+   <div class="ansopts">${C.opts.map((o,k)=>`<button class="ansopt" data-k="${k}" style="animation-delay:${k*80}ms">${esc(o[4])}<small lang="ne">${o[5]}${S.english&&V.lv==='easy'?` · ${esc(o[6])}`:''}</small></button>`).join('')}</div>`;
+  const ask=()=>{if(!hide)speech(qa[0],qa[1],qa[2]);say(qa[0],qa[1],V.lv==='easy'?qa[2]:null);};
+  $('#backBtn').onclick=openVakya;$('#again').onclick=ask;
+  $('#hearAns').onclick=()=>C.opts.forEach((o,k)=>say(o[4],o[5],null,{keep:k>0}));
+  main.querySelectorAll('.ansopt').forEach(b=>b.onclick=()=>{
+    if(C.lock)return;const o=C.opts[+b.dataset.k];
+    if(o===qa){
+      C.lock=true;if(V.tries===0)V.stars++;b.classList.add('right');confetti();mood('happy');
+      $('#qSay').innerHTML=`${esc(qa[0])}<small lang="ne">${qa[1]} · ${esc(qa[2])}</small>`;
+      speech(qa[4],qa[5],qa[6]);say(qa[4],qa[5],null);const v=V;setTimeout(()=>{if(screen==='vask'&&V===v){V.i++;vNext();}},2300);
+    }else{
+      V.tries++;b.classList.add('wrong');b.disabled=true;mood('sad');
+      if(V.tries>=2){const rb=main.querySelector(`.ansopt[data-k="${C.opts.indexOf(qa)}"]`);rb.classList.add('hint');speech(qa[4],qa[5],'This one!');say(qa[4],qa[5],null);}
+      else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
+    }
+  });
+  ask();
+}
+function vEnd(){
+  const p=P(),key='vakya:'+V.act+':'+V.lv;let nb=false;
+  if(V.stars>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=V.stars;nb=true;}
+  stat(p).plays++;stat(p).last=today();save();renderTop();
+  const act=V.act;endCard(V.stars,V.list.length,{newBest:nb,sub:`${V_ACTS.find(a=>a.id===act).en} · ${LEVELS[V.lv].en}`,again:()=>vStart(act),back:openVakya,backLabel:'Vakya'});
+}
+// grow: a sentence gets one more word each time; tap the gap where it goes
+function vGrowStart(){
+  const p=P();let i=GROW.findIndex((_,k)=>bestOf(p,'badhau',k)<3);if(i<0)i=Math.floor(Math.random()*GROW.length);
+  V={act:'grow',g:i,step:1,stars:0,tries:0};vGrow();
+}
+function vGrow(){
+  screen='vgrow';const g=GROW[V.g],prev=g.steps[V.step-1],next=g.steps[V.step];
+  const add=next.find(x=>!prev.some(y=>y.rom===x.rom)),want=next.indexOf(add),n=prev.length,eng=prev[n-1].r==='d'?n:n+1;
+  const gap=k=>`<button class="gap${V.tries>=2&&k===want?' hint':''}" data-g="${k}" aria-label="Put it here">+</button>`;
+  main.innerHTML=`${backBtn('Vakya')}<div class="progress"><i style="width:${(V.step-1)/(g.steps.length-1)*100}%"></i></div>
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${g.pic}</span><div class="say" style="font-size:1.3rem">${esc(sRom(prev))}<small lang="ne">${sDev(prev)}${S.english?' · '+esc(g.en[V.step-1]):''}</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
+   <div class="train">${gap(0)}${prev.map((t,k)=>carHtml(t,k,eng,{colour:true})+gap(k+1)).join('')}</div>
+   <h2 class="sub" style="text-align:center">Yo kahaa jaanchha? <small>Where does this word go?${S.english?' · '+esc(g.en[V.step]):''}</small></h2>
+   <div class="pool"><span class="tile new" style="--rc:${ROLES[add.r][3]}">${esc(add.rom)}<small lang="ne">${add.dev}</small></span></div>`;
+  $('#backBtn').onclick=openVakya;$('#again').onclick=()=>say(sRom(prev),sDev(prev),null);
+  main.querySelectorAll('.gap').forEach(b=>b.onclick=()=>{
+    if(+b.dataset.g===want){
+      if(V.tries===0)V.stars++;V.step++;V.tries=0;confetti();mood('happy');
+      speech(sRom(next),sDev(next),g.en[V.step-1]);say(sRom(next),sDev(next),null);
+      const v=V;if(V.step>=g.steps.length){setTimeout(()=>{if(screen==='vgrow'&&V===v)vGrowEnd();},1800);main.querySelectorAll('.gap').forEach(x=>x.disabled=true);}
+      else setTimeout(()=>{if(screen==='vgrow'&&V===v)vGrow();},1500);
+    }else{V.tries++;b.classList.add('wrong');b.disabled=true;mood('sad');
+      if(V.tries>=2)vGrow();
+      if(add.r==='d'){speech('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');}else speech(RETRY[0],RETRY[1],RETRY[2]);
+      say(RETRY[0],RETRY[1],null);}
+  });
+  if(V.tries===0){say(sRom(prev),sDev(prev),null,{});speech(sRom(prev),sDev(prev),'Let’s make it longer!');}
+}
+function vGrowEnd(){
+  const p=P(),key='badhau:'+V.g,g=GROW[V.g],last=g.steps[g.steps.length-1];let nb=false;
+  if(V.stars>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=V.stars;nb=true;}
+  save();renderTop();
+  endCard(V.stars,3,{trophy:'🌱',title:sRom(last),titleDev:sDev(last),sub:g.en[g.en.length-1],newBest:nb,again:vGrowStart,back:openVakya,backLabel:'Vakya'});
+}
+
+// ---------- Habre's wardrobe ----------
+function openWardrobe(){
+  screen='wardrobe';const p=P(),stars=starsOf(p);p.outfit=p.outfit||{};
+  main.innerHTML=`${backBtn('Ghar')}<h1>👕 Habreko lugaa <small>हाब्रेको लुगा · Dress up Habre</small></h1>
+   <p style="margin:0;color:var(--soft)">Stars unlock new things for Habre to wear. You have ★ ${stars}. Tap to put one on or take it off.</p>
+   <div class="wardrobe">${REWARDS.map((r,k)=>{const open=stars>=r[0],on=p.outfit[r[2]]===r[1];return `<button data-k="${k}" aria-pressed="${on}" ${open?'':'disabled'}><span aria-hidden="true">${open?r[1]:'🔒'}</span><b>${open?r[3]:'★ '+r[0]}</b></button>`;}).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome();
+  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const r=REWARDS[+b.dataset.k];p.outfit[r[2]]=p.outfit[r[2]]===r[1]?'':r[1];save();renderOutfit();openWardrobe();mood('happy');});
+  speech('Habreko lugaa!','हाब्रेको लुगा!','What shall Habre wear?');mood('wave');
 }
 
 // ---------- letter tracing ----------
@@ -907,27 +1722,53 @@ function openTrace(it){
   wrap.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
 }
 
-// play: a round of questions with 2, 3 or 4 big choices
+// ---------- quiz engine: play, check, today's practice, listen-and-tap flashcards, Vakya picture rounds ----------
+// each question is an entry {t, it, pool (entries to draw wrong answers from), lv (level), face (how answers are labelled), hide (listen only)}
+const ENDING_DEV={haru:'हरू',ko:'को',ma:'मा',lai:'लाई',le:'ले',sanga:'सँग'};
+const ENDING_EN={haru:'many',ko:'whose',ma:'in',lai:'to / for',le:'did it',sanga:'with'};
 function questionLine(t,it){
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
+  if(t.kind==='yesno')return [it[0],it[1],it[2]];
+  if(t.kind==='ending')return ['Kun tukra milchha?','कुन टुक्रा मिल्छ?','Which ending fits?'];
   if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
   if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
   if(t.kind==='letter')return [`“${it[0]}” kun akshar?`,`${it[1]}। ${it[1]} कुन अक्षर?`,`Which letter says “${it[0]}”?`];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
 }
-function startQuiz(){
-  const t=topic,lv=levelOf(t.id),L=LEVELS[lv],words=wordsFor(t,lv),order=[];
-  while(order.length<L.n)order.push(...shuffle(words));
-  // never the same answer twice in a row
-  for(let i=1;i<L.n;i++)if(order[i]===order[i-1]){const j=order.findIndex((x,k)=>k>i&&x!==order[i-1]);if(j>0)[order[i],order[j]]=[order[j],order[i]];}
-  Q={t,lv,L,words,order:order.slice(0,L.n),i:0,stars:0,tries:0,lock:false};
+// a list of n, reshuffled as often as needed, never the same thing twice in a row
+function spread(list,n){
+  const out=[];while(out.length<n)out.push(...shuffle(list));
+  for(let i=1;i<out.length;i++)if(out[i]===out[i-1]){const j=out.findIndex((x,k)=>k>i&&x!==out[i-1]);if(j>0)[out[i],out[j]]=[out[j],out[i]];}
+  return out.slice(0,n);
+}
+function startQuiz(o){
+  let entries=[];
+  const mk=(t,words,lv,extra)=>spreadOf=>spreadOf.map(it=>({t,it,pool:words.map(w=>({t,it:w})),lv,face:lv,...extra}));
+  if(o.mode==='play'){
+    const t=o.t,lv=levelOf(t.id),words=wordsFor(t,lv);o.lv=lv;
+    entries=mk(t,words,lv,{hide:LEVELS[lv].listen})(spread(words,LEVELS[lv].n));
+  }else if(o.mode==='check'){
+    const t=o.t;entries=mk(t,t.items,'check',{face:'hard',choices:3})(spread(t.items,CHECK_N));
+  }else if(o.mode==='vchitra'){
+    const lv=levelOf('vakya'),words=vSents(lv).map(s=>[s.rom,s.dev,s.en,s.pic]);o.lv=lv;
+    entries=mk(VAKYA_T,words,lv,{hide:lv==='hard',face:'hard'})(spread(words,V_N));
+  }else if(o.mode==='listen'){
+    entries=spread(o.cards,Math.min(8,o.cards.length)).map(c=>({...c,pool:o.cards,lv:'listen',face:'hard',hide:true,choices:3,pick:true}));
+  }else if(o.mode==='daily'){
+    const one=t=>{const lv=levelOf(t.id),w=wordsFor(t,lv);return {t,it:rnd(w),pool:w.map(x=>({t,it:x})),lv,face:lv};};
+    const vw=vSents(levelOf('vakya')).map(s=>[s.rom,s.dev,s.en,s.pic]);
+    entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
+      {t:VAKYA_T,it:rnd(vw),pool:vw.map(x=>({t:VAKYA_T,it:x})),lv:levelOf('vakya'),face:'hard'}]);
+  }
+  Q={...o,o,entries,n:entries.length,i:0,stars:0};
+  if(!Q.back)Q.back=o.t?()=>openTopic(o.t):()=>goHome();
   renderQ();
 }
-// for counting, wrong numbers sit close to the right one so the child really counts
-function distractors(t,it,words,n){
-  if(t.kind!=='num')return shuffle(words.filter(x=>x!==it)).slice(0,n);
-  const near=shuffle(words.filter(x=>x!==it&&Math.abs(x[3]-it[3])<=3));
-  const far=shuffle(words.filter(x=>x!==it&&Math.abs(x[3]-it[3])>3));
+function distractors(e,n){
+  const k0=keyOf(e.t,e.it);
+  const pool=e.pool.filter(x=>keyOf(x.t,x.it)!==k0&&x.it[3]!==e.it[3]).filter((x,i,a)=>a.findIndex(y=>y.it[3]===x.it[3])===i);
+  if(e.t.kind!=='num')return shuffle(pool).slice(0,n);
+  const near=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])<=3)),far=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])>3));
   return [...near,...far].slice(0,n);
 }
 // what an answer button shows: easy = picture + Nepali + English, medium = picture + Nepali, hard = picture only.
@@ -939,86 +1780,132 @@ function optionFace(t,o,lv){
       +(lv==='hard'?`<span class="lab">${o[0]} · ${ex}</span>`:lv==='medium'?`<span class="lab">${ex}</span>`:'');
   }
   const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o);
-  const np=lv!=='hard'?`<span class="w">${o[0]}</span>`:'';
-  const en=lv==='easy'?`<span class="w-en">${o[2]}</span>`:'';
+  const np=lv!=='hard'?`<span class="w">${esc(o[0])}</span>`:'';
+  const en=lv==='easy'?`<span class="w-en">${esc(o[2])}</span>`:'';
   const hidden=lv==='hard'?`${o[0]} · ${o[2]}`:lv==='medium'?o[2]:'';
-  return pic+np+en+(hidden?`<span class="lab">${hidden}</span>`:'');
+  return pic+np+en+(hidden?`<span class="lab">${esc(hidden)}</span>`:'');
 }
 function renderQ(){
-  screen='quiz';const {t,L}=Q,it=Q.order[Q.i];Q.tries=0;Q.lock=false;
-  const opts=shuffle([it,...distractors(t,it,Q.words,L.choices-1)]);
-  const [rom,dev,en]=questionLine(t,it);
-  const hide=L.listen&&canListen()&&t.kind!=='num';
-  const pic=rnd(COUNT_PICS);
-  main.innerHTML=`<div class="progress" aria-label="Question ${Q.i+1} of ${L.n}"><i style="width:${Q.i/L.n*100}%"></i></div>
-   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:`${rom}<small lang="ne">${dev}${S.english&&Q.lv==='easy'?` · ${en}`:''}</small>`}</div>
+  screen='quiz';const e=Q.entries[Q.i],{t,it}=e;Q.tries=0;Q.lock=false;
+  // in listen-and-tap every card becomes "hear it, find the picture"
+  const kind=e.pick&&t.kind!=='letter'&&t.kind!=='num'?'pick':t.kind;
+  let opts,ans;
+  if(kind==='yesno'){opts=[{t,it:[...t.yes,'✅']},{t,it:[...t.no,'❌']}];ans=opts[it[4]?0:1];}
+  else if(kind==='ending'){
+    const ends=[...new Set(t.items.map(x=>x[5]))];
+    opts=shuffle([it[5],...shuffle(ends.filter(x=>x!==it[5])).slice(0,3)]).map(x=>({t,it:['-'+x,ENDING_DEV[x]||x,ENDING_EN[x]||'',''],end:x}));
+    ans=opts.find(x=>x.end===it[5]);
+  }else{const c=e.choices||LEVELS[e.lv].choices;opts=shuffle([e,...distractors(e,c-1)]);ans=e;}
+  Q.opts=opts;Q.ans=ans;
+  const [rom,dev,en]=kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
+  const hide=e.hide&&canListen()&&!['num','yesno','ending'].includes(kind);
+  const showEn=S.english&&e.lv==='easy';
+  const face=o=>kind==='yesno'?`<span class="pic">${o.it[3]}</span><span class="w">${o.it[0]}</span>${S.english?`<span class="w-en">${esc(o.it[2])}</span>`:''}`
+    :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lv!=='hard'?' · '+esc(o.it[2]):''}</span>`
+    :optionFace(o.t,o.it,e.face);
+  main.innerHTML=`${Q.back?backBtn('Back'):''}<div class="progress" aria-label="Question ${Q.i+1} of ${Q.n}"><i style="width:${Q.i/Q.n*100}%"></i></div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:`${esc(rom)}<small lang="ne">${dev}${showEn?` · ${esc(en)}`:''}</small>`}</div>
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
-   ${t.kind==='num'?`<div class="counter">${countHtml(it[3],pic,`aria-label="${it[3]} things"`)}</div>`:''}
-   <div class="opts${L.choices===3?' three':''}" style="--cols:${L.choices}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${t.kind==='num'?o[0]:o[2]}">
-     ${optionFace(t,o,Q.lv)}</button>`).join('')}</div>`;
-  const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');say(rom,dev,Q.lv==='easy'?en:null);};
+   ${kind==='num'?`<div class="counter">${countHtml(it[3],rnd(COUNT_PICS),`aria-label="${it[3]} things"`)}</div>`:''}
+   ${kind==='yesno'||kind==='ending'?`<div class="counter"><span class="pic" style="font-size:4.6rem;line-height:1.1" aria-hidden="true">${it[3]}</span></div>`:''}
+   ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}</div></div>`:''}
+   <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
+  const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
+    if(kind==='pick')say(it[0],it[1],null);else say(rom,dev,e.lv==='easy'?en:null);};
+  if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
-  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k],it,[rom,dev,en]));
+  main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k]));
   ask();
 }
-function pick(b,o,it,line){
+function qNext(q){if(screen!=='quiz'||(q&&q!==Q))return;Q.i++;if(Q.i<Q.n)renderQ();else endQuiz();}
+function pick(b,o){
   if(Q.lock)return;
-  const pr=P(),stat=pr?(pr.stat=pr.stat||{plays:0,right:{},miss:{}}):null,key=Q.t.id+'|'+it[0];
-  if(o===it){
-    Q.lock=true;if(Q.tries===0){Q.stars++;if(stat)stat.right[key]=(stat.right[key]||0)+1;}
+  const e=Q.entries[Q.i],{t,it}=e,p=P(),st=stat(p),key=keyOf(t,it),ans=Q.ans;
+  if(o===ans){
+    Q.lock=true;if(Q.tries===0){Q.stars++;st.right[key]=(st.right[key]||0)+1;save();}
     b.classList.add('right');confetti();mood('happy');
-    $('#qSay').innerHTML=`${line[0]}<small lang="ne">${line[1]} · ${line[2]}</small>`;
-    const p=rnd(PRAISE);speech(p[0]+' '+cap(it[0])+'!',p[1]+' '+it[1],p[2]+' '+cap(it[2])+'!');say(p[0]+' '+it[0],p[1]+' '+it[1],null);
-    setTimeout(()=>{if(screen!=='quiz')return;Q.i++;if(Q.i<Q.L.n)renderQ();else endQuiz();},1900);
+    $('#qSay').innerHTML=`${esc(t.kind==='ending'?it[0]:questionLine(t,it)[0])}<small lang="ne">${it[1]} · ${esc(it[2])}</small>`;
+    if($('#blankLine'))$('#blankLine').innerHTML=esc(it[4]).replace('___',`<span class="blank" style="color:var(--green);border-color:var(--green)">${it[5]}</span>`);
+    const pr=rnd(PRAISE),w=t.kind==='yesno'?ans.it:it;
+    speech(pr[0]+' '+cap(w[0])+'!',pr[1]+' '+w[1],pr[2]+' '+cap(w[2])+'!');say(pr[0]+' '+w[0],pr[1]+' '+w[1],null);
+    const q=Q;setTimeout(()=>qNext(q),1900);
   }else{
     Q.tries++;b.classList.add('wrong','show');b.disabled=true;mood('sad');
-    if(stat&&Q.tries===1){stat.miss[key]=(stat.miss[key]||0)+1;save();}
-    const left=[...main.querySelectorAll('.opt')].filter(x=>!x.disabled);
-    if(Q.tries>=2||left.length===1){const right=left.find(x=>x.getAttribute('aria-label')===(Q.t.kind==='num'?it[0]:it[2]));right?.classList.add('hint');speech(cap(it[0]),it[1],'This one!');say(it[0],it[1],null);}
+    if(Q.tries===1){st.miss[key]=(st.miss[key]||0)+1;save();}
+    const rb=main.querySelector(`.opt[data-k="${Q.opts.indexOf(ans)}"]`),left=[...main.querySelectorAll('.opt')].filter(x=>!x.disabled);
+    const show=()=>{rb.classList.add('hint');speech(cap(ans.it[0]),ans.it[1],'This one!');say(ans.it[0],ans.it[1],null);};
+    // a check counts the first answer only
+    if(Q.mode==='check'){Q.lock=true;show();const q=Q;setTimeout(()=>qNext(q),2200);}
+    else if(Q.tries>=2||left.length===1)show();
     else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
   }
 }
 function endQuiz(){
-  screen='end';const {t,lv,L}=Q,n=Q.stars,p=P(),frac=n/L.n;
+  const p=P(),n=Q.stars,N=Q.n,st=stat(p),o=Q.o;
+  st.plays++;st.last=today();
+  let key=null;
+  if(Q.mode==='play')key=Q.t.id+':'+Q.lv;
+  else if(Q.mode==='check')key='check:'+Q.t.id;
+  else if(Q.mode==='vchitra')key='vakya:chitra:'+Q.lv;
+  else if(Q.mode==='daily'){key='daily:'+today();const d=p.daily||{};if(d.last!==today()){d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();}p.daily=d;}
   let newBest=false;
-  p.stat=p.stat||{plays:0,right:{},miss:{}};p.stat.plays++;p.stat.last=new Date().toISOString().slice(0,10);
-  if(n>bestOf(p,t.id,lv)){p.best=p.best||{};p.best[t.id+':'+lv]=n;newBest=true;}
-  save();
-  renderTop();
-  const next=LV_KEYS[LV_KEYS.indexOf(lv)+1];
-  const offerNext=next&&frac>=0.7;
-  main.innerHTML=`<div class="end">
-    <div class="trophy" aria-hidden="true">${frac>=0.9?'🏆':frac>=0.6?'🥇':'🌟'}</div>
-    <h1>${frac>=0.9?'Ekdam ramro!':frac>=0.6?'Syabaas!':'Ramro kosis!'}<small>${frac>=0.9?'Amazing!':frac>=0.6?'Well done!':'Good try!'} ${L.icon} ${L.np} · ${L.en}${newBest?' · new best!':''}</small></h1>
-    <div class="row" aria-label="${n} of ${L.n} stars">${Array.from({length:L.n},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>
-    <div class="btns">
-      ${offerNext?`<button class="btn" style="background:${LEVELS[next].color}" id="nextLv">${LEVELS[next].icon} ${LEVELS[next].np} <small style="font-weight:500">try ${LEVELS[next].en.toLowerCase()}</small></button>`:''}
-      <button class="btn" style="background:var(--green)" id="againQ">🔁 Pheri <small style="font-weight:500">again</small></button>
-      <button class="btn" style="background:var(--blue)" id="toLearn">👀 Sikaun <small style="font-weight:500">learn</small></button>
-      <button class="btn" style="background:var(--red)" id="toHome">⌂ Ghar <small style="font-weight:500">home</small></button>
-    </div></div>`;
-  $('#againQ').onclick=startQuiz;$('#toLearn').onclick=()=>{learnI=0;renderLearn();};$('#toHome').onclick=()=>goHome();
-  if(offerNext)$('#nextLv').onclick=()=>{p.lv=p.lv||{};p.lv[t.id]=next;save();startQuiz();};
-  confetti();setTimeout(confetti,500);mood('happy');
-  const line=frac>=0.9?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:frac>=0.6?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
-  speech(...line);say(...line);
+  if(key&&n>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=n;newBest=true;}
+  save();renderTop();
+  if(Q.mode==='play'){
+    const t=Q.t,lv=Q.lv,L=LEVELS[lv],next=LV_KEYS[LV_KEYS.indexOf(lv)+1],offerNext=next&&n/N>=0.7;
+    endCard(n,N,{newBest,sub:`${L.icon} ${L.np} · ${L.en}`,
+      extra:`${offerNext?`<button class="btn" style="background:${LEVELS[next].color}" id="nextLv">${LEVELS[next].icon} ${LEVELS[next].np} <small style="font-weight:500">try ${LEVELS[next].en.toLowerCase()}</small></button>`:''}
+        ${n/N>=0.7&&!checked(p,t)?`<button class="btn" style="background:#ff9f1c" id="toCheck">✅ Jaanch <small style="font-weight:500">check</small></button>`:''}
+        <button class="btn" style="background:var(--blue)" id="toLearn">👀 Sikaun <small style="font-weight:500">learn</small></button>`,
+      again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
+    if(offerNext)$('#nextLv').onclick=()=>{p.lv=p.lv||{};p.lv[t.id]=next;save();startQuiz({mode:'play',t});};
+    if($('#toCheck'))$('#toCheck').onclick=()=>startQuiz({mode:'check',t});
+    $('#toLearn').onclick=()=>{topic=t;learnI=0;renderLearn();};
+  }else if(Q.mode==='check'){
+    const t=Q.t,ok=n>=CHECK_N-1;
+    endCard(n,N,{newBest,trophy:ok?'✅':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',sub:ok?`You know ${t.en.toLowerCase()}!`:`Get ${CHECK_N-1} right to pass. Play a bit more, then try again.`,
+      again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
+  }else if(Q.mode==='daily'){
+    const d=p.daily||{};
+    endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:()=>goHome(),backLabel:'Ghar'});
+  }else if(Q.mode==='vchitra'){
+    endCard(n,N,{newBest,sub:`Find the picture · ${LEVELS[Q.lv].en}`,again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
+  }else{
+    endCard(n,N,{sub:`${Q.title} · listen and tap`,again:()=>startQuiz(o),back:Q.back,backLabel:'Patti'});
+  }
 }
+function startDaily(){startQuiz({mode:'daily'});}
 
-// per-player report for grown-ups: stars per topic and level, stories, letters written, words that keep tripping them up
+// per-player report for grown-ups: each door, stars per topic and level, stories, sentences, flashcards, words that keep tripping them up,
+// and a flashcard deck the grown-up picks for this child
 function renderProgress(p){
   if(!p)return;
-  const st=p.stat||{plays:0,right:{},miss:{}},cell=(t,k)=>{const b=bestOf(p,t.id,k),n=LEVELS[k].n;return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
-  const find=key=>{const [tid,w]=key.split('|'),t=TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);return t&&it?{t,it}:null;};
-  const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:find(x.k)})).filter(x=>x.f);
-  const traced=Object.keys(p.traced||{});
+  const st=stat(p),pr=progressOf(p),cell=(t,k)=>{const b=bestOf(p,t.id,k),n=LEVELS[k].n;return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
+  const ck=t=>{const b=bestOf(p,'check',t.id);return `<td class="${checked(p,t)?'pass':b?'some':''}">${b?`${b}/${CHECK_N}`:'–'}</td>`;};
+  const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:findCard(x.k)})).filter(x=>x.f);
+  const traced=Object.keys(p.traced||{}),cards=allCards(),bx=[0,0,0];cards.forEach(c=>bx[boxOf(p,c)]++);
+  const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
+  const deckTopics=[...WORD_T(),AKSHAR(),...GRAM_T()],custom=new Set(p.custom||[]);
   $('#progBody').innerHTML=`
-   <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}</p>
-   <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}</tr></thead>
-    <tbody>${TOPICS.filter(t=>t.kind!=='story').map(t=>`<tr><td>${t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}</tr>`).join('')}</tbody></table></div>
-   <p><b>Stories:</b> ${STORIES.map(s=>`${s.icon} ${s.np} ${bestOf(p,'kathaa',s.id)>=2?'✓ read + quiz':bestOf(p,'kathaa',s.id)?'✓ read':'not yet'}`).join(' · ')}</p>
+   <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
+   <div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
+    <tbody>${DOORS.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>
+   <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
+    <tbody>${deckTopics.map(t=>`<tr><td>${t.kind==='letter'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
+   <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
+   <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${GROW.filter((_,i)=>bestOf(p,'badhau',i)).length}/${GROW.length}</p>
+   <p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length}) · <b>Stickers:</b> ${stickers}/${stickerItems().length}</p>
    <p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>
    <h3>Words to practise</h3>
-   ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}`;
+   ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
+   <h3>Your flashcard deck for ${esc(p.name)}</h3>
+   <p>Tick words for ${esc(p.name)} to practise. They appear in Patti as the “Thulo maanchhe” (grown-ups’) deck. ${custom.size} chosen.</p>
+   <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.kind==='letter'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
+   <div class="cd" id="cdWords"></div>`;
+  const drawCd=()=>{const t=TOPICS.find(x=>x.id===$('#cdTopic').value);
+    $('#cdWords').innerHTML=t.items.map(it=>{const k=keyOf(t,it);return `<label><input type="checkbox" data-key="${esc(k)}" ${custom.has(k)?'checked':''}> ${t.kind==='color'?`<i class="dot" style="background:${it[3]}"></i>`:t.kind==='num'?it[3]:t.kind==='letter'?it[1]:it[3]} ${esc(it[0])}</label>`;}).join('');
+    $('#cdWords').querySelectorAll('input').forEach(c=>c.onchange=()=>{if(c.checked)custom.add(c.dataset.key);else custom.delete(c.dataset.key);p.custom=[...custom];save();});};
+  $('#cdTopic').onchange=drawCd;drawCd();
 }
 // grown-ups panel
 function renderGrown(){
@@ -1055,7 +1942,7 @@ function renderGrown(){
   if(p){
     $('#resetP').onclick=()=>{$('#resetBox').hidden=false;$('#resetNo').focus();};
     $('#resetNo').onclick=()=>{$('#resetBox').hidden=true;};
-    $('#resetYes').onclick=()=>{p.best={};save();renderTop();renderGrown();};
+    $('#resetYes').onclick=()=>{p.best={};p.rw=0;save();renderTop();renderGrown();};
   }
 }
 
