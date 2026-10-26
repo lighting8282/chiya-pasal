@@ -30,7 +30,9 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
   - pick the right answer to a question
 - **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks. Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
 
-**Aajako abhyas** is a five-minute mixed practice with a day streak. Stars unlock outfits for Habre to wear. Under ⚙, grown-ups get a progress page for each child: how far through each door they are, stars per topic and level, stories, sentences, flashcard baskets, letters written and the words they keep missing. Grown-ups also build their flashcard deck there. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
+**Aajako abhyas** is a five-minute mixed practice with a day streak.
+
+**Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: how far through each door they are, stars per topic and level, stories, sentences, flashcard baskets, letters written and the words they keep missing. Grown-ups also build their flashcard deck there. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 
 ### Install it as an app
 

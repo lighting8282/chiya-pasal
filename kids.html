@@ -413,6 +413,42 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
   .mc-face .pic{font-size:2rem}
 }
 
+/* gems, shop, and Habre's backdrop + magic */
+.gems{background:#d9f3ff;border-radius:999px;padding:4px 14px;font-weight:800;box-shadow:0 4px 0 #8fd0f0;font-variant-numeric:tabular-nums;position:relative}
+.gems.pop{animation:yay .6s cubic-bezier(.3,1.6,.5,1)}
+.gems.pop::after{content:attr(data-plus);position:absolute;left:50%;top:100%;transform:translateX(-50%);background:var(--blue);color:#fff;border-radius:999px;padding:0 8px;font-size:.85rem;animation:pop .4s cubic-bezier(.3,1.5,.5,1)}
+.habre{position:relative}
+.habre svg{position:relative;z-index:1}
+.scene{position:absolute;inset:6% 2% 0;border-radius:50% 50% 44% 44%;overflow:hidden;z-index:0;container-type:size;opacity:0;transition:opacity .3s}
+.scene.on{opacity:1}
+.scene span{position:absolute;transform:translate(-50%,-50%);line-height:1}
+.fx{position:absolute;inset:0;z-index:2;pointer-events:none;container-type:size}
+.fx span{position:absolute;bottom:4%;font-size:14cqw;opacity:0;animation:floaty 3.4s ease-in infinite}
+@keyframes floaty{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:1}100%{transform:translateY(-95cqh) rotate(25deg) scale(1.05);opacity:0}}
+.wallet{display:flex;align-items:center;gap:14px;background:#e8f7ff;border-radius:22px;padding:10px 16px;box-shadow:0 5px 0 #b9e3f7;flex-wrap:wrap}
+.wallet small{display:block;color:var(--soft);font-size:.85rem}
+.gemsbig{font-size:2rem;font-weight:800}
+.shoptabs button{padding:6px 12px}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
+.sitem{background:var(--card);border-radius:22px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 5px 0 var(--line);border:4px solid transparent;animation:pop .4s cubic-bezier(.3,1.5,.5,1) backwards;line-height:1.15}
+.sitem.sel{border-color:var(--blue)}
+.sitem .si{font-size:2.6rem;line-height:1.15;min-height:3rem;display:grid;place-items:center}
+.sitem b{font-size:1rem}
+.sitem small{font-size:.75rem;color:var(--soft);text-align:center}
+.sitem em{font-style:normal;font-weight:800;font-size:.85rem;margin-top:3px;border-radius:999px;padding:0 8px;background:#e8f7ff}
+.sitem em.on{background:var(--green);color:#fff}
+.sitem em.dear{opacity:.5}
+.sitem em.gift{background:#fff7d6}
+.furdot{display:inline-block;width:2.6rem;height:2.6rem;border-radius:50%;background:radial-gradient(circle at 50% 70%,var(--b) 0 30%,var(--a) 31%);box-shadow:inset 0 -6px 0 var(--c),0 0 0 3px #fff,0 0 0 4px var(--line)}
+.bgdot{display:grid;place-items:center;width:3.2rem;height:2.8rem;border-radius:14px;font-size:1.5rem;box-shadow:0 0 0 2px var(--line)}
+.shopbar{position:sticky;bottom:10px;z-index:5;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border-radius:24px;padding:10px 14px;box-shadow:0 6px 0 var(--line),0 8px 24px rgba(43,33,64,.18)}
+.shopbar .si{font-size:2.4rem;line-height:1}
+.shopbar .sbt{flex:1;min-width:120px}
+.shopbar .sbt small{display:block;color:var(--soft)}
+.shopbar .need{font-weight:700;color:var(--soft)}
+@media (prefers-reduced-motion: reduce){.fx span{opacity:.8;bottom:40%}}
+@media (max-width:680px){.shopgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.sitem .si{font-size:2rem}.gems{padding:4px 10px}}
+
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
 .confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall var(--d) cubic-bezier(.2,.6,.4,1) forwards}
@@ -452,6 +488,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
     <div class="title">Habre's Nepali<small>हाब्रेको नेपाली</small></div>
     <button class="who" id="whoBtn" aria-label="Switch player"><span class="av" id="whoAv">🦊</span><span class="nm" id="whoNm"></span></button>
     <span class="stars" id="stars" aria-label="Stars">★ 0</span>
+    <button class="gems" id="gemBtn" aria-label="Gems: open Habre’s shop">💎 0</button>
     <button class="round" id="soundBtn" aria-pressed="true" aria-label="Sound on">🔊</button>
     <button class="round" id="grownBtn" aria-label="For grown-ups">⚙</button>
   </header>
@@ -675,6 +712,8 @@ if(S.best&&!S.profiles.length){
   S.cur=S.profiles[0].id;
 }
 delete S.best;
+const OLD_OUTFIT={'🧢':'cap','🎀':'bow','🕶️':'shades','👑':'crown','🎩':'tophat','🎓':'grad','🏅':'medal','🌼':'daisy'};
+S.profiles.forEach(p=>{if(p.outfit)for(const k in p.outfit)if(OLD_OUTFIT[p.outfit[k]])p.outfit[k]=OLD_OUTFIT[p.outfit[k]];});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const P=()=>S.profiles.find(p=>p.id===S.cur)||null;
 const bestOf=(p,tid,lv)=>((p&&p.best)||{})[tid+':'+lv]||0;
@@ -730,7 +769,8 @@ function say(rom,dev,en,o){
 const canListen=()=>TTS&&S.sound;
 
 // ---------- Habre ----------
-$('#habre').innerHTML=`<svg viewBox="0 0 160 170" aria-hidden="true">
+$('#habre').innerHTML=`<div class="scene" id="hbScene" aria-hidden="true"></div><svg viewBox="0 0 160 170" aria-hidden="true">
+ <defs><pattern id="dhakaP" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#b8322a"/><path d="M0 4.5h9M4.5 0v9" stroke="#2b2140" stroke-width="1.3"/><rect x="2.5" y="2.5" width="4" height="4" fill="#ffc93c" transform="rotate(45 4.5 4.5)"/></pattern></defs>
  <g class="hb-body">
   <g class="hb-tail"><path d="M108 142 C140 138 152 112 146 88" stroke="#c4471f" stroke-width="22" fill="none" stroke-linecap="round"/>
    <path d="M128 136l8-14M140 120l9-8M146 102l10-2" stroke="#7a2a12" stroke-width="7" stroke-linecap="round"/></g>
@@ -753,7 +793,9 @@ $('#habre').innerHTML=`<svg viewBox="0 0 160 170" aria-hidden="true">
    <ellipse class="hb-mouth" cx="80" cy="91" rx="6" ry="3" fill="#7a2a20"/>
    <circle cx="50" cy="84" r="6" fill="#ff8f8f" opacity=".6"/><circle cx="110" cy="84" r="6" fill="#ff8f8f" opacity=".6"/>
   </g>
- </g></svg>`;
+ </g></svg><div class="fx" id="hbFx" aria-hidden="true"></div>`;
+// remember each shape's own colours so a fur colour can be swapped in and out
+$('#habre').querySelectorAll('svg [fill],svg [stroke]').forEach(el=>{const f=el.getAttribute('fill'),k=el.getAttribute('stroke');if(f&&f[0]==='#')el.dataset.of=f.toLowerCase();if(k&&k[0]==='#')el.dataset.os=k.toLowerCase();});
 function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave');void h.offsetWidth;if(cls)h.classList.add(cls);}
 function speech(rom,dev,en){$('#speech').innerHTML=`<b>${esc(rom)}</b><span class="dev" lang="ne">${esc(dev)}</span>${en&&S.english?`<span class="en">${esc(en)}</span>`:''}`;}
 $('#habre').onclick=()=>{mood('wave');speech('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I’m Habre.');say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');};
@@ -775,30 +817,169 @@ function renderTop(){
   $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
   $('#whoNm').textContent=p?p.name:'Ko?';
   $('#stars').textContent='★ '+starsOf(p);
-  // a new outfit for Habre at each reward step; Habre puts it on straight away
+  $('#gemBtn').textContent='💎 '+(p?gemsOf(p):0);
+  // free gifts at star milestones; Habre puts each one on straight away
   if(p){
-    const got=REWARDS.filter(r=>starsOf(p)>=r[0]).length;
-    if((p.rw||0)<got){
-      const r=REWARDS[got-1];p.rw=got;p.outfit=p.outfit||{};p.outfit[r[2]]=r[1];save();
-      setTimeout(()=>{speech('Naya lugaa! '+r[1],'नयाँ लुगा!',`Habre got a new ${r[3]}!`);say('Naya lugaa!','नयाँ लुगा!',`Habre got a new ${r[3]}!`);confetti();mood('happy');},2600);
+    p.owned=p.owned||{};p.outfit=p.outfit||{};
+    const gifts=GIFTS().filter(x=>starsOf(p)>=x.gift);gifts.forEach(g=>p.owned[g.id]=1);
+    if((p.rw||0)<gifts.length){
+      const x=gifts[gifts.length-1];gifts.forEach(g=>p.owned[g.id]=1);p.rw=gifts.length;p.outfit[x.slot]=x.id;save();
+      setTimeout(()=>{speech('Upahaar! '+(x.e||''),'उपहार!',`A free ${x.en} for Habre!`);say('Upahaar!','उपहार!',`A free ${x.en} for Habre!`);confetti();mood('happy');},2600);
     }
   }
   renderOutfit();
 }
-// rewards: [stars needed, emoji, where Habre wears it, name]
-const REWARDS=[[10,'🧢','hat','cap'],[20,'🎀','neck','bow'],[30,'🕶️','eyes','sunglasses'],[45,'👑','hat','crown'],[60,'🎩','hat','top hat'],[80,'🎓','hat','graduation cap'],[100,'🏅','neck','medal'],[130,'🌼','hat','flower']];
-const ACC_POS={hat:[80,22,46,'.hb-head'],eyes:[80,68,52,'.hb-head'],neck:[80,114,30,'.hb-body']};
+
+// ---------- heera (gems) and Habre's shop ----------
+// stars measure progress (best scores); gems are earned every time you play and spent in the shop
+function gemsOf(p){if(p.gems==null){p.gems=starsOf(p);save();}return p.gems;}
+let gemTimer=0;
+function earn(n){
+  const p=P();if(!p||!n)return;gemsOf(p);p.gems+=n;save();renderTop();
+  const b=$('#gemBtn');b.dataset.plus='+'+n;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+  clearTimeout(gemTimer);gemTimer=setTimeout(()=>b.classList.remove('pop'),1600);
+}
+// slots: hat, eyes, neck, hand (worn), fur (colour), bg (background behind Habre), fx (magic floating around him)
+const SHOP_CATS=[['hat','🎩','Topi','Hats'],['eyes','🕶️','Chasma','Glasses'],['neck','🎀','Gala','Neck'],['hand','🎈','Haat','To hold'],
+  ['fur','🎨','Rang','Fur colour'],['bg','🏔️','Pachhaadi','Backgrounds'],['fx','✨','Jaadu','Magic'],['mine','👜','Mero','Mine']];
+const I=(id,slot,e,np,dev,en,price,x)=>({id,slot,e,np,dev,en,price,...(x||{})});
+const heart=(cx,cy,s)=>`M${cx} ${cy+s*.6}C${cx-s*1.2} ${cy-s*.2} ${cx-s*.6} ${cy-s*1.1} ${cx} ${cy-s*.4}C${cx+s*.6} ${cy-s*1.1} ${cx+s*1.2} ${cy-s*.2} ${cx} ${cy+s*.6}Z`;
+const starPath=(cx,cy,r)=>'M'+Array.from({length:10},(_,k)=>{const a=Math.PI/5*k-Math.PI/2,q=k%2?r*.45:r;return `${(cx+q*Math.cos(a)).toFixed(1)} ${(cy+q*Math.sin(a)).toFixed(1)}`;}).join('L')+'Z';
+const SVG_ITEMS={
+  dhaka:`<path d="M50 32 L54 8 Q80 -2 108 10 L110 32 Q80 38 50 32Z" fill="url(#dhakaP)" stroke="#2b2140" stroke-width="2.5"/><path d="M50 32 Q80 38 110 32" stroke="#2b2140" stroke-width="4" fill="none"/>`,
+  hearts:`<path d="${heart(62,68,13)}" fill="#ff4f8b" stroke="#b0174f" stroke-width="2"/><path d="${heart(98,68,13)}" fill="#ff4f8b" stroke="#b0174f" stroke-width="2"/><path d="M73 64 Q80 59 87 64" stroke="#b0174f" stroke-width="3" fill="none"/>`,
+  stars:`<path d="${starPath(62,66,15)}" fill="#ffc93c" stroke="#b98900" stroke-width="2"/><path d="${starPath(98,66,15)}" fill="#ffc93c" stroke="#b98900" stroke-width="2"/><path d="M74 64 Q80 60 86 64" stroke="#b98900" stroke-width="3" fill="none"/>`,
+  mala:Array.from({length:11},(_,k)=>{const t=k/10,x=50+60*t,y=108+26*Math.sin(Math.PI*t);return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${k%2?'#ffc93c':'#ff8c1a'}" stroke="#c25e00" stroke-width="1"/>`;}).join(''),
+  khada:`<path d="M52 106 Q80 128 108 106 L112 114 Q98 146 94 162 L84 160 Q90 136 98 120 Q80 132 62 120 Q70 136 76 160 L66 162 Q62 146 48 114Z" fill="#fffbe9" stroke="#e0b84a" stroke-width="2"/>`,
+};
+const ITEMS=[
+ // hats (the first five are free gifts at star milestones)
+ I('cap','hat','🧢','Topi','टोपी','cap',0,{gift:10}),I('crown','hat','👑','Mukut','मुकुट','crown',0,{gift:45}),I('tophat','hat','🎩','Lamo topi','लामो टोपी','top hat',0,{gift:60}),
+ I('grad','hat','🎓','Padhne topi','पढ्ने टोपी','graduation cap',0,{gift:80}),I('daisy','hat','🌼','Pahelo phul','पहेंलो फूल','yellow flower',0,{gift:130}),
+ I('dhaka','hat','','Dhaka topi','ढाका टोपी','Nepali Dhaka cap',30,{svg:'dhaka',icon:'🧢'}),
+ I('sunhat','hat','👒','Ghaam topi','घाम टोपी','sun hat',15),I('helmet','hat','⛑️','Helmet','हेलमेट','helmet',20),
+ I('blossom','hat','🌸','Phul','फूल','flower',8),I('sunflower','hat','🌻','Suryamukhi','सूर्यमुखी','sunflower',10),
+ I('cherry','hat','🍒','Cherry','चेरी','cherries',9),I('mushroom','hat','🍄','Chyau','च्याउ','mushroom',12),
+ I('butterflyhat','hat','🦋','Putali','पुतली','butterfly',14),I('starhat','hat','⭐','Tara','तारा','star',15),
+ I('chick','hat','🐣','Challa','चल्ला','little chick',16),I('moon','hat','🌙','Jun','जून','moon',18),I('pumpkin','hat','🎃','Pharsi','फर्सी','pumpkin',18),
+ I('frog','hat','🐸','Bhyaguto','भ्यागुतो','frog',20),I('birdhat','hat','🐦','Chara','चरा','bird',20),I('kitten','hat','🐱','Biralo','बिरालो','kitten',22),
+ I('snowman','hat','⛄','Hiu-maanchhe','हिउँमान्छे','snowman',24),I('cake','hat','🎂','Kek','केक','birthday cake',25),
+ I('rainbowhat','hat','🌈','Indreni','इन्द्रेणी','rainbow',30),I('unicorn','hat','🦄','Unicorn','युनिकर्न','unicorn',35),
+ // glasses
+ I('shades','eyes','🕶️','Kalo chasma','कालो चस्मा','sunglasses',0,{gift:30}),I('specs','eyes','👓','Chasma','चस्मा','glasses',10),
+ I('goggles','eyes','🥽','Pauri chasma','पौडी चस्मा','swimming goggles',15),
+ I('hearts','eyes','','Maya chasma','माया चस्मा','heart glasses',25,{svg:'hearts',icon:'💕'}),I('stars','eyes','','Tara chasma','तारा चस्मा','star glasses',25,{svg:'stars',icon:'🌟'}),
+ // neck
+ I('bow','neck','🎀','Ribbon','रिबन','bow',0,{gift:20}),I('medal','neck','🏅','Padak','पदक','medal',0,{gift:100}),
+ I('bell','neck','🔔','Ghanti','घण्टी','bell',10),I('scarf','neck','🧣','Galbandi','गलबन्दी','scarf',12),I('tie','neck','👔','Tie','टाई','shirt and tie',15),
+ I('khada','neck','','Khada','खादा','khada scarf',18,{svg:'khada',icon:'🧣'}),I('mala','neck','','Sayapatri mala','सयपत्री माला','marigold garland',20,{svg:'mala',icon:'🌼'}),
+ I('gold','neck','🥇','Sun padak','सुन पदक','gold medal',30),I('gem','neck','💎','Heera','हीरा','diamond',40),
+ // to hold (pos: x, y, size when it needs to sit higher)
+ I('balloon','hand','🎈','Bellun','बेलुन','balloon',8,{pos:[150,86,38]}),I('rose','hand','🌹','Gulaaf','गुलाफ','rose',8),I('tea','hand','🍵','Chiya','चिया','cup of tea',8),
+ I('lolly','hand','🍭','Lolipop','ललिपप','lollipop',10),I('umbrella','hand','☂️','Chhata','छाता','umbrella',10,{pos:[146,104,40]}),I('momo','hand','🥟','Momo','मोमो','momo',10),
+ I('icecream','hand','🍦','Aaiskrim','आइसक्रिम','ice cream',12),I('ball','hand','⚽','Bhakundo','भकुण्डो','football',12),I('books','hand','📚','Kitab','किताब','books',12),
+ I('sparkler','hand','🎇','Phuljhadi','फूलझडी','sparkler',14),I('bat','hand','🏏','Bat','ब्याट','cricket bat',15),I('present','hand','🎁','Upahaar','उपहार','present',15),
+ I('teddy','hand','🧸','Bhalu khelauna','भालु खेलौना','teddy bear',18),I('drum','hand','🥁','Dhol','ढोल','drum',20),
+ I('kite','hand','🪁','Changa','चङ्गा','kite',25,{pos:[152,70,38]}),I('guitar','hand','🎸','Gitaar','गितार','guitar',25),I('trophy','hand','🏆','Trophy','ट्रफी','trophy',50),
+ // fur colours: body, head, tail rings, cheek marks, paws, face
+ I('red','fur','','Rato','रातो','red panda (as he is)',0,{free:1,pal:null}),
+ I('choco','fur','','Khairo','खैरो','chocolate',15,{pal:['#7a4a2a','#8f5a35','#3e2414','#4a2a16','#2a1a10','#f3e2cf']}),
+ I('golden','fur','','Sunaulo','सुनौलो','golden',20,{pal:['#d9a227','#e8b83a','#8a5a12','#9a6a14','#4a3214','#fff8e1']}),
+ I('orange','fur','','Suntala','सुन्तला','orange',20,{pal:['#f07a1a','#ff9433','#9a4a0a','#a8520e','#4a2410','#fff4e6']}),
+ I('snowy','fur','','Seto','सेतो','snowy white',25,{pal:['#d9dde3','#eceff3','#8a93a0','#9aa3ad','#4a4f57','#ffffff']}),
+ I('pink','fur','','Gulaafi','गुलाफी','pink',25,{pal:['#e86aa0','#f08ab4','#a3305f','#b0406c','#5a2340','#fff0f6']}),
+ I('blue','fur','','Nilo','निलो','blue',30,{pal:['#3a7bf2','#5b93f5','#1d4fa8','#2a5bb5','#1b2a50','#eef4ff']}),
+ I('green','fur','','Hariyo','हरियो','green',30,{pal:['#2fae6e','#45c283','#17703f','#1f7a48','#173a28','#effbf3']}),
+ I('purple','fur','','Baijani','बैजनी','purple',30,{pal:['#8e5be8','#a47af0','#5a2fb0','#6236b8','#2c1a50','#f5efff']}),
+ I('midnight','fur','','Raatko','रातको','midnight',45,{pal:['#2b2140','#3b2f58','#f2b705','#6a5a90','#120c20','#e8e0ff']}),
+ // backgrounds: sky gradient + decorations [emoji, x%, y%, size]
+ I('bg-garden','bg','','Bagaicha','बगैंचा','garden',12,{grad:'#cdeeff,#e8f8ff 60%,#8fd16f 60%',deco:[['🌷',14,76,14],['🌻',84,72,16],['🦋',20,24,10]]}),
+ I('bg-himal','bg','','Himal','हिमाल','mountains',15,{grad:'#bfe3ff,#eef8ff 62%,#cfe9c4 62%',deco:[['🏔️',14,62,30],['🏔️',88,58,32],['☁️',24,16,14]]}),
+ I('bg-night','bg','','Raat','रात','night sky',15,{grad:'#1b1f4a,#3a2f7a',deco:[['🌙',80,16,18],['⭐',18,22,9],['⭐',40,9,7],['⭐',88,50,8]]}),
+ I('bg-forest','bg','','Jangal','जङ्गल','forest',18,{grad:'#bfe8c0,#dff5d8 60%,#5fae4a 60%',deco:[['🌲',12,54,26],['🌳',88,52,28]]}),
+ I('bg-sea','bg','','Samundra','समुद्र','seaside',20,{grad:'#9fdcff 0,#cdeeff 55%,#3bb3e0 55%,#2a9fd0 72%,#f5dca0 72%',deco:[['☀️',80,14,16],['⛵',22,50,14],['🐚',16,86,12]]}),
+ I('bg-snow','bg','','Hiu','हिउँ','snowy day',20,{grad:'#e6f3ff,#ffffff 65%,#eef4fa 65%',deco:[['❄️',18,18,10],['❄️',80,26,9],['⛄',86,72,20]]}),
+ I('bg-tihar','bg','','Tihar','तिहार','Tihar lights',25,{grad:'#2a1a3f,#4a2a5a',deco:[['🪔',14,84,14],['🪔',86,84,14],['✨',26,18,10],['✨',76,12,10]]}),
+ I('bg-candy','bg','','Mithai','मिठाई','candy land',25,{grad:'#ffd1e6,#ffeef6',deco:[['🍭',14,30,14],['🍬',86,24,12],['🧁',86,80,14]]}),
+ I('bg-rainbow','bg','','Indreni','इन्द्रेणी','rainbow',30,{grad:'#ff8a80,#ffc070,#fff38a,#9fe39b,#8fd0ff,#c3a6ff',deco:[['☁️',16,80,18],['☁️',84,76,18]]}),
+ I('bg-space','bg','','Antariksh','अन्तरिक्ष','outer space',35,{grad:'#0b0d2a,#26235a',deco:[['🪐',78,20,18],['🚀',18,28,14],['⭐',50,8,7],['⭐',88,62,7]]}),
+ // magic: things that float up around Habre
+ I('fx-flowers','fx','🌸','Phul','फूल','flower petals',15),I('fx-leaves','fx','🍂','Paat','पात','autumn leaves',15),
+ I('fx-sparkle','fx','✨','Chamak','चमक','sparkles',20),I('fx-hearts','fx','❤️','Maya','माया','hearts',20),I('fx-stars','fx','⭐','Tara','तारा','stars',20),
+ I('fx-snow','fx','❄️','Hiu','हिउँ','snowflakes',20),I('fx-music','fx','🎵','Sangit','संगीत','music notes',20),
+ I('fx-butterflies','fx','🦋','Putali','पुतली','butterflies',25),I('fx-party','fx','🎉','Ramaailo','रमाइलो','party poppers',30),
+];
+const ITEM=Object.fromEntries(ITEMS.map(x=>[x.id,x]));
+const GIFTS=()=>ITEMS.filter(x=>x.gift).sort((a,b)=>a.gift-b.gift);
+const FUR_KEYS=['#c4471f','#d9572b','#7a2a12','#8a2e14','#3b2016','#fff4e8'];
+const SLOT_POS={hat:[80,22,46],eyes:[80,68,52],neck:[80,114,30],hand:[128,130,36]};
+let tryOn=null;
+const owns=(p,x)=>x.free||!!(p.owned||{})[x.id];
+const clearTry=()=>{if(tryOn){tryOn=null;renderOutfit();}};
+function itemIcon(x){
+  if(x.slot==='fur'){const c=x.pal||['#c4471f','#d9572b',0,0,'#3b2016','#fff4e8'];return `<span class="furdot" style="--a:${c[0]};--b:${c[5]};--c:${c[4]}"></span>`;}
+  if(x.slot==='bg')return `<span class="bgdot" style="background:linear-gradient(180deg,${x.grad})">${x.deco[0][0]}</span>`;
+  return x.e||x.icon;
+}
 function renderOutfit(){
-  document.querySelectorAll('.hbAcc').forEach(x=>x.remove());
-  const p=P();if(!p||!p.outfit)return;
-  for(const [slot,e] of Object.entries(p.outfit)){
-    if(!e||!ACC_POS[slot])continue;
-    const [x,y,s,parent]=ACC_POS[slot],g=document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.setAttribute('class','hbAcc');g.id=slot==='neck'?'hbAccN':'hbAcc';
-    g.innerHTML=`<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central">${e}</text>`;
-    // the bow/medal goes in front of the body but behind the head
-    const host=$('#habre '+parent);if(slot==='neck')host.insertBefore(g,host.querySelector('.hb-head'));else host.append(g);
+  const svg=$('#habre svg');if(!svg)return;
+  svg.querySelectorAll('.hbAcc').forEach(x=>x.remove());
+  const p=P(),o={...((p&&p.outfit)||{}),...(tryOn||{})},it=s=>o[s]&&ITEM[o[s]];
+  // fur: swap the original colours for the palette's
+  const pal=(it('fur')||{}).pal;
+  svg.querySelectorAll('[data-of],[data-os]').forEach(el=>{
+    for(const [a,d] of [['fill','of'],['stroke','os']]){const orig=el.dataset[d];if(!orig)continue;const k=FUR_KEYS.indexOf(orig);el.setAttribute(a,pal&&k>=0?pal[k]:orig);}
+  });
+  for(const slot of ['hat','eyes','neck','hand']){
+    const x=it(slot);if(!x)continue;
+    const [px,py,ps]=x.pos||SLOT_POS[slot],g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','hbAcc');
+    g.innerHTML=x.svg?SVG_ITEMS[x.svg]:`<text x="${px}" y="${py}" font-size="${ps}" text-anchor="middle" dominant-baseline="central">${x.e}</text>`;
+    // the hat and glasses move with the head; things at the neck sit behind the head
+    const host=svg.querySelector(slot==='hat'||slot==='eyes'?'.hb-head':'.hb-body');
+    if(slot==='neck')host.insertBefore(g,host.querySelector('.hb-head'));else host.append(g);
   }
+  const bg=it('bg'),sc=$('#hbScene');
+  sc.style.background=bg?`linear-gradient(180deg,${bg.grad})`:'';sc.classList.toggle('on',!!bg);
+  sc.innerHTML=bg?bg.deco.map(([e,x,y,s])=>`<span style="left:${x}%;top:${y}%;font-size:${s}cqw">${e}</span>`).join(''):'';
+  const fx=it('fx');
+  $('#hbFx').innerHTML=fx?Array.from({length:7},(_,k)=>`<span style="left:${8+k*13}%;animation-delay:${(k*0.53)%3.2}s;animation-duration:${3+(k%3)*0.6}s">${fx.e}</span>`).join(''):'';
+}
+let shopCat='hat',shopSel=null;
+function openShop(cat){
+  screen='shop';if(cat)shopCat=cat;const p=P(),gems=gemsOf(p);p.owned=p.owned||{};p.outfit=p.outfit||{};
+  const list=shopCat==='mine'?ITEMS.filter(x=>owns(p,x)):ITEMS.filter(x=>x.slot===shopCat);
+  const ownedN=ITEMS.filter(x=>owns(p,x)&&!x.free).length,all=ITEMS.filter(x=>!x.free).length;
+  const card=(x,i)=>{const own=owns(p,x),on=(p.outfit[x.slot]||'')===x.id||(x.free&&!p.outfit[x.slot]),sel=shopSel===x.id;
+    const tag=on?'<em class="on">✔ wearing</em>':own?'<em>yours</em>':x.gift?`<em class="gift">🎁 free at ★ ${x.gift}</em>`:`<em class="${gems>=x.price?'':'dear'}">💎 ${x.price}</em>`;
+    return `<button class="sitem${sel?' sel':''}${own?' own':''}" data-i="${x.id}" style="animation-delay:${Math.min(i,16)*30}ms" aria-pressed="${sel}"><span class="si" aria-hidden="true">${itemIcon(x)}</span><b>${esc(x.np)}</b><small>${esc(x.en)}</small>${tag}</button>`;};
+  main.innerHTML=`${backBtn('Ghar')}<h1>🛍️ Habreko pasal <small>हाब्रेको पसल · Habre’s shop</small></h1>
+   <div class="wallet"><span class="gemsbig">💎 ${gems}</span><span>heera to spend · you have ${ownedN} of ${all} things<small>Earn 💎 every time you play: one for each star in a round, plus extras for stories, sentences and today’s practice.</small></span></div>
+   <div class="seg shoptabs" role="tablist">${SHOP_CATS.map(c=>`<button role="tab" aria-pressed="${c[0]===shopCat}" data-c="${c[0]}">${c[1]} ${c[2]} <small style="font-weight:500;color:var(--soft)">${c[3]}</small></button>`).join('')}</div>
+   <div class="shopgrid">${list.length?list.map(card).join(''):'<p style="color:var(--soft)">Nothing here yet. Buy something!</p>'}</div>
+   <div class="shopbar" id="shopBar" ${shopSel?'':'hidden'}></div>`;
+  $('#backBtn').onclick=()=>{shopSel=null;clearTry();goHome();};
+  main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{shopSel=null;clearTry();openShop(b.dataset.c);});
+  main.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{
+    const x=ITEM[b.dataset.i];shopSel=x.id;tryOn={[x.slot]:x.free?'':x.id};renderOutfit();openShop();
+    speech(x.np+' '+(x.e||x.icon||''),x.dev,cap(x.en)+(owns(p,x)?'':x.gift?` · free at ${x.gift} stars`:` · ${x.price} gems`));say(x.np,x.dev,null);mood('happy');
+  });
+  if(shopSel)shopBarFor(ITEM[shopSel]);
+}
+function shopBarFor(x){
+  const p=P(),gems=gemsOf(p),own=owns(p,x),on=(p.outfit[x.slot]||'')===x.id||(x.free&&!p.outfit[x.slot]),bar=$('#shopBar');
+  bar.innerHTML=`<span class="si" aria-hidden="true">${itemIcon(x)}</span><span class="sbt"><b>${esc(x.np)}</b><small lang="ne">${x.dev} · ${esc(x.en)}</small></span>
+   ${own?(on&&!x.free?`<button class="btn ghost" id="sOff">Kholau <small style="font-weight:500">take off</small></button>`:on?'':`<button class="btn" style="background:var(--green)" id="sOn">✔ Lagau <small style="font-weight:500">wear it</small></button>`)
+     :x.gift?`<span class="need">🎁 Free when you reach ★ ${x.gift}</span>`
+     :gems>=x.price?`<button class="btn" style="background:var(--blue)" id="sBuy">💎 ${x.price} · Kinau <small style="font-weight:500">buy</small></button>`
+     :`<span class="need">${x.price-gems} more 💎 needed</span>`}`;
+  const wear=id=>{p.outfit[x.slot]=id;tryOn=null;save();renderOutfit();openShop();};
+  if($('#sOn'))$('#sOn').onclick=()=>{wear(x.free?'':x.id);mood('happy');};
+  if($('#sOff'))$('#sOff').onclick=()=>wear('');
+  if($('#sBuy'))$('#sBuy').onclick=()=>{
+    if(gemsOf(p)<x.price)return;p.gems-=x.price;p.owned[x.id]=1;save();renderTop();wear(x.id);confetti();mood('happy');
+    speech('Kinyo! '+x.np,'किन्यो! '+x.dev,`Habre has a new ${x.en}!`);say('Kinyo!','किन्यो!',`Habre has a new ${x.en}!`);
+  };
 }
 function pictureOf(t,it){
   if(t.kind==='letter')return `<span class="letter" lang="ne">${it[1]}</span>`;
@@ -824,7 +1005,7 @@ function countHtml(n,pic,cls){
 
 // ---------- players ----------
 function goWho(){
-  screen='who';speechSynthesis?.cancel?.();
+  clearTry();screen='who';speechSynthesis?.cancel?.();
   main.innerHTML=`<h1>Ko khelcha? <small>Who’s playing?</small></h1>
    <div class="people">${S.profiles.map((p,i)=>`<div class="person" style="--pc:${p.color};animation-delay:${i*60}ms">
       <button class="pick" data-id="${p.id}" style="display:flex;flex-direction:column;align-items:center;width:100%" aria-label="Play as ${esc(p.name)}">
@@ -935,10 +1116,10 @@ function wordOfDay(){
 // ---------- screens ----------
 function goHome(quiet){
   if(!P()){goWho();return;}
-  screen='home';topic=null;if(!quiet)speechSynthesis?.cancel?.();
+  screen='home';topic=null;shopSel=null;clearTry();if(!quiet)speechSynthesis?.cancel?.();
   const p=P(),pr=progressOf(p),d=p.daily||{},done=d.last===today(),w=wordOfDay(),stars=starsOf(p);
   const streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
-  const nx=REWARDS.find(r=>r[0]>stars),from=nx?(REWARDS[REWARDS.indexOf(nx)-1]||[0])[0]:0;
+  const gl=GIFTS(),nx=gl.find(r=>r.gift>stars),from=nx?((gl[gl.indexOf(nx)-1]||{gift:0}).gift):0;
   main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
    <div class="today">
     <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
@@ -960,13 +1141,13 @@ function goHome(quiet){
     </div>
     <div class="ground" aria-hidden="true"></div>
    </div>
-   <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?nx[1]:'🏆'}</span>
-     <span style="flex:1;min-width:150px"><b>${nx?`${nx[0]-stars} more ★ and Habre gets a ${nx[3]}!`:'Habre has every outfit!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx[0]-from)*100):100}%"></i></span></span>
-     <span class="mini">👕 Habreko lugaa</span></button>`;
+   <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
+     <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
+     <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
   main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=DOORS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');say(o.np,o.dev,null);setTimeout(()=>{if(screen==='home')o.open();},RM?0:520);});
   $('#dailyBtn').onclick=startDaily;
   $('#wodBtn').onclick=()=>{speech(w.it[0],w.it[1],w.it[2]);say(w.it[0],w.it[1],w.it[2]);mood('happy');};
-  $('#wardBtn').onclick=openWardrobe;
+  $('#wardBtn').onclick=()=>openShop();
   if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a door.');mood('wave');}
 }
 function topicTile(t,i,p){
@@ -1051,7 +1232,7 @@ function renderLearn(){
   $('#prev').onclick=()=>{learnI=(learnI-1+words.length)%words.length;renderLearn();};
   $('#next').onclick=()=>{
     if(learnI===words.length-1){
-      const p=P();p.seen=p.seen||{};p.seen[t.id]=1;save();
+      const p=P();p.seen=p.seen||{};if(!p.seen[t.id])earn(2);p.seen[t.id]=1;save();
       speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;
     }
     learnI++;renderLearn();
@@ -1112,7 +1293,8 @@ function memFlip(b,k){
 }
 function memEnd(){
   const n=M.moves<=M.pairs+2?3:M.moves<=M.pairs*2+1?2:1,p=P(),o=M.o;let nb=false;
-  if(o.key&&n>((p.best||{})[o.key]||0)){p.best=p.best||{};p.best[o.key]=n;nb=true;save();renderTop();}
+  if(o.key&&n>((p.best||{})[o.key]||0)){p.best=p.best||{};p.best[o.key]=n;nb=true;save();}
+  earn(n);
   endCard(n,3,{newBest:nb,sub:`${M.pairs} pairs in ${M.moves} tries`,again:()=>startMemory(M.cards,o),back:o.back});
 }
 
@@ -1200,6 +1382,7 @@ function drawKCard(){
   screen='kcards';const c=KF.queue[0],p=P();
   if(!c){
     const again=[...KF.missed],n=[0,0,0];KF.cards.forEach(x=>n[boxOf(p,x)]++);
+    if(!KF.paid){KF.paid=1;earn(Math.ceil((KF.total-again.length)/3));}
     endCard(0,0,{trophy:'🃏',title:'Sakiyo!',titleDev:'सकियो!',sub:`${KF.title} · ${KF.total} cards · ${KF.total-again.length} you knew straight away`,
       extra:`<div class="baskets" style="width:100%;font-size:1rem"><span><i class="b0"></i> ${n[0]} naya</span><span><i class="b1"></i> ${n[1]} abhyas</span><span><i class="b2"></i> ${n[2]} aayo!</span></div>
         ${again.length?`<button class="btn" style="background:var(--yellow);color:var(--ink)" id="kMissed">🔁 Missed ones (${again.length})</button>`:''}`,
@@ -1418,7 +1601,7 @@ function goBranch(k){branchK=k;path=[...story.pages,...story.branches[k]];pageI=
 function branchEnd(){
   const p=P();p.endings=p.endings||{};const f=new Set(p.endings[story.id]||[]);f.add(branchK);p.endings[story.id]=[...f];
   let nb=false;if(f.size>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=f.size;nb=true;}
-  save();renderTop();
+  save();earn(3);
   const other=1-branchK,o=story.choice[3][other];
   endCard(f.size,2,{trophy:'🌿',title:'Kathaa sakiyo!',titleDev:'कथा सकियो!',sub:f.size>=2?'You found both endings!':'Now try the other way!',newBest:nb,
     extra:`<button class="btn" style="background:var(--purple)" id="otherWay">${o[0]} Arko baato <small style="font-weight:500">the other way</small></button>`,back:openStories,backLabel:'Kathaa'});
@@ -1435,7 +1618,8 @@ function storyQuiz(){
     if(k===ans){
       done=true;b.classList.add('right');confetti();mood('happy');
       const stars=tries===0?2:1,p=P();
-      if(stars>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=stars;save();renderTop();}
+      if(stars>bestOf(p,'kathaa',story.id)){p.best=p.best||{};p.best['kathaa:'+story.id]=stars;save();}
+      earn(stars+1);
       speech('Syabaas! '+cap(opts[ans][1])+'!','स्याबास!','Well done! Now put the story in order.');say('Syabaas!','स्याबास!',null);
       setTimeout(()=>{if(screen==='storyq')storyOrder();},2100);
     }else{tries++;b.classList.add('wrong');b.disabled=true;mood('sad');speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
@@ -1453,7 +1637,8 @@ function storyOrder(){
     if(c.ord===nextOrd){
       nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=pg[c.pi];say(l[1],l[2],null);mood('happy');
       if(nextOrd===pick.length){
-        const p=P();if(!bestOf(p,'krama',story.id)){p.best=p.best||{};p.best['krama:'+story.id]=1;save();renderTop();}
+        const p=P();if(!bestOf(p,'krama',story.id)){p.best=p.best||{};p.best['krama:'+story.id]=1;save();}
+        earn(2);
         confetti();speech('Ekdam ramro!','एकदम राम्रो!','You put the story in order!');setTimeout(()=>{say('Ekdam ramro!','एकदम राम्रो!','You put the story in order!');},1400);
         setTimeout(()=>{if(screen==='storyo')openStories();},3600);
       }
@@ -1660,7 +1845,7 @@ function vAsk(){
 function vEnd(){
   const p=P(),key='vakya:'+V.act+':'+V.lv;let nb=false;
   if(V.stars>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=V.stars;nb=true;}
-  stat(p).plays++;stat(p).last=today();save();renderTop();
+  stat(p).plays++;stat(p).last=today();save();earn(V.stars);
   const act=V.act;endCard(V.stars,V.list.length,{newBest:nb,sub:`${V_ACTS.find(a=>a.id===act).en} · ${LEVELS[V.lv].en}`,again:()=>vStart(act),back:openVakya,backLabel:'Vakya'});
 }
 // grow: a sentence gets one more word each time; tap the gap where it goes
@@ -1694,20 +1879,10 @@ function vGrow(){
 function vGrowEnd(){
   const p=P(),key='badhau:'+V.g,g=GROW[V.g],last=g.steps[g.steps.length-1];let nb=false;
   if(V.stars>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=V.stars;nb=true;}
-  save();renderTop();
+  save();earn(V.stars);
   endCard(V.stars,3,{trophy:'🌱',title:sRom(last),titleDev:sDev(last),sub:g.en[g.en.length-1],newBest:nb,again:vGrowStart,back:openVakya,backLabel:'Vakya'});
 }
 
-// ---------- Habre's wardrobe ----------
-function openWardrobe(){
-  screen='wardrobe';const p=P(),stars=starsOf(p);p.outfit=p.outfit||{};
-  main.innerHTML=`${backBtn('Ghar')}<h1>👕 Habreko lugaa <small>हाब्रेको लुगा · Dress up Habre</small></h1>
-   <p style="margin:0;color:var(--soft)">Stars unlock new things for Habre to wear. You have ★ ${stars}. Tap to put one on or take it off.</p>
-   <div class="wardrobe">${REWARDS.map((r,k)=>{const open=stars>=r[0],on=p.outfit[r[2]]===r[1];return `<button data-k="${k}" aria-pressed="${on}" ${open?'':'disabled'}><span aria-hidden="true">${open?r[1]:'🔒'}</span><b>${open?r[3]:'★ '+r[0]}</b></button>`;}).join('')}</div>`;
-  $('#backBtn').onclick=()=>goHome();
-  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const r=REWARDS[+b.dataset.k];p.outfit[r[2]]=p.outfit[r[2]]===r[1]?'':r[1];save();renderOutfit();openWardrobe();mood('happy');});
-  speech('Habreko lugaa!','हाब्रेको लुगा!','What shall Habre wear?');mood('wave');
-}
 
 // ---------- letter tracing ----------
 // the child traces over a faint letter; it counts when the ink covers most of the letter and stays mostly inside it
@@ -1751,7 +1926,7 @@ function openTrace(it){
   }
   function celebrate(){
     won=true;confetti();mood('happy');
-    const p=P();if(p){p.traced=p.traced||{};p.traced[it[1]]=(p.traced[it[1]]||0)+1;save();}
+    const p=P();if(p){p.traced=p.traced||{};p.traced[it[1]]=(p.traced[it[1]]||0)+1;save();earn(1);}
     speech('Syabaas! '+it[0]+'!','स्याबास! '+it[1],'You wrote '+it[0]+'!');say('Syabaas! '+it[0],'स्याबास! '+it[1],null);
   }
   $('#trClear').onclick=()=>{kx.clearRect(0,0,size,size);ix.clearRect(0,0,size,size);won=false;};
@@ -1888,7 +2063,7 @@ function endQuiz(){
   else if(Q.mode==='daily'){key='daily:'+today();const d=p.daily||{};if(d.last!==today()){d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();}p.daily=d;}
   let newBest=false;
   if(key&&n>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=n;newBest=true;}
-  save();renderTop();
+  save();earn(n+(Q.mode==='daily'&&newBest?5:0));
   if(Q.mode==='play'){
     const t=Q.t,lv=Q.lv,L=LEVELS[lv],next=LV_KEYS[LV_KEYS.indexOf(lv)+1],offerNext=next&&n/N>=0.7;
     endCard(n,N,{newBest,sub:`${L.icon} ${L.np} · ${L.en}`,
@@ -1933,6 +2108,7 @@ function renderProgress(p){
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
    <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${GROW.filter((_,i)=>bestOf(p,'badhau',i)).length}/${GROW.length}</p>
    <p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length}) · <b>Stickers:</b> ${stickers}/${stickerItems().length}</p>
+   <p><b>Gems:</b> 💎 ${gemsOf(p)} to spend · ${ITEMS.filter(x=>owns(p,x)&&!x.free).length} of ${ITEMS.filter(x=>!x.free).length} shop things owned</p>
    <p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>
    <h3>Words to practise</h3>
    ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
@@ -1947,7 +2123,7 @@ function renderProgress(p){
 }
 // grown-ups panel
 function renderGrown(){
-  screen='grown';
+  clearTry();screen='grown';
   const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang)),p=P();
   main.innerHTML=`<div class="grown">
     <h2>For grown-ups</h2>
@@ -1987,6 +2163,7 @@ function renderGrown(){
 $('#homeBtn').onclick=()=>goHome();
 $('#whoBtn').onclick=goWho;
 $('#grownBtn').onclick=renderGrown;
+$('#gemBtn').onclick=()=>{if(P())openShop();};
 function renderSound(){const b=$('#soundBtn');b.setAttribute('aria-pressed',String(S.sound));b.setAttribute('aria-label',S.sound?'Sound on':'Sound off');b.textContent=S.sound?'🔊':'🔇';}
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
 save();renderSound();renderTop();
