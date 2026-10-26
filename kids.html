@@ -256,16 +256,41 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 
 /* home: six doors with a progress ring each */
 .back{align-self:flex-start;background:var(--card);border-radius:999px;padding:4px 16px;font-weight:800;box-shadow:0 4px 0 var(--line)}
-.doors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.door{background:var(--card);border-radius:90px 90px 26px 26px;padding:16px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 8px 0 var(--dc);transition:transform .12s;animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
-.door:hover{transform:translateY(-3px)}
-.door:active{transform:translateY(4px);box-shadow:0 4px 0 var(--dc)}
-.door b{font-size:1.5rem;line-height:1.05}
-.door .dev{color:var(--soft)}
-.door .en{font-size:.85rem;color:var(--soft)}
-.ring{width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--dc) calc(var(--p)*1%),#e6eef6 0);display:grid;place-items:center;margin-bottom:4px}
-.ring>span{width:82px;height:82px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:2.8rem;line-height:1}
-.ring>span.lt{font-family:'Nirmala UI','Mangal',var(--f);font-weight:700;color:var(--red)}
+/* Habre's house: a two-tier Nepali roof, brick walls, two floors of three doors; a door swings open when tapped */
+.house{width:100%;max-width:660px;margin:4px auto 0;filter:drop-shadow(0 8px 0 rgba(43,33,64,.08))}
+.roof{position:relative;height:118px}
+.roof .tier{position:absolute;background:linear-gradient(#8f4527,#6e3019);box-shadow:inset 0 -6px 0 rgba(0,0,0,.18)}
+.roof .t2{bottom:58px;left:24%;right:24%;height:52px;clip-path:polygon(16% 0,84% 0,100% 100%,0 100%)}
+.roof .t1{bottom:0;left:-3%;right:-3%;height:62px;clip-path:polygon(11% 0,89% 0,100% 100%,0 100%);display:grid;place-items:center}
+.roof .gajur{position:absolute;left:50%;bottom:106px;width:18px;height:20px;margin-left:-9px;background:#f2b705;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.roof .sign{color:#ffe7b0;font-weight:800;font-size:1.25rem;line-height:1;text-align:center;letter-spacing:.5px}
+.roof .sign small{display:block;font-size:.8rem;font-weight:500;color:#ffd38a}
+.flags{display:flex;justify-content:space-between;height:16px;margin:0 2%;position:relative}
+.flags::before{content:"";position:absolute;left:0;right:0;top:1px;height:2px;background:#6e3019}
+.flags i{width:14px;height:15px;clip-path:polygon(0 0,100% 0,50% 100%)}
+.flags i:nth-child(5n+1){background:#3a7bf2}.flags i:nth-child(5n+2){background:#fff}.flags i:nth-child(5n+3){background:#e8463a}.flags i:nth-child(5n+4){background:#2fae6e}.flags i:nth-child(5n){background:#ffc93c}
+.walls{background:
+  repeating-linear-gradient(0deg,transparent 0 20px,rgba(255,226,200,.55) 20px 22px),
+  repeating-linear-gradient(90deg,transparent 0 44px,rgba(255,226,200,.35) 44px 46px),
+  #c8664a;border-left:10px solid #6e3019;border-right:10px solid #6e3019}
+.floor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4%;padding:14px 5% 0;align-items:end}
+.beam{height:16px;background:repeating-linear-gradient(90deg,#5b2a14 0 18px,#6e3019 18px 22px);box-shadow:0 4px 0 rgba(0,0,0,.15)}
+.ground{height:22px;border-radius:0 0 18px 18px;background:linear-gradient(#7cc96b,#58a84a);margin:0 -2%}
+.hdoor{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;min-width:0;animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards}
+.plaque{background:#fff6df;border:3px solid #6e3019;border-radius:10px;padding:2px 8px;font-weight:800;font-size:1.05rem;line-height:1.05;text-align:center;box-shadow:0 3px 0 #4a200d;max-width:100%}
+.plaque small{display:block;font-weight:500;font-size:.72rem;color:var(--soft)}
+.frame{position:relative;width:100%;max-width:132px;aspect-ratio:3/4.3;border:8px solid #5b2a14;border-bottom:0;border-radius:70px 70px 0 0;overflow:hidden;perspective:700px;
+  background:radial-gradient(circle at 50% 62%,#fff4c2,#ffcf6b 45%,#d9822b 100%)}
+.leaf{position:absolute;inset:0;background:var(--dc);border-radius:62px 62px 0 0;transform-origin:left center;transition:transform .45s cubic-bezier(.4,0,.2,1);box-shadow:inset 0 0 0 5px rgba(0,0,0,.14),inset -10px 0 0 rgba(0,0,0,.06)}
+.leaf::after{content:"";position:absolute;left:16%;right:16%;top:62%;height:26%;border-radius:6px;box-shadow:inset 0 0 0 4px rgba(0,0,0,.16)}
+.wreath{position:absolute;left:50%;top:13%;width:62%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:conic-gradient(#ffc93c calc(var(--p)*1%),rgba(255,255,255,.45) 0);display:grid;place-items:center}
+.wreath span{width:78%;aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:2.1rem;line-height:1}
+.wreath span.lt{font-family:'Nirmala UI','Mangal',var(--f);font-weight:700;color:var(--red)}
+.knob{position:absolute;right:12%;top:52%;width:12px;height:12px;border-radius:50%;background:#f2b705;box-shadow:0 2px 0 #a87c00}
+.hdoor:hover .leaf{transform:rotateY(-14deg)}
+.hdoor.open .leaf{transform:rotateY(-80deg)}
+.step{width:calc(100% + 0px);max-width:148px;height:10px;border-radius:3px;background:#b9a48a;box-shadow:0 3px 0 #8d7a62;position:relative}
+.mat{font-size:.78rem;font-weight:800;color:#fff;background:rgba(43,33,64,.35);border-radius:999px;padding:0 8px;margin-top:-2px}
 .today{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}
 .daily{background:linear-gradient(135deg,#ff9f1c,#e8463a);color:#fff;border-radius:28px;padding:14px 18px;text-align:left;display:flex;align-items:center;gap:14px;box-shadow:0 7px 0 var(--red-dark)}
 .daily .ic{font-size:3rem;line-height:1}
@@ -377,10 +402,10 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .cd label{background:var(--sky);border-radius:999px;padding:3px 12px;gap:6px;font-size:.95rem}
 .hbAcc text{font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif}
 @media (max-width:680px){
-  .doors{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .today{grid-template-columns:minmax(0,1fr)}
-  .ring{width:84px;height:84px}.ring>span{width:66px;height:66px;font-size:2.2rem}
-  .door b{font-size:1.25rem}
+  .roof{height:92px}.roof .t1{height:50px}.roof .t2{bottom:46px;height:40px}.roof .gajur{bottom:84px}.roof .sign{font-size:1rem}
+  .floor{gap:3%;padding:10px 3% 0}.plaque{font-size:.85rem;padding:2px 5px}.plaque small{font-size:.62rem}
+  .wreath span{font-size:1.5rem}.frame{border-width:6px}
   .path,.extras{gap:8px}
   .car{min-width:74px;font-size:1.05rem;padding:6px 8px}
   .tile{font-size:1.05rem;padding:8px 12px}
@@ -919,13 +944,26 @@ function goHome(quiet){
     <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
     <button class="wod" id="wodBtn" aria-label="Word of the day: ${esc(w.it[2])}"><span aria-hidden="true">${pictureOf(w.t,w.it)}</span><span><small>Aajako shabda · word of the day</small><b>${esc(w.it[0])}</b><span class="dev" lang="ne">${w.it[1]}</span>${S.english?`<small>${esc(w.it[2])}</small>`:''}</span></button>
    </div>
-   <div class="doors">${DOORS.map((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="door" style="--dc:${o.color};animation-delay:${i*60}ms" data-d="${o.id}">
-     <span class="ring" style="--p:${v}" aria-hidden="true"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span>
-     <b>${o.np}</b><span class="dev" lang="ne">${o.dev}</span><span class="en">${o.en} · ${v}%</span></button>`;}).join('')}</div>
+   <div class="house">
+    <div class="roof" aria-hidden="true"><span class="gajur"></span><span class="tier t2"></span><span class="tier t1"><span class="sign">Habreko ghar<small>हाब्रेको घर · Habre’s house</small></span></span></div>
+    <div class="walls">
+     <div class="flags" aria-hidden="true">${'<i></i>'.repeat(19)}</div>
+     <div class="floor">${DOORS.slice(0,3).map((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
+       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
+       <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span><span class="knob"></span></span></span>
+       <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;}).join('')}</div>
+     <div class="beam" aria-hidden="true"></div>
+     <div class="floor">${DOORS.slice(3).map((o,i)=>((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
+       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
+       <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span><span class="knob"></span></span></span>
+       <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;})(o,i+3)).join('')}</div>
+    </div>
+    <div class="ground" aria-hidden="true"></div>
+   </div>
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?nx[1]:'🏆'}</span>
      <span style="flex:1;min-width:150px"><b>${nx?`${nx[0]-stars} more ★ and Habre gets a ${nx[3]}!`:'Habre has every outfit!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx[0]-from)*100):100}%"></i></span></span>
      <span class="mini">👕 Habreko lugaa</span></button>`;
-  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>DOORS.find(o=>o.id===b.dataset.d).open());
+  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=DOORS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');say(o.np,o.dev,null);setTimeout(()=>{if(screen==='home')o.open();},RM?0:520);});
   $('#dailyBtn').onclick=startDaily;
   $('#wodBtn').onclick=()=>{speech(w.it[0],w.it[1],w.it[2]);say(w.it[0],w.it[1],w.it[2]);mood('happy');};
   $('#wardBtn').onclick=openWardrobe;

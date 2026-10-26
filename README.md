@@ -4,7 +4,7 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
-**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The home screen has six doors, each with a ring that fills up as the child gets through it:
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The home screen is Habre's house: a Nepali-style house with six doors that swing open when tapped. The wreath on each door fills up as the child works through that section:
 
 - **Kathaa (stories):** ten short stories. A voice reads each page aloud and lights up every word as it's spoken. Tap any word to hear it and see what it means. Two of the stories let the child choose what Habre does next, and each has two endings to find. The rest end with a question, then a game where the child puts four scenes back in order. Finishing one story opens the next. A "Kun chitra?" switch hides each page's picture so the child has to pick it.
 - **Shabda (words):** 18 picture topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings and everyday sayings). Each topic goes Learn → Play → Check, with three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3) and *Gaaro* (hard, 4, listen-only). There's also a memory-match game. Every word a child gets right twice becomes a sticker in their sticker book.
