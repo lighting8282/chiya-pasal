@@ -829,7 +829,7 @@ function renderTop(){
     const gifts=GIFTS().filter(x=>starsOf(p)>=x.gift);gifts.forEach(g=>p.owned[g.id]=1);
     if((p.rw||0)<gifts.length){
       const x=gifts[gifts.length-1];gifts.forEach(g=>p.owned[g.id]=1);p.rw=gifts.length;p.outfit[x.slot]=x.id;save();
-      setTimeout(()=>{speech('Upahaar! '+(x.e||''),'उपहार!',`A free ${x.en} for Habre!`);say('Upahaar!','उपहार!',`A free ${x.en} for Habre!`);confetti();mood('happy');},2600);
+      setTimeout(()=>{speech('Upahaar! '+(x.e||x.icon||''),'उपहार!',`A free ${x.en} for Habre!`);say('Upahaar!','उपहार!',`A free ${x.en} for Habre!`);confetti();mood('happy');},2600);
     }
   }
   renderOutfit();
@@ -852,6 +852,10 @@ const heart=(cx,cy,s)=>`M${cx} ${cy+s*.6}C${cx-s*1.2} ${cy-s*.2} ${cx-s*.6} ${cy
 const starPath=(cx,cy,r)=>'M'+Array.from({length:10},(_,k)=>{const a=Math.PI/5*k-Math.PI/2,q=k%2?r*.45:r;return `${(cx+q*Math.cos(a)).toFixed(1)} ${(cy+q*Math.sin(a)).toFixed(1)}`;}).join('L')+'Z';
 const SVG_ITEMS={
   dhaka:`<path d="M50 32 L54 8 Q80 -2 108 10 L110 32 Q80 38 50 32Z" fill="url(#dhakaP)" stroke="#2b2140" stroke-width="2.5"/><path d="M50 32 Q80 38 110 32" stroke="#2b2140" stroke-width="4" fill="none"/>`,
+  // glasses are drawn on the eyes at (62,66) and (98,66), so they fit the same with every emoji font
+  shades:`<path d="M48 61 L35 57M112 61 L125 57" stroke="#1d1a2e" stroke-width="3.5" stroke-linecap="round"/><rect x="47" y="56" width="30" height="21" rx="9" fill="#2b2140" stroke="#111" stroke-width="2.5"/><rect x="83" y="56" width="30" height="21" rx="9" fill="#2b2140" stroke="#111" stroke-width="2.5"/><path d="M77 63 Q80 59 83 63" stroke="#111" stroke-width="3" fill="none"/><path d="M52 61 L60 61M88 61 L96 61" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>`,
+  specs:`<path d="M50 63 L35 59M110 63 L125 59" stroke="#6b3a1f" stroke-width="3" stroke-linecap="round"/><circle cx="62" cy="66" r="12.5" fill="#dff3ff" fill-opacity=".3" stroke="#6b3a1f" stroke-width="3"/><circle cx="98" cy="66" r="12.5" fill="#dff3ff" fill-opacity=".3" stroke="#6b3a1f" stroke-width="3"/><path d="M74.5 64 Q80 60 85.5 64" stroke="#6b3a1f" stroke-width="3" fill="none"/>`,
+  goggles:`<path d="M34 64 L126 64" stroke="#1d6fd6" stroke-width="7" stroke-linecap="round"/><ellipse cx="62" cy="66" rx="15" ry="12.5" fill="#8fd8ff" fill-opacity=".55" stroke="#1d6fd6" stroke-width="4"/><ellipse cx="98" cy="66" rx="15" ry="12.5" fill="#8fd8ff" fill-opacity=".55" stroke="#1d6fd6" stroke-width="4"/><path d="M53 61 Q57 57 62 58M89 61 Q93 57 98 58" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>`,
   hearts:`<path d="${heart(62,68,13)}" fill="#ff4f8b" stroke="#b0174f" stroke-width="2"/><path d="${heart(98,68,13)}" fill="#ff4f8b" stroke="#b0174f" stroke-width="2"/><path d="M73 64 Q80 59 87 64" stroke="#b0174f" stroke-width="3" fill="none"/>`,
   stars:`<path d="${starPath(62,66,15)}" fill="#ffc93c" stroke="#b98900" stroke-width="2"/><path d="${starPath(98,66,15)}" fill="#ffc93c" stroke="#b98900" stroke-width="2"/><path d="M74 64 Q80 60 86 64" stroke="#b98900" stroke-width="3" fill="none"/>`,
   mala:Array.from({length:11},(_,k)=>{const t=k/10,x=50+60*t,y=108+26*Math.sin(Math.PI*t);return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${k%2?'#ffc93c':'#ff8c1a'}" stroke="#c25e00" stroke-width="1"/>`;}).join(''),
@@ -871,8 +875,8 @@ const ITEMS=[
  I('snowman','hat','⛄','Hiu-maanchhe','हिउँमान्छे','snowman',24),I('cake','hat','🎂','Kek','केक','birthday cake',25),
  I('rainbowhat','hat','🌈','Indreni','इन्द्रेणी','rainbow',30),I('unicorn','hat','🦄','Unicorn','युनिकर्न','unicorn',35),
  // glasses
- I('shades','eyes','🕶️','Kalo chasma','कालो चस्मा','sunglasses',0,{gift:30}),I('specs','eyes','👓','Chasma','चस्मा','glasses',10),
- I('goggles','eyes','🥽','Pauri chasma','पौडी चस्मा','swimming goggles',15),
+ I('shades','eyes','','Kalo chasma','कालो चस्मा','sunglasses',0,{gift:30,svg:'shades',icon:'🕶️'}),I('specs','eyes','','Chasma','चस्मा','glasses',10,{svg:'specs',icon:'👓'}),
+ I('goggles','eyes','','Pauri chasma','पौडी चस्मा','swimming goggles',15,{svg:'goggles',icon:'🥽'}),
  I('hearts','eyes','','Maya chasma','माया चस्मा','heart glasses',25,{svg:'hearts',icon:'💕'}),I('stars','eyes','','Tara chasma','तारा चस्मा','star glasses',25,{svg:'stars',icon:'🌟'}),
  // neck
  I('bow','neck','🎀','Ribbon','रिबन','bow',0,{gift:20}),I('medal','neck','🏅','Padak','पदक','medal',0,{gift:100}),
