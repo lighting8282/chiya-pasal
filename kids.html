@@ -578,6 +578,11 @@ const TOPICS=[
   ['haseko','हाँसेको','laughing','😂'],['thakeko','थाकेको','tired','😩'],['biraami','बिरामी','sick','🤒'],['laaj lageko','लाज लागेको','shy','😳'],
   ['chinta lageko','चिन्ता लागेको','worried','😟'],['maya lageko','माया लागेको','in love','😍'],['jhyau lageko','झ्याउ लागेको','bored','🥱'],
   ['jaado lageko','जाडो लागेको','cold','🥶'],['garmi lageko','गर्मी लागेको','hot','🥵']]},
+ {id:'chaad',np:'Chaad-parba',dev:'चाडपर्व',en:'Festivals',icon:'🪔',color:'#ff8c2e',kind:'pic',q:'kahaa',items:[
+  ['diyo','दियो','oil lamp','🪔'],['changa','चङ्गा','kite','🪁'],['upahaar','उपहार','present','🎁'],['bellun','बेलुन','balloon','🎈'],
+  ['mala','माला','garland','📿'],['dhol','ढोल','drum','🥁'],['phuljhadi','फुलझडी','sparkler','🎇'],['mainbatti','मैनबत्ती','candle','🕯️'],
+  ['pichkari','पिचकारी','water pistol','🔫'],['jamara','जमरा','jamara (barley shoots)','🌱'],['khapse','खाप्से','khapse biscuit','🍪'],
+  ['dhwaja','ध्वजा','flag','🚩']]},
  // everyday sayings people use now; the child hears one and picks the picture that fits
  // letters: [sound, letter, sound again (unique label), picture, tier, example word, its Devanagari, its English]
  {id:'akshar',np:'Akshar',dev:'अक्षर',en:'Letters',icon:'अ',color:'#e8463a',kind:'letter',q:'letter',tiers:true,items:[
@@ -1510,6 +1515,50 @@ const STORIES=[
    [['🦁','Habre chidiyakhanama jaanchha.','हाब्रे चिडियाखानामा जान्छ।','Habre goes to the zoo.'],
     ['🐘','Thulo hatti paani chhyapchha!','ठूलो हात्ती पानी छ्याप्छ!','A big elephant splashes water!'],
     ['🦒','Jiraphko ghaati kati laamo!','जिराफको घाँटी कति लामो!','The giraffe’s neck is so long!']]]},
+ {id:'dashain',np:'Dashain aayo',dev:'दशैं आयो',en:'Dashain is here',icon:'🪁',pages:[
+  ['🌾🌤️','Dashain aayo! Sabai ghar farkinchhan.','दशैं आयो! सबै घर फर्किन्छन्।','Dashain is here! Everyone goes home.'],
+  ['🪁','Habre buwasanga changa udauchha.','हाब्रे बुवासँग चङ्गा उडाउँछ।','Habre flies a kite with Dad.'],
+  ['🎋🪢','Gaaunma thulo ping cha. Habre ping khelchha.','गाउँमा ठूलो पिङ छ। हाब्रे पिङ खेल्छ।','There is a big bamboo swing in the village. Habre plays on the swing.'],
+  ['👴🔴','Hajurbuwale Habrelai tika lagaunubhayo.','हजुरबुवाले हाब्रेलाई टीका लगाउनुभयो।','Grandpa put tika on Habre.'],
+  ['🌱','Shirma jamara pani lagaunubhayo.','शिरमा जमरा पनि लगाउनुभयो।','He put jamara (barley shoots) on his head too.'],
+  ['🙏','Habre bhanchha: Dashainko shubhakamana!','हाब्रे भन्छ: दशैंको शुभकामना!','Habre says: Happy Dashain!']],
+  quiz:['Habrele ke udayo?','हाब्रेले के उडायो?','What did Habre fly?',0,[['🪁','changa','kite'],['🎈','bellun','balloon'],['✈️','hawaijahaj','aeroplane']]]},
+ {id:'holi',np:'Rangko chaad',dev:'रङको चाड',en:'The festival of colours',icon:'🎨',pages:[
+  ['🌸☀️','Aaja Holi ho. Rangko chaad!','आज होली हो। रङको चाड!','Today is Holi. The festival of colours!'],
+  ['🎨','Habresanga rato, hariyo ra pahelo rang cha.','हाब्रेसँग रातो, हरियो र पहेंलो रङ छ।','Habre has red, green and yellow colour powder.'],
+  ['🔫💦','Saathi pichkariko paani chhyapchha!','साथी पिचकारीको पानी छ्याप्छ!','A friend squirts water from a water pistol!'],
+  ['🎈💦','Habre paani bellun phyaakchha.','हाब्रे पानी बेलुन फ्याँक्छ।','Habre throws a water balloon.'],
+  ['🌈😆','Habreko anuhar rangichangi bhayo!','हाब्रेको अनुहार रङ्गीचङ्गी भयो!','Habre’s face turned all colourful!'],
+  ['🤗','Sabai bhanchhan: Holiko shubhakamana!','सबै भन्छन्: होलीको शुभकामना!','Everyone says: Happy Holi!']],
+  quiz:['Habreko anuhar kasto bhayo?','हाब्रेको अनुहार कस्तो भयो?','What did Habre’s face look like?',2,[['⬜','seto','white'],['⬛','kalo','black'],['🌈','rangichangi','colourful']]]},
+ {id:'lhosar',np:'Lhosar',dev:'ल्होसार',en:'Lhosar, the new year',icon:'🥁',pages:[
+  ['🎊','Aaja Lhosar ho. Naya barsa aayo!','आज ल्होसार हो। नयाँ वर्ष आयो!','Today is Lhosar. The new year is here!'],
+  ['👫','Habreko saathi Pemba ho.','हाब्रेको साथी पेम्बा हो।','Habre’s friend is Pemba.'],
+  ['🟦⬜🟥🟩🟨','Gharma rangichangi dhwaja phahrauchha.','घरमा रङ्गीचङ्गी ध्वजा फहराउँछ।','Colourful prayer flags flutter at the house.'],
+  ['🍪','Pembako aama khapse banaunuhunchha.','पेम्बाको आमा खाप्से बनाउनुहुन्छ।','Pemba’s mum makes khapse biscuits.'],
+  ['💃🕺','Sabai golo bhaera naachchhan.','सबै गोलो भएर नाच्छन्।','Everyone dances in a circle.'],
+  ['🙏','Habre bhanchha: Lhosarko shubhakamana!','हाब्रे भन्छ: ल्होसारको शुभकामना!','Habre says: Happy Lhosar!']],
+  quiz:['Pembako aamale ke banaunubhayo?','पेम्बाको आमाले के बनाउनुभयो?','What did Pemba’s mum make?',1,[['🥟','momo','momos'],['🍪','khapse','khapse biscuits'],['🍚','bhaat','rice']]]},
+ {id:'daktar',np:'Daktarkahaa',dev:'डाक्टरकहाँ',en:'At the doctor’s',icon:'🩺',pages:[
+  ['🤒','Habrelai jworo aayo.','हाब्रेलाई ज्वरो आयो।','Habre has a fever.'],
+  ['😷','Uslai rugha ra khoki pani lagyo.','उसलाई रुघा र खोकी पनि लाग्यो।','He has a cold and a cough too.'],
+  ['🏥','Aama Habrelai aspatal laanuhunchha.','आमा हाब्रेलाई अस्पताल लानुहुन्छ।','Mum takes Habre to the hospital.'],
+  ['👩‍⚕️🩺','Daktarle Habreko chhaati jaanchnubhayo.','डाक्टरले हाब्रेको छाती जाँच्नुभयो।','The doctor listened to Habre’s chest.'],
+  ['💊💧','Habre aushadhi khanchha ra dherai paani piunchha.','हाब्रे औषधि खान्छ र धेरै पानी पिउँछ।','Habre takes his medicine and drinks lots of water.'],
+  ['😀','Habre aaram garchha. Bholi sanchai bhayo!','हाब्रे आराम गर्छ। भोलि सन्चै भयो!','Habre rests. The next day he was better!']],
+  quiz:['Habrelai ke bhayo?','हाब्रेलाई के भयो?','What was wrong with Habre?',0,[['🤒','jworo','fever'],['😴','nindra','sleepy'],['😋','bhok','hungry']]]},
+ {id:'school',np:'Schoolma',dev:'स्कूलमा',en:'At school',icon:'🏫',pages:[
+  ['🏫','Habre schoolma pugchha.','हाब्रे स्कूलमा पुग्छ।','Habre gets to school.'],
+  ['👩‍🏫','Guruaama bhannuhunchha: Namaste, bachchaharu!','गुरुआमा भन्नुहुन्छ: नमस्ते, बच्चाहरू!','The teacher says: Hello, children!'],
+  ['🔔','Tiphinko ghanti bajyo. Ke garne?','टिफिनको घण्टी बज्यो। के गर्ने?','The break-time bell rang. What shall we do?']],
+  choice:['Habre ke garchha?','हाब्रे के गर्छ?','What does Habre do? You choose!',[['⚽','Bhakundo!','भकुण्डो!','Football!'],['🖍️','Chitra!','चित्र!','Drawing!']]],
+  branches:[
+   [['⚽','Habre saathiharusanga bhakundo khelchha.','हाब्रे साथीहरूसँग भकुण्डो खेल्छ।','Habre plays football with his friends.'],
+    ['🥅','Habrele gol garyo!','हाब्रेले गोल गर्‍यो!','Habre scored a goal!'],
+    ['👏😀','Sabai taali bajauchhan. Syabaas, Habre!','सबै ताली बजाउँछन्। स्याबास, हाब्रे!','Everyone claps. Well done, Habre!']],
+   [['🖍️','Habre kaagajma chitra banauchha.','हाब्रे कागजमा चित्र बनाउँछ।','Habre draws a picture on paper.'],
+    ['🏠🌈','Usle ghar ra indreni banayo.','उसले घर र इन्द्रेणी बनायो।','He drew a house and a rainbow.'],
+    ['👩‍🏫⭐','Guruaamale tara dinubhayo. Syabaas, Habre!','गुरुआमाले तारा दिनुभयो। स्याबास, हाब्रे!','The teacher gave him a star. Well done, Habre!']]]},
 ];
 const pagesOf=s=>[...s.pages,...(s.branches||[]).flat()];
 // picture words, so a tapped story word can show its meaning
