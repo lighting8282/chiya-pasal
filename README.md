@@ -4,7 +4,16 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
-**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The game opens on a map (below). The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The game opens on a map (below).
+
+**Learning English.** When a profile is made, the child picks *Ke sikne?* (what will you learn?): Nepali or English. English is for Nepali-speaking children, in Nepal or anywhere else. For them:
+- The words, find-it questions ("Where is the kettle?") and stories are in English, spoken with the device's English voice.
+- The Devanagari sits underneath as the help, and the romanized spelling is hidden.
+- Habre's other lines are in Nepali when they have no English.
+- It covers the rooms, the trips, the 19 word topics, flashcards, memory match, stickers, daily practice and the stories, where each English word lights up as it is read and can be tapped.
+- The letters, grammar and sentence train teach Nepali, so they are left out for now.
+
+A grown-up can change the choice later under "Change player". The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
 
 Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
 

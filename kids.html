@@ -151,6 +151,11 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .colors{display:flex;gap:8px;flex-wrap:wrap}
 .colors button{width:46px;height:46px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px var(--line)}
 .colors button[aria-pressed="true"]{box-shadow:0 0 0 4px var(--ink)}
+.langpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.langpick button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:20px;background:var(--sky);border:4px solid transparent}
+.langpick button span{font-size:2rem;font-weight:800;line-height:1.1}
+.langpick button small{color:var(--soft)}
+.langpick button[aria-pressed="true"]{border-color:var(--green);background:#e4f7ec}
 .warn{background:#fff1ef;border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 
 /* learn card */
@@ -678,7 +683,7 @@ const TOPICS=[
  {id:'chaad',np:'Chaad-parba',dev:'चाडपर्व',en:'Festivals',icon:'🪔',color:'#ff8c2e',kind:'pic',q:'kahaa',items:[
   ['diyo','दियो','oil lamp','🪔'],['changa','चङ्गा','kite','🪁'],['upahaar','उपहार','present','🎁'],['bellun','बेलुन','balloon','🎈'],
   ['mala','माला','garland','📿'],['dhol','ढोल','drum','🥁'],['phuljhadi','फुलझडी','sparkler','🎇'],['mainbatti','मैनबत्ती','candle','🕯️'],
-  ['pichkari','पिचकारी','water pistol','🔫'],['jamara','जमरा','jamara (barley shoots)','🌱'],['khapse','खाप्से','khapse biscuit','🍪'],
+  ['pichkari','पिचकारी','water pistol','🔫'],['jamara','जमरा','barley shoots','🌱'],['khapse','खाप्से','biscuit','🍪'],
   ['dhwaja','ध्वजा','flag','🚩']]},
  // everyday sayings people use now; the child hears one and picks the picture that fits
  // letters: [sound, letter, sound again (unique label), picture, tier, example word, its Devanagari, its English]
@@ -770,7 +775,7 @@ const TOPICS=[
  {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',color:'#ff7eb6',kind:'pic',q:'phrase',items:[
   ['pakka','पक्का','for sure!','👍'],['sahi ho','सही हो','that’s right!','✅'],['ek chin','एक छिन','just a moment','⏳'],
   ['bye bye','बाइ बाइ','bye-bye!','👋'],['majja aayo','मज्जा आयो','that was fun!','🎉'],['chhito gara','छिटो गर','hurry up!','🏃'],
-  ['khatra','खतरा','awesome! (slang)','🤩'],['dami','दामी','cool! (slang)','😎'],['chill gara','चिल गर','chill out','😌'],
+  ['khatra','खतरा','awesome!','🤩'],['dami','दामी','cool!','😎'],['chill gara','चिल गर','chill out','😌'],
   ['jhyau lagyo','झ्याउ लाग्यो','I’m bored','🥱'],['selfie khichau','सेल्फी खिचौं','let’s take a selfie!','🤳'],
   ['janmadin ko shubhakamana','जन्मदिनको शुभकामना','happy birthday!','🎂']]},
 ];
@@ -822,6 +827,17 @@ const bestOf=(p,tid,lv)=>((p&&p.best)||{})[tid+':'+lv]||0;
 const starsOf=p=>p?Object.values(p.best||{}).reduce((a,b)=>a+b,0):0;
 const levelOf=tid=>(P()&&P().lv&&P().lv[tid])||'easy';
 const passed=(p,tid,lv)=>bestOf(p,tid,lv)>=Math.ceil(LEVELS[lv].n*0.7);
+// Each player learns one way: Nepali (the words in romanized Nepali, with Devanagari and English to help) or
+// English (for Nepali-speaking children: the words in English, with Devanagari to help, and no romanized spelling)
+const EN=()=>P()?.learn==='en';
+const isPl=w=>/s$/.test(w)&&!/(ss|us|is)$/.test(w);
+const whereEn=w=>`Where ${isPl(w)?'are':'is'} the ${w}?`;
+// the word being learned, as [the word, the help line under it]
+const tw=it=>EN()?[it[2],it[1]]:[it[0],it[1]];
+// a topic, room or place name ({np, dev, en}) as [the name, the small line under it]
+const nmOf=o=>EN()?[o.en,o.dev]:[o.np,`${o.dev} · ${o.en}`];
+// a question shown in a box: the learned language big, the help under it
+const qLine=(rom,dev,en)=>EN()?`${esc(en)}<small lang="ne">${dev}</small>`:`${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small>`;
 
 let screen='home',topic=null,learnI=0,Q=null;
 
@@ -840,26 +856,29 @@ if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoic
 // say a Nepali line (Devanagari for a Nepali/Hindi voice, romanized otherwise), then optionally the English
 // o.keep: queue after what is already being said; o.onWord(i): called with the index of the word being spoken (-1 at the end),
 // from the voice's word boundaries when it reports them, otherwise from a timer that guesses the pace
+// For a player learning English, a line that has English is said in English only (the Nepali is on screen);
+// a line with no English is said in Nepali, the child's own language.
 function say(rom,dev,en,o){
   o=o||{};
   if(!TTS||!S.sound){o.onWord&&o.onWord(-1);return;}
   try{
     if(!o.keep)speechSynthesis.cancel();
-    const h=$('#habre'),stop=()=>h.classList.remove('talking');
-    const text=npVoice?dev:rom,u=new SpeechSynthesisUtterance(text);
-    if(npVoice){u.voice=npVoice;u.lang=npVoice.lang;}
+    const h=$('#habre'),stop=()=>h.classList.remove('talking'),eng=EN()&&!!en,voice=eng?enVoice:npVoice;
+    const text=eng?en:npVoice?dev:rom,u=new SpeechSynthesisUtterance(text);
+    if(voice){u.voice=voice;u.lang=voice.lang;}
+    else if(eng)u.lang='en-GB';
     u.rate=S.rate;u.pitch=1.15;
     u.onstart=()=>h.classList.add('talking');u.onend=stop;u.onerror=stop;
     if(o.onWord){
       const starts=[],toks=[];text.replace(/\S+/g,(m,i)=>{starts.push(i);toks.push(m);return m;});
       let timer=0,byVoice=false,k=0;
-      const step=()=>{if(byVoice||k>=toks.length)return;o.onWord(k);const ms=(toks[k].length*(npVoice?95:70)+170)/S.rate;k++;timer=setTimeout(step,ms);};
+      const step=()=>{if(byVoice||k>=toks.length)return;o.onWord(k);const ms=(toks[k].length*(npVoice&&!eng?95:70)+170)/S.rate;k++;timer=setTimeout(step,ms);};
       const end=()=>{clearTimeout(timer);o.onWord(-1);};
       u.onboundary=e=>{if(e.name&&e.name!=='word')return;byVoice=true;clearTimeout(timer);let j=0;while(j+1<starts.length&&starts[j+1]<=e.charIndex)j++;o.onWord(j);};
       u.addEventListener('start',step);u.addEventListener('end',end);u.addEventListener('error',end);
     }
     speechSynthesis.speak(u);
-    if(en&&S.english){
+    if(en&&S.english&&!eng){
       const e=new SpeechSynthesisUtterance(en);
       if(enVoice){e.voice=enVoice;e.lang=enVoice.lang;}
       e.rate=Math.min(1,S.rate+0.1);e.pitch=1.1;
@@ -869,6 +888,8 @@ function say(rom,dev,en,o){
   }catch(err){}
 }
 const canListen=()=>TTS&&S.sound;
+// say the word being learned: in English for an English learner, in Nepali otherwise
+const sayT=(rom,dev,en,o)=>say(rom,dev,EN()?en:null,o);
 
 // ---------- Habre ----------
 $('#habre').innerHTML=`<div class="scene" id="hbScene" aria-hidden="true"></div><svg viewBox="0 0 160 170" aria-hidden="true">
@@ -899,7 +920,11 @@ $('#habre').innerHTML=`<div class="scene" id="hbScene" aria-hidden="true"></div>
 // remember each shape's own colours so a fur colour can be swapped in and out
 $('#habre').querySelectorAll('svg [fill],svg [stroke]').forEach(el=>{const f=el.getAttribute('fill'),k=el.getAttribute('stroke');if(f&&f[0]==='#')el.dataset.of=f.toLowerCase();if(k&&k[0]==='#')el.dataset.os=k.toLowerCase();});
 function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave');void h.offsetWidth;if(cls)h.classList.add(cls);}
-function speech(rom,dev,en){$('#speech').innerHTML=`<b>${esc(rom)}</b><span class="dev" lang="ne">${esc(dev)}</span>${en&&S.english?`<span class="en">${esc(en)}</span>`:''}`;}
+function speech(rom,dev,en){
+  // an English learner reads the English, with the Devanagari under it; with no English, just the Devanagari
+  if(EN()){$('#speech').innerHTML=en?`<b>${esc(en)}</b>${dev?`<span class="dev" lang="ne">${esc(dev)}</span>`:''}`:`<b lang="ne">${esc(dev||rom)}</b>`;return;}
+  $('#speech').innerHTML=`<b>${esc(rom)}</b><span class="dev" lang="ne">${esc(dev)}</span>${en&&S.english?`<span class="en">${esc(en)}</span>`:''}`;
+}
 $('#habre').onclick=()=>{mood('wave');speech('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I’m Habre.');say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');};
 
 function confetti(){
@@ -920,6 +945,7 @@ function renderTop(){
   $('#whoNm').textContent=p?p.name:'Ko?';
   $('#stars').textContent='★ '+starsOf(p);
   $('#gemBtn').textContent='💎 '+(p?gemsOf(p):0);
+  $('.title').innerHTML=EN()?'Habre’s English<small lang="ne">हाब्रेको अंग्रेजी</small>':'Habre’s Nepali<small lang="ne">हाब्रेको नेपाली</small>';
   // free gifts at star milestones; Habre puts each one on straight away
   if(p){
     p.owned=p.owned||{};p.outfit=p.outfit||{};
@@ -1138,6 +1164,8 @@ function editProfile(p){
      <div class="avatars">${AVATARS.map(a=>`<button type="button" aria-pressed="${a===d.icon}" data-a="${a}" aria-label="${a}">${a}</button>`).join('')}</div>
      <label>Rang chhana <small style="font-weight:500;color:var(--soft)">Pick a colour</small></label>
      <div class="colors">${PCOLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour"></button>`).join('')}</div>
+     <label>Ke sikne? <small style="font-weight:500;color:var(--soft)" lang="ne">के सिक्ने? · What will you learn?</small></label>
+     <div class="langpick">${[['ne','अ','Nepali','नेपाली सिक्ने'],['en','A','English','अंग्रेजी सिक्ने']].map(([l,ic,nm,dv])=>`<button type="button" aria-pressed="${(d.learn||'ne')===l}" data-l="${l}"><span aria-hidden="true">${ic}</span><b>${nm}</b><small lang="ne">${dv}</small></button>`).join('')}</div>
      <div class="btns" style="justify-content:flex-start">
        <button type="submit" class="btn" style="background:var(--green)">✔ Thik cha <small style="font-weight:500">save</small></button>
        ${S.profiles.length?`<button type="button" class="btn ghost" id="pCancel">Back</button>`:''}
@@ -1150,11 +1178,12 @@ function editProfile(p){
    </form>`;
   main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{d.icon=b.dataset.a;main.querySelectorAll('[data-a]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{d.color=b.dataset.c;main.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{d.learn=b.dataset.l;main.querySelectorAll('[data-l]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   $('#pf').onsubmit=e=>{
     e.preventDefault();
-    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1));
-    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
-    else Object.assign(p,{name,icon:d.icon,color:d.color});
+    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne';
+    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
+    else Object.assign(p,{name,icon:d.icon,color:d.color,learn});
     // a new player goes straight to the map, to see where the journey goes
     save();renderTop();if(isNew)openMap();else goWho();
   };
@@ -1186,7 +1215,7 @@ const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatr
 function hearItem(t,it){
   if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
   else if(t.kind==='yesno'){const a=ynOf(t,it);say(it[0]+' '+a[0],it[1]+' '+a[1],null);}
-  else say(it[0],it[1],null);
+  else sayT(it[0],it[1],it[2]);
 }
 function findCard(key){
   const i=key.indexOf('|'),tid=key.slice(0,i),w=key.slice(i+1),t=tid==='vakya'?VAKYA_T:TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);
@@ -1374,39 +1403,44 @@ const SECTIONS={
 const FIND_N=8;
 // the room that holds a section or a word topic
 const roomOf=id=>ROOMS.find(r=>r.sections.includes(id)||r.topics.includes(id));
+// the letters, grammar and sentence train teach Nepali, so an English learner's rooms leave them out
+const NE_ONLY=['akshar','vyakaran','vakya'];
+const roomTopics=r=>EN()?r.topics.filter(id=>!NE_ONLY.includes(id)):r.topics;
+const roomSections=r=>EN()?r.sections.filter(id=>!NE_ONLY.includes(id)):r.sections;
 const toRoom=id=>()=>openRoom(roomOf(id));
 // how far through a room: things looked at, the find game, and its word topics
 function roomProgress(p,r){
   const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(FIND_N-1));
-  return r.topics.length?seen*0.25+find*0.35+avg(r.topics.map(id=>topicDone(p,T(id))))*0.4:seen*0.4+find*0.6;
+  const ts=roomTopics(r);
+  return ts.length?seen*0.25+find*0.35+avg(ts.map(id=>topicDone(p,T(id))))*0.4:seen*0.4+find*0.6;
 }
 let RF=null;
 function openRoom(r){
   if(!P()){goWho();return;}
   screen='room';RF=null;topic=null;
   const p=P();
-  main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${r.np} <small lang="ne">${r.dev} · ${r.en}</small></h1>
+  main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]}</small></h1>
    <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
     <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${FIND_N}</small></button></div>
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
    ${roomScene(r)}
    <h2 class="sub">Yo kothama <small>More in this room</small></h2>
-   <div class="topics">${r.topics.map((id,i)=>topicTile(T(id),i,p)).join('')}${r.sections.map((id,i)=>{const s=SECTIONS[id];
-     return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}</span></button>`;}).join('')}</div>`;
+   <div class="topics">${roomTopics(r).map((id,i)=>topicTile(T(id),i,p)).join('')}${roomSections(r).map((id,i)=>{const s=SECTIONS[id];
+     return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${EN()?s.en:s.np}</b><span class="dev" lang="ne">${s.dev}</span>${EN()?'':`<span class="en">${s.en}</span>`}</button>`;}).join('')}</div>`;
   $('#backBtn').onclick=()=>goHome(true);
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(T(b.dataset.t)));
   main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>SECTIONS[b.dataset.sec].open());
   main.querySelectorAll('.ritem').forEach(b=>b.onclick=()=>RF?roomPick(b):roomLook(r,b));
   $('#rLook').onclick=()=>openRoom(r);
   $('#rFind').onclick=()=>roomFind(r);
-  speech(r.np,r.dev,`${r.en}: tap anything to hear its name!`);say(r.np,r.dev,null);mood('wave');
+  speech(r.np,r.dev,EN()?r.en:`${r.en}: tap anything to hear its name!`);sayT(r.np,r.dev,r.en);mood('wave');
 }
 function roomScene(r){
   // furniture drawn into the room first, so the small things sitting on it stay tappable on top
   const btn=(it,k)=>it[3]
-    ?`<button class="ritem${it[7]==='u'||(it[7]!=='d'&&it[5]>82)?' up':''}${it[4]<15?' lft':it[4]>85?' rgt':''}" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;--s:${it[6]}" aria-label="${esc(it[2])}"><span class="e" aria-hidden="true">${it[3]}</span><span class="rl">${esc(it[0])}</span></button>`
-    :`<button class="ritem hot" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;width:${it[7]}%;height:${it[8]}%" aria-label="${esc(it[2])}"><span class="rl">${esc(it[0])}</span></button>`;
+    ?`<button class="ritem${it[7]==='u'||(it[7]!=='d'&&it[5]>82)?' up':''}${it[4]<15?' lft':it[4]>85?' rgt':''}" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;--s:${it[6]}" aria-label="${esc(it[2])}"><span class="e" aria-hidden="true">${it[3]}</span><span class="rl">${esc(tw(it)[0])}</span></button>`
+    :`<button class="ritem hot" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;width:${it[7]}%;height:${it[8]}%" aria-label="${esc(it[2])}"><span class="rl">${esc(tw(it)[0])}</span></button>`;
   return `<div class="room" id="room"><svg class="art" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">${ROOM_ART[r.id]}</svg>
     ${r.items.map((it,k)=>it[3]?'':btn(it,k)).join('')}${r.items.map((it,k)=>it[3]?btn(it,k):'').join('')}</div>`;
 }
@@ -1437,19 +1471,19 @@ function roomAsk(){
   const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
   $('#rProg i').style.width=RF.i/FIND_N*100+'%';
-  $('#qSay').innerHTML=`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · Where is the ${esc(it[2])}?`:''}</small>`;
-  speech(cap(it[0])+' kahaa cha?',it[1]+' कहाँ छ?',`Where is the ${it[2]}?`);say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',null);
+  $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}<small lang="ne">${it[1]} कहाँ छ?</small>`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
+  speech(cap(it[0])+' kahaa cha?',it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
 }
 function roomPick(b){
   if(RF.lock)return;
   const k=+b.dataset.k,want=RF.list[RF.i],it=RF.r.items[want],rf=RF;
   if(k===want){
     RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right');showName(b);confetti();mood('happy');
-    const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],null);
+    const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':null);
     setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<FIND_N)roomAsk();else roomEnd();},1500);
   }else{
     RF.tries++;b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');mood('sad');
-    const o=RF.r.items[k];speech(cap(o[0])+'!',o[1],`That’s the ${o[2]}. Try again!`);say(o[0],o[1],null);
+    const o=RF.r.items[k];speech(cap(o[0])+'!',o[1],`That’s the ${o[2]}. Try again!`);sayT(o[0],o[1],`That’s the ${o[2]}.`);
     if(RF.tries>=2)main.querySelector(`.ritem[data-k="${want}"]`).classList.add('hint');
   }
 }
@@ -1552,9 +1586,9 @@ function openPath(rid){
      <button class="stop ${cls}${s.k==='boss'?' boss':''}${xs[k]<50?' r':''}" style="--x:${xs[k]}%" data-i="${i}" aria-label="${esc(f[3])}${cls==='lock'?' (locked)':cls==='done'?' (done)':''}">
       ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
       <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
-      <span class="lb">${esc(f[1])}</span></button></div>`;}).join('');
+      <span class="lb">${esc(EN()?f[3].split(' · ')[0]:f[1])}</span></button></div>`;}).join('');
   const before=ri?YATRA[ri-1]:null,after=YATRA[ri+1],done=Math.max(0,Math.min(at-first,list.length));
-  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${r.icon} ${r.np} <small lang="ne">${r.dev} · ${r.en} · ${done} / ${list.length}</small></h1>
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${list.length}</small></h1>
    <div class="trail">
     <div class="trail-end"><span class="pic" aria-hidden="true">${before?before.icon:'🏠'}</span>${before?before.np:'Habreko ghar'}<small>${before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
@@ -1572,7 +1606,7 @@ function openPath(rid){
       // the place is finished: back to the map, where the next place opens
       setTimeout(()=>{if(screen==='yatra')openMap();},2400);return;
     }
-    speech(f[1],f[2],f[3]);say(f[1],f[2],null);mood('happy');
+    speech(f[1],f[2],f[3]);sayT(f[1],f[2],f[3]);mood('happy');
     setTimeout(()=>{if(screen==='yatra')goStop(s);},RM?0:700);
   });
   if(at>=regionEnd(ri)){speech(r.np+' sakiyo!',r.dev+' सकियो!',`You finished ${r.en.toLowerCase()}! Play any stop again.`);say(r.np+' sakiyo!',r.dev+' सकियो!',null);mood('happy');}
@@ -1607,7 +1641,7 @@ function openMap(){
       return `<button class="place ${cls}${o.cur?' now':''}${o.fresh?' fresh':''}${x<50?' r':''}" style="left:${x}%;top:${yy}%;--p:${Math.round(o.pct*100)}" data-n="${k}" aria-label="${esc(o.en)}${o.open?'':' (locked)'}">
        ${o.cur?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
        <span class="disc"><span class="in" aria-hidden="true">${o.icon}</span>${!o.open?'<span class="badge" aria-hidden="true">🔒</span>':o.done?'<span class="badge" aria-hidden="true">⭐</span>':''}</span>
-       <span class="lb">${o.np}<small>${o.en}</small></span></button>`;}).join('')}
+       <span class="lb">${EN()?o.en:o.np}<small${EN()?' lang="ne"':''}>${EN()?o.dev:o.en}</small></span></button>`;}).join('')}
    </div>
    <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>
    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
@@ -1624,7 +1658,7 @@ function openMap(){
         :[`Pahile ${YATRA[k-2].np} sakau!`,`पहिले ${YATRA[k-2].dev} सकौं!`,`Finish ${YATRA[k-2].en.toLowerCase()} first!`];
       speech(...msg);say(...msg);mood('sad');b.classList.remove('fresh');void b.offsetWidth;b.classList.add('fresh');return;
     }
-    speech(o.np,o.dev,o.en);say(o.np,o.dev,null);mood('happy');
+    speech(o.np,o.dev,o.en);sayT(o.np,o.dev,o.en);mood('happy');
     setTimeout(()=>{if(screen==='map')openPath(YATRA[k-1].id);},RM?0:450);
   });
   if(fresh>=0){const r=YATRA[fresh];speech('Naya thaau khulyo: '+r.np+'!','नयाँ ठाउँ खुल्यो: '+r.dev+'!',`A new place is open: ${r.en.toLowerCase()}!`);say('Naya thaau khulyo: '+r.np+'!','नयाँ ठाउँ खुल्यो: '+r.dev+'!',null);confetti();setTimeout(confetti,500);mood('happy');}
@@ -1639,7 +1673,7 @@ function goHome(quiet){
   screen='home';topic=null;shopSel=null;trip=null;clearTry();if(!quiet)speechSynthesis?.cancel?.();
   const p=P(),stars=starsOf(p),gate=stars>=GATE,y=p.yatra||{},at=yatraAt(p);
   const door=(o,i)=>{const v=Math.round(roomProgress(p,o)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
-       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
+       <span class="plaque">${nmOf(o)[0]}<small lang="ne">${nmOf(o)[1]}</small></span>
        <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span>${o.icon}</span></span><span class="knob"></span></span></span>
        <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;};
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Habreko ghar <small>हाब्रेको घर · Pick a room</small></h1>
@@ -1657,7 +1691,7 @@ function goHome(quiet){
      <span style="flex:1;min-width:150px"><b>Habreko yatra</b>${gate
        ?`<small>Habre’s journey · ${at>=STOPS.length?'you reached the mountains!':`stop ${at+1} of ${STOPS.length}: ${esc(stopFace(STOPS[at])[3])}`}</small>`
        :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
-  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');say(o.np,o.dev,null);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
+  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');sayT(o.np,o.dev,o.en);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
   $('#backBtn').onclick=openMap;
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
@@ -1669,7 +1703,7 @@ function goHome(quiet){
 }
 function topicTile(t,i,p){
   return `<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}">
-   <span class="ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><span class="dev" lang="ne">${t.dev}</span><span class="en">${t.en}</span>
+   <span class="ic" aria-hidden="true">${t.icon}</span><b>${EN()?t.en:t.np}</b><span class="dev" lang="ne">${t.dev}</span>${EN()?'':`<span class="en">${t.en}</span>`}
    <span class="medals" aria-label="Levels finished">${LV_KEYS.map(k=>`<span class="${passed(p,t.id,k)?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}<span class="${checked(p,t)?'on':''}" title="Check">✅</span></span></button>`;
 }
 function openWords(){
@@ -1698,7 +1732,7 @@ function openTopic(t){
   topic=t;screen='topic';
   const p=P(),cur=levelOf(t.id),[bl,bf]=topicBack(t),tick='<em>✔</em>';
   const seen=(p.seen||{})[t.id],played=LV_KEYS.some(k=>passed(p,t.id,k));
-  main.innerHTML=`${backBtn(bl)}<h1>${t.kind==='letter'?'<span lang="ne">अ</span>':t.icon} ${t.np} <small>${t.dev} · ${t.en}</small></h1>
+  main.innerHTML=`${backBtn(bl)}<h1>${t.kind==='letter'?'<span lang="ne">अ</span>':t.icon} ${nmOf(t)[0]} <small>${nmOf(t)[1]}</small></h1>
    ${t.rule?`<button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>${esc(t.rule[0])}</b><small lang="ne">${t.rule[1]}</small></span></button>`:''}
    <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
    <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}">
@@ -1733,7 +1767,7 @@ function renderLearn(){
   screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter',yn=t.kind==='yesno'?ynOf(t,it):null;
   const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
   const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english?` · ${it[7]}`:''}</span>`
-    :`<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${esc(it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!<small lang="ne">${yn[1]}${S.english?' · '+esc(yn[2]):''}</small></span>`:''}`;
+    :EN()&&!yn?`<b>${esc(it[2])}</b><span class="dev" lang="ne">${it[1]}</span>`:`<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${esc(it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!<small lang="ne">${yn[1]}${S.english?' · '+esc(yn[2]):''}</small></span>`:''}`;
   main.innerHTML=`${backBtn(t.np)}<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}${text}</div>
    ${isL?`<button class="listen write" id="writeBtn">✏️ Lekhaun <small style="font-weight:500">let’s write it</small></button><div id="traceBox" hidden></div>`:''}
    <div class="nav">
@@ -1781,7 +1815,8 @@ function memFace(x){
   const {t,it}=x.c;
   if(x.side==='pic')return t.kind==='num'?`<span class="digit">${it[3]}</span>`:pictureOf(t,it);
   if(t.kind==='letter')return `<span class="pic" style="font-size:2rem">${it[3]}</span><b>${esc(it[5])}</b><span class="dev" lang="ne">${it[6]}</span>`;
-  return `<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>`;
+  const [w,help]=tw(it);
+  return `<b>${esc(w)}</b><span class="dev" lang="ne">${help}</span>`;
 }
 function startMemory(cards,o){
   const uniq=shuffle(cards).filter((c,i,a)=>a.findIndex(x=>x.it[3]===c.it[3]||keyOf(x.t,x.it)===keyOf(c.t,c.it))===i);
@@ -1823,7 +1858,7 @@ function openStickers(){
   screen='stickers';const p=P(),st=stat(p),all=stickerItems(),has=c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT,got=all.filter(has).length;
   main.innerHTML=`${backBtn('Shabda')}<h1>📒 Mero sticker kitab <small>My sticker book · ${got} / ${all.length}</small></h1>
    <p style="margin:0;color:var(--soft)">Get a word right twice, in a game, a check or a flashcard, and its sticker is yours.</p>
-   ${WORD_T().map(t=>`<div class="book"><h3>${t.icon} ${t.np} <small style="color:var(--soft);font-weight:500">${t.en} · ${t.items.filter(it=>has({t,it})).length}/${t.items.length}</small></h3>
+   ${WORD_T().map(t=>`<div class="book"><h3>${t.icon} ${EN()?t.en:t.np} <small style="color:var(--soft);font-weight:500">${EN()?t.dev:t.en} · ${t.items.filter(it=>has({t,it})).length}/${t.items.length}</small></h3>
      <div class="stk">${t.items.map((it,k)=>{const g=has({t,it});return `<button class="${g?'got':''}" data-t="${t.id}" data-k="${k}" style="--r:${(k*37)%11-5}deg" aria-label="${g?esc(it[2]):'Not found yet'}">${t.kind==='num'?`<span class="digit">${it[3]}</span>`:pictureOf(t,it)}</button>`;}).join('')}</div></div>`).join('')}`;
   $('#backBtn').onclick=openWords;
   main.querySelectorAll('.stk button').forEach(b=>b.onclick=()=>{
@@ -1856,25 +1891,25 @@ function storyWordCards(){
 const PATTI_MODES=[['flip','🃏 Palta','flip'],['jodi','🧠 Jodi','match pairs'],['suna','👂 Suna ra chhana','listen and tap']];
 function openPatti(){
   screen='patti';const p=P(),mode=S.pattiMode||'flip',decks=[];
-  const add=(id,icon,np,en,color,cards)=>{if(cards.length)decks.push({id,icon,np,en,color,cards});};
+  const add=(id,icon,np,en,color,cards,dev)=>{if(cards.length)decks.push({id,icon,np,en,color,cards,dev});};
   const tricky=trickyCards(p),custom=(p.custom||[]).map(findCard).filter(Boolean);
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
   add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
   add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
-  add('vakya','🚂','Vakya','Sentences','#ff9f1c',VAKYA_T.items.map(it=>({t:VAKYA_T,it})));
+  if(!EN())add('vakya','🚂','Vakya','Sentences','#ff9f1c',VAKYA_T.items.map(it=>({t:VAKYA_T,it})));
   const special=decks.length;
-  [...WORD_T(),AKSHAR()].forEach(t=>add(t.id,t.kind==='letter'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
+  [...WORD_T(),...(EN()?[]:[AKSHAR()])].forEach(t=>add(t.id,t.kind==='letter'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const words=decks.length;
-  GRAM_T().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
+  (EN()?[]:GRAM_T()).forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
-    return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(d.np)}</b><span class="en">${esc(d.en)} · ${d.cards.length}</span>
+    return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(EN()?d.en:d.np)}</b><span class="en"${EN()?' lang="ne"':''}>${EN()?(d.dev||''):esc(d.en)} · ${d.cards.length}</span>
       <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
   main.innerHTML=`${backBtn('Aphis')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
    <h2 class="sub">Mero patti <small>my decks</small></h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
-   <h2 class="sub">Shabda ra Akshar <small>words and letters</small></h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
-   <h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`;
+   <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':'Shabda ra Akshar <small>words and letters</small>'}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
+   ${decks.length>words?`<h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
   $('#backBtn').onclick=toRoom('patti');
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
   main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
@@ -1910,12 +1945,13 @@ function drawKCard(){
     return;
   }
   const {t,it}=c,isL=t.kind==='letter',pic=kPicture(t,it),yn=t.kind==='yesno'?ynOf(t,it):null;
-  const word=`<b>${esc(it[0])}</b><span class="dev" lang="ne">${isL?it[1]+' · '+it[6]:it[1]}</span>${S.english?`<span class="en">${esc(isL?it[5]+' = '+it[7]:it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!</span>`:''}`;
-  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+`<span class="en">${esc(isL?it[5]:it[2])}</span>`:pic+word;
+  const word=EN()&&!isL&&!yn?`<b>${esc(it[2])}</b><span class="dev" lang="ne">${it[1]}</span>`
+    :`<b>${esc(it[0])}</b><span class="dev" lang="ne">${isL?it[1]+' · '+it[6]:it[1]}</span>${S.english?`<span class="en">${esc(isL?it[5]+' = '+it[7]:it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!</span>`:''}`;
+  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+(EN()?`<span class="dev" lang="ne">${it[1]}</span>`:`<span class="en">${esc(isL?it[5]:it[2])}</span>`):pic+word;
   const pos=KF.total-KF.queue.length+1;
   main.innerHTML=`<div class="kfc-top"><span>${esc(KF.title)} · ${Math.min(pos,KF.total)}/${KF.total} <span class="baskets" style="display:inline-flex"><span><i class="b${boxOf(p,c)}"></i></span></span></span><label><input type="checkbox" id="kWordFirst" ${KF.wordFirst?'checked':''}> Word first</label></div>
    <button class="kfc ${KF.flipped?'flipped':''}" id="kCard" type="button" aria-label="Tap to flip">
-    <span class="kfc-in"><span class="kfc-face">${front}<span class="hint">${KF.wordFirst?'What does it mean? Tap to flip!':'Can you say it in Nepali? Tap to flip!'}</span></span><span class="kfc-face kfc-back">${back}</span></span></button>
+    <span class="kfc-in"><span class="kfc-face">${front}<span class="hint">${EN()?(KF.wordFirst?'यसको अर्थ के हो? पल्टाऊ!':'अंग्रेजीमा भन्न सक्छौ? पल्टाऊ!'):KF.wordFirst?'What does it mean? Tap to flip!':'Can you say it in Nepali? Tap to flip!'}</span></span><span class="kfc-face kfc-back">${back}</span></span></button>
    <div class="nav">
     <button class="btn" style="background:var(--yellow);color:var(--ink)" id="kNo">🔁 Pheri <small style="font-weight:500">again</small></button>
     <button class="listen" id="kSay" aria-label="Listen">🔊</button>
@@ -2085,6 +2121,13 @@ function lookup(w){
   for(const e of ENDINGS)if(w.endsWith(e)&&LEX[w.slice(0,-e.length)])return LEX[w.slice(0,-e.length)];
   return null;
 }
+// the same for an English story word (apples → apple)
+let LEXE=null;
+function lookupEn(w){
+  if(!LEXE){LEXE={};WORD_T().forEach(t=>t.items.forEach(it=>{const k=it[2].toLowerCase();if(!/\s/.test(k)&&!LEXE[k])LEXE[k]={t,it};}));}
+  w=w.toLowerCase().replace(/[^a-z]/g,'');
+  return LEXE[w]||LEXE[w.replace(/s$/,'')]||LEXE[w.replace(/es$/,'')]||null;
+}
 let story=null,pageI=0,path=null,branchK=-1,guessed=null;
 const storyOpen=(p,i)=>i===0||bestOf(p,'kathaa',STORIES[i-1].id)>=1;
 function openStories(){
@@ -2094,7 +2137,7 @@ function openStories(){
    <label class="toggle"><input type="checkbox" id="guessT" ${S.storyGuess?'checked':''}> 🧩 Kun chitra? <small style="font-weight:500;color:var(--soft)">guess each page’s picture</small></label>
    <div class="topics">${STORIES.map((s,i)=>{const open=storyOpen(p,i),b=bestOf(p,'kathaa',s.id);
      return `<button class="topic${open?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-s="${s.id}" aria-label="${esc(s.en)}${open?'':' (locked)'}">
-     <span class="ic" aria-hidden="true">${open?s.icon:'🔒'}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}${s.choice?' · you choose!':''}</span>
+     <span class="ic" aria-hidden="true">${open?s.icon:'🔒'}</span><b>${EN()?s.en:s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${EN()?'':s.en}${s.choice?(EN()?'You choose!':' · you choose!'):''}</span>
      <span class="medals">${s.choice?`<span class="${b>=1?'on':''}" title="One ending">🌿</span><span class="${b>=2?'on':''}" title="Both endings">🌿</span>`
        :`<span class="${b?'on':''}" title="Read">📖</span><span class="${b>=2?'on':''}" title="Question right first time">⭐</span><span class="${bestOf(p,'krama',s.id)?'on':''}" title="Put in order">🧩</span>`}</span></button>`;}).join('')}</div>`;
   $('#backBtn').onclick=toRoom('kathaa');
@@ -2105,16 +2148,17 @@ function openStories(){
   });
   speech('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');say('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');mood('wave');
 }
+// An English learner reads the English line (each word lit up as it is said, and tappable) with the Devanagari under it.
 function renderPage(quiet){
-  screen='story';const pg=path[pageI],rt=pg[1].split(' '),dt=pg[2].split(' '),same=rt.length===dt.length;
+  screen='story';const en=EN(),pg=path[pageI],rt=(en?pg[3]:pg[1]).split(' '),dt=pg[2].split(' '),same=!en&&rt.length===dt.length;
   const guess=S.storyGuess&&!guessed.has(pageI),more=story.choice&&branchK<0;
   let gopts=[];
   if(guess){const others=[...new Set(pagesOf(story).map(x=>x[0]).filter(x=>x!==pg[0]))];gopts=shuffle([pg[0],...shuffle(others).slice(0,2)]);}
-  main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">${story.np} <small>${pageI+1} / ${path.length}${more?'+':''}</small></h2>
+  main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">${en?story.en:story.np} <small>${pageI+1} / ${path.length}${more?'+':''}</small></h2>
    <div class="big story" id="card" role="button" tabindex="0" aria-label="Read it again">
      <span class="story-pic${guess?' qpic':''}" aria-hidden="true">${guess?'❓':pg[0]}</span>
      <b>${rt.map((w,k)=>`<button type="button" class="tok" data-w="${k}">${esc(w)}</button>`).join(' ')}</b>
-     <span class="dev" lang="ne">${dt.map((w,k)=>`<span class="dtok" data-d="${k}">${w}</span>`).join(' ')}</span>${S.english?`<span class="en">${esc(pg[3])}</span>`:''}</div>
+     <span class="dev" lang="ne">${dt.map((w,k)=>`<span class="dtok" data-d="${k}">${w}</span>`).join(' ')}</span>${S.english&&!en?`<span class="en">${esc(pg[3])}</span>`:''}</div>
    ${guess?`<h2 class="sub">Kun chitra? <small>Which picture goes with this page?</small></h2><div class="opts three" style="--cols:3">${gopts.map((g,k)=>`<button class="opt" data-g="${k}" style="animation-delay:${k*90}ms"><span class="pic">${g}</span></button>`).join('')}</div>`:''}
    <div class="nav">
     <button class="arrow" id="prev" aria-label="Previous page" ${pageI?'':'disabled'}>◀</button>
@@ -2127,15 +2171,17 @@ function renderPage(quiet){
   // light up the word being read (the voice reads the Devanagari when it has a Nepali or Hindi voice)
   const hl=k=>{toks.concat(dtoks).forEach(x=>x.classList.remove('on'));if(k<0)return;
     const nD=dt.length,nR=rt.length;
-    if(npVoice){dtoks[k]?.classList.add('on');toks[map(k,nD,nR)]?.classList.add('on');}
+    if(en)toks[k]?.classList.add('on');
+    else if(npVoice){dtoks[k]?.classList.add('on');toks[map(k,nD,nR)]?.classList.add('on');}
     else{toks[k]?.classList.add('on');dtoks[map(k,nR,nD)]?.classList.add('on');}};
-  const read=()=>{speech(story.np,story.dev,'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');};
+  const read=()=>{speech(story.np,story.dev,en?story.en:'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');};
   $('#backBtn').onclick=openStories;
   $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();read();}};
   toks.forEach(b=>b.onclick=ev=>{
-    ev.stopPropagation();const k=+b.dataset.w,w=rt[k].replace(/[.,!?:;“”"]/g,''),L=lookup(w);
+    ev.stopPropagation();const k=+b.dataset.w,w=rt[k].replace(/[.,!?:;“”"’]/g,''),L=en?lookupEn(w):lookup(w),pic=L&&L.t.kind==='pic'?L.it[3]+' ':'';
+    if(en){speech(pic+w,L?L.it[1]:'',pic+w);say(w,'',w);hl(-1);b.classList.add('on');return;}
     const d=(same?dt[k]:'').replace(/[।,!?:;“”"]/g,'')||(L&&L.it[1])||w;
-    speech((L&&L.t.kind==='pic'?L.it[3]+' ':'')+w,d,L?L.it[2]:null);say(w,d,null);hl(-1);b.classList.add('on');
+    speech(pic+w,d,L?L.it[2]:null);say(w,d,null);hl(-1);b.classList.add('on');
   });
   $('#listen').onclick=read;
   $('#prev').onclick=()=>{if(pageI){pageI--;renderPage();}};
@@ -2153,11 +2199,12 @@ function renderPage(quiet){
 }
 function renderChoice(){
   screen='storyc';const [rom,dev,en,opts]=story.choice;
-  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
-   <div class="opts" style="--cols:2">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms"><span class="pic">${o[0]}</span><span class="w">${esc(o[1])}</span>${S.english?`<span class="w-en">${esc(o[3])}</span>`:''}</button>`).join('')}</div>`;
+  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${qLine(rom,dev,en)}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="opts" style="--cols:2">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms"><span class="pic">${o[0]}</span>${EN()
+     ?`<span class="w">${esc(o[3])}</span><span class="w-en" lang="ne">${o[2]}</span>`:`<span class="w">${esc(o[1])}</span>${S.english?`<span class="w-en">${esc(o[3])}</span>`:''}`}</button>`).join('')}</div>`;
   const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
   $('#backBtn').onclick=openStories;$('#again').onclick=ask;
-  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=+b.dataset.k,o=opts[k];say(o[1],o[2],null);goBranch(k);});
+  main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=+b.dataset.k,o=opts[k];sayT(o[1],o[2],o[3]);goBranch(k);});
   ask();mood('wave');
 }
 function goBranch(k){branchK=k;path=[...story.pages,...story.branches[k]];pageI=story.pages.length;renderPage();}
@@ -2173,8 +2220,8 @@ function branchEnd(){
 }
 function storyQuiz(){
   screen='storyq';const [rom,dev,en,ans,opts]=story.quiz;let tries=0,done=false;
-  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${esc(rom)}<small lang="ne">${dev}${S.english?` · ${esc(en)}`:''}</small></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
-   <div class="opts three" style="--cols:3">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${o[2]}"><span class="pic">${o[0]}</span><span class="w">${o[1]}</span><span class="w-en">${o[2]}</span></button>`).join('')}</div>`;
+  main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${qLine(rom,dev,en)}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="opts three" style="--cols:3">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${o[2]}"><span class="pic">${o[0]}</span>${EN()?`<span class="w">${o[2]}</span>`:`<span class="w">${o[1]}</span><span class="w-en">${o[2]}</span>`}</button>`).join('')}</div>`;
   const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
   $('#backBtn').onclick=openStories;$('#again').onclick=ask;ask();
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
@@ -2194,12 +2241,12 @@ function storyOrder(){
   screen='storyo';const pg=story.pages,mid=shuffle(pg.slice(1,-1).map((_,i)=>i+1)).slice(0,2).sort((a,b)=>a-b),pick=[0,...mid,pg.length-1];
   const cards=shuffle(pick.map((pi,ord)=>({pi,ord})));let nextOrd=0;
   main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">🧩 Kun pahile? <small>Tap what happened first, then next…</small></h2>
-   <div class="order">${cards.map((c,k)=>`<button class="ocard" data-k="${k}" style="animation:pop .45s ${k*80}ms backwards"><span class="pic" aria-hidden="true">${pg[c.pi][0]}</span><span>${esc(pg[c.pi][1])}</span></button>`).join('')}</div>`;
+   <div class="order">${cards.map((c,k)=>`<button class="ocard" data-k="${k}" style="animation:pop .45s ${k*80}ms backwards"><span class="pic" aria-hidden="true">${pg[c.pi][0]}</span><span>${esc(pg[c.pi][EN()?3:1])}</span></button>`).join('')}</div>`;
   $('#backBtn').onclick=openStories;
   main.querySelectorAll('.ocard').forEach(b=>b.onclick=()=>{
     const c=cards[+b.dataset.k];if(b.classList.contains('done'))return;
     if(c.ord===nextOrd){
-      nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=pg[c.pi];say(l[1],l[2],null);mood('happy');
+      nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=pg[c.pi];sayT(l[1],l[2],l[3]);mood('happy');
       if(nextOrd===pick.length){
         const p=P();if(!bestOf(p,'krama',story.id)){p.best=p.best||{};p.best['krama:'+story.id]=1;save();}
         earn(2);
@@ -2511,7 +2558,7 @@ function questionLine(t,it){
   if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
   if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
   if(t.kind==='letter')return [`“${it[0]}” kun akshar?`,`${it[1]}। ${it[1]} कुन अक्षर?`,`Which letter says “${it[0]}”?`];
-  return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,`Where is the ${it[2]}?`];
+  return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,whereEn(it[2])];
 }
 // a list of n, reshuffled as often as needed, never the same thing twice in a row
 function spread(list,n){
@@ -2535,7 +2582,8 @@ function startQuiz(o){
   }else if(o.mode==='daily'){
     const one=t=>{const lv=levelOf(t.id),w=wordsFor(t,lv);return {t,it:rnd(w),pool:w.map(x=>({t,it:x})),lv,face:lv};};
     const vw=vSents(levelOf('vakya')).map(s=>[s.rom,s.dev,s.en,s.pic]);
-    entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
+    // an English learner gets word topics only: the letters, grammar and sentences are about Nepali
+    entries=EN()?shuffle(WORD_T()).slice(0,8).map(one):shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
       {t:VAKYA_T,it:rnd(vw),pool:vw.map(x=>({t:VAKYA_T,it:x})),lv:levelOf('vakya'),face:'hard'}]);
   }else if(o.mode==='yatra'){
     // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
@@ -2563,10 +2611,11 @@ function optionFace(t,o,lv){
     return pictureOf(t,o)+(lv!=='hard'?`<span class="w">${o[0]}</span>`:'')+(lv==='easy'?`<span class="w-en">${ex}</span>`:'')
       +(lv==='hard'?`<span class="lab">${o[0]} · ${ex}</span>`:lv==='medium'?`<span class="lab">${ex}</span>`:'');
   }
-  const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o);
-  const np=lv!=='hard'?`<span class="w">${esc(o[0])}</span>`:'';
-  const en=lv==='easy'?`<span class="w-en">${esc(o[2])}</span>`:'';
-  const hidden=lv==='hard'?`${o[0]} · ${o[2]}`:lv==='medium'?o[2]:'';
+  // the word being learned, then its help line (English for Nepali learners, Devanagari for English learners)
+  const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o),[w,help]=EN()?[o[2],o[1]]:[o[0],o[2]];
+  const np=lv!=='hard'?`<span class="w">${esc(w)}</span>`:'';
+  const en=lv==='easy'?`<span class="w-en"${EN()?' lang="ne"':''}>${esc(help)}</span>`:'';
+  const hidden=lv==='hard'?`${w} · ${help}`:lv==='medium'?help:'';
   return pic+np+en+(hidden?`<span class="lab">${esc(hidden)}</span>`:'');
 }
 function renderQ(){
@@ -2588,14 +2637,14 @@ function renderQ(){
     :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lv!=='hard'?' · '+esc(o.it[2]):''}</span>`
     :optionFace(o.t,o.it,e.face);
   main.innerHTML=`${Q.back?backBtn('Back'):''}<div class="progress" aria-label="Question ${Q.i+1} of ${Q.n}"><i style="width:${Q.i/Q.n*100}%"></i></div>
-   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:`${esc(rom)}<small lang="ne">${dev}${showEn?` · ${esc(en)}`:''}</small>`}</div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?`${esc(en)}<small lang="ne">${dev}</small>`:`${esc(rom)}<small lang="ne">${dev}${showEn?` · ${esc(en)}`:''}</small>`)}</div>
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
    ${kind==='num'?`<div class="counter">${countHtml(it[3],rnd(COUNT_PICS),`aria-label="${it[3]} things"`)}</div>`:''}
    ${kind==='yesno'||kind==='ending'?`<div class="counter"><span class="pic" style="font-size:4.6rem;line-height:1.1" aria-hidden="true">${it[3]}</span></div>`:''}
    ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}</div></div>`:''}
    <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
   const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
-    if(kind==='pick')say(it[0],it[1],null);else say(rom,dev,e.lv==='easy'?en:null);};
+    if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,e.lv==='easy'||EN()?en:null);};
   if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k]));
@@ -2608,16 +2657,16 @@ function pick(b,o){
   if(o===ans){
     Q.lock=true;if(Q.tries===0){Q.stars++;st.right[key]=(st.right[key]||0)+1;save();}
     b.classList.add('right');confetti();mood('happy');
-    $('#qSay').innerHTML=`${esc(t.kind==='ending'?it[0]:questionLine(t,it)[0])}<small lang="ne">${it[1]} · ${esc(it[2])}</small>`;
+    $('#qSay').innerHTML=EN()?`${esc(t.kind==='ending'?it[2]:questionLine(t,it)[2])}<small lang="ne">${it[1]}</small>`:`${esc(t.kind==='ending'?it[0]:questionLine(t,it)[0])}<small lang="ne">${it[1]} · ${esc(it[2])}</small>`;
     if($('#blankLine'))$('#blankLine').innerHTML=esc(it[4]).replace('___',`<span class="blank" style="color:var(--green);border-color:var(--green)">${it[5]}</span>`);
     const pr=rnd(PRAISE),w=t.kind==='yesno'?ans.it:it;
-    speech(pr[0]+' '+cap(w[0])+'!',pr[1]+' '+w[1],pr[2]+' '+cap(w[2])+'!');say(pr[0]+' '+w[0],pr[1]+' '+w[1],null);
+    speech(pr[0]+' '+cap(w[0])+'!',pr[1]+' '+w[1],pr[2]+' '+cap(w[2])+'!');say(pr[0]+' '+w[0],pr[1]+' '+w[1],EN()?pr[2]+' '+cap(w[2])+'!':null);
     const q=Q;setTimeout(()=>qNext(q),1900);
   }else{
     Q.tries++;b.classList.add('wrong','show');b.disabled=true;mood('sad');
     if(Q.tries===1){st.miss[key]=(st.miss[key]||0)+1;save();}
     const rb=main.querySelector(`.opt[data-k="${Q.opts.indexOf(ans)}"]`),left=[...main.querySelectorAll('.opt')].filter(x=>!x.disabled);
-    const show=()=>{rb.classList.add('hint');speech(cap(ans.it[0]),ans.it[1],'This one!');say(ans.it[0],ans.it[1],null);};
+    const show=()=>{rb.classList.add('hint');speech(cap(ans.it[0]),ans.it[1],EN()?cap(ans.it[2]):'This one!');sayT(ans.it[0],ans.it[1],ans.it[2]);};
     // a check counts the first answer only
     if(Q.mode==='check'){Q.lock=true;show();const q=Q;setTimeout(()=>qNext(q),2200);}
     else if(Q.tries>=2||left.length===1)show();
