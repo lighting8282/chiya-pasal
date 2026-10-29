@@ -504,8 +504,8 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 /* kotha: a room of Habre's house, drawn as a picture of things to tap */
 .rbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .rbar .mode[aria-pressed="true"]{outline:4px solid #fff;outline-offset:-8px}
-.room{position:relative;aspect-ratio:4/3;border-radius:26px;overflow:hidden;container-type:inline-size;background:linear-gradient(var(--wall) 0 64%,var(--floor) 64%);box-shadow:0 7px 0 var(--line)}
-.room .furn{position:absolute;pointer-events:none}
+.room{position:relative;aspect-ratio:4/3;border-radius:26px;overflow:hidden;container-type:inline-size;background:#fff;box-shadow:0 7px 0 var(--line)}
+.room .art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .ritem{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;line-height:1;padding:0;border-radius:16px}
 .ritem .e{display:block;font-size:calc(var(--s)*1.15cqw);transition:transform .15s}
 .ritem:active .e{transform:scale(.9)}
@@ -513,12 +513,19 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .ritem.up .rl{top:auto;bottom:100%;margin:0 0 2px}
 .ritem.lft .rl{left:0}
 .ritem.rgt .rl{right:0}
-.ritem.seen .rl{opacity:1;transform:none}
-.room.find .ritem .rl{opacity:0}
-.room.find .ritem.right .rl{opacity:1;transform:none}
+.ritem.on .rl{opacity:1;transform:none}
 .ritem.bounce .e,.ritem.right .e{animation:yay .55s}
 .ritem.wrong .e{animation:shake .4s}
 .ritem.hint .e{filter:drop-shadow(0 0 6px #ffd23c) drop-shadow(0 0 10px #ffb000)}
+/* furniture drawn into the room: a see-through box over it, with the name in the middle */
+.ritem.hot{border-radius:14px}
+.ritem.hot .rl{top:50%;left:50%;margin:0;transform:translate(-50%,-50%) scale(.6)}
+.ritem.hot.on .rl{transform:translate(-50%,-50%)}
+.ritem.hot.bounce,.ritem.hot.right{animation:hotYes .7s}
+.ritem.hot.wrong{animation:hotNo .45s}
+.ritem.hot.hint{background:rgba(255,210,60,.3);box-shadow:inset 0 0 0 4px #ffd23c}
+@keyframes hotYes{30%{background:rgba(255,210,60,.45)}}
+@keyframes hotNo{30%{background:rgba(232,70,58,.3)}}
 /* naksa: the map of every place, from Habre's house at the bottom to the mountains at the top */
 .wmap{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:3/4.3;border-radius:32px;overflow:hidden;background:linear-gradient(to top,#a8dc8c 0%,#cdeeb8 30%,#d6eefb 68%,#f6fbff 100%);box-shadow:0 7px 0 var(--line)}
 .wmap svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -1182,48 +1189,154 @@ const DOORS=[
 // ---------- kotha (the rooms of Habre's house) ----------
 // Each room is a picture: tap a thing to hear its name, or play "find it". The room also holds the lessons that
 // belong there: word topics (topics) and whole sections (sections: kathaa, vakya, vyakaran, patti, shabda).
-// items: [romanized, devanagari, english, picture, x %, y %, size (% of the room's width)]
-// furn: furniture drawn behind the things: [left %, top %, width %, height %, colour, corner radius]
+// items: [romanized, devanagari, english, picture, x %, y %, size (% of the room's width), label: 'u' above / 'd' below]
+// A thing with no picture is drawn into the room itself (the sofa, the bed, the bath…): it is tapped through a
+// see-through box, its last two numbers being the box's width and height in %.
+// The pictures sit where they would in a real room: on the counter, the table, the bedside table, the desk.
 const ROOMS=[
- {id:'baithak',np:'Baithak',dev:'बैठक',en:'Living room',icon:'🛋️',color:'#ff9f1c',wall:'#ffe9c7',floor:'#c99a6b',
-  topics:['pariwar','bhavana','saman','bhanai'],sections:['vakya'],
-  furn:[[18,80,64,12,'#e8463a66','50%'],[66,62,20,4,'#8a5a3c','4px']],items:[
-  ['sofa','सोफा','sofa','🛋️',34,70,20],['tibhi','टिभी','TV','📺',70,42,13],['jhyaal','झ्याल','window','🪟',28,24,14],
-  ['dhoka','ढोका','door','🚪',90,58,12],['tasbir','तस्बिर','picture','🖼️',56,22,10],['phon','फोन','phone','☎️',58,68,8],
-  ['gamala','गमला','flower pot','🪴',8,58,10],['rediyo','रेडियो','radio','📻',82,84,9],['biralo','बिरालो','cat','🐈',62,90,9]]},
- {id:'bhanchha',np:'Bhanchha',dev:'भान्छा',en:'Kitchen',icon:'🍳',color:'#e8463a',wall:'#e6f6ef',floor:'#d9c6a5',
-  topics:['khana'],sections:[],
-  furn:[[4,58,92,10,'#a0764c','6px'],[6,36,36,3,'#a0764c','3px'],[68,36,26,3,'#a0764c','3px']],items:[
-  ['kitli','कित्ली','kettle','🫖',16,50,11],['taaba','ताबा','frying pan','🍳',36,50,11],['bhaado','भाँडो','pot','🍲',56,50,11],
-  ['dhaaraa','धारा','tap','🚰',82,48,11],['chamcha','चम्चा','spoon','🥄',14,28,8],['chakku','चक्कु','knife','🔪',32,28,8],
-  ['nun','नुन','salt','🧂',80,28,9],['gaajar','गाजर','carrot','🥕',18,84,10],['aalu','आलु','potato','🥔',38,86,10],
-  ['pyaaj','प्याज','onion','🧅',58,84,10],['golbheda','गोलभेडा','tomato','🍅',78,86,10]]},
- {id:'khane',np:'Khane kotha',dev:'खाने कोठा',en:'Dining room',icon:'🍽️',color:'#2fae6e',wall:'#fff3d6',floor:'#b98a62',
-  topics:['ganti','thulo'],sections:[],
-  furn:[[12,62,76,5,'#8a5a3c','6px'],[18,66,3,20,'#6e4630','2px'],[79,66,3,20,'#6e4630','2px']],items:[
-  ['bhaat','भात','rice','🍚',30,38,8],['chiya','चिया','tea','☕',50,38,8],['pauroti','पाउरोटी','bread','🍞',70,38,8],
-  ['thaal','थाल','plate','🍽️',22,56,9],['katora','कटोरा','bowl','🥣',40,56,9],['momo','मोमो','momo','🥟',58,56,9],
-  ['roti','रोटी','flatbread','🫓',76,56,9],['kursi','कुर्सी','chair','🪑',90,80,11],['mainbatti','मैनबत्ती','candle','🕯️',50,22,9]]},
- {id:'sutne',np:'Sutne kotha',dev:'सुत्ने कोठा',en:'Bedroom',icon:'🛏️',color:'#8e5be8',wall:'#e9e2ff',floor:'#a98bc4',
-  topics:['kapada','rang'],sections:['kathaa'],
-  furn:[[12,8,26,26,'#2b2f5a','10px'],[56,46,24,3,'#7a5a9a','3px']],items:[
-  ['jun','जून','moon','🌙',25,20,10],['khaat','खाट','bed','🛏️',28,70,24],['ghadi','घडी','clock','⏰',60,38,8],
-  ['kitab','किताब','book','📖',73,38,8],['kamij','कमिज','shirt','👕',90,20,10],['jhola','झोला','school bag','🎒',90,62,11],
-  ['bhalu khelauna','भालु खेलौना','teddy bear','🧸',62,72,11],['bhakundo','भकुण्डो','ball','⚽',84,88,8],['chappal','चप्पल','slippers','🩴',54,92,8]]},
- {id:'nuhaune',np:'Nuhaune kotha',dev:'नुहाउने कोठा',en:'Bathroom',icon:'🛁',color:'#00a6b8',wall:'#d8f3f7',floor:'#9fc7d0',
-  topics:['sharir'],sections:[],
-  furn:[[64,48,26,3,'#5f9aa6','3px']],items:[
-  ['sawar','सावर','shower','🚿',24,22,12],['tab','टब','bathtub','🛁',26,70,24],['hans','हाँस','toy duck','🦆',40,58,8],
-  ['aina','ऐना','mirror','🪞',78,24,12],['burus','बुरुस','toothbrush','🪥',70,42,8],['saabun','साबुन','soap','🧼',84,42,8],
-  ['charpi','चर्पी','toilet','🚽',66,76,14],['baalti','बाल्टी','bucket','🪣',88,82,10],['spanj','स्पन्ज','sponge','🧽',90,62,8]]},
- {id:'aphis',np:'Aphis',dev:'अफिस',en:'Office',icon:'💻',color:'#3a7bf2',wall:'#e3eeff',floor:'#8f9bb3',
-  topics:['akshar'],sections:['vyakaran','patti','shabda'],
-  furn:[[4,62,92,6,'#7a5230','6px'],[8,68,3,18,'#5e3e24','2px'],[89,68,3,18,'#5e3e24','2px'],[70,36,24,3,'#7a5230','3px']],items:[
-  ['kyalendar','क्यालेन्डर','calendar','📅',16,24,11],['glob','ग्लोब','globe','🌍',76,28,10],['batti','बत्ती','light','💡',46,12,9],
-  ['mobail','मोबाइल','mobile phone','📱',14,56,8],['kalam','कलम','pen','🖊️',28,56,8],['kampyutar','कम्प्युटर','computer','💻',46,52,14],
-  ['sisakalam','सिसाकलम','pencil','✏️',64,56,8],['kainchi','कैंची','scissors','✂️',77,56,7],['kitab','किताब','books','📚',91,54,8],
-  ['kaagaj','कागज','paper','📄',40,86,9],['phohor tokari','फोहोर टोकरी','rubbish bin','🗑️',76,84,10]]},
+ {id:'baithak',np:'Baithak',dev:'बैठक',en:'Living room',icon:'🛋️',color:'#ff9f1c',
+  topics:['pariwar','bhavana','saman','bhanai'],sections:['vakya'],items:[
+  ['sofa','सोफा','sofa','',28.75,62.3,0,43,32],['tibhi','टिभी','TV','',65,43,0,19,20],['jhyaal','झ्याल','window','',18.75,26.7,0,26,32],
+  ['dhoka','ढोका','door','',92.5,42.5,0,14,48],['tasbir','तस्बिर','picture','',44.4,22,0,15,15],['phon','फोन','phone','☎️',48.75,72.7,6],
+  ['gamala','गमला','flower pot','🪴',25,34.7,6],['rediyo','रेडियो','radio','📻',79.5,47.7,7],['biralo','बिरालो','cat','🐈',80,87.3,8]]},
+ {id:'bhanchha',np:'Bhanchha',dev:'भान्छा',en:'Kitchen',icon:'🍳',color:'#e8463a',
+  topics:['khana'],sections:[],items:[
+  ['kitli','कित्ली','kettle','🫖',32.5,45.3,7],['taaba','ताबा','frying pan','🍳',46.25,46,7],['bhaado','भाँडो','pot','🍲',57,45.3,7],
+  ['dhaaraa','धारा','tap','',83.5,43.3,0,9,14],['chamcha','चम्चा','spoon','🥄',10.5,39.3,5,'u'],['chakku','चक्कु','knife','🔪',20.5,39.3,5,'u'],
+  ['nun','नुन','salt','🧂',66.5,47.7,5],['gaajar','गाजर','carrot','🥕',68,81.3,5,'u'],['aalu','आलु','potato','🥔',76.25,83.3,5,'d'],
+  ['pyaaj','प्याज','onion','🧅',84.5,81.3,5,'u'],['golbheda','गोलभेडा','tomato','🍅',92.75,83.3,5,'d']]},
+ {id:'khane',np:'Khane kotha',dev:'खाने कोठा',en:'Dining room',icon:'🍽️',color:'#2fae6e',
+  topics:['ganti','thulo'],sections:[],items:[
+  ['bhaat','भात','rice','🍚',26.5,50,5,'u'],['chiya','चिया','tea','☕',50,56.7,5],['pauroti','पाउरोटी','bread','🍞',73.5,50,5,'u'],
+  ['thaal','थाल','plate','🍽️',18,56,6],['katora','कटोरा','bowl','🥣',34.5,56,6],['momo','मोमो','momo','🥟',65.5,56,6],
+  ['roti','रोटी','flatbread','🫓',81,56,6],['kursi','कुर्सी','chair','',93.5,60.7,0,13,45],['mainbatti','मैनबत्ती','candle','🕯️',50,47.3,6,'u']]},
+ {id:'sutne',np:'Sutne kotha',dev:'सुत्ने कोठा',en:'Bedroom',icon:'🛏️',color:'#8e5be8',
+  topics:['kapada','rang'],sections:['kathaa'],items:[
+  ['jun','जून','moon','🌙',26,17.3,5],['khaat','खाट','bed','',29.75,60,0,52,40],['ghadi','घडी','clock','⏰',62.5,51.7,5],
+  ['kitab','किताब','book','📖',63,29.3,5],['kamij','कमिज','shirt','👕',81.25,30,7],['jhola','झोला','school bag','🎒',92.5,81.7,7],
+  ['bhalu khelauna','भालु खेलौना','teddy bear','🧸',48,50.7,7,'u'],['bhakundo','भकुण्डो','ball','⚽',75,87.3,5],['chappal','चप्पल','slippers','🩴',37.5,86.7,5]]},
+ {id:'nuhaune',np:'Nuhaune kotha',dev:'नुहाउने कोठा',en:'Bathroom',icon:'🛁',color:'#00a6b8',
+  topics:['sharir'],sections:[],items:[
+  ['sawar','सावर','shower','🚿',15.5,24,8],['tab','टब','bathtub','',25,67.3,0,46,24],['hans','हाँस','toy duck','🦆',31.25,52,5],
+  ['aina','ऐना','mirror','',60,32.7,0,16,26],['burus','बुरुस','toothbrush','🪥',53.5,48.7,5],['saabun','साबुन','soap','🧼',66.25,50,4.5],
+  ['charpi','चर्पी','toilet','',85.25,60,0,21,40],['baalti','बाल्टी','bucket','🪣',70,87.3,6],['spanj','स्पन्ज','sponge','🧽',42,52,4.5]]},
+ {id:'aphis',np:'Aphis',dev:'अफिस',en:'Office',icon:'💻',color:'#3a7bf2',
+  topics:['akshar'],sections:['vyakaran','patti','shabda'],items:[
+  ['kyalendar','क्यालेन्डर','calendar','📅',82.5,23.3,6],['glob','ग्लोब','globe','🌍',25,37.3,5,'u'],['batti','बत्ती','light','💡',37.5,9.3,5],
+  ['mobail','मोबाइल','mobile phone','📱',12.5,48,5,'d'],['kalam','कलम','pen','🖊️',23.75,48.3,5,'u'],['kampyutar','कम्प्युटर','computer','💻',50,45.3,9,'d'],
+  ['sisakalam','सिसाकलम','pencil','✏️',35,48.3,5,'d'],['kainchi','कैंची','scissors','✂️',65,48.7,5,'u'],['kitab','किताब','books','📚',13,22.7,6],
+  ['kaagaj','कागज','paper','📄',75,48.3,5,'d'],['phohor tokari','फोहोर टोकरी','rubbish bin','🗑️',62.5,83.3,6]]},
 ];
+// each room drawn as a picture, 400 × 300; the things above are placed on it
+const ROOM_ART={
+ baithak:`<defs><pattern id="aBkW" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#ffe9c7"/><path d="M12 0V24" stroke="#f6d9aa" stroke-width="6"/></pattern></defs>
+  <rect width="400" height="202" fill="url(#aBkW)"/><rect y="202" width="400" height="98" fill="#c99a6b"/>
+  <path d="M0 228H400M0 256H400M0 284H400M90 202V228M250 202V228M170 228V256M330 228V256M60 256V284M230 256V284" stroke="#b58553" stroke-width="2"/>
+  <rect y="196" width="400" height="8" fill="#e2c49a"/>
+  <rect x="30" y="40" width="90" height="80" rx="3" fill="#fff" stroke="#b98a5a" stroke-width="4"/><rect x="36" y="46" width="78" height="68" fill="#bfe6ff"/>
+  <ellipse cx="58" cy="64" rx="14" ry="6" fill="#fff"/><path d="M36 114L62 92L80 104L98 86L114 100V114Z" fill="#8fd16f"/>
+  <path d="M75 46V114M36 80H114" stroke="#fff" stroke-width="4"/><rect x="24" y="120" width="102" height="7" rx="2" fill="#d9b48a"/>
+  <path d="M12 34H138" stroke="#8a5a3c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M16 34H42Q36 80 44 132H14Q22 80 16 34Z" fill="#e8463a"/><path d="M108 34H134Q128 80 136 132H106Q114 80 108 34Z" fill="#e8463a"/>
+  <path d="M28 40Q24 86 28 128M121 40Q117 86 121 128" stroke="#b8321f" stroke-width="2" fill="none"/>
+  <rect x="150" y="45" width="55" height="42" rx="2" fill="#8a5a3c"/><rect x="155" y="50" width="45" height="32" fill="#cdeeff"/>
+  <path d="M155 82L168 62L177 72L188 56L200 82Z" fill="#6aa84f"/><path d="M185 60L188 56L191 61Z" fill="#fff"/>
+  <rect x="345" y="55" width="50" height="145" fill="#a0643c" stroke="#7a4a2a" stroke-width="3"/>
+  <rect x="352" y="65" width="36" height="50" fill="none" stroke="#7a4a2a" stroke-width="2"/><rect x="352" y="125" width="36" height="65" fill="none" stroke="#7a4a2a" stroke-width="2"/>
+  <circle cx="386" cy="135" r="3.5" fill="#ffc93c"/>
+  <rect x="210" y="160" width="125" height="42" rx="4" fill="#8a5a3c"/><path d="M272 164V198M214 181H331" stroke="#6e4630" stroke-width="2"/>
+  <circle cx="262" cy="172" r="2" fill="#ffc93c"/><circle cx="282" cy="172" r="2" fill="#ffc93c"/>
+  <rect x="225" y="105" width="70" height="48" rx="4" fill="#2b2b2b"/><rect x="230" y="110" width="60" height="38" fill="#4a90e2"/>
+  <path d="M235 115H252" stroke="#fff" stroke-width="3" opacity=".5"/><rect x="255" y="153" width="10" height="7" fill="#2b2b2b"/>
+  <ellipse cx="220" cy="262" rx="125" ry="26" fill="#e8463a" opacity=".5"/><ellipse cx="220" cy="262" rx="105" ry="18" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>
+  <rect x="40" y="140" width="150" height="52" rx="14" fill="#3a7bf2"/><rect x="37" y="206" width="156" height="22" rx="6" fill="#2f66cf"/>
+  <rect x="55" y="182" width="58" height="28" rx="8" fill="#5b93f5"/><rect x="117" y="182" width="58" height="28" rx="8" fill="#5b93f5"/>
+  <rect x="28" y="165" width="28" height="62" rx="12" fill="#2f66cf"/><rect x="174" y="165" width="28" height="62" rx="12" fill="#2f66cf"/>
+  <ellipse cx="76" cy="172" rx="15" ry="12" fill="#ffc93c"/><rect x="45" y="228" width="7" height="9" fill="#5a3a20"/><rect x="178" y="228" width="7" height="9" fill="#5a3a20"/>
+  <rect x="140" y="232" width="110" height="8" rx="3" fill="#8a5a3c"/><rect x="148" y="240" width="6" height="18" fill="#6e4630"/><rect x="236" y="240" width="6" height="18" fill="#6e4630"/>`,
+ bhanchha:`<defs><pattern id="aKtT" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="#fff" stroke="#d4e8e0" stroke-width="2"/></pattern>
+  <pattern id="aKtF" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#e8d9bc"/><rect width="20" height="20" fill="#d9c6a5"/><rect x="20" y="20" width="20" height="20" fill="#d9c6a5"/></pattern></defs>
+  <rect width="400" height="160" fill="#e6f6ef"/><rect y="98" width="400" height="60" fill="url(#aKtT)"/>
+  <rect x="12" y="18" width="140" height="64" rx="4" fill="#fafafa" stroke="#c8d6d0" stroke-width="2"/><path d="M82 18V82" stroke="#c8d6d0" stroke-width="2"/>
+  <rect x="72" y="58" width="4" height="14" rx="2" fill="#9aa5ab"/><rect x="88" y="58" width="4" height="14" rx="2" fill="#9aa5ab"/>
+  <rect x="193" y="0" width="24" height="30" fill="#c9d3d6"/><path d="M168 30H242L254 66H156Z" fill="#c9d3d6" stroke="#aab6ba" stroke-width="2"/>
+  <rect x="285" y="22" width="84" height="72" rx="3" fill="#fff" stroke="#9aa5ab" stroke-width="4"/><rect x="291" y="28" width="72" height="60" fill="#bfe6ff"/>
+  <ellipse cx="310" cy="44" rx="10" ry="4" fill="#fff"/><path d="M327 28V88M291 58H363" stroke="#fff" stroke-width="4"/>
+  <path d="M24 102H112" stroke="#8a8a8a" stroke-width="3" stroke-linecap="round"/><path d="M42 102V106M82 102V106" stroke="#8a8a8a" stroke-width="2"/>
+  <rect y="242" width="400" height="58" fill="url(#aKtF)"/>
+  <rect y="166" width="400" height="76" fill="#6fb59a"/><path d="M66 170V238M132 170V238M260 170V238M330 170V238" stroke="#5a9a80" stroke-width="2"/>
+  <rect x="56" y="196" width="4" height="14" rx="2" fill="#e6f6ef"/><rect x="72" y="196" width="4" height="14" rx="2" fill="#e6f6ef"/><rect x="320" y="196" width="4" height="14" rx="2" fill="#e6f6ef"/><rect x="336" y="196" width="4" height="14" rx="2" fill="#e6f6ef"/>
+  <rect x="162" y="172" width="86" height="62" rx="4" fill="#3a3a3a"/><rect x="172" y="188" width="66" height="36" rx="3" fill="#5a5a5a"/><rect x="180" y="177" width="50" height="5" rx="2" fill="#9aa5ab"/>
+  <rect y="156" width="400" height="10" fill="#a0764c"/>
+  <rect x="160" y="150" width="90" height="7" rx="2" fill="#444"/><ellipse cx="185" cy="152" rx="14" ry="3" fill="#222"/><ellipse cx="228" cy="152" rx="14" ry="3" fill="#222"/>
+  <rect x="285" y="150" width="84" height="8" rx="3" fill="#b8c4c9"/>
+  <rect x="324" y="118" width="7" height="34" rx="2" fill="#9aa5ab"/><path d="M327 121Q327 108 346 110V118Q336 117 334 123Z" fill="#9aa5ab"/><rect x="342" y="118" width="6" height="6" fill="#7d878c"/>
+  <path d="M345 128q-3 6 0 8q3-2 0-8z" fill="#5bc0ff"/><circle cx="321" cy="140" r="4" fill="#e8463a"/><circle cx="335" cy="140" r="4" fill="#3a7bf2"/>
+  <rect x="18" y="150" width="92" height="7" rx="3" fill="#d9a86c"/>
+  <rect x="250" y="248" width="142" height="9" rx="4" fill="#a8763a"/><path d="M254 256H388L378 294H264Z" fill="#c8964f"/><path d="M259 268H383M262 282H380" stroke="#a8763a" stroke-width="2"/>`,
+ khane:`<rect width="400" height="202" fill="#fff3d6"/><rect y="128" width="400" height="74" fill="#f1dcae"/><rect y="124" width="400" height="6" fill="#d9b07a"/>
+  <path d="M20 140H120V190H20ZM150 140H250V190H150ZM280 140H380V190H280Z" fill="none" stroke="#dcc08c" stroke-width="2"/>
+  <rect y="202" width="400" height="98" fill="#b98a62"/><path d="M0 230H400M0 260H400M0 290H400M120 202V230M300 202V230M60 230V260M240 230V260M160 260V290M360 260V290" stroke="#a87a54" stroke-width="2"/>
+  <rect x="28" y="28" width="76" height="72" rx="3" fill="#fff" stroke="#b98a5a" stroke-width="4"/><rect x="34" y="34" width="64" height="60" fill="#bfe6ff"/>
+  <path d="M34 94L56 74L72 86L98 66V94Z" fill="#8fd16f"/><path d="M66 34V94M34 64H98" stroke="#fff" stroke-width="4"/>
+  <rect x="300" y="30" width="62" height="46" rx="2" fill="#8a5a3c"/><rect x="305" y="35" width="52" height="36" fill="#ffe0a3"/><circle cx="331" cy="58" r="10" fill="#ff8c2e"/><path d="M305 64H357V71H305Z" fill="#6aa84f"/>
+  <path d="M200 0V38" stroke="#6e4630" stroke-width="2"/><path d="M180 38H220L232 62H168Z" fill="#ffc93c"/><ellipse cx="200" cy="64" rx="10" ry="4" fill="#fff6c9"/>
+  <rect x="98" y="100" width="44" height="66" rx="6" fill="#8a5a3c"/><path d="M110 108V160M120 108V160M130 108V160" stroke="#6e4630" stroke-width="3"/>
+  <rect x="258" y="100" width="44" height="66" rx="6" fill="#8a5a3c"/><path d="M270 108V160M280 108V160M290 108V160" stroke="#6e4630" stroke-width="3"/>
+  <rect x="66" y="205" width="9" height="58" fill="#6e4630"/><rect x="315" y="205" width="9" height="58" fill="#6e4630"/>
+  <path d="M62 164H328L340 180H50Z" fill="#fffaf0"/><rect x="50" y="180" width="290" height="28" fill="#fff"/><path d="M50 200H340" stroke="#e8463a" stroke-width="4"/>
+  <rect x="358" y="116" width="34" height="74" rx="5" fill="#8a5a3c"/><path d="M368 124V184M380 124V184" stroke="#6e4630" stroke-width="3"/>
+  <rect x="350" y="186" width="48" height="10" rx="3" fill="#a0643c"/><rect x="354" y="196" width="5" height="52" fill="#6e4630"/><rect x="390" y="196" width="5" height="52" fill="#6e4630"/>`,
+ sutne:`<defs><pattern id="aBdW" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#e9e2ff"/><path d="M15 11l1.2 2.6 2.8.3-2.1 1.9.6 2.8-2.5-1.4-2.5 1.4.6-2.8-2.1-1.9 2.8-.3z" fill="#dcd2fb"/></pattern></defs>
+  <rect width="400" height="202" fill="url(#aBdW)"/><rect y="202" width="400" height="98" fill="#b49ccf"/>
+  <path d="M0 230H400M0 260H400M0 290H400M110 202V230M290 202V230M50 230V260M230 230V260M150 260V290M340 260V290" stroke="#a088bd" stroke-width="2"/>
+  <rect y="196" width="400" height="8" fill="#cbbbe6"/>
+  <rect x="40" y="28" width="92" height="80" rx="3" fill="#fff" stroke="#8a6fb0" stroke-width="4"/><rect x="46" y="34" width="80" height="68" fill="#2b2f5a"/>
+  <circle cx="58" cy="46" r="1.6" fill="#fff"/><circle cx="74" cy="58" r="1.2" fill="#fff"/><circle cx="62" cy="84" r="1.4" fill="#fff"/><circle cx="114" cy="88" r="1.2" fill="#fff"/><circle cx="96" cy="76" r="1.6" fill="#fff"/>
+  <path d="M86 34V102M46 68H126" stroke="#fff" stroke-width="4"/>
+  <path d="M30 22H142" stroke="#7a5a9a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M34 22H56Q50 70 58 118H30Q38 70 34 22Z" fill="#8e5be8"/><path d="M116 22H138Q134 70 140 118H112Q120 70 116 22Z" fill="#8e5be8"/>
+  <rect x="226" y="100" width="70" height="5" rx="2" fill="#7a5a9a"/>
+  <rect x="302" y="30" width="90" height="10" fill="#a07a52"/><rect x="302" y="38" width="90" height="182" rx="4" fill="#c9a27a" stroke="#a07a52" stroke-width="3"/>
+  <path d="M347 42V216" stroke="#a07a52" stroke-width="2"/><rect x="338" y="120" width="4" height="18" rx="2" fill="#ffc93c"/><rect x="352" y="120" width="4" height="18" rx="2" fill="#ffc93c"/>
+  <circle cx="325" cy="68" r="3" fill="#7a5a3a"/>
+  <rect x="226" y="168" width="48" height="52" rx="3" fill="#b48a5a"/><path d="M230 194H270" stroke="#8a6038" stroke-width="2"/>
+  <circle cx="250" cy="182" r="2.5" fill="#ffc93c"/><circle cx="250" cy="207" r="2.5" fill="#ffc93c"/>
+  <ellipse cx="270" cy="266" rx="105" ry="22" fill="#fff" opacity=".45"/>
+  <rect x="24" y="118" width="190" height="66" rx="18" fill="#8a5a3c"/><rect x="34" y="128" width="170" height="40" rx="12" fill="#a0643c"/>
+  <rect x="18" y="168" width="202" height="46" rx="10" fill="#ff7eb6"/><rect x="18" y="168" width="202" height="12" rx="6" fill="#ffd1e6"/>
+  <circle cx="80" cy="198" r="5" fill="#ffd1e6"/><circle cx="120" cy="198" r="5" fill="#ffd1e6"/><circle cx="160" cy="198" r="5" fill="#ffd1e6"/><circle cx="200" cy="198" r="5" fill="#ffd1e6"/>
+  <ellipse cx="70" cy="166" rx="34" ry="12" fill="#fff"/>
+  <rect x="14" y="212" width="210" height="14" rx="4" fill="#6e4630"/><rect x="20" y="226" width="8" height="12" fill="#5a3a20"/><rect x="210" y="226" width="8" height="12" fill="#5a3a20"/>`,
+ nuhaune:`<defs><pattern id="aBtW" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#e3f7fa" stroke="#bfe3ea" stroke-width="2"/></pattern>
+  <pattern id="aBtF" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#b6d8df"/><rect width="20" height="20" fill="#9fc7d0"/><rect x="20" y="20" width="20" height="20" fill="#9fc7d0"/></pattern></defs>
+  <rect width="400" height="200" fill="url(#aBtW)"/><rect y="200" width="400" height="100" fill="url(#aBtF)"/>
+  <path d="M30 196V58H50" stroke="#9aa5ab" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <rect x="40" y="248" width="110" height="18" rx="6" fill="#ff7eb6" opacity=".7"/>
+  <rect x="10" y="164" width="182" height="12" rx="6" fill="#f4fbfd" stroke="#c4dfe6" stroke-width="2"/>
+  <path d="M16 176H186V206Q186 232 160 232H42Q16 232 16 206Z" fill="#fff" stroke="#c4dfe6" stroke-width="3"/><rect x="22" y="166" width="158" height="6" rx="3" fill="#8fd8ff"/>
+  <circle cx="50" cy="162" r="6" fill="#fff"/><circle cx="62" cy="160" r="4" fill="#fff"/><circle cx="92" cy="162" r="5" fill="#fff"/>
+  <circle cx="40" cy="238" r="5" fill="#c4dfe6"/><circle cx="162" cy="238" r="5" fill="#c4dfe6"/>
+  <ellipse cx="240" cy="98" rx="28" ry="36" fill="#cfeefc" stroke="#9aa5ab" stroke-width="5"/><path d="M226 82L238 70M224 98L246 76" stroke="#fff" stroke-width="3" opacity=".8"/>
+  <rect x="236" y="148" width="8" height="13" fill="#9aa5ab"/><path d="M240 150H251" stroke="#9aa5ab" stroke-width="4" stroke-linecap="round"/>
+  <path d="M229 176H251L247 236H233Z" fill="#fff" stroke="#c4dfe6" stroke-width="3"/><rect x="203" y="160" width="74" height="16" rx="8" fill="#fff" stroke="#c4dfe6" stroke-width="3"/>
+  <rect x="314" y="122" width="54" height="44" rx="5" fill="#fff" stroke="#c4dfe6" stroke-width="3"/><rect x="332" y="128" width="18" height="5" rx="2" fill="#c4dfe6"/>
+  <path d="M302 172H380Q378 204 356 212L352 238H330L326 212Q304 204 302 172Z" fill="#fff" stroke="#c4dfe6" stroke-width="3"/>
+  <ellipse cx="341" cy="172" rx="40" ry="7" fill="#f4fbfd" stroke="#c4dfe6" stroke-width="3"/>`,
+ aphis:`<rect width="400" height="202" fill="#e3eeff"/><rect y="202" width="400" height="98" fill="#8f9bb3"/><rect y="196" width="400" height="8" fill="#c3cfe6"/>
+  <path d="M0 240H400M0 275H400" stroke="#8390a9" stroke-width="2"/>
+  <rect x="18" y="38" width="114" height="100" rx="3" fill="#b48a5a"/><rect x="24" y="44" width="102" height="40" fill="#8a6038"/><rect x="24" y="90" width="102" height="42" fill="#8a6038"/>
+  <rect x="78" y="56" width="9" height="28" fill="#e8463a"/><rect x="89" y="52" width="8" height="32" fill="#2fae6e"/><rect x="99" y="58" width="10" height="26" fill="#ffc93c"/><rect x="111" y="54" width="8" height="30" fill="#8e5be8"/>
+  <rect x="30" y="104" width="9" height="28" fill="#3a7bf2"/><rect x="41" y="100" width="8" height="32" fill="#ff7eb6"/><rect x="51" y="106" width="10" height="26" fill="#ff9f1c"/>
+  <path d="M150 0V14" stroke="#555" stroke-width="2"/>
+  <rect x="172" y="44" width="96" height="74" rx="4" fill="#fff" stroke="#3a7bf2" stroke-width="3"/>
+  <text x="220" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#e8463a">क ख ग</text><text x="220" y="106" text-anchor="middle" font-size="18" font-weight="700" fill="#3a7bf2">१ २ ३</text>
+  <rect x="38" y="168" width="78" height="80" fill="#8a6038"/><path d="M38 194H116M38 220H116" stroke="#6e4a2c" stroke-width="2"/>
+  <rect x="70" y="179" width="14" height="4" rx="2" fill="#ffc93c"/><rect x="70" y="205" width="14" height="4" rx="2" fill="#ffc93c"/><rect x="70" y="231" width="14" height="4" rx="2" fill="#ffc93c"/>
+  <rect x="316" y="168" width="10" height="80" fill="#6e4a2c"/><rect x="28" y="158" width="306" height="10" rx="3" fill="#7a5230"/>
+  <rect x="350" y="128" width="34" height="60" rx="10" fill="#3a7bf2"/><rect x="342" y="186" width="50" height="10" rx="4" fill="#2f66cf"/>
+  <rect x="364" y="196" width="6" height="34" fill="#555"/><path d="M344 236H390" stroke="#555" stroke-width="5" stroke-linecap="round"/>`,
+};
 const SECTIONS={
  kathaa:{np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',open:()=>openStories()},
  vakya:{np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',open:()=>openVakya()},
@@ -1244,13 +1357,13 @@ let RF=null;
 function openRoom(r){
   if(!P()){goWho();return;}
   screen='room';RF=null;topic=null;
-  const p=P(),seen=new Set((p.rooms||{})[r.id]||[]);
+  const p=P();
   main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${r.np} <small lang="ne">${r.dev} · ${r.en}</small></h1>
    <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
     <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${FIND_N}</small></button></div>
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
-   ${roomScene(r,seen)}
+   ${roomScene(r)}
    <h2 class="sub">Yo kothama <small>More in this room</small></h2>
    <div class="topics">${r.topics.map((id,i)=>topicTile(T(id),i,p)).join('')}${r.sections.map((id,i)=>{const s=SECTIONS[id];
      return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}</span></button>`;}).join('')}</div>`;
@@ -1262,16 +1375,25 @@ function openRoom(r){
   $('#rFind').onclick=()=>roomFind(r);
   speech(r.np,r.dev,`${r.en}: tap anything to hear its name!`);say(r.np,r.dev,null);mood('wave');
 }
-function roomScene(r,seen){
-  return `<div class="room" id="room" style="--wall:${r.wall};--floor:${r.floor}">
-    ${r.furn.map(([x,y,w,h,c,rad])=>`<span class="furn" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%;background:${c};border-radius:${rad}" aria-hidden="true"></span>`).join('')}
-    ${r.items.map((it,k)=>`<button class="ritem${seen.has(k)?' seen':''}${it[5]>82?' up':''}${it[4]<15?' lft':it[4]>85?' rgt':''}" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;--s:${it[6]}" aria-label="${esc(it[2])}"><span class="e" aria-hidden="true">${it[3]}</span><span class="rl">${esc(it[0])}</span></button>`).join('')}</div>`;
+function roomScene(r){
+  // furniture drawn into the room first, so the small things sitting on it stay tappable on top
+  const btn=(it,k)=>it[3]
+    ?`<button class="ritem${it[7]==='u'||(it[7]!=='d'&&it[5]>82)?' up':''}${it[4]<15?' lft':it[4]>85?' rgt':''}" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;--s:${it[6]}" aria-label="${esc(it[2])}"><span class="e" aria-hidden="true">${it[3]}</span><span class="rl">${esc(it[0])}</span></button>`
+    :`<button class="ritem hot" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;width:${it[7]}%;height:${it[8]}%" aria-label="${esc(it[2])}"><span class="rl">${esc(it[0])}</span></button>`;
+  return `<div class="room" id="room"><svg class="art" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">${ROOM_ART[r.id]}</svg>
+    ${r.items.map((it,k)=>it[3]?'':btn(it,k)).join('')}${r.items.map((it,k)=>it[3]?btn(it,k):'').join('')}</div>`;
+}
+// a tapped thing shows its name for a moment, so a busy room never fills up with labels
+let nameTimer=0;
+function showName(b){
+  main.querySelectorAll('.ritem.on').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  clearTimeout(nameTimer);nameTimer=setTimeout(()=>b.classList.remove('on'),2600);
 }
 // look: hear each thing; seeing everything in a room once earns a few gems
 function roomLook(r,b){
   const k=+b.dataset.k,it=r.items[k],p=P();
   speech(cap(it[0]),it[1],it[2]);say(it[0],it[1],it[2]);mood('happy');
-  b.classList.add('seen');b.classList.remove('bounce');void b.offsetWidth;b.classList.add('bounce');
+  showName(b);b.classList.remove('bounce');void b.offsetWidth;b.classList.add('bounce');
   p.rooms=p.rooms||{};const s=new Set(p.rooms[r.id]||[]),had=s.size;s.add(k);p.rooms[r.id]=[...s];save();
   if(s.size===r.items.length&&had<s.size){earn(3);confetti();
     setTimeout(()=>{if(screen==='room'){speech('Sabai herisakyau!','सबै हेरिसक्यौ!','You looked at everything! Now play Khoja: find it.');say('Sabai herisakyau!','सबै हेरिसक्यौ!',null);}},1500);}
@@ -1286,7 +1408,7 @@ function roomFind(r){
 }
 function roomAsk(){
   const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
-  main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint'));
+  main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
   $('#rProg i').style.width=RF.i/FIND_N*100+'%';
   $('#qSay').innerHTML=`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · Where is the ${esc(it[2])}?`:''}</small>`;
   speech(cap(it[0])+' kahaa cha?',it[1]+' कहाँ छ?',`Where is the ${it[2]}?`);say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',null);
@@ -1295,7 +1417,7 @@ function roomPick(b){
   if(RF.lock)return;
   const k=+b.dataset.k,want=RF.list[RF.i],it=RF.r.items[want],rf=RF;
   if(k===want){
-    RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right','seen');confetti();mood('happy');
+    RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right');showName(b);confetti();mood('happy');
     const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],null);
     setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<FIND_N)roomAsk();else roomEnd();},1500);
   }else{
