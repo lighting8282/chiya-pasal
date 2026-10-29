@@ -224,4 +224,14 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 
 ## Project layout
 
+**Habre Plus (paid places, not live yet).** `kids.html` has the structure for a paid pack:
+- **`PACKS` and `PLUS`:** the pack and its places, shown under the map and locked until owned. The places are Kathmandu, Chitwan, a mountain trek and the fair.
+- **The unlock screen** sits behind a grown-ups-only question.
+- **Ownership** is a per-device flag (`S.owned`).
+- **Adding content:** give a place `stops` (the same kinds as a trip), and it gets a trail with a big check and a present. Until then it shows "coming soon".
+- **`PAY`:** where real payments plug in, either Google Play Billing in the Play Store app or a web checkout whose codes are checked by a server. While `PAY.ready` is false, buying shows "not switched on yet".
+- **Testing on one device:** `habrePlus.test(true)` in the browser console unlocks the pack.
+
+The lock lives in the page, so it is not secure on its own: real payments need the store or a server to confirm them.
+
 `manifest.webmanifest`, `sw.js` (offline cache) and `icons/` make the main game installable. Regenerate the icons with `python tools/make_icons.py`. The kids' game is a separate single file, `kids.html`. The main game lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.
