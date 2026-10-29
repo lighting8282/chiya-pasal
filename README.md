@@ -4,7 +4,20 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 
 **Play it in your browser: https://lighting8282.github.io/chiya-pasal/**
 
-**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The home screen is Habre's house: a Nepali-style house with six doors that swing open when tapped. The wreath on each door fills up as the child works through that section:
+**For children: [Habre's Nepali](https://lighting8282.github.io/chiya-pasal/kids.html)**, a picture-and-voice version with Habre the red panda. Each child gets their own player profile. The game opens on a map (below). The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
+
+Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
+
+| Room | Things to find | Lessons there |
+|---|---|---|
+| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | family, feelings, things at home, sayings, and the sentence train |
+| **Bhanchha** (kitchen) | kettle, pan, pot, tap, spoon, salt, vegetables… | food |
+| **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | counting and big numbers |
+| **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | clothes, colours, and the stories |
+| **Nuhaune kotha** (bathroom) | shower, bath, mirror, toothbrush, soap, bucket… | the body |
+| **Aphis** (office) | computer, pen, pencil, scissors, calendar, globe… | letters, grammar, flashcards, and every word topic |
+
+The lessons:
 
 - **Kathaa (stories):** fifteen short stories, including festival days (Tihar, Dashain, Holi and Lhosar) and everyday scenes (the market, the doctor's, school). A voice reads each page aloud and lights up every word as it's spoken. Tap any word to hear it and see what it means. Three of the stories let the child choose what Habre does next, and each has two endings to find. The rest end with a question, then a game where the child puts four scenes back in order. Finishing one story opens the next. A "Kun chitra?" switch hides each page's picture so the child has to pick it.
 - **Shabda (words):** 19 picture topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings, festivals and everyday sayings). Each topic goes Learn → Play → Check, with three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3) and *Gaaro* (hard, 4, listen-only). There's also a memory-match game. Every word a child gets right twice becomes a sticker in their sticker book.
@@ -30,11 +43,20 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
   - pick the right answer to a question
 - **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks. Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
 
-**Naksa (the map)** is the front page, and a new player lands on it straight away. It shows Habre's house at the bottom and a road winding up through seven places to the mountains: the garden, the village, the market, the forest, the lake, the hills and the mountains. At first only the house is open and the other places show a lock. A ring around each place fills as the child works through it, and the child's avatar stands at the place they're on. Tapping a place goes there, and tapping a locked one says what to do first.
+**Naksa (the map)** is the front page, and a new player lands on it straight away. It shows Habre's house at the bottom and a road winding up through eight trips to the mountains. At first only the house is open and the other places show a lock. A ring around each place fills as the child works through it, and the child's avatar stands at the place they're on. Tapping a place goes there, and tapping a locked one says what to do first. Below the map are **Aajako abhyas** (a five-minute mixed practice with a day streak) and the next free gift for Habre.
 
-**Habreko yatra (Habre's journey)** turns the lessons into a trail to walk. The garden opens once the child has 10 ★ from the house, and each later place opens when the one before it is finished. Inside a place, a winding path of stops leads to its end. Each stop is a lesson the game already has: a word topic, a story, letters, a grammar lesson, the sentence train or a check. The child taps the glowing stop to play it. Early stops are easy, and later ones move to the medium and hard levels, longer sentences and the later stories. A new word level starts with the Learn cards. Each place ends with a big check that mixes its words (6 of 8 to pass) and a present of gems. Lessons a child has already passed in the house count on the trail, and the house doors still go straight to any section.
+**Habreko yatra (Habre's journey)** is the trips. Each one is about the creatures and things found there:
 
-**Aajako abhyas** is a five-minute mixed practice with a day streak.
+1. **Bagaicha** (the garden): bugs and nature
+2. **Gaaun** (the farm village): animals
+3. **Bazaar** (the market): vehicles and festivals
+4. **Jangal** (the forest): wild animals
+5. **Taal** (the lake): reptiles and frogs
+6. **Samundra** (the seaside): sea animals
+7. **Pahad** (the hills): birds
+8. **Himal** (the mountains): the last climb
+
+The garden opens once the child has 10 ★ from the rooms, and each later trip opens when the one before it is finished. Inside a trip, a winding path of stops takes each topic from easy to medium to hard, then to a check, with the stories that happen there along the way. The child taps the glowing stop to play it, and a new word level starts with the Learn cards. Each trip ends with a big check that mixes its words (6 of 8 to pass) and a present of gems. The mountains' big check mixes every trip at the hard level. Lessons a child has already passed count on the trail. Every word topic can also be opened directly from the office.
 
 **Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: how far through each door they are, stars per topic and level, stories, sentences, flashcard baskets, letters written and the words they keep missing. Grown-ups also build their flashcard deck there. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 

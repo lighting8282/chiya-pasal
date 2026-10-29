@@ -291,17 +291,11 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .hdoor.open .leaf{transform:rotateY(-80deg)}
 .step{width:calc(100% + 0px);max-width:148px;height:10px;border-radius:3px;background:#b9a48a;box-shadow:0 3px 0 #8d7a62;position:relative}
 .mat{font-size:.78rem;font-weight:800;color:#fff;background:rgba(43,33,64,.35);border-radius:999px;padding:0 8px;margin-top:-2px}
-.today{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}
 .daily{background:linear-gradient(135deg,#ff9f1c,#e8463a);color:#fff;border-radius:28px;padding:14px 18px;text-align:left;display:flex;align-items:center;gap:14px;box-shadow:0 7px 0 var(--red-dark)}
 .daily .ic{font-size:3rem;line-height:1}
 .daily b{font-size:1.5rem;display:block;line-height:1.1}
 .daily small{display:block;font-size:.9rem}
-.daily:active,.wod:active,.reward:active{transform:translateY(4px)}
-.wod{background:var(--card);border-radius:28px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 7px 0 var(--line);text-align:left}
-.wod .pic{font-size:3.2rem;line-height:1}
-.wod .swatch{width:56px;height:56px;animation:none}
-.wod small{display:block;color:var(--soft);font-size:.8rem}
-.wod b{font-size:1.4rem;display:block;line-height:1.1}
+.daily:active,.reward:active{transform:translateY(4px)}
 .reward{background:#fff7d6;border-radius:24px;padding:10px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #f0d77a;flex-wrap:wrap;text-align:left}
 .reward .next{font-size:2.2rem;line-height:1}
 .bar2{display:block;height:14px;border-radius:99px;background:#fff;overflow:hidden;margin-top:4px}
@@ -402,7 +396,6 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .cd label{background:var(--sky);border-radius:999px;padding:3px 12px;gap:6px;font-size:.95rem}
 .hbAcc text{font-family:'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif}
 @media (max-width:680px){
-  .today{grid-template-columns:minmax(0,1fr)}
   .roof{height:92px}.roof .t1{height:50px}.roof .t2{bottom:46px;height:40px}.roof .gajur{bottom:84px}.roof .sign{font-size:1rem}
   .floor{gap:3%;padding:10px 3% 0}.plaque{font-size:.85rem;padding:2px 5px}.plaque small{font-size:.62rem}
   .wreath span{font-size:1.5rem}.frame{border-width:6px}
@@ -508,6 +501,24 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .stop.r .me{left:auto;right:-34px}
 .stop:active .disc{transform:translateY(4px);box-shadow:0 2px 0 var(--sc,var(--line))}
 .stop.boss .disc{width:78px;height:78px;border-radius:24px;font-size:2.4rem}
+/* kotha: a room of Habre's house, drawn as a picture of things to tap */
+.rbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rbar .mode[aria-pressed="true"]{outline:4px solid #fff;outline-offset:-8px}
+.room{position:relative;aspect-ratio:4/3;border-radius:26px;overflow:hidden;container-type:inline-size;background:linear-gradient(var(--wall) 0 64%,var(--floor) 64%);box-shadow:0 7px 0 var(--line)}
+.room .furn{position:absolute;pointer-events:none}
+.ritem{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;line-height:1;padding:0;border-radius:16px}
+.ritem .e{display:block;font-size:calc(var(--s)*1.15cqw);transition:transform .15s}
+.ritem:active .e{transform:scale(.9)}
+.ritem .rl{position:absolute;top:100%;font-size:max(11px,3cqw);font-weight:800;background:#fff;border-radius:999px;padding:1px 7px;margin-top:2px;opacity:0;transform:scale(.6);transition:.2s;white-space:nowrap;line-height:1.25;box-shadow:0 2px 0 rgba(0,0,0,.12);z-index:2}
+.ritem.up .rl{top:auto;bottom:100%;margin:0 0 2px}
+.ritem.lft .rl{left:0}
+.ritem.rgt .rl{right:0}
+.ritem.seen .rl{opacity:1;transform:none}
+.room.find .ritem .rl{opacity:0}
+.room.find .ritem.right .rl{opacity:1;transform:none}
+.ritem.bounce .e,.ritem.right .e{animation:yay .55s}
+.ritem.wrong .e{animation:shake .4s}
+.ritem.hint .e{filter:drop-shadow(0 0 6px #ffd23c) drop-shadow(0 0 10px #ffb000)}
 /* naksa: the map of every place, from Habre's house at the bottom to the mountains at the top */
 .wmap{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:3/4.3;border-radius:32px;overflow:hidden;background:linear-gradient(to top,#a8dc8c 0%,#cdeeb8 30%,#d6eefb 68%,#f6fbff 100%);box-shadow:0 7px 0 var(--line)}
 .wmap svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -1014,12 +1025,12 @@ function openShop(cat){
   const card=(x,i)=>{const own=owns(p,x),on=(p.outfit[x.slot]||'')===x.id||(x.free&&!p.outfit[x.slot]),sel=shopSel===x.id;
     const tag=on?'<em class="on">✔ wearing</em>':own?'<em>yours</em>':x.gift?`<em class="gift">🎁 free at ★ ${x.gift}</em>`:`<em class="${gems>=x.price?'':'dear'}">💎 ${x.price}</em>`;
     return `<button class="sitem${sel?' sel':''}${own?' own':''}" data-i="${x.id}" style="animation-delay:${Math.min(i,16)*30}ms" aria-pressed="${sel}"><span class="si" aria-hidden="true">${itemIcon(x)}</span><b>${esc(x.np)}</b><small>${esc(x.en)}</small>${tag}</button>`;};
-  main.innerHTML=`${backBtn('Ghar')}<h1>🛍️ Habreko pasal <small>हाब्रेको पसल · Habre’s shop</small></h1>
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>🛍️ Habreko pasal <small>हाब्रेको पसल · Habre’s shop</small></h1>
    <div class="wallet"><span class="gemsbig">💎 ${gems}</span><span>heera to spend · you have ${ownedN} of ${all} things<small>Earn 💎 every time you play: one for each star in a round, plus extras for stories, sentences and today’s practice.</small></span></div>
    <div class="seg shoptabs" role="tablist">${SHOP_CATS.map(c=>`<button role="tab" aria-pressed="${c[0]===shopCat}" data-c="${c[0]}">${c[1]} ${c[2]} <small style="font-weight:500;color:var(--soft)">${c[3]}</small></button>`).join('')}</div>
    <div class="shopgrid">${list.length?list.map(card).join(''):'<p style="color:var(--soft)">Nothing here yet. Buy something!</p>'}</div>
    <div class="shopbar" id="shopBar" ${shopSel?'':'hidden'}></div>`;
-  $('#backBtn').onclick=()=>{shopSel=null;clearTry();goHome();};
+  $('#backBtn').onclick=()=>{shopSel=null;clearTry();openMap();};
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{shopSel=null;clearTry();openShop(b.dataset.c);});
   main.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{
     const x=ITEM[b.dataset.i];shopSel=x.id;tryOn={[x.slot]:x.free?'':x.id};renderOutfit();openShop();
@@ -1168,33 +1179,163 @@ const DOORS=[
  {id:'vakya',np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',color:'#ff9f1c',open:()=>openVakya()},
  {id:'patti',np:'Patti',dev:'पत्ती',en:'Flashcards',icon:'🃏',color:'#3a7bf2',open:()=>openPatti()},
 ];
-// the same word all day, different each day
-function wordOfDay(){
-  const all=WORD_T().filter(t=>t.kind==='pic').flatMap(t=>t.items.map(it=>({t,it})));
-  const d=new Date(),n=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
-  return all[(n*7919)%all.length];
+// ---------- kotha (the rooms of Habre's house) ----------
+// Each room is a picture: tap a thing to hear its name, or play "find it". The room also holds the lessons that
+// belong there: word topics (topics) and whole sections (sections: kathaa, vakya, vyakaran, patti, shabda).
+// items: [romanized, devanagari, english, picture, x %, y %, size (% of the room's width)]
+// furn: furniture drawn behind the things: [left %, top %, width %, height %, colour, corner radius]
+const ROOMS=[
+ {id:'baithak',np:'Baithak',dev:'बैठक',en:'Living room',icon:'🛋️',color:'#ff9f1c',wall:'#ffe9c7',floor:'#c99a6b',
+  topics:['pariwar','bhavana','saman','bhanai'],sections:['vakya'],
+  furn:[[18,80,64,12,'#e8463a66','50%'],[66,62,20,4,'#8a5a3c','4px']],items:[
+  ['sofa','सोफा','sofa','🛋️',34,70,20],['tibhi','टिभी','TV','📺',70,42,13],['jhyaal','झ्याल','window','🪟',28,24,14],
+  ['dhoka','ढोका','door','🚪',90,58,12],['tasbir','तस्बिर','picture','🖼️',56,22,10],['phon','फोन','phone','☎️',58,68,8],
+  ['gamala','गमला','flower pot','🪴',8,58,10],['rediyo','रेडियो','radio','📻',82,84,9],['biralo','बिरालो','cat','🐈',62,90,9]]},
+ {id:'bhanchha',np:'Bhanchha',dev:'भान्छा',en:'Kitchen',icon:'🍳',color:'#e8463a',wall:'#e6f6ef',floor:'#d9c6a5',
+  topics:['khana'],sections:[],
+  furn:[[4,58,92,10,'#a0764c','6px'],[6,36,36,3,'#a0764c','3px'],[68,36,26,3,'#a0764c','3px']],items:[
+  ['kitli','कित्ली','kettle','🫖',16,50,11],['taaba','ताबा','frying pan','🍳',36,50,11],['bhaado','भाँडो','pot','🍲',56,50,11],
+  ['dhaaraa','धारा','tap','🚰',82,48,11],['chamcha','चम्चा','spoon','🥄',14,28,8],['chakku','चक्कु','knife','🔪',32,28,8],
+  ['nun','नुन','salt','🧂',80,28,9],['gaajar','गाजर','carrot','🥕',18,84,10],['aalu','आलु','potato','🥔',38,86,10],
+  ['pyaaj','प्याज','onion','🧅',58,84,10],['golbheda','गोलभेडा','tomato','🍅',78,86,10]]},
+ {id:'khane',np:'Khane kotha',dev:'खाने कोठा',en:'Dining room',icon:'🍽️',color:'#2fae6e',wall:'#fff3d6',floor:'#b98a62',
+  topics:['ganti','thulo'],sections:[],
+  furn:[[12,62,76,5,'#8a5a3c','6px'],[18,66,3,20,'#6e4630','2px'],[79,66,3,20,'#6e4630','2px']],items:[
+  ['bhaat','भात','rice','🍚',30,38,8],['chiya','चिया','tea','☕',50,38,8],['pauroti','पाउरोटी','bread','🍞',70,38,8],
+  ['thaal','थाल','plate','🍽️',22,56,9],['katora','कटोरा','bowl','🥣',40,56,9],['momo','मोमो','momo','🥟',58,56,9],
+  ['roti','रोटी','flatbread','🫓',76,56,9],['kursi','कुर्सी','chair','🪑',90,80,11],['mainbatti','मैनबत्ती','candle','🕯️',50,22,9]]},
+ {id:'sutne',np:'Sutne kotha',dev:'सुत्ने कोठा',en:'Bedroom',icon:'🛏️',color:'#8e5be8',wall:'#e9e2ff',floor:'#a98bc4',
+  topics:['kapada','rang'],sections:['kathaa'],
+  furn:[[12,8,26,26,'#2b2f5a','10px'],[56,46,24,3,'#7a5a9a','3px']],items:[
+  ['jun','जून','moon','🌙',25,20,10],['khaat','खाट','bed','🛏️',28,70,24],['ghadi','घडी','clock','⏰',60,38,8],
+  ['kitab','किताब','book','📖',73,38,8],['kamij','कमिज','shirt','👕',90,20,10],['jhola','झोला','school bag','🎒',90,62,11],
+  ['bhalu khelauna','भालु खेलौना','teddy bear','🧸',62,72,11],['bhakundo','भकुण्डो','ball','⚽',84,88,8],['chappal','चप्पल','slippers','🩴',54,92,8]]},
+ {id:'nuhaune',np:'Nuhaune kotha',dev:'नुहाउने कोठा',en:'Bathroom',icon:'🛁',color:'#00a6b8',wall:'#d8f3f7',floor:'#9fc7d0',
+  topics:['sharir'],sections:[],
+  furn:[[64,48,26,3,'#5f9aa6','3px']],items:[
+  ['sawar','सावर','shower','🚿',24,22,12],['tab','टब','bathtub','🛁',26,70,24],['hans','हाँस','toy duck','🦆',40,58,8],
+  ['aina','ऐना','mirror','🪞',78,24,12],['burus','बुरुस','toothbrush','🪥',70,42,8],['saabun','साबुन','soap','🧼',84,42,8],
+  ['charpi','चर्पी','toilet','🚽',66,76,14],['baalti','बाल्टी','bucket','🪣',88,82,10],['spanj','स्पन्ज','sponge','🧽',90,62,8]]},
+ {id:'aphis',np:'Aphis',dev:'अफिस',en:'Office',icon:'💻',color:'#3a7bf2',wall:'#e3eeff',floor:'#8f9bb3',
+  topics:['akshar'],sections:['vyakaran','patti','shabda'],
+  furn:[[4,62,92,6,'#7a5230','6px'],[8,68,3,18,'#5e3e24','2px'],[89,68,3,18,'#5e3e24','2px'],[70,36,24,3,'#7a5230','3px']],items:[
+  ['kyalendar','क्यालेन्डर','calendar','📅',16,24,11],['glob','ग्लोब','globe','🌍',76,28,10],['batti','बत्ती','light','💡',46,12,9],
+  ['mobail','मोबाइल','mobile phone','📱',14,56,8],['kalam','कलम','pen','🖊️',28,56,8],['kampyutar','कम्प्युटर','computer','💻',46,52,14],
+  ['sisakalam','सिसाकलम','pencil','✏️',64,56,8],['kainchi','कैंची','scissors','✂️',77,56,7],['kitab','किताब','books','📚',91,54,8],
+  ['kaagaj','कागज','paper','📄',40,86,9],['phohor tokari','फोहोर टोकरी','rubbish bin','🗑️',76,84,10]]},
+];
+const SECTIONS={
+ kathaa:{np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',open:()=>openStories()},
+ vakya:{np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',open:()=>openVakya()},
+ vyakaran:{np:'Vyakaran',dev:'व्याकरण',en:'Grammar',icon:'🧩',open:()=>openGram()},
+ patti:{np:'Patti',dev:'पत्ती',en:'Flashcards',icon:'🃏',open:()=>openPatti()},
+ shabda:{np:'Sabai shabda',dev:'सबै शब्द',en:'Every word topic',icon:'🍎',open:()=>openWords()},
+};
+const FIND_N=8;
+// the room that holds a section or a word topic
+const roomOf=id=>ROOMS.find(r=>r.sections.includes(id)||r.topics.includes(id));
+const toRoom=id=>()=>openRoom(roomOf(id));
+// how far through a room: things looked at, the find game, and its word topics
+function roomProgress(p,r){
+  const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(FIND_N-1));
+  return r.topics.length?seen*0.25+find*0.35+avg(r.topics.map(id=>topicDone(p,T(id))))*0.4:seen*0.4+find*0.6;
+}
+let RF=null;
+function openRoom(r){
+  if(!P()){goWho();return;}
+  screen='room';RF=null;topic=null;
+  const p=P(),seen=new Set((p.rooms||{})[r.id]||[]);
+  main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${r.np} <small lang="ne">${r.dev} · ${r.en}</small></h1>
+   <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
+    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${FIND_N}</small></button></div>
+   <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="progress" id="rProg" hidden><i></i></div>
+   ${roomScene(r,seen)}
+   <h2 class="sub">Yo kothama <small>More in this room</small></h2>
+   <div class="topics">${r.topics.map((id,i)=>topicTile(T(id),i,p)).join('')}${r.sections.map((id,i)=>{const s=SECTIONS[id];
+     return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}</span></button>`;}).join('')}</div>`;
+  $('#backBtn').onclick=()=>goHome(true);
+  main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(T(b.dataset.t)));
+  main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>SECTIONS[b.dataset.sec].open());
+  main.querySelectorAll('.ritem').forEach(b=>b.onclick=()=>RF?roomPick(b):roomLook(r,b));
+  $('#rLook').onclick=()=>openRoom(r);
+  $('#rFind').onclick=()=>roomFind(r);
+  speech(r.np,r.dev,`${r.en}: tap anything to hear its name!`);say(r.np,r.dev,null);mood('wave');
+}
+function roomScene(r,seen){
+  return `<div class="room" id="room" style="--wall:${r.wall};--floor:${r.floor}">
+    ${r.furn.map(([x,y,w,h,c,rad])=>`<span class="furn" style="left:${x}%;top:${y}%;width:${w}%;height:${h}%;background:${c};border-radius:${rad}" aria-hidden="true"></span>`).join('')}
+    ${r.items.map((it,k)=>`<button class="ritem${seen.has(k)?' seen':''}${it[5]>82?' up':''}${it[4]<15?' lft':it[4]>85?' rgt':''}" data-k="${k}" style="left:${it[4]}%;top:${it[5]}%;--s:${it[6]}" aria-label="${esc(it[2])}"><span class="e" aria-hidden="true">${it[3]}</span><span class="rl">${esc(it[0])}</span></button>`).join('')}</div>`;
+}
+// look: hear each thing; seeing everything in a room once earns a few gems
+function roomLook(r,b){
+  const k=+b.dataset.k,it=r.items[k],p=P();
+  speech(cap(it[0]),it[1],it[2]);say(it[0],it[1],it[2]);mood('happy');
+  b.classList.add('seen');b.classList.remove('bounce');void b.offsetWidth;b.classList.add('bounce');
+  p.rooms=p.rooms||{};const s=new Set(p.rooms[r.id]||[]),had=s.size;s.add(k);p.rooms[r.id]=[...s];save();
+  if(s.size===r.items.length&&had<s.size){earn(3);confetti();
+    setTimeout(()=>{if(screen==='room'){speech('Sabai herisakyau!','सबै हेरिसक्यौ!','You looked at everything! Now play Khoja: find it.');say('Sabai herisakyau!','सबै हेरिसक्यौ!',null);}},1500);}
+}
+// find it: Habre names a thing, the child taps it in the room
+function roomFind(r){
+  RF={r,list:spread(r.items.map((_,k)=>k),FIND_N),i:0,stars:0};
+  $('#room').classList.add('find');$('#rLook').setAttribute('aria-pressed','false');$('#rFind').setAttribute('aria-pressed','true');
+  $('#rQ').hidden=false;$('#rProg').hidden=false;$('#again').onclick=roomAsk;
+  $('#room').scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});
+  roomAsk();
+}
+function roomAsk(){
+  const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
+  main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint'));
+  $('#rProg i').style.width=RF.i/FIND_N*100+'%';
+  $('#qSay').innerHTML=`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · Where is the ${esc(it[2])}?`:''}</small>`;
+  speech(cap(it[0])+' kahaa cha?',it[1]+' कहाँ छ?',`Where is the ${it[2]}?`);say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',null);
+}
+function roomPick(b){
+  if(RF.lock)return;
+  const k=+b.dataset.k,want=RF.list[RF.i],it=RF.r.items[want],rf=RF;
+  if(k===want){
+    RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right','seen');confetti();mood('happy');
+    const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],null);
+    setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<FIND_N)roomAsk();else roomEnd();},1500);
+  }else{
+    RF.tries++;b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');mood('sad');
+    const o=RF.r.items[k];speech(cap(o[0])+'!',o[1],`That’s the ${o[2]}. Try again!`);say(o[0],o[1],null);
+    if(RF.tries>=2)main.querySelector(`.ritem[data-k="${want}"]`).classList.add('hint');
+  }
+}
+function roomEnd(){
+  const r=RF.r,n=RF.stars,p=P();let nb=false;
+  if(n>bestOf(p,'room',r.id)){p.best=p.best||{};p.best['room:'+r.id]=n;nb=true;}
+  stat(p).plays++;stat(p).last=today();save();earn(n);renderTop();RF=null;
+  endCard(n,FIND_N,{newBest:nb,sub:`${r.en} · find it`,again:()=>{openRoom(r);roomFind(r);},back:()=>openRoom(r),backLabel:r.np});
 }
 
-// ---------- yatra (Habre's journey): a trail of stops from the garden up to the mountains ----------
-// Each stop is one thing the game already has, getting harder along the way. A stop counts as done from the
-// player's saved scores, so anything already played in the house counts too. Every place ends with a big check
-// (a mix of its words) and a present of gems. The gate opens at GATE stars.
+// ---------- yatra (Habre's journey): trips from the house to the garden, the farm, the forest… up to the mountains ----------
+// Each trip is about the creatures and things found there (bugs in the garden, birds in the hills…): its word topics
+// go easy → medium → hard → check, with the stories that happen there. A stop counts as done from the player's
+// saved scores, so anything already played counts too. Every trip ends with a big check (a mix of its words) and a
+// present of gems; the last one, the mountains, mixes every trip at the hard level. The gate opens at GATE stars.
 const GATE=10,BOSS_N=8;
-const YATRA=(()=>{const W=(t,lv)=>({k:'play',t,lv}),K=id=>({k:'story',id}),J=t=>({k:'check',t}),R=(a,lv)=>({k:'vakya',a,lv});return [
+const YATRA=(()=>{const W=(t,lv)=>({k:'play',t,lv}),K=id=>({k:'story',id}),J=t=>({k:'check',t});return [
  {id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝'],stops:[
-  W('janawar','easy'),W('rang','easy'),K('bihana'),W('ganti','easy'),W('khana','easy'),W('pariwar','easy')]},
- {id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡'],stops:[
-  W('sharir','easy'),W('kapada','easy'),W('g-dherai','easy'),K('bazaar'),W('akshar','easy'),W('prakriti','easy'),W('g-thulo','easy'),R('build','easy')]},
+  W('kira','easy'),W('prakriti','easy'),K('bagaicha'),W('kira','medium'),W('prakriti','medium'),K('paani'),
+  W('kira','hard'),W('prakriti','hard'),J('kira'),J('prakriti')]},
+ {id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡'],stops:[
+  W('janawar','easy'),K('mimi'),W('janawar','medium'),K('bhok'),W('janawar','hard'),J('janawar')]},
  {id:'bazaar',np:'Bazaar',dev:'बजार',en:'The market',icon:'🛍️',bg:'#ffe6ee',gems:20,deco:['🍎','🍌','🧺','🎈'],stops:[
-  W('janawar','medium'),W('saman','easy'),W('g-rang','easy'),K('paani'),W('ganti','medium'),W('savari','easy'),W('g-cha','easy'),K('janmadin'),R('chitra','easy')]},
+  W('savari','easy'),K('bazaar'),W('chaad','easy'),W('savari','medium'),K('tihar'),W('chaad','medium'),
+  K('dashain'),W('savari','hard'),K('holi'),W('chaad','hard'),J('savari'),J('chaad')]},
  {id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️'],stops:[
-  W('jangali','easy'),W('chara','easy'),W('kira','easy'),W('g-kahaa','easy'),K('bagaicha'),W('bhavana','easy'),W('g-gardai','easy'),K('mimi'),W('akshar','medium'),R('build','medium')]},
- {id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:30,deco:['🦆','🐟','🪷','⛵'],stops:[
-  W('samundra','easy'),W('sarisrip','easy'),W('g-ho','easy'),W('rang','medium'),K('bhok'),W('g-ulto','easy'),W('khana','medium'),W('g-kasko','easy'),K('himal'),R('ulto','easy'),J('janawar')]},
- {id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','🐦','🌿'],stops:[
-  W('thulo','easy'),W('chaad','easy'),K('tihar'),W('g-prashna','easy'),W('bhanai','easy'),K('bida'),W('g-bhayo','easy'),W('pariwar','medium'),R('sodhau','easy'),K('dashain'),W('ganti','hard'),J('rang')]},
- {id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,deco:['❄️','🏔️','☁️','🦅'],stops:[
-  W('janawar','hard'),W('g-tukra','easy'),K('holi'),W('akshar','hard'),W('thulo','medium'),K('lhosar'),W('jangali','medium'),R('build','hard'),K('daktar'),W('bhavana','medium'),J('khana'),K('school')]},
+  W('jangali','easy'),K('bida'),W('jangali','medium'),W('jangali','hard'),J('jangali')]},
+ {id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:25,deco:['🦆','🪷','🐸','🌾'],stops:[
+  W('sarisrip','easy'),W('sarisrip','medium'),W('sarisrip','hard'),J('sarisrip')]},
+ {id:'samundra',np:'Samundra',dev:'समुद्र',en:'The seaside',icon:'🌊',bg:'#d4f1f9',gems:30,deco:['🐚','🌴','⛵','🦀'],stops:[
+  W('samundra','easy'),W('samundra','medium'),W('samundra','hard'),J('samundra')]},
+ {id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿'],stops:[
+  W('chara','easy'),W('chara','medium'),W('chara','hard'),J('chara')]},
+ {id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅'],stops:[
+  K('himal'),K('lhosar')]},
 ];})();
 const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
 const T=id=>TOPICS.find(t=>t.id===id);
@@ -1229,7 +1370,11 @@ function goStop(s){
   }else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
   else if(s.k==='story'){story=STORIES.find(x=>x.id===s.id);pageI=0;path=story.pages.slice();branchK=-1;guessed=new Set();renderPage();}
   else if(s.k==='vakya'){p.lv.vakya=s.lv;save();vStart(s.a);}
-  else if(s.k==='boss')startQuiz({mode:'yatra',rid:s.r.id,stops:s.r.stops.filter(x=>x.k==='play'),back:openPath});
+  else if(s.k==='boss'){
+    // the mountains' big check mixes every trip's topics at the hard level
+    const own=s.r.stops.filter(x=>x.k==='play'),all=[...new Set(YATRA.flatMap(r=>r.stops).filter(x=>x.k==='play').map(x=>x.t))].map(t=>({k:'play',t,lv:'hard'}));
+    startQuiz({mode:'yatra',rid:s.r.id,stops:s.r.final?all:own,back:openPath});
+  }
 }
 // a section page opened while on a trip goes back to that place on the trail instead
 function tripBack(){if(!trip)return false;const r=trip.r;trip=null;openPath(r.id);return true;}
@@ -1288,8 +1433,8 @@ function openPath(rid){
 }
 
 // ---------- naksa (the map): the front page. Habre's house at the bottom, the places above it, locked until reached ----------
-const MAP_POS=[[72,89],[28,78],[72,67],[28,56],[72,45],[28,34],[72,23],[30,11]];
-const MAP_DECO=[['☀️',86,5],['☁️',62,3],['☁️',10,22],['🦅',90,34],['🌲',8,46],['🌳',92,56],['🐐',8,68],['🐄',10,90],['🌼',40,96],['🌷',94,97]];
+const MAP_POS=[[72,88],[28,78],[72,68.5],[28,59],[72,49],[28,39.5],[72,29.5],[28,20],[72,10]];
+const MAP_DECO=[['☀️',10,7],['☁️',48,3],['☁️',10,31],['🦅',92,20],['🌲',8,51],['🌳',92,42],['🦀',92,62],['🐐',8,71],['🌷',92,81],['🐄',8,91]];
 function openMap(){
   if(!P()){goWho();return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
@@ -1299,6 +1444,8 @@ function openMap(){
   // a place that opened since the map was last shown gets a little party
   const fresh=y.open!=null&&nOpen>y.open?nOpen-1:-1,first=!y.mapSeen;
   y.open=nOpen;y.mapSeen=1;save();
+  const d=p.daily||{},done=d.last===today(),streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
+  const gl=GIFTS(),nx=gl.find(g=>g.gift>stars),from=nx?((gl[gl.indexOf(nx)-1]||{gift:0}).gift):0;
   const nodes=[{icon:'🏠',np:'Habreko ghar',dev:'हाब्रेको घर',en:'Habre’s house',open:true,pct:Math.min(1,stars/GATE),done:gate,cur:curI<0},
     ...YATRA.map((r,i)=>{const f=regionFirst(r),n=regionEnd(i)-f;return {icon:r.icon,np:r.np,dev:r.dev,en:r.en,open:open[i],pct:open[i]?Math.max(0,Math.min(at-f,n))/n:0,done:at>=regionEnd(i),cur:curI===i,fresh:fresh===i};})];
   const road=MAP_POS.slice(1).map(([x2,y2],k)=>{const [x1,y1]=MAP_POS[k],m=(y1+y2)/2,on=nodes[k+1].open;
@@ -1313,12 +1460,18 @@ function openMap(){
        <span class="disc"><span class="in" aria-hidden="true">${o.icon}</span>${!o.open?'<span class="badge" aria-hidden="true">🔒</span>':o.done?'<span class="badge" aria-hidden="true">⭐</span>':''}</span>
        <span class="lb">${o.np}<small>${o.en}</small></span></button>`;}).join('')}
    </div>
-   <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>`;
+   <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>
+   <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
+   <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
+     <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
+     <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
+  $('#dailyBtn').onclick=startDaily;
+  $('#wardBtn').onclick=()=>openShop();
   main.querySelectorAll('.place').forEach(b=>b.onclick=()=>{
     const k=+b.dataset.n,o=nodes[k];
-    if(k===0){speech(o.np,o.dev,'Pick a door.');say(o.np,o.dev,null);mood('happy');setTimeout(()=>{if(screen==='map')goHome(true);},RM?0:450);return;}
+    if(k===0){speech(o.np,o.dev,'Pick a room.');say(o.np,o.dev,null);mood('happy');setTimeout(()=>{if(screen==='map')goHome(true);},RM?0:450);return;}
     if(!o.open){
-      const msg=!gate?['Pahile gharma tara jammaa gara!','पहिले घरमा तारा जम्मा गर!',`Collect ${GATE-stars} more ★ in the house to open the garden!`]
+      const msg=!gate?['Pahile gharma tara jammaa gara!','पहिले घरमा तारा जम्मा गर!',`Collect ${GATE-stars} more ★ in the rooms of the house to open the garden!`]
         :[`Pahile ${YATRA[k-2].np} sakau!`,`पहिले ${YATRA[k-2].dev} सकौं!`,`Finish ${YATRA[k-2].en.toLowerCase()} first!`];
       speech(...msg);say(...msg);mood('sad');b.classList.remove('fresh');void b.offsetWidth;b.classList.add('fresh');return;
     }
@@ -1335,50 +1488,35 @@ function openMap(){
 function goHome(quiet){
   if(!P()){goWho();return;}
   screen='home';topic=null;shopSel=null;trip=null;clearTry();if(!quiet)speechSynthesis?.cancel?.();
-  const p=P(),pr=progressOf(p),d=p.daily||{},done=d.last===today(),w=wordOfDay(),stars=starsOf(p);
-  const gate=stars>=GATE,y=p.yatra||{},at=yatraAt(p);
-  const streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
-  const gl=GIFTS(),nx=gl.find(r=>r.gift>stars),from=nx?((gl[gl.indexOf(nx)-1]||{gift:0}).gift):0;
-  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Ke sikne? <small>What shall we learn today?</small></h1>
-   <div class="today">
-    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
-    <button class="wod" id="wodBtn" aria-label="Word of the day: ${esc(w.it[2])}"><span aria-hidden="true">${pictureOf(w.t,w.it)}</span><span><small>Aajako shabda · word of the day</small><b>${esc(w.it[0])}</b><span class="dev" lang="ne">${w.it[1]}</span>${S.english?`<small>${esc(w.it[2])}</small>`:''}</span></button>
-   </div>
+  const p=P(),stars=starsOf(p),gate=stars>=GATE,y=p.yatra||{},at=yatraAt(p);
+  const door=(o,i)=>{const v=Math.round(roomProgress(p,o)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
+       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
+       <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span>${o.icon}</span></span><span class="knob"></span></span></span>
+       <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;};
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Habreko ghar <small>हाब्रेको घर · Pick a room</small></h1>
    <div class="house">
     <div class="roof" aria-hidden="true"><span class="gajur"></span><span class="tier t2"></span><span class="tier t1"><span class="sign">Habreko ghar<small>हाब्रेको घर · Habre’s house</small></span></span></div>
     <div class="walls">
      <div class="flags" aria-hidden="true">${'<i></i>'.repeat(19)}</div>
-     <div class="floor">${DOORS.slice(0,3).map((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
-       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
-       <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span><span class="knob"></span></span></span>
-       <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;}).join('')}</div>
+     <div class="floor">${ROOMS.slice(0,3).map(door).join('')}</div>
      <div class="beam" aria-hidden="true"></div>
-     <div class="floor">${DOORS.slice(3).map((o,i)=>((o,i)=>{const v=Math.round((pr[o.id]||0)*100);return `<button class="hdoor" style="--dc:${o.color};animation-delay:${i*70}ms" data-d="${o.id}" aria-label="${o.en}, ${v}% done">
-       <span class="plaque">${o.np}<small lang="ne">${o.dev} · ${o.en}</small></span>
-       <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span class="${o.id==='akshar'?'lt':''}">${o.icon}</span></span><span class="knob"></span></span></span>
-       <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;})(o,i+3)).join('')}</div>
+     <div class="floor">${ROOMS.slice(3).map((o,i)=>door(o,i+3)).join('')}</div>
     </div>
     <div class="ground" aria-hidden="true"></div>
    </div>
    <button class="gate${gate?'':' shut'}${gate&&!y.seen?' fresh':''}" id="gateBtn"><span class="ic" aria-hidden="true">${gate?'🗺️':'🔒'}</span>
      <span style="flex:1;min-width:150px"><b>Habreko yatra</b>${gate
        ?`<small>Habre’s journey · ${at>=STOPS.length?'you reached the mountains!':`stop ${at+1} of ${STOPS.length}: ${esc(stopFace(STOPS[at])[3])}`}</small>`
-       :`<small>Habre’s journey · ${GATE-stars} more ★ to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>
-   <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
-     <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
-     <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
-  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=DOORS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');say(o.np,o.dev,null);setTimeout(()=>{if(screen==='home')o.open();},RM?0:520);});
-  $('#dailyBtn').onclick=startDaily;
-  $('#wodBtn').onclick=()=>{speech(w.it[0],w.it[1],w.it[2]);say(w.it[0],w.it[1],w.it[2]);mood('happy');};
-  $('#wardBtn').onclick=()=>openShop();
+       :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
+  main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');say(o.np,o.dev,null);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
   $('#backBtn').onclick=openMap;
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
-    const en=`Collect ${GATE-stars} more stars in the house to open the gate!`;
+    const en=`Collect ${GATE-stars} more stars in the rooms to open the gate!`;
     speech('Aru tara jammaa gara!','अरू तारा जम्मा गर!',en);say('Aru tara jammaa gara!','अरू तारा जम्मा गर!',en);mood('wave');
   };
   if(!quiet&&gate&&!y.seen){speech('Dhoka khulyo!','ढोका खुल्यो!','The gate is open! Come on a journey with Habre!');say('Dhoka khulyo!','ढोका खुल्यो!','The gate is open!');mood('happy');confetti();}
-  else if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a door.');mood('wave');}
+  else if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a room.');mood('wave');}
 }
 function topicTile(t,i,p){
   return `<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}">
@@ -1387,22 +1525,23 @@ function topicTile(t,i,p){
 }
 function openWords(){
   screen='words';topic=null;const p=P(),st=stat(p),all=stickerItems(),got=all.filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length;
-  main.innerHTML=`${backBtn('Ghar')}<h1>🍎 Shabda <small>शब्द · Words</small></h1>
+  main.innerHTML=`${backBtn('Aphis')}<h1>🍎 Shabda <small>शब्द · Words</small></h1>
    <button class="toggle" id="bookBtn">📒 Mero sticker kitab <small style="font-weight:500;color:var(--soft)">my sticker book · ${got} / ${all.length}</small></button>
    <div class="topics">${WORD_T().map((t,i)=>topicTile(t,i,p)).join('')}</div>`;
-  $('#backBtn').onclick=()=>goHome();$('#bookBtn').onclick=openStickers;
+  $('#backBtn').onclick=toRoom('shabda');$('#bookBtn').onclick=openStickers;
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
   speech('Shabda!','शब्द!','Pick a topic.');say('Shabda!','शब्द!',null);mood('wave');
 }
 function openGram(){
   screen='gram';topic=null;const p=P();
-  main.innerHTML=`${backBtn('Ghar')}<h1>🧩 Vyakaran <small>व्याकरण · How Nepali fits together</small></h1>
+  main.innerHTML=`${backBtn('Aphis')}<h1>🧩 Vyakaran <small>व्याकरण · How Nepali fits together</small></h1>
    <div class="topics">${GRAM_T().map((t,i)=>topicTile(t,i,p)).join('')}</div>`;
-  $('#backBtn').onclick=()=>goHome();
+  $('#backBtn').onclick=toRoom('vyakaran');
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
   speech('Vyakaran!','व्याकरण!','Pick a little lesson.');say('Vyakaran!','व्याकरण!',null);mood('wave');
 }
-const topicBack=t=>t.section==='gram'?['Vyakaran',openGram]:t.kind==='letter'?['Ghar',()=>goHome()]:['Shabda',openWords];
+// a topic goes back to the room it lives in; the trip topics go back to the list of every word topic
+const topicBack=t=>t.section==='gram'?['Vyakaran',openGram]:roomOf(t.id)?[roomOf(t.id).np,toRoom(t.id)]:['Shabda',openWords];
 // a topic: pick a level, then learn → play → check, plus memory match and flashcards
 function openTopic(t){
   if(tripBack())return;
@@ -1581,13 +1720,13 @@ function openPatti(){
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
     return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(d.np)}</b><span class="en">${esc(d.en)} · ${d.cards.length}</span>
       <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
-  main.innerHTML=`${backBtn('Ghar')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
+  main.innerHTML=`${backBtn('Aphis')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
    <h2 class="sub">Mero patti <small>my decks</small></h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
    <h2 class="sub">Shabda ra Akshar <small>words and letters</small></h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
    <h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`;
-  $('#backBtn').onclick=()=>goHome();
+  $('#backBtn').onclick=toRoom('patti');
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
   main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
     const d=decks.find(x=>x.id===b.dataset.k),pics=new Set(d.cards.map(c=>c.it[3])).size;
@@ -1802,14 +1941,14 @@ const storyOpen=(p,i)=>i===0||bestOf(p,'kathaa',STORIES[i-1].id)>=1;
 function openStories(){
   if(tripBack())return;
   screen='stories';const p=P();
-  main.innerHTML=`${backBtn('Ghar')}<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
+  main.innerHTML=`${backBtn('Sutne kotha')}<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
    <label class="toggle"><input type="checkbox" id="guessT" ${S.storyGuess?'checked':''}> 🧩 Kun chitra? <small style="font-weight:500;color:var(--soft)">guess each page’s picture</small></label>
    <div class="topics">${STORIES.map((s,i)=>{const open=storyOpen(p,i),b=bestOf(p,'kathaa',s.id);
      return `<button class="topic${open?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-s="${s.id}" aria-label="${esc(s.en)}${open?'':' (locked)'}">
      <span class="ic" aria-hidden="true">${open?s.icon:'🔒'}</span><b>${s.np}</b><span class="dev" lang="ne">${s.dev}</span><span class="en">${s.en}${s.choice?' · you choose!':''}</span>
      <span class="medals">${s.choice?`<span class="${b>=1?'on':''}" title="One ending">🌿</span><span class="${b>=2?'on':''}" title="Both endings">🌿</span>`
        :`<span class="${b?'on':''}" title="Read">📖</span><span class="${b>=2?'on':''}" title="Question right first time">⭐</span><span class="${bestOf(p,'krama',s.id)?'on':''}" title="Put in order">🧩</span>`}</span></button>`;}).join('')}</div>`;
-  $('#backBtn').onclick=()=>goHome();
+  $('#backBtn').onclick=toRoom('kathaa');
   $('#guessT').onchange=e=>{S.storyGuess=e.target.checked;save();};
   main.querySelectorAll('[data-s]').forEach((b,i)=>b.onclick=()=>{
     if(!storyOpen(p,i)){speech('Pahile aghillo kathaa!','पहिले अघिल्लो कथा!','Finish the story before this one first!');say('Pahile aghillo kathaa!','पहिले अघिल्लो कथा!','Finish the story before this one first!');mood('sad');return;}
@@ -1995,7 +2134,7 @@ function openVakya(){
   if(tripBack())return;
   screen='vakya';const p=P(),cur=levelOf('vakya'),grown=GROW.filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
   const rule=['Kaam janaaune shabda sadhai antyama aauchha.','काम जनाउने शब्द सधैं अन्त्यमा आउँछ।','The doing word always comes last, like the engine of a train.'];
-  main.innerHTML=`${backBtn('Ghar')}<h1>🚂 Vakya <small>वाक्य · Sentences</small></h1>
+  main.innerHTML=`${backBtn('Baithak')}<h1>🚂 Vakya <small>वाक्य · Sentences</small></h1>
    <button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>The doing word is the engine: it always goes last. Biralo sutchha = the cat sleeps.</b><small lang="ne">${rule[1]}</small></span></button>
    <div class="legend">${Object.values(ROLES).map(r=>`<span style="background:${r[3]}">${r[0]} <small>${r[2]}</small></span>`).join('')}</div>
    <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
@@ -2003,7 +2142,7 @@ function openVakya(){
    <div class="topics">${V_ACTS.map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${a.np}</b><span class="dev" lang="ne">${a.dev}</span><span class="en">${a.en}</span>
       <span class="medals">${LV_KEYS.map(k=>`<span class="${bestOf(p,'vakya:'+a.id,k)>=V_N-1?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}
      <button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>Badhau</b><span class="dev" lang="ne">बढाऊ</span><span class="en">Grow a sentence</span><span class="medals"><span class="on">🌱 ${grown}/${GROW.length}</span></span></button></div>`;
-  $('#backBtn').onclick=()=>goHome();
+  $('#backBtn').onclick=toRoom('vakya');
   $('#ruleCard').onclick=()=>{speech(...rule);say(...rule);mood('happy');};
   main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{p.lv=p.lv||{};p.lv.vakya=b.dataset.lv;save();
     main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));const L=LEVELS[b.dataset.lv];speech(L.np,L.dev,L.en);say(L.np,L.dev,L.en);});
@@ -2257,7 +2396,7 @@ function startQuiz(o){
       return {t,it,pool:w.map(x=>({t,it:x})),lv:s.lv,face:s.lv};});
   }
   Q={...o,o,entries,n:entries.length,i:0,stars:0};
-  if(!Q.back)Q.back=o.t?()=>openTopic(o.t):()=>goHome();
+  if(!Q.back)Q.back=o.t?()=>openTopic(o.t):openMap;
   renderQ();
 }
 function distractors(e,n){
@@ -2364,7 +2503,7 @@ function endQuiz(){
       again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
   }else if(Q.mode==='daily'){
     const d=p.daily||{};
-    endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:()=>goHome(),backLabel:'Ghar'});
+    endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:openMap,backLabel:'🗺️ Naksa'});
   }else if(Q.mode==='yatra'){
     const r=YATRA.find(x=>x.id===Q.rid),ok=n>=BOSS_N-2;
     endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
