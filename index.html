@@ -131,6 +131,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-o
 .av-colors{display:flex;gap:8px;flex-wrap:wrap}
 .av-colors button{width:36px;height:36px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line)}
 .av-colors button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.langpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.langpick button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px;border-radius:12px;background:var(--surface-2);border:2px solid transparent;color:var(--ink)}
+.langpick button b{font-size:1.4rem;line-height:1.1}
+.langpick button small{color:var(--muted)}
+.langpick button[aria-pressed="true"]{border-color:var(--crimson);background:var(--surface)}
 .warn-box{background:var(--bad-bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 @media (max-width:620px){.hstats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{font-size:1.5rem}.pav.big{width:72px;height:72px;font-size:2.3rem}.who-chip span:last-child{max-width:70px}}
 .brand-np{font-family:var(--f-display);font-size:1.7rem;color:var(--crimson);line-height:1}
@@ -567,8 +572,8 @@ body[data-mode="weather"] .work,body[data-mode="family"] .work,body[data-mode="w
     <div class="speeds" id="themes" role="radiogroup" aria-label="Theme"></div>
   </div>
   <label class="set"><input type="checkbox" id="optRelaxed"><span>Relaxed mode<small>Customers never run out of patience.</small></span></label>
-  <label class="set"><input type="checkbox" id="optEnglish"><span>Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
-  <label class="set"><input type="checkbox" id="optType"><span>Type your answers<small>Type the reply in romanized Nepali instead of picking from three. Spelling is forgiving (aa/a, chh/ch…).</small></span></label>
+  <label class="set"><input type="checkbox" id="optEnglish"><span id="lblEnglish">Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small></span></label>
+  <label class="set"><input type="checkbox" id="optType"><span id="lblType">Type your answers<small>Type the reply in romanized Nepali instead of picking from three. Spelling is forgiving (aa/a, chh/ch…).</small></span></label>
   <label class="set"><input type="checkbox" id="optDev"><span>Show customers in Devanagari<small>Customers’ lines appear in Nepali script. Tap any word to see it in romanized letters. Best after the Lipi lessons.</small></span></label>
   <label class="set"><input type="checkbox" id="optListen"><span>Listening mode<small id="listenStatus">The customer’s words stay hidden until you answer. Needs a voice.</small></span></label>
   <label class="set"><input type="checkbox" id="optMic"><span>Answer by speaking<small id="micStatus">Shows a 🎤 button: say your answer out loud.</small></span></label>
@@ -594,6 +599,10 @@ const ONES=['','ek','dui','tin','char','paanch','chha','saat','aath','nau','das'
 const TENS={5:'paanch',10:'das',15:'pandhra',20:'bis',25:'pachchis',30:'tis',35:'paitis',40:'chalis',45:'paitalis',50:'pachas',
   55:'pachpanna',60:'saathi',65:'painsatthi',70:'sattari',75:'pachahattar',80:'assi',85:'pachasi',90:'nabbe',95:'panchanabbe'};
 const npNum=n=>{const h=Math.floor(n/100),t=n%100,p=[];if(h)p.push(ONES[h]+' saya');if(t)p.push(TENS[t]);return p.join(' ');};
+// the same in English words, for English learners: 125 → one hundred and twenty-five
+const EN_ONES=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+const EN_TENS=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+const enNum=n=>{const h=Math.floor(n/100),r=n%100,p=[];if(h)p.push(EN_ONES[h]+' hundred');if(r)p.push(r<20?EN_ONES[r]:EN_TENS[Math.floor(r/10)]+(r%10?'-'+EN_ONES[r%10]:''));return p.join(' and ');};
 
 // [romanized, english, devanagari, day introduced] — day 0 = glossary only
 const VOCAB=[
@@ -859,14 +868,18 @@ function markActive(){
 // ---------- voice ----------
 // uses the device's own voices: a Nepali one if installed, else Hindi (reads Devanagari closely), else none
 const TTS='speechSynthesis' in window;
-let voices=[],npVoice=null;
+let voices=[],npVoice=null,enVoice=null;
 function loadVoices(){
   if(!TTS)return;
   voices=speechSynthesis.getVoices();
   npVoice=voices.find(v=>v.name===S.settings.voiceName)||voices.find(v=>/^ne/i.test(v.lang))||voices.find(v=>/^hi/i.test(v.lang))||voices.find(v=>/^mr/i.test(v.lang))||null;
+  enVoice=voices.find(v=>/^en/i.test(v.lang)&&/zira|aria|jenny|samantha|google us|female/i.test(v.name))||voices.find(v=>/^en/i.test(v.lang))||null;
   if(!$('#ovSet').hidden)renderVoiceSettings();
 }
-const voiceOn=()=>TTS&&S.settings.voice&&!!npVoice;
+// Each player learns one way: Nepali (customers speak romanized Nepali) or English, for Nepali speakers: tourists
+// speak English at the stall, the replies are English, and the Devanagari is the help. Every browser has an English voice.
+const EN=()=>curProf().learn==='en';
+const voiceOn=()=>TTS&&S.settings.voice&&(EN()||!!npVoice);
 // romanized line -> Devanagari, word by word from the dictionary
 function toDev(line){
   return line.split(/\s+/).map((w,i,arr)=>{
@@ -876,9 +889,19 @@ function toDev(line){
     return d+(m[2]==='.'?'।':m[2]);
   }).join(' ');
 }
-function speak(line){if(line)speakDev(toDev(line));}
+// for an English learner the lines are English, so they are read by an English voice
+function speak(line){if(!line)return;if(EN())speakEn(line);else speakDev(toDev(line));}
+function speakEn(text){
+  if(!TTS||!S.settings.voice||!text)return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    if(enVoice){u.voice=enVoice;u.lang=enVoice.lang;}else u.lang='en-US';
+    u.rate=S.settings.rate;speechSynthesis.speak(u);
+  }catch(e){}
+}
 function speakDev(dev){
-  if(!voiceOn()||!dev)return;
+  if(!TTS||!S.settings.voice||!npVoice||!dev)return;
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(dev);
@@ -896,7 +919,8 @@ const unlocked=()=>Object.keys(ITEMS).filter(k=>ITEMS[k].day<=E()&&(!ITEMS[k].sh
 const maxNum=()=>E()>=5?10:E()>=4?7:E()>=2?5:3;
 
 // ---------- step generators ----------
-function enPart(k,q){const it=ITEMS[k],u=UNIT_EN[it.unit];return u?`${q} ${u[q>1?1:0]} of ${it.short}`:`${q} ${it.short}`;}
+// an English learner hears the numbers as words ("two cups"); a Nepali learner's English help keeps the digits
+function enPart(k,q){const it=ITEMS[k],u=UNIT_EN[it.unit],n=EN()?enNum(q):q;return u?`${n} ${u[q>1?1:0]} of ${it.short}`:`${n} ${it.short}`;}
 const PRICE_DAY=4;
 const priceOf=k=>S.day>=PRICE_DAY?ITEMS[k].p5:ITEMS[k].price;
 function genPart(k){
@@ -954,7 +978,7 @@ function payStep(order){
   const t=order.total;
   const near=S.day>=PRICE_DAY?[t-5,t+5,t-10,t+10,t+15]:[t-20,t-10,t+10,t+20,t+30];
   const cands=shuffle([...near,t+100,t-100].filter(n=>n>0&&n<(E()<3?100:1000)&&n!==t)).slice(0,2);
-  const mk=n=>({t:cap(npNum(n))+' rupiya.',en:`Rs ${n}`});
+  const mk=n=>({t:cap(npNum(n))+' rupiya.',en:`Rs ${n}`,enW:`${cap(enNum(n))} rupees.`});
   return {type:'pay',say:'Kati bhayo?',en:'How much does it come to?',answer:mk(t),options:shuffle([mk(t),...cands.map(mk)]),order};
 }
 // weather steps: read the window, answer yes/no, or match a report from elsewhere in Nepal
@@ -1136,6 +1160,12 @@ const PRACTICES=[
  {key:'patti',icon:'🃏',np:'Patti',en:'Flashcards',about:'A deck for every section, plus the words you keep missing.',open:()=>openCards()},
  {key:'lipi',icon:'अ',np:'Lipi',en:'Nepali script',about:'Learn Devanagari letters and read words you know.',open:()=>openLipiIntro()},
 ];
+// family terms, festivals, Nepali grammar and the Devanagari script teach Nepali itself, so an English learner skips them
+const NE_ONLY=['pariwar','chad','vyakaran','lipi'];
+const EN_ABOUT={mausam:'Read the sky and talk about the weather in English.',vishaya:'Animals, colours, clothes, feelings and more, in English.',
+  dainik:'Phone calls, bargaining, taxis, the doctor and directions, in English.',samaya:'Telling the time and the days of the week.',
+  vakya:'See a Nepali sentence, build it in English.',patti:'Flashcards of English phrases and words.'};
+const practices=()=>EN()?PRACTICES.filter(p=>!NE_ONLY.includes(p.key)):PRACTICES;
 function stallNote(){
   if(!G||G.mode!=='stall')return '';
   return `<p class="recap">${G.started?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`;
@@ -1146,9 +1176,9 @@ function laterBtn(id){
 function openPractice(){
   const done=S.practiced||{},legacy={mausam:S.wxPlayed,pariwar:S.famPlayed,vishaya:S.wordsPlayed};
   $('#introBody').innerHTML=`
-   <h2>Abhyas<small>practice</small></h2>
+   <h2>${EN()?'Practice <small lang="ne">अभ्यास</small>':'Abhyas<small>practice</small>'}</h2>
    <p>Short rounds with no timer and no tips. Pick one.</p>
-   <div class="prac">${PRACTICES.map(p=>`<button data-k="${p.key}"><span class="pi" aria-hidden="true">${p.icon}</span><b>${p.np}</b><small>${p.en}. ${p.about}</small>${done[p.key]||legacy[p.key]?'<span class="done">✓ tried</span>':''}</button>`).join('')}</div>
+   <div class="prac">${practices().map(p=>`<button data-k="${p.key}"><span class="pi" aria-hidden="true">${p.icon}</span><b>${EN()?p.en:p.np}</b><small>${EN()?(EN_ABOUT[p.key]||p.about):p.en+'. '+p.about}</small>${done[p.key]||legacy[p.key]?'<span class="done">✓ tried</span>':''}</button>`).join('')}</div>
    ${stallNote()}
    <div class="row-end"><button class="ghost" id="pracLater">Pachi <small>later</small></button></div>`;
   show('#ovIntro');laterBtn('#pracLater');
@@ -1254,8 +1284,8 @@ const DAILY={
   ['Tadha cha, taxi linus.','It’s far, take a taxi.','Hunchha, taxi linchhu.','Okay, I’ll take a taxi.']]},
 };
 function openDailyIntro(){
-  practiceSheet('Dainik jivan','daily life',`<p>Everyday situations around town. Pick one: five people, two lines each.</p>
-   <div class="prac">${Object.entries(DAILY).map(([k,d])=>`<button data-d="${k}"><span class="pi" aria-hidden="true">${d.icon}</span><b>${d.np}</b><small>${d.en} · ${d.lines.length} exchanges</small></button>`).join('')}</div>`);
+  practiceSheet(EN()?'Daily life':'Dainik jivan',EN()?'<span lang="ne">दैनिक जीवन</span>':'daily life',`<p>Everyday situations around town${EN()?', in English':''}. Pick one: five people, two lines each.</p>
+   <div class="prac">${Object.entries(DAILY).map(([k,d])=>`<button data-d="${k}"><span class="pi" aria-hidden="true">${d.icon}</span><b>${EN()?d.en:d.np}</b><small>${EN()?'':d.en+' · '}${d.lines.length} exchanges</small></button>`).join('')}</div>`);
   $('#introBody').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{hide('#ovIntro');startDaily(b.dataset.d);});
 }
 function startDaily(k){
@@ -1299,7 +1329,7 @@ const TIME_STEPS={
  },
  day(){
   const d=Math.floor(Math.random()*7),mk=i=>({t:cap(DAYS[i][0])+'.',en:DAYS[i][2]+'.'});
-  return {type:'chat',say:'Yo kun bar ho?',en:'Which day is this?',show:`<span class="cal-card"><small>BAR</small><b>${DAYS[d][2]}</b></span>`,prompt:'Name the day in Nepali:',answer:mk(d),options:pick2(mk(d),DAYS.map((_,i)=>mk(i)))};
+  return {type:'chat',say:'Yo kun bar ho?',en:'Which day is this?',show:EN()?`<span class="cal-card"><small>बार</small><b lang="ne">${DAYS[d][1]}</b></span>`:`<span class="cal-card"><small>BAR</small><b>${DAYS[d][2]}</b></span>`,prompt:'Name the day in Nepali:',answer:mk(d),options:pick2(mk(d),DAYS.map((_,i)=>mk(i)))};
  },
  tomorrow(){
   const d=Math.floor(Math.random()*7),mk=i=>({t:cap(DAYS[i][0])+'.',en:DAYS[i][2]+'.'}),n=(d+1)%7;
@@ -1312,6 +1342,9 @@ const TIME_STEPS={
  },
 };
 function openTimeIntro(){
+  if(EN()){practiceSheet('Time','<span lang="ne">समय</span>',`<p>Read clocks and name the days of the week in English.</p>
+   <div class="tblwrap"><table class="tbl"><tr>${DAYS.map(d=>`<th lang="ne">${d[1]}</th>`).join('')}</tr><tr>${DAYS.map(d=>`<td><b>${d[2]}</b></td>`).join('')}</tr></table></div>
+   <p class="recap">Time: <b>It’s three o’clock</b> = <span lang="ne">तीन बज्यो</span>, <b>It’s half past three</b> = <span lang="ne">साढे तीन बज्यो</span>.</p>`,null,()=>startTime());return;}
   practiceSheet('Samaya','time & dates',`<p>Read clocks, name the days, and learn the order of the Nepali months.</p>
    <h3>Bar <small>days of the week</small></h3>
    <div class="tblwrap"><table class="tbl"><tr>${DAYS.map(d=>`<th>${d[2]}</th>`).join('')}</tr><tr>${DAYS.map(d=>`<td><b>${cap(d[0])}</b><br><span class="dev" lang="ne">${d[1]}</span></td>`).join('')}</tr></table></div>
@@ -1322,7 +1355,8 @@ function openTimeIntro(){
 }
 function startTime(){
   startPractice({key:'samaya',np:'Samaya',en:'Time & dates',n:6,again:startTime,label:i=>`🕒 Samaya · ${i+1}/6`,
-    gen:()=>{const kinds=shuffle(Object.keys(TIME_STEPS)).slice(0,2);return withLook(kinds.map(k=>TIME_STEPS[k]()),'');}});
+    // the Nepali months are not English words, so an English learner gets clocks and days only
+    gen:()=>{const kinds=shuffle(Object.keys(TIME_STEPS).filter(k=>!(EN()&&k==='month'))).slice(0,2);return withLook(kinds.map(k=>TIME_STEPS[k]()),'');}});
 }
 
 // ---------- vakya (sentence builder) ----------
@@ -1344,6 +1378,8 @@ function buildStep(line,pool){
     note:'Nepali puts the verb at the end. Word order is fairly flexible, but this is the most natural one.'};
 }
 function openVakyaIntro(){
+  if(EN()){practiceSheet('Sentences','<span lang="ne">वाक्य</span>',`<p>See a Nepali sentence and build it in English by tapping the word tiles in order. One extra word doesn’t belong.</p>
+   <p class="recap">English word order is who, then the doing word, then the rest: <b>I drink tea</b> = <span lang="ne">म चिया पिउँछु</span>. Little words like <i>to</i>, <i>in</i> and <i>of</i> come <i>before</i> the noun: <b>in the house</b> = <span lang="ne">घरमा</span>.</p>`,null,()=>startVakya());return;}
   practiceSheet('Vakya','sentences',`<p>See an English sentence and build it in Nepali by tapping the word tiles in order. One extra word doesn’t belong.</p>
    <p class="recap">Nepali word order is subject, then object, then verb: <b>Ma chiya khanchhu</b> = “I tea drink”. Little words like <i>lai</i> (to), <i>ma</i> (in) and <i>ko</i> (of) come <i>after</i> the noun.</p>`,
    null,()=>startVakya());
@@ -1715,7 +1751,22 @@ function startGrammar(i){
 // ================= Patti (flashcards) =================
 // a card: f = front (romanized Nepali), dev = Devanagari, b = back (English), pic = picture, k = dictionary key for mastery
 const vocabCard=v=>({k:v[0],f:v[0],dev:v[2],b:v[1]});
+// an English learner's decks: English on the front (spoken in English), the Nepali on the back
+function cardDecksEn(){
+  const uniq=cs=>cs.filter((c,i,a)=>a.findIndex(x=>x.f===c.f)===i);
+  const D=[{id:'en-stall',group:'Tea stall',np:'Tea-stall phrases',en:'What customers say, and your replies',icon:'🍵',
+     cards:()=>uniq(CHATS.flatMap(c=>[{f:c.en,dev:'',b:toDev(c.say)},{f:c.ansEn,dev:'',b:toDev(c.ans)}]))},
+   {id:'en-menu',group:'Tea stall',np:'The menu',en:'Food and drink',icon:'🥟',
+     cards:()=>Object.keys(ITEMS).map(k=>({f:ITEMS[k].short,dev:'',b:toDev(ITEMS[k].np),pic:ICON[k]}))},
+   {id:'en-dainik',group:'Practice',np:'Daily-life phrases',en:'Phone, market, taxi, doctor, directions',icon:'🚕',
+     cards:()=>uniq(Object.values(DAILY).flatMap(d=>d.lines.flatMap(l=>[{f:l[1],dev:'',b:toDev(l[0])},{f:l[3],dev:'',b:toDev(l[2])}])))},
+   {id:'en-days',group:'Practice',np:'Days of the week',en:'Sunday to Saturday',icon:'🕒',cards:()=>DAYS.map(x=>({f:x[2],dev:'',b:x[1]}))}];
+  WORD_TOPICS.forEach(t=>D.push({id:'en-vis-'+t.id,group:'Picture topics',np:t.en,en:t.dev,icon:t.icon,cards:()=>t.items.map(it=>({f:cap(it[1]),dev:'',b:toDev(it[0]),
+    pic:t.q==='rang'?`<span class="wd-swatch" style="background:${it[2]}"></span>`:it[2]}))}));
+  return D;
+}
 function cardDecks(){
+  if(EN())return cardDecksEn();
   const D=[];
   for(let d=1;d<=6;d++)D.push({id:'din'+d,group:'Tea stall days',np:'Din '+d,en:d===6?'Day 6: weather':`Day ${d} words`,icon:d===6?'🌦️':'🍵',cards:()=>VOCAB.filter(v=>v[3]===d).map(vocabCard)});
   D.push({id:'pariwar',group:'Practice',np:'Pariwar',en:'Family words',icon:'👪',cards:()=>VOCAB.filter(v=>v[3]===7).map(vocabCard)});
@@ -1733,7 +1784,7 @@ function cardDecks(){
 }
 function openCards(){
   const decks=cardDecks(),groups=[...new Set(decks.map(d=>d.group))];
-  practiceSheet('Patti','flashcards',`<p>Flip through a deck: see the Nepali, guess the meaning, flip to check. Cards you miss come back until you know them.</p>
+  practiceSheet(EN()?'Flashcards':'Patti',EN()?'<span lang="ne">पत्ती</span>':'flashcards',`<p>Flip through a deck: see the ${EN()?'English':'Nepali'}, guess the meaning, flip to check. Cards you miss come back until you know them.</p>
    ${groups.map(gr=>`<h3>${gr}</h3><div class="prac">${decks.filter(d=>d.group===gr).map(d=>{const n=d.cards().length;
      return `<button data-d="${d.id}" ${n?'':'disabled'}><span class="pi" aria-hidden="true">${d.icon}</span><b>${esc(d.np)}</b><small>${esc(d.en)} · ${n} card${n===1?'':'s'}${!n&&d.id==='weak'?' (none yet)':''}</small></button>`;}).join('')}</div>`).join('')}`);
   $('#introBody').querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>startCards(decks.find(d=>d.id===b.dataset.d),openCards));
@@ -1758,11 +1809,11 @@ function drawCard(){
     $('#fcBack').focus();return;
   }
   const pos=FC.total-FC.queue.length+1,np=`<span class="fc-np">${c.glyph?`<span class="lipi-big" lang="ne">${esc(c.f)}</span>`:esc(c.f)}</span>${c.dev&&!c.glyph?`<span class="fc-dev" lang="ne">${c.dev}</span>`:''}`;
-  const en=`<span class="fc-en">${esc(c.b)}</span>`,pic=c.pic?`<span class="fc-pic">${c.pic}</span>`:'';
+  const en=`<span class="fc-en"${EN()?' lang="ne"':''}>${esc(c.b)}</span>`,pic=c.pic?`<span class="fc-pic">${c.pic}</span>`:'';
   const front=FC.rev?pic+en:pic+np,back=FC.rev?np+en:en+`<span class="fc-small">${esc(c.glyph?c.f:c.f)}</span>`;
   $('#introBody').innerHTML=`<h2>${FC.deck.icon} ${esc(FC.deck.np)}<small>${esc(FC.deck.en)} · flashcards</small></h2>
    <div class="fc-top"><span>${pos} / ${FC.total}${FC.queue.length>FC.total-pos+1?' · some coming back':''}</span>
-     <label><input type="checkbox" id="fcRev" ${FC.rev?'checked':''}> English first</label></div>
+     <label><input type="checkbox" id="fcRev" ${FC.rev?'checked':''}> ${EN()?'Nepali first':'English first'}</label></div>
    <button class="fc ${FC.flipped?'flipped':''}" id="fcCard" type="button" aria-label="${FC.flipped?'Card back':'Card front'}. Tap to flip.">
      <span class="fc-in"><span class="fc-face fc-front">${front}<span class="fc-hint">tap to flip</span></span><span class="fc-face fc-back">${back}</span></span></button>
    <div class="fc-btns"><button class="ghost" id="fcSay" type="button">🔊</button><button class="danger" id="fcNo" type="button">Pheri <small>again</small></button><button class="primary" id="fcYes" type="button">Thaha cha <small>got it</small></button></div>
@@ -1835,12 +1886,16 @@ function avatar(l){
 function renderTop(){
   renderDecor();
   const p=curProf();$('#whoBtn').innerHTML=`${avatarHtml(p,'sm')}<span>${esc(p.name)}</span>`;
-  $('#dayChip').innerHTML=`Din ${S.day} <small>day</small>`;
+  const en=EN();
+  $('#dayChip').innerHTML=en?`Day ${S.day} <small lang="ne">दिन</small>`:`Din ${S.day} <small>day</small>`;
+  $('#homeBtn').innerHTML=en?'⌂ Home <small lang="ne">घर</small>':'⌂ Ghar <small>home</small>';
+  $('#btnPrac').innerHTML=en?'Practice <small lang="ne">अभ्यास</small>':'Abhyas <small>practice</small>';
   $('#money').textContent=fmt(S.rupees);
 }
 function renderMenu(){
   $('#menu').innerHTML=unlocked().map(k=>{const it=ITEMS[k];
-    return `<li><span>${it.np}${S.settings.english?`<span class="e">${it.short}</span>`:''}</span><span class="dots"></span><span class="p">${priceOf(k)}</span></li>`;}).join('');
+    const [nm,help]=EN()?[it.short,toDev(it.np)]:[it.np,it.short];
+    return `<li><span>${nm}${S.settings.english?`<span class="e"${EN()?' lang="ne"':''}>${help}</span>`:''}</span><span class="dots"></span><span class="p">${priceOf(k)}</span></li>`;}).join('');
 }
 function renderCounter(){
   const c=$('#counter');c.innerHTML='';
@@ -1868,12 +1923,13 @@ function renderBubble(say,en,pic,reveal){
     el.innerHTML='<span class="listen-ph">🔊 Suna… <small>listen, then answer · tap 🔊 to hear it again</small></span>';
   }else{
     // Devanagari mode: show each word in Nepali script; tapping still gives the romanized word and meaning
-    const dv=S.settings.devanagari?toDev(say).split(' '):null;
+    const dv=S.settings.devanagari&&!EN()?toDev(say).split(' '):null;
     el.classList.toggle('dev-say',!!dv);
     say.split(/\s+/).forEach((w,i)=>{if(i)el.append(' ');const b=document.createElement('button');b.className='tok';b.textContent=dv?dv[i]:w;if(dv)b.lang='ne';b.onclick=()=>peek(w,b);el.append(b);});
   }
   $('#sayPic').hidden=!pic;$('#sayPic').innerHTML=pic||'';
   $('#sayEn').textContent=en;$('#sayEn').hidden=!S.settings.english||!!(C&&C.hiddenSay);
+  if(EN())$('#sayEn').lang='ne';else $('#sayEn').removeAttribute('lang');
   $('#gloss').innerHTML=calmMode()?'<span class="hint">Tap any word to see what it means.</span>':glossHint;
   lastSay=say;
   const v=voiceOn();$('#sayAgain').hidden=!v;$('#bubble').classList.toggle('has-voice',v);
@@ -1881,8 +1937,11 @@ function renderBubble(say,en,pic,reveal){
 function peek(w,b){
   const t=toks(w)[0],v=DICT[t];
   speak(w);
+  // an English learner's peek shows what the whole line means in Nepali
+  if(EN()){const st=C&&C.steps[C.i];$('#gloss').innerHTML=`<b>${esc(w.replace(/[.,!?]/g,''))}</b> — <span class="dev" lang="ne">${esc(st?st.en:'')}</span>`;}
+  else{
   $('#gloss').innerHTML=v?`<b>${esc(t)}</b><span class="dev" lang="ne">${v.dev}</span>— ${esc(v.en)}`:`<b>${esc(t)}</b> — no entry`;
-  if(!v&&S.settings.devanagari)$('#gloss').innerHTML=`<b>${esc(w.replace(/[.,!?]/g,''))}</b>`;
+  if(!v&&S.settings.devanagari)$('#gloss').innerHTML=`<b>${esc(w.replace(/[.,!?]/g,''))}</b>`;}
   b.classList.add('peek');
   if(C&&!C.lock&&!C.gone){const st=C.steps[C.i];
     // a free-peek token covers every peek on this step; otherwise peeking costs the tip
@@ -1904,6 +1963,13 @@ function show(id){$(id).hidden=false;}
 function hide(id){$(id).hidden=true;}
 
 const wcards=words=>`<div class="words">${words.map(v=>`<div class="wcard"><b>${v[0]}</b><span class="dev" lang="ne">${v[2]}</span><div class="en">${esc(v[1])}</div></div>`).join('')}</div>`;
+// for an English learner: the day's phrases in English, each with its Nepali and the reply
+const phraseCards=cs=>`<div class="words">${cs.map(c=>`<div class="wcard"><b>${esc(c.en)}</b><span class="dev" lang="ne">${toDev(c.say)}</span><div class="en">↳ ${esc(c.ansEn)}</div></div>`).join('')}</div>`;
+const WX_HOWTO_EN=`<ol class="howto">
+     <li><b>What’s the weather like today?</b>: look out the window and pick the sentence that matches.</li>
+     <li>Yes/no questions like <b>Is it raining?</b>: answer <b>Yes.</b> or <b>No.</b></li>
+     <li>Reports like <b>It’s windy in Mustang.</b>: pick the weather picture they mean.</li></ol>`;
+const wxHowto=()=>EN()?WX_HOWTO_EN:WX_HOWTO;
 const WX_HOWTO=`<ol class="howto">
      <li><b>Aaja mausam kasto cha?</b> (“What’s the weather like today?”): look out the window and pick the sentence that matches.</li>
      <li>Yes/no questions like <b>Paani pardai cha?</b> (“Is it raining?”): answer <b>Ho</b> (yes) or <b>Hoina</b> (no).</li>
@@ -1918,6 +1984,24 @@ function startDay(){
   if(d<=WX_DAY){words=VOCAB.filter(v=>v[3]===d);title=`Aaja ko naya shabda <small>today’s new words</small>`;}
   else{words=LEARN.map(t=>DICT[t]).sort((a,b)=>lvl(a.t)-lvl(b.t)).slice(0,9).map(v=>[v.t,v.en,v.dev,v.day]);title=`Dohoryaune shabda <small>words to practise</small>`;}
   const newItems=Object.keys(ITEMS).filter(k=>ITEMS[k].day===d&&!ITEMS[k].shop);
+  if(EN()){
+    // tourists speak English at the stall: the day's new phrases, or (from day 7) a mix to review
+    const cs=d<=5?CHATS.filter(c=>c.day===d):shuffle(CHATS.filter(c=>c.day<=E())).slice(0,6);
+    words=null;title=d<=5?'Today’s new phrases <small lang="ne">आजका नयाँ वाक्य</small>':'Phrases to practise <small lang="ne">दोहोर्‍याउने वाक्य</small>';
+    $('#introBody').innerHTML=`
+     <h2>Day ${d}<small lang="ne">दिन ${d} · तपाईंको चिया पसलमा</small></h2>
+     ${d===1?`<ol class="howto">
+       <li>Tourists come to your stall and speak English. Tap any word to see what the line means in Nepali.</li>
+       <li>For orders, tap food onto the tray, then press <b>Linus!</b> (here you go).</li>
+       <li>When they ask <b>How much does it come to?</b>, add up the menu prices and pick the total in English.</li>
+       <li>Answer fast and without peeking to earn <b>baksis</b> (a tip). Tips in a row earn a bonus.</li>
+       <li>Spend your rupees in the <b>Bazaar</b> (on the home screen): decorations, new menu items and helpers.</li></ol>`:''}
+     ${d===WX_DAY?`<p>From today the weather changes, and customers talk about it while they order.</p>${WX_HOWTO_EN}`:''}
+     ${cs.length?`<h3>${title}</h3>${phraseCards(cs)}`:''}
+     ${newItems.length?`<h3>New on the menu <small lang="ne">नयाँ मेनु</small></h3><div class="menu-new">${newItems.map(k=>`<div>${ICON[k]}<span><b>${ITEMS[k].short}</b> · <span lang="ne">${toDev(ITEMS[k].np)}</span> · रु ${priceOf(k)}</span></div>`).join('')}</div>`:''}
+     ${d===PRICE_DAY?`<p><b>Prices went up today.</b> Some now end in 5 (fifteen, twenty-five, thirty-five…). Check the menu board.</p>`:''}
+     <div class="row-end"><button class="ghost" id="toHome">⌂ Home</button><button class="ghost wdbtn" id="toPrac">Practice <small>other rounds</small></button><button class="primary big" id="go">Let’s start! <small lang="ne">सुरु गरौं</small></button></div>`;
+  }else
   $('#introBody').innerHTML=`
    <h2>Din ${d}<small>day ${d} at your tea stall</small></h2>
    ${d===1?`<ol class="howto">
@@ -1942,12 +2026,14 @@ function openWeatherIntro(){
   const words=VOCAB.filter(v=>v[3]===WX_DAY);
   const midDay=G&&G.mode==='stall'&&G.started;
   $('#introBody').innerHTML=`
-   <h2>Mausam<small>weather practice</small></h2>
+   <h2>${EN()?'Weather <small lang="ne">मौसम अभ्यास</small>':'Mausam<small>weather practice</small>'}</h2>
    <p>Six customers who only want to talk about the weather. The window shows a new sky for each one.</p>
-   ${WX_HOWTO}
-   <h3>Mausam ka shabda <small>weather words</small></h3>
+   ${wxHowto()}
+   ${EN()?`<h3>Weather sentences <small lang="ne">मौसमका वाक्य</small></h3>
+   <div class="menu-new">${WX_KEYS.map(k=>`<div>${WX_ICON[k]}<span><b>${wxSentence(k).en}</b> · <span lang="ne">${toDev(wxSentence(k).t)}</span></span></div>`).join('')}</div>`
+   :`<h3>Mausam ka shabda <small>weather words</small></h3>
    ${wcards(words)}
-   <div class="menu-new">${WX_KEYS.map(k=>`<div>${WX_ICON[k]}<span><b>${WEATHER[k].core}</b> · ${WEATHER[k].en}</span></div>`).join('')}</div>
+   <div class="menu-new">${WX_KEYS.map(k=>`<div>${WX_ICON[k]}<span><b>${WEATHER[k].core}</b> · ${WEATHER[k].en}</span></div>`).join('')}</div>`}
    ${G&&G.mode==='stall'?`<p class="recap">${midDay?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`:''}
    <div class="row-end"><button class="ghost" id="wxLater">Pachi <small>later</small></button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
   show('#ovIntro');
@@ -1987,9 +2073,10 @@ function openFamilyIntro(){
 function openWordsIntro(){
   const midDay=G&&G.mode==='stall'&&G.started;
   $('#introBody').innerHTML=`
-   <h2>Vishaya<small>picture topics</small></h2>
-   <p>A neighbour’s child brings you pictures. Name what you see in Nepali (“Yo ke ho?”, what is this?), or pick the picture they ask for (“… dekhaunus”, please show me …). There is no timer.</p>
-   <div class="wd-topics">${WORD_TOPICS.map(t=>`<button class="wd-topic" data-t="${t.id}"><span class="wd-ic" aria-hidden="true">${t.icon}</span><b>${t.np}</b><small>${t.en} · ${t.items.length} words</small></button>`).join('')}</div>
+   <h2>${EN()?'Picture topics <small lang="ne">विषय</small>':'Vishaya<small>picture topics</small>'}</h2>
+   <p>${EN()?'A neighbour’s child brings you pictures. Name what you see in English (“What is this?”), or pick the picture they ask for (“Please show me the …”). There is no timer.'
+     :'A neighbour’s child brings you pictures. Name what you see in Nepali (“Yo ke ho?”, what is this?), or pick the picture they ask for (“… dekhaunus”, please show me …). There is no timer.'}</p>
+   <div class="wd-topics">${WORD_TOPICS.map(t=>`<button class="wd-topic" data-t="${t.id}"><span class="wd-ic" aria-hidden="true">${t.icon}</span><b>${EN()?t.en:t.np}</b><small>${EN()?`<span lang="ne">${t.dev}</span>`:t.en} · ${t.items.length} words</small></button>`).join('')}</div>
    ${G&&G.mode==='stall'?`<p class="recap">${midDay?`Day ${S.day} at the stall starts over when you come back. Money you earned stays.`:`Day ${S.day} at the stall is waiting for you afterwards.`}</p>`:''}
    <div class="row-end"><button class="ghost" id="wdLater">Pachi <small>later</small></button></div>`;
   show('#ovIntro');
@@ -1999,11 +2086,11 @@ function openWordsIntro(){
 }
 function openWordsTopic(t){
   $('#introBody').innerHTML=`
-   <h2>${t.icon} ${t.np}<small>${t.dev} · ${t.en}</small></h2>
+   <h2>${t.icon} ${EN()?t.en:t.np}<small>${EN()?`<span lang="ne">${t.dev}</span>`:`${t.dev} · ${t.en}`}</small></h2>
    <p class="recap">Tap a card to hear it.</p>
-   <div class="words">${t.items.map((it,i)=>`<button class="wcard wd-card" data-i="${i}">${wdPic(t,it,'small')}<b>${it[0]}</b><span class="dev" lang="ne">${it[0].split(' ').map(w=>DICT[w]?DICT[w].dev:w).join(' ')}</span><div class="en">${esc(it[1])}</div></button>`).join('')}</div>
+   <div class="words">${t.items.map((it,i)=>`<button class="wcard wd-card" data-i="${i}">${wdPic(t,it,'small')}<b>${EN()?esc(it[1]):it[0]}</b><span class="dev" lang="ne">${it[0].split(' ').map(w=>DICT[w]?DICT[w].dev:w).join(' ')}</span>${EN()?'':`<div class="en">${esc(it[1])}</div>`}</button>`).join('')}</div>
    <div class="row-end"><button class="ghost" id="wdBack">Other topics</button><button class="primary big" id="go">Shuru garaun! <small>let’s start</small></button></div>`;
-  $('#introBody').querySelectorAll('.wd-card').forEach(b=>b.onclick=()=>speak(t.items[+b.dataset.i][0]));
+  $('#introBody').querySelectorAll('.wd-card').forEach(b=>b.onclick=()=>speak(t.items[+b.dataset.i][EN()?1:0]));
   $('#wdBack').onclick=openWordsIntro;
   $('#go').onclick=()=>{hide('#ovIntro');startWords(t);};
   $('#go').focus();
@@ -2089,8 +2176,29 @@ function startParticles(){
 }
 addEventListener('resize',()=>startParticles());
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>startParticles());
+// For an English learner every step is turned round the first time it is shown: the customer says the English,
+// the replies are the English ones, and the Nepali (in Devanagari) becomes the help line. Picture choices keep their
+// English labels. The Nepali is kept (npSay, npAns) so word mastery still counts.
+const BUILD_DECOYS=['the','very','please','big','today','not','we','is'];
+function flipEn(st){
+  if(st.flipped)return;st.flipped=true;st.npSay=st.say;st.npAns=st.answer&&st.answer.t;st.voice=null;
+  if(st.type==='build'){
+    const words=toks(st.answer.en);
+    st.say='How do you say it in English?';st.en='अंग्रेजीमा कसरी भन्ने?';
+    st.tiles=shuffle([...words,rnd(BUILD_DECOYS.filter(x=>!words.includes(x)))]);
+    st.answer={t:st.answer.en,en:toDev(st.answer.t)};
+    st.note='English puts the doing word straight after who: “I drink tea” = म चिया पिउँछु।';
+    return;
+  }
+  const say=st.say;st.say=st.en;st.en=toDev(say);
+  if(st.prompt)st.prompt=st.prompt.replace(/Nepali/g,'English');
+  if(st.type==='pick'||!st.options)return;
+  const turn=o=>({...o,t:o.enW||o.en,en:toDev(o.t)});
+  st.options=st.options.map(turn);
+  st.answer=st.options.find(o=>o.en===toDev(st.answer.t))||turn(st.answer);
+}
 function renderStep(){
-  const st=C.steps[C.i];st.hinted=false;st.tries=0;st.scored=false;st.showChoices=false;C.lock=false;C.hiddenSay=null;
+  const st=C.steps[C.i];if(EN())flipEn(st);st.hinted=false;st.tries=0;st.scored=false;st.showChoices=false;C.lock=false;C.hiddenSay=null;
   renderBubble(st.say,st.en,st.show);setFb('');$('#cont').hidden=true;
   if(st.noSpeak){}else if(st.voice)speakDev(st.voice);else speak(st.say);
   renderInputs(st);
@@ -2102,7 +2210,7 @@ function renderInputs(st){
   $('#buildWrap').hidden=st.type!=='build'&&st.type!=='spell';
   $('#typeWrap').hidden=!typing;
   $('#optWrap').hidden=st.type==='order'||st.type==='build'||st.type==='spell'||typing;
-  const recap=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':(st.prompt||'Pick your reply:');
+  const recap=st.type==='pay'?'Order: '+st.order.parts.map(p=>`${p.q} × ${EN()?ITEMS[p.k].short:ITEMS[p.k].np}`).join(', ')+'. Check the menu prices.':(st.prompt||'Pick your reply:');
   if(st.type==='order'){
     tray={};renderTray();document.querySelectorAll('.item').forEach(b=>b.disabled=false);$('#serve').disabled=false;
   }else if(st.type==='build'||st.type==='spell'){
@@ -2110,7 +2218,7 @@ function renderInputs(st){
   }else if(typing){
     $('#typeRecap').innerHTML=recap.replace('Pick your reply:','Type your reply:').replace('Name it in Nepali:','Type it in Nepali:');
     $('#typeIn').value='';$('#typeIn').disabled=false;$('#typeShow').hidden=false;
-    $('#typeIn').placeholder=st.type==='pay'?'e.g. pachas rupiya (or 50)':'Type in romanized Nepali';
+    $('#typeIn').placeholder=EN()?(st.type==='pay'?'e.g. fifty rupees (or 50)':'Type in English'):st.type==='pay'?'e.g. pachas rupiya (or 50)':'Type in romanized Nepali';
     setTimeout(()=>$('#typeIn').focus(),30);
   }else{
     $('#recap').innerHTML=recap;
@@ -2118,20 +2226,20 @@ function renderInputs(st){
     const o=$('#opts');o.innerHTML='';o.classList.toggle('picks',st.type==='pick');
     st.options.forEach(op=>{const b=document.createElement('button');b.className=st.type==='pick'?'opt pick':'opt';b.dataset.t=op.t;
       b.innerHTML=st.type==='pick'?`${op.icon||WX_ICON[op.wx]}<span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`
-        :`<span>${esc(op.t)}</span><span class="en" ${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
+        :`<span>${esc(op.t)}</span><span class="en" ${EN()?'lang="ne" ':''}${S.settings.english?'':'hidden'}>${esc(op.en)}</span>`;
       if(st.type==='pick')b.setAttribute('aria-label',S.settings.english?op.en:'Picture '+(st.options.indexOf(op)+1));
       b.onclick=()=>choose(st,op,b);o.append(b);});
   }
 }
 function score(st,ok){
   if(st.scored)return;st.scored=true;
-  const keys=[...toks(st.say),...(st.answer?toks(st.answer.t):[])].filter(t=>DICT[t]&&DICT[t].day>0);
+  const keys=[...toks(st.npSay||st.say),...(st.answer?toks(st.npAns||st.answer.t):[])].filter(t=>DICT[t]&&DICT[t].day>0);
   G.steps++;markActive();
   if(ok){G.correct++;if(!st.hinted)keys.forEach(t=>S.mastery[t]=Math.min(5,lvl(t)+1));C.patience=Math.min(100,C.patience+15);}
   else{C.mistakes++;keys.forEach(t=>{S.mastery[t]=Math.max(0,lvl(t)-1);G.missed.add(t);});}
   save();
 }
-function praise(){const p=rnd(PRAISE);return `<b>${p[0]}</b> <span class="recap">(${p[1]})</span>`;}
+function praise(){const p=rnd(PRAISE);return EN()?`<b>${p[1]}</b> <span class="recap">(${p[0]})</span>`:`<b>${p[0]}</b> <span class="recap">(${p[1]})</span>`;}
 function choose(st,op,btn,said){
   if(C.lock)return;
   const ok=op.t===st.answer.t,sh=shopState();
@@ -2201,7 +2309,7 @@ $('#micBtn').onclick=()=>{
   if(!SR||!C||C.lock||C.gone)return;
   const st=C.steps[C.i],btn=$('#micBtn');
   let rec;try{rec=new SR();}catch(e){setFb('Speech recognition could not start in this browser.','bad');return;}
-  rec.lang='ne-NP';rec.maxAlternatives=5;rec.interimResults=false;
+  rec.lang=EN()?'en-US':'ne-NP';rec.maxAlternatives=5;rec.interimResults=false;
   btn.disabled=true;btn.classList.add('listening');btn.innerHTML='🎤 Sunda chhu… <small>listening</small>';
   const reset=()=>{btn.disabled=false;btn.classList.remove('listening');btn.innerHTML='🎤 Bolnus <small>say your answer</small>';};
   rec.onresult=e=>{
@@ -2393,36 +2501,42 @@ function goHome(){
   const sug=[];
   const nb=nextBuy();
   if(nb&&nb.can)sug.push({icon:'🛍️',t:`You can buy: ${nb.it.en}`,s:`${fmt(nb.it.price)} in the Bazaar · you have ${fmt(S.rupees)}`,go:()=>openShop()});
+  const en=EN();
   const li=LIPI.findIndex((_,i)=>!(((S.lipi||{best:{}}).best[i]||0)>=80));
-  if(li>=0)sug.push({icon:'अ',t:`Lipi lesson ${li+1}: ${LIPI[li].np}`,s:LIPI[li].title,go:()=>openLipiLesson(li)});
+  if(li>=0&&!en)sug.push({icon:'अ',t:`Lipi lesson ${li+1}: ${LIPI[li].np}`,s:LIPI[li].title,go:()=>openLipiLesson(li)});
   const gi=GRAMMAR.findIndex(g=>!((((S.gram||{}).best||{})[g.id]||0)>=80));
-  if(gi>=0)sug.push({icon:GRAMMAR[gi].icon,t:`Grammar: ${GRAMMAR[gi].np}`,s:GRAMMAR[gi].en,go:()=>openGrammarLesson(gi)});
+  if(gi>=0&&!en)sug.push({icon:GRAMMAR[gi].icon,t:`Grammar: ${GRAMMAR[gi].np}`,s:GRAMMAR[gi].en,go:()=>openGrammarLesson(gi)});
   const weak=VOCAB.filter(v=>v[3]>0&&v[0] in S.mastery&&lvl(v[0])<=1).length;
-  if(weak)sug.push({icon:'🎯',t:`${weak} word${weak===1?'':'s'} to practise`,s:'Flashcards of the words you keep missing',go:()=>startCards(cardDecks().find(d=>d.id==='weak'),openCards)});
-  const untried=PRACTICES.find(x=>!((S.practiced||{})[x.key]||{mausam:S.wxPlayed,pariwar:S.famPlayed,vishaya:S.wordsPlayed}[x.key]));
-  if(untried)sug.push({icon:untried.icon,t:`Try ${untried.np}`,s:untried.en+'. '+untried.about,go:untried.open});
+  if(weak&&!en)sug.push({icon:'🎯',t:`${weak} word${weak===1?'':'s'} to practise`,s:'Flashcards of the words you keep missing',go:()=>startCards(cardDecks().find(d=>d.id==='weak'),openCards)});
+  const untried=practices().find(x=>!((S.practiced||{})[x.key]||{mausam:S.wxPlayed,pariwar:S.famPlayed,vishaya:S.wordsPlayed}[x.key]));
+  if(untried)sug.push({icon:untried.icon,t:`Try ${en?untried.en:untried.np}`,s:en?EN_ABOUT[untried.key]||untried.about:untried.en+'. '+untried.about,go:untried.open});
   const greet=new Date().getHours()<12?['Shubha prabhat','Good morning']:new Date().getHours()<18?['Namaste','Hello']:['Shubha sandhya','Good evening'];
   $('#home').innerHTML=`
    <section class="hero">${avatarHtml(p,'big')}
-     <div class="hero-t"><h1>${greet[0]}, ${esc(p.name)}!<small>${greet[1]} · ${streak?`🔥 ${streak} day${streak===1?'':'s'} in a row`:'Ready for some Nepali?'}</small></h1></div>
+     <div class="hero-t"><h1>${greet[0]}, ${esc(p.name)}!<small>${greet[1]} · ${streak?`🔥 ${streak} day${streak===1?'':'s'} in a row`:en?'Ready for some English?':'Ready for some Nepali?'}</small></h1></div>
      <button class="ghost" id="hWho" type="button">Change player</button></section>
    <section class="hstats">
      <div><b>Din ${S.day}</b><span>at the tea stall</span></div>
      <div><b>${fmt(S.rupees)}</b><span>earned</span></div>
-     <div><b>${wordsKnown()}</b><span>words known well</span></div>
-     <div><b>${lipiDone}/${LIPI.length} · ${gramDone}/${GRAMMAR.length}</b><span>script · grammar lessons</span></div>
+     ${en?`<div><b>${practices().filter(x=>(S.practiced||{})[x.key]).length}/${practices().length}</b><span>practice rounds tried</span></div>
+     <div><b>${S.tipsTotal?fmt(S.tipsTotal):'–'}</b><span>tips earned</span></div>`
+     :`<div><b>${wordsKnown()}</b><span>words known well</span></div>
+     <div><b>${lipiDone}/${LIPI.length} · ${gramDone}/${GRAMMAR.length}</b><span>script · grammar lessons</span></div>`}
    </section>
-   <button class="hmain" id="hStall" type="button"><span class="hm-ic" aria-hidden="true">🍵</span><span><b>Pasal kholnus</b><small>Open the tea stall · Day ${S.day}</small></span><span class="hm-go" aria-hidden="true">→</span></button>
+   <button class="hmain" id="hStall" type="button"><span class="hm-ic" aria-hidden="true">🍵</span><span><b>${en?'Open the tea stall':'Pasal kholnus'}</b><small>${en?`<span lang="ne">पसल खोल्नुस्</span> · Day ${S.day}`:`Open the tea stall · Day ${S.day}`}</small></span><span class="hm-go" aria-hidden="true">→</span></button>
    <section class="hgrid">
-     ${[['hShop','🛍️','Bazaar','Spend your rupees'],['hPrac','🧭','Abhyas','Practice rounds'],['hCards','🃏','Patti','Flashcards'],['hGram','📘','Vyakaran','Grammar'],['hLipi','अ','Lipi','Nepali script'],['hBook','📖','Shabdakosh','Your dictionary'],['hSet','⚙️','Settings','Voice, answers, app']]
+     ${(en?[['hShop','🛍️','Bazaar','Spend your rupees'],['hPrac','🧭','Practice','Practice rounds'],['hCards','🃏','Flashcards','English phrases and words'],['hSet','⚙️','Settings','Voice, answers, app']]
+       :[['hShop','🛍️','Bazaar','Spend your rupees'],['hPrac','🧭','Abhyas','Practice rounds'],['hCards','🃏','Patti','Flashcards'],['hGram','📘','Vyakaran','Grammar'],['hLipi','अ','Lipi','Nepali script'],['hBook','📖','Shabdakosh','Your dictionary'],['hSet','⚙️','Settings','Voice, answers, app']])
        .map(([id,ic,np,en])=>`<button class="hcard" id="${id}" type="button"><span class="hc-ic" aria-hidden="true">${ic}</span><b>${np}</b><small>${en}</small></button>`).join('')}
    </section>
    ${sug.length?`<h2 class="hsub">Aaja ko lagi <small>suggested for today</small></h2><section class="hsug">${sug.slice(0,3).map((x,i)=>`<button type="button" data-s="${i}"><span class="hc-ic" aria-hidden="true">${x.icon}</span><span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></button>`).join('')}</section>`:''}`;
   $('#hWho').onclick=()=>openWho();
   $('#hStall').onclick=()=>startDay();
   $('#hShop').onclick=()=>openShop();
-  $('#hPrac').onclick=openPractice;$('#hCards').onclick=openCards;$('#hGram').onclick=openGrammar;$('#hLipi').onclick=openLipiIntro;
-  $('#hBook').onclick=()=>{renderBook();show('#ovBook');};$('#hSet').onclick=()=>$('#btnSet').click();
+  $('#hPrac').onclick=openPractice;$('#hCards').onclick=openCards;
+  if(!en){$('#hGram').onclick=openGrammar;$('#hLipi').onclick=openLipiIntro;$('#hBook').onclick=()=>{renderBook();show('#ovBook');};}
+  $('#hSet').onclick=()=>$('#btnSet').click();
+  $('#btnBook').hidden=en;
   $('#home').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>sug[+b.dataset.s].go());
 }
 
@@ -2543,6 +2657,8 @@ function editPlayer(p){
        <div class="av-grid">${AV_EMOJI.map(a=>`<button type="button" aria-pressed="${a===d.av}" data-a="${a}">${a}</button>`).join('')}</div>
        <div><b>Rang</b> <small class="recap">colour</small></div>
        <div class="av-colors">${AV_COLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour ${c}"></button>`).join('')}</div>
+       <div><b>Ke sikne?</b> <small class="recap"><span lang="ne">के सिक्ने?</span> · what will you learn?</small></div>
+       <div class="langpick">${[['ne','अ Nepali','नेपाली सिक्ने'],['en','A English','अंग्रेजी सिक्ने']].map(([l,nm,dv])=>`<button type="button" aria-pressed="${(d.learn||'ne')===l}" data-l="${l}"><b>${nm}</b><small lang="ne">${dv}</small></button>`).join('')}</div>
        <div class="row-end" style="justify-content:space-between">
          ${isNew||PR.list.length<2?'<span></span>':'<button type="button" class="danger" id="pDel">Delete player</button>'}
          <span style="display:flex;gap:8px"><button type="button" class="ghost" id="pBack">Back</button><button type="submit" class="primary">Save</button></span></div>
@@ -2552,14 +2668,17 @@ function editPlayer(p){
     const keepName=()=>{d.name=$('#pName2').value;};
     $('#introBody').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{keepName();d.av=b.dataset.a;d.photo=d.photo;draw();});
     $('#introBody').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{keepName();d.color=b.dataset.c;draw();});
+    $('#introBody').querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{keepName();d.learn=b.dataset.l;draw();});
     $('#pPhoto').onchange=async e=>{const f=e.target.files[0];if(!f)return;keepName();
       try{d.photo=await photoToData(f);draw();}catch(err){$('#pMsg').textContent='That picture couldn’t be read. Try a JPG or PNG.';}};
     if($('#pNoPhoto'))$('#pNoPhoto').onclick=()=>{keepName();d.photo='';draw();};
     $('#pBack').onclick=()=>openWho();
     $('#pForm').onsubmit=e=>{e.preventDefault();keepName();
       const name=d.name.trim()||`Player ${PR.list.length+(isNew?1:0)}`;
-      if(isNew){const np={id:'p'+Date.now(),name,av:d.av,color:d.color,photo:d.photo};PR.list.push(np);saveProfiles();hide('#ovIntro');switchPlayer(np.id);return;}
-      Object.assign(p,{name,av:d.av,color:d.color,photo:d.photo});
+      const learn=d.learn||'ne';
+      if(isNew){const np={id:'p'+Date.now(),name,av:d.av,color:d.color,photo:d.photo,learn};PR.list.push(np);saveProfiles();hide('#ovIntro');switchPlayer(np.id);return;}
+      Object.assign(p,{name,av:d.av,color:d.color,photo:d.photo,learn});
+      renderMenu();
       try{localStorage.setItem(PKEY,JSON.stringify(PR));}catch(err){p.photo='';saveProfiles();}
       renderTop();if(!$('#home').hidden)goHome();openWho();};
     if($('#pDel')){
@@ -2604,7 +2723,16 @@ function renderBook(){
 $('#btnBook').onclick=()=>{renderBook();show('#ovBook');};
 $('#bookBody').addEventListener('click',e=>{const b=e.target.closest('.brow b');if(b)speak(b.textContent);});
 $('#btnPrac').onclick=openPractice;
-$('#btnSet').onclick=()=>{$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
+// settings that read differently for an English learner
+function renderSetLabels(){
+  const en=EN();
+  $('#lblEnglish').innerHTML=en?'Show the Nepali <span lang="ne">नेपाली देखाउनुस्</span><small>Shows what every line means in Nepali, under the line and on the menu. You earn no tips.</small>'
+    :'Show English<small>Shows a translation under every line and on the menu. You earn no tips.</small>';
+  $('#lblType').innerHTML=en?'Type your answers<small>Type the reply in English instead of picking from three. Small spelling slips are forgiven.</small>'
+    :'Type your answers<small>Type the reply in romanized Nepali instead of picking from three. Spelling is forgiving (aa/a, chh/ch…).</small>';
+  $('#optDev').closest('label').hidden=en;
+}
+$('#btnSet').onclick=()=>{renderSetLabels();$('#optRelaxed').checked=S.settings.relaxed;$('#optEnglish').checked=S.settings.english;
   $('#optType').checked=S.settings.typing;$('#optListen').checked=S.settings.listen;$('#optMic').checked=S.settings.mic;$('#optDev').checked=!!S.settings.devanagari;
   $('#optListen').disabled=!voiceOn();$('#listenStatus').textContent=voiceOn()?'The customer’s words stay hidden until you answer. Use 🔊 to hear them again.':'Needs a Nepali or Hindi voice on this device (see “Read lines aloud” below).';
   $('#optMic').disabled=!SR;$('#micStatus').textContent=SR?'Shows a 🎤 button: say your answer out loud. Uses the browser’s speech recognition (Chrome or Edge, online). It won’t work inside the private Claude link, which blocks the microphone.':'This browser has no speech recognition. Try Chrome or Edge.';resetArm=false;$('#btnReset').textContent=`Erase ${curProf().name}’s progress`;show('#ovSet');renderVoiceSettings();renderInstall();renderThemes();};
@@ -2622,7 +2750,9 @@ function renderThemes(){
 }
 function renderVoiceSettings(){
   const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
-  $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice;
+  $('#optVoice').checked=S.settings.voice;$('#optVoice').disabled=!npVoice&&!EN();
+  if(EN()){$('#voiceStatus').textContent=!TTS?'This browser cannot speak.':`The customers’ English is read by ${enVoice?`${enVoice.name} (${enVoice.lang})`:'this browser’s English voice'}.`;
+    $('#voiceBox').hidden=!TTS;$('#voicePickRow').hidden=true;renderSpeeds();return;}
   $('#voiceStatus').textContent=!TTS?'This browser cannot speak.'
     :npVoice?`Using ${npVoice.name} (${npVoice.lang}).${/^ne/i.test(npVoice.lang)?'':' A Hindi voice reads the Nepali spelling closely, but not perfectly.'}`
     :'No Nepali or Hindi voice is installed on this device. Microsoft Edge has Nepali voices built in; on Android, install Nepali in Google’s text-to-speech settings.';
@@ -2642,7 +2772,7 @@ function renderSpeeds(){
     if(voiceOn())speak('Ek cup chiya dinus.');});
   $('#speeds').parentElement.classList.toggle('novoice',!voiceOn());
 }
-$('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak('Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
+$('#voiceTest').onclick=()=>{const was=S.settings.voice;S.settings.voice=true;speak(EN()?'Hello! A cup of milk tea, please.':'Namaste! Ek cup chiya dinus.');S.settings.voice=was;};
 // ---------- installable app ----------
 let installEvt=null;
 const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;

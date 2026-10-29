@@ -96,6 +96,22 @@ Chiya Pasal can be installed on a phone like an app. It gets its own icon, opens
 
 The game's **Settings** also has an install button where the browser supports one. Progress is kept separately in the app and in the browser.
 
+### Learning English
+
+Each player picks *Ke sikne?* (what will you learn?): Nepali or English. English is for Nepali speakers. Tourists come to your stall and speak English, and you serve them, answer them and tell them the price in English ("Two hundred and fifty rupees."). Every line has its Nepali in Devanagari: tap a word to see it, or turn on **Show the Nepali** in Settings. The menu board shows the English names.
+
+Lines are read by the device's English voice, and typing and spoken answers take English. Tips and streaks work the same.
+
+The practice rounds for English learners are:
+- weather
+- picture topics
+- daily life (phone calls, bargaining, taxis, the doctor, directions)
+- time and days of the week
+- sentences (see a Nepali sentence, build it in English)
+- flashcards of English phrases and words
+
+Family terms, festivals, Nepali grammar and the Devanagari script teach Nepali itself, so English learners skip them.
+
 ### Home screen and players
 
 The game opens on a home screen that greets you and shows your day at the stall, your money, how many words you know well, your progress in script and grammar, and your streak. From there you can open the stall or jump to any section, and it suggests what to do next.
