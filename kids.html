@@ -476,6 +476,38 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
   .who .nm{max-width:70px}
   .title{font-size:1.3rem}
 }
+/* yatra: the trail from Habre's gate up to the mountains */
+.gate{border-radius:28px;padding:12px 18px;display:flex;align-items:center;gap:14px;text-align:left;color:#fff;background:linear-gradient(135deg,#2fae6e,#1c7f8e);box-shadow:0 7px 0 #17604f}
+.gate:active{transform:translateY(4px)}
+.gate .ic{font-size:3rem;line-height:1}
+.gate b{font-size:1.5rem;display:block;line-height:1.1}
+.gate small{display:block;font-size:.9rem}
+.gate.shut{background:linear-gradient(135deg,#a89c8a,#7d7264);box-shadow:0 7px 0 #5e5548}
+.gate.shut .bar2{background:rgba(255,255,255,.35)}
+.gate.fresh{animation:glow .8s ease-in-out infinite alternate}
+.trail{display:flex;flex-direction:column;gap:0}
+.trail-end{display:flex;flex-direction:column;align-items:center;font-weight:800;padding:10px 0;gap:2px}
+.trail-end .pic{font-size:3.4rem;line-height:1}
+.trail-end small{color:var(--soft);font-weight:600}
+.region{position:relative;border-radius:30px;margin:6px 0;padding:10px 6px 4px;background:var(--rg);overflow:hidden}
+.region h2{position:relative;z-index:1;margin:0;text-align:center;font-size:1.5rem;line-height:1.1}
+.region h2 small{display:block;font-size:.85rem;font-weight:600;color:var(--soft)}
+.region .rows{position:relative}
+.region svg.line{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.region .deco{position:absolute;font-size:2rem;opacity:.75;pointer-events:none;transform:translate(-50%,-50%)}
+.srow{position:relative;height:104px}
+.stop{position:absolute;top:50%;left:var(--x);transform:translate(-50%,-50%);width:76px;display:flex;flex-direction:column;align-items:center;gap:2px;z-index:1}
+.stop .disc{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:2.1rem;background:var(--card);box-shadow:0 6px 0 var(--sc,var(--line));border:4px solid var(--sc,var(--line));position:relative}
+.stop .lb{font-size:.72rem;font-weight:800;line-height:1.05;text-align:center;background:rgba(255,255,255,.85);border-radius:999px;padding:1px 7px;max-width:110px}
+.stop .badge{position:absolute;right:-6px;bottom:-6px;font-size:1rem;background:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.stop.done .disc{--sc:#f2b705;background:#fff7d6}
+.stop.lock .disc{filter:grayscale(1);opacity:.55}
+.stop.lock .lb{opacity:.6}
+.stop.now .disc{--sc:var(--green);animation:glow .7s ease-in-out infinite alternate}
+.stop .me{position:absolute;top:2px;left:-34px;font-size:1.9rem;animation:bob 1s ease-in-out infinite}
+.stop.r .me{left:auto;right:-34px}
+.stop:active .disc{transform:translateY(4px);box-shadow:0 2px 0 var(--sc,var(--line))}
+.stop.boss .disc{width:78px;height:78px;border-radius:24px;font-size:2.4rem}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -1014,7 +1046,7 @@ function countHtml(n,pic,cls){
 
 // ---------- players ----------
 function goWho(){
-  clearTry();screen='who';speechSynthesis?.cancel?.();
+  clearTry();screen='who';trip=null;speechSynthesis?.cancel?.();
   main.innerHTML=`<h1>Ko khelcha? <small>Who’s playing?</small></h1>
    <div class="people">${S.profiles.map((p,i)=>`<div class="person" style="--pc:${p.color};animation-delay:${i*60}ms">
       <button class="pick" data-id="${p.id}" style="display:flex;flex-direction:column;align-items:center;width:100%" aria-label="Play as ${esc(p.name)}">
@@ -1084,7 +1116,7 @@ const keyOf=(t,it)=>t.id+'|'+it[0];
 const checked=(p,t)=>bestOf(p,'check',t.id)>=CHECK_N-1;
 const topicDone=(p,t)=>(LV_KEYS.filter(k=>passed(p,t.id,k)).length+(checked(p,t)?1:0))/4;
 const ynOf=(t,it)=>it[4]?t.yes:t.no;
-const backBtn=label=>`<button class="back" id="backBtn">◀ ${label}</button>`;
+const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':label}</button>`;
 function hearItem(t,it){
   if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
   else if(t.kind==='yesno'){const a=ynOf(t,it);say(it[0]+' '+a[0],it[1]+' '+a[1],null);}
@@ -1122,11 +1154,122 @@ function wordOfDay(){
   return all[(n*7919)%all.length];
 }
 
+// ---------- yatra (Habre's journey): a trail of stops from the garden up to the mountains ----------
+// Each stop is one thing the game already has, getting harder along the way. A stop counts as done from the
+// player's saved scores, so anything already played in the house counts too. Every place ends with a big check
+// (a mix of its words) and a present of gems. The gate opens at GATE stars.
+const GATE=10,BOSS_N=8;
+const YATRA=(()=>{const W=(t,lv)=>({k:'play',t,lv}),K=id=>({k:'story',id}),J=t=>({k:'check',t}),R=(a,lv)=>({k:'vakya',a,lv});return [
+ {id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝'],stops:[
+  W('janawar','easy'),W('rang','easy'),K('bihana'),W('ganti','easy'),W('khana','easy'),W('pariwar','easy')]},
+ {id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡'],stops:[
+  W('sharir','easy'),W('kapada','easy'),W('g-dherai','easy'),K('bazaar'),W('akshar','easy'),W('prakriti','easy'),W('g-thulo','easy'),R('build','easy')]},
+ {id:'bazaar',np:'Bazaar',dev:'बजार',en:'The market',icon:'🛍️',bg:'#ffe6ee',gems:20,deco:['🍎','🍌','🧺','🎈'],stops:[
+  W('janawar','medium'),W('saman','easy'),W('g-rang','easy'),K('paani'),W('ganti','medium'),W('savari','easy'),W('g-cha','easy'),K('janmadin'),R('chitra','easy')]},
+ {id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️'],stops:[
+  W('jangali','easy'),W('chara','easy'),W('kira','easy'),W('g-kahaa','easy'),K('bagaicha'),W('bhavana','easy'),W('g-gardai','easy'),K('mimi'),W('akshar','medium'),R('build','medium')]},
+ {id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:30,deco:['🦆','🐟','🪷','⛵'],stops:[
+  W('samundra','easy'),W('sarisrip','easy'),W('g-ho','easy'),W('rang','medium'),K('bhok'),W('g-ulto','easy'),W('khana','medium'),W('g-kasko','easy'),K('himal'),R('ulto','easy'),J('janawar')]},
+ {id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','🐦','🌿'],stops:[
+  W('thulo','easy'),W('chaad','easy'),K('tihar'),W('g-prashna','easy'),W('bhanai','easy'),K('bida'),W('g-bhayo','easy'),W('pariwar','medium'),R('sodhau','easy'),K('dashain'),W('ganti','hard'),J('rang')]},
+ {id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,deco:['❄️','🏔️','☁️','🦅'],stops:[
+  W('janawar','hard'),W('g-tukra','easy'),K('holi'),W('akshar','hard'),W('thulo','medium'),K('lhosar'),W('jangali','medium'),R('build','hard'),K('daktar'),W('bhavana','medium'),J('khana'),K('school')]},
+];})();
+const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
+const T=id=>TOPICS.find(t=>t.id===id);
+// the stop being played right now, when it was started from the trail
+let trip=null;
+function stopDone(p,s){
+  if(s.k==='play')return passed(p,s.t,s.lv);
+  if(s.k==='check')return checked(p,T(s.t));
+  if(s.k==='story')return bestOf(p,'kathaa',s.id)>=1;
+  if(s.k==='vakya')return bestOf(p,'vakya:'+s.a,s.lv)>=V_N-1;
+  if(s.k==='boss')return bestOf(p,'yatra',s.r.id)>=BOSS_N-2;
+  return !!((p.yatra||{}).chest||{})[s.r.id];
+}
+// the stop a player is on: the first one not done yet
+const yatraAt=p=>{const i=STOPS.findIndex(s=>!stopDone(p,s));return i<0?STOPS.length:i;};
+// what a stop looks like: [picture, romanized, devanagari, english, badge]
+function stopFace(s){
+  if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.kind==='letter'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
+  if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
+  if(s.k==='story'){const st=STORIES.find(x=>x.id===s.id);return [st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
+  if(s.k==='vakya'){const a=V_ACTS.find(x=>x.id===s.a),L=LEVELS[s.lv];return [a.icon,a.np,a.dev,`${a.en} · ${L.en.toLowerCase()}`,L.icon];}
+  if(s.k==='boss')return ['🏆','Thulo jaanch','ठूलो जाँच',`Big check: ${s.r.en.toLowerCase()}`,''];
+  return ['🎁','Upahaar','उपहार',`A present of ${s.r.gems} gems`,'💎'];
+}
+// start a stop; when it ends, the way back leads to the trail again
+function goStop(s){
+  const p=P();trip=s;p.lv=p.lv||{};p.yatra=p.yatra||{};
+  if(s.k==='play'){
+    const t=T(s.t),lk=s.t+':'+s.lv,learn=p.yatra.learn=p.yatra.learn||{};p.lv[t.id]=s.lv;
+    // new words at a new level: see them first, then play
+    if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t});}
+  }else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
+  else if(s.k==='story'){story=STORIES.find(x=>x.id===s.id);pageI=0;path=story.pages.slice();branchK=-1;guessed=new Set();renderPage();}
+  else if(s.k==='vakya'){p.lv.vakya=s.lv;save();vStart(s.a);}
+  else if(s.k==='boss')startQuiz({mode:'yatra',rid:s.r.id,stops:s.r.stops.filter(x=>x.k==='play'),back:openPath});
+}
+// a section page opened while on a trip goes back to the trail instead
+function tripBack(){if(!trip)return false;trip=null;openPath();return true;}
+function openPath(){
+  if(!P()){goWho();return;}
+  trip=null;screen='yatra';
+  const p=P(),y=p.yatra=p.yatra||{},at=yatraAt(p),prev=y.at||0;y.seen=1;
+  const moved=at>prev;y.at=at;save();
+  let gi=0;
+  const xOf=i=>Math.round(50+30*Math.sin(i*0.95));
+  const regions=YATRA.map((r,ri)=>{
+    const list=STOPS.filter(s=>s.r===r),first=gi,H=list.length*104;
+    const xs=list.map((_,k)=>xOf(first+k));
+    let d=`M${xs[0]} 0L${xs[0]} 52`;
+    for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
+    d+=`L${xs[xs.length-1]} ${H}`;
+    const rows=list.map((s,k)=>{const i=gi++,f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
+      const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4];
+      return `<div class="srow"><span class="deco" style="left:${xs[k]>50?16:84}%;top:52px" aria-hidden="true">${r.deco[k%r.deco.length]}</span>
+       <button class="stop ${cls}${s.k==='boss'?' boss':''}${xs[k]<50?' r':''}" style="--x:${xs[k]}%" data-i="${i}" aria-label="${esc(f[3])}${cls==='lock'?' (locked)':cls==='done'?' (done)':''}">
+        ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
+        <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
+        <span class="lb">${esc(f[1])}</span></button></div>`;}).join('');
+    return `<section class="region" style="--rg:${r.bg}"><h2>${r.icon} ${r.np} <small lang="ne">${r.dev} · ${r.en}</small></h2>
+     <div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>`;
+  }).join('');
+  const all=at>=STOPS.length;
+  main.innerHTML=`${backBtn('Ghar')}<h1>🗺️ Habreko yatra <small>हाब्रेको यात्रा · Habre’s journey · ${Math.min(at,STOPS.length)} / ${STOPS.length}</small></h1>
+   <div class="trail">
+    <div class="trail-end"><span class="pic" aria-hidden="true">🏠</span>Habreko ghar<small>Suru · the start</small></div>
+    ${regions}
+    <div class="trail-end"><span class="pic" aria-hidden="true">🏔️🚩</span>Himalko tuppo<small>${all?'You made it to the top!':'The top of the mountain'}</small></div>
+   </div>`;
+  $('#backBtn').onclick=()=>goHome();
+  main.querySelectorAll('.stop').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,s=STOPS[i],f=stopFace(s);
+    if(i>at){speech('Pahile yo!','पहिले यो!','Do the glowing stop first!');say('Pahile yo!','पहिले यो!','Do the glowing stop first!');mood('sad');
+      main.querySelector('.stop.now')?.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});return;}
+    if(s.k==='chest'){
+      if(i<at){speech('Upahaar kholisakyo!','उपहार खोलिसक्यो!','You already opened this present.');return;}
+      y.chest=y.chest||{};y.chest[s.r.id]=1;save();earn(s.r.gems);b.classList.add('done');confetti();setTimeout(confetti,500);mood('happy');
+      speech(`Upahaar! 💎 ${s.r.gems}`,'उपहार!',`${s.r.gems} gems for Habre’s shop!`);say('Upahaar!','उपहार!',`${s.r.gems} gems!`);
+      setTimeout(()=>{if(screen==='yatra')openPath();},2200);return;
+    }
+    speech(f[1],f[2],f[3]);say(f[1],f[2],null);mood('happy');
+    setTimeout(()=>{if(screen==='yatra')goStop(s);},RM?0:700);
+  });
+  const cur=STOPS[at];
+  if(all){speech('Himal pugyau!','हिमाल पुग्यौ!','You climbed all the way to the mountains!');say('Himal pugyau!','हिमाल पुग्यौ!','You climbed all the way to the mountains!');confetti();setTimeout(confetti,600);mood('happy');}
+  else if(moved&&prev&&cur.r!==STOPS[prev].r){speech('Naya thaau: '+cur.r.np+'!','नयाँ ठाउँ: '+cur.r.dev+'!',`A new place: ${cur.r.en.toLowerCase()}!`);say('Naya thaau: '+cur.r.np+'!','नयाँ ठाउँ: '+cur.r.dev+'!',null);confetti();mood('happy');}
+  else if(moved&&prev){speech('Agadi badhau!','अगाडि बढौं!','On to the next stop!');say('Agadi badhau!','अगाडि बढौं!','On to the next stop!');mood('happy');}
+  else{const f=stopFace(cur);speech('Yatra!','यात्रा!',`Next stop: ${f[3]}. Tap the glowing one!`);say('Yatra!','यात्रा!',null);mood('wave');}
+  const now=main.querySelector('.stop.now');if(now)setTimeout(()=>now.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'}),RM?0:350);
+}
+
 // ---------- screens ----------
 function goHome(quiet){
   if(!P()){goWho();return;}
-  screen='home';topic=null;shopSel=null;clearTry();if(!quiet)speechSynthesis?.cancel?.();
+  screen='home';topic=null;shopSel=null;trip=null;clearTry();if(!quiet)speechSynthesis?.cancel?.();
   const p=P(),pr=progressOf(p),d=p.daily||{},done=d.last===today(),w=wordOfDay(),stars=starsOf(p);
+  const gate=stars>=GATE,y=p.yatra||{},at=yatraAt(p);
   const streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
   const gl=GIFTS(),nx=gl.find(r=>r.gift>stars),from=nx?((gl[gl.indexOf(nx)-1]||{gift:0}).gift):0;
   main.innerHTML=`<h1>Ke sikne? <small>What shall we learn today?</small></h1>
@@ -1150,6 +1293,10 @@ function goHome(quiet){
     </div>
     <div class="ground" aria-hidden="true"></div>
    </div>
+   <button class="gate${gate?'':' shut'}${gate&&!y.seen?' fresh':''}" id="gateBtn"><span class="ic" aria-hidden="true">${gate?'🗺️':'🔒'}</span>
+     <span style="flex:1;min-width:150px"><b>Habreko yatra</b>${gate
+       ?`<small>Habre’s journey · ${at>=STOPS.length?'you reached the mountains!':`stop ${at+1} of ${STOPS.length}: ${esc(stopFace(STOPS[at])[3])}`}</small>`
+       :`<small>Habre’s journey · ${GATE-stars} more ★ to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
      <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
      <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
@@ -1157,7 +1304,13 @@ function goHome(quiet){
   $('#dailyBtn').onclick=startDaily;
   $('#wodBtn').onclick=()=>{speech(w.it[0],w.it[1],w.it[2]);say(w.it[0],w.it[1],w.it[2]);mood('happy');};
   $('#wardBtn').onclick=()=>openShop();
-  if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a door.');mood('wave');}
+  $('#gateBtn').onclick=()=>{
+    if(gate){openPath();return;}
+    const en=`Collect ${GATE-stars} more stars in the house to open the gate!`;
+    speech('Aru tara jammaa gara!','अरू तारा जम्मा गर!',en);say('Aru tara jammaa gara!','अरू तारा जम्मा गर!',en);mood('wave');
+  };
+  if(!quiet&&gate&&!y.seen){speech('Dhoka khulyo!','ढोका खुल्यो!','The gate is open! Come on a journey with Habre!');say('Dhoka khulyo!','ढोका खुल्यो!','The gate is open!');mood('happy');confetti();}
+  else if(!quiet){speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Pick a door.');mood('wave');}
 }
 function topicTile(t,i,p){
   return `<button class="topic" style="--tc:${t.color};animation-delay:${Math.min(i,12)*40}ms" data-t="${t.id}">
@@ -1184,6 +1337,7 @@ function openGram(){
 const topicBack=t=>t.section==='gram'?['Vyakaran',openGram]:t.kind==='letter'?['Ghar',()=>goHome()]:['Shabda',openWords];
 // a topic: pick a level, then learn → play → check, plus memory match and flashcards
 function openTopic(t){
+  if(tripBack())return;
   if(t.kind==='story'){openStories();return;}
   topic=t;screen='topic';
   const p=P(),cur=levelOf(t.id),[bl,bf]=topicBack(t),tick='<em>✔</em>';
@@ -1242,7 +1396,7 @@ function renderLearn(){
   $('#next').onclick=()=>{
     if(learnI===words.length-1){
       const p=P();p.seen=p.seen||{};if(!p.seen[t.id])earn(2);p.seen[t.id]=1;save();
-      speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn')openTopic(t);},1600);return;
+      speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn'){if(trip)startQuiz({mode:'play',t});else openTopic(t);}},1600);return;
     }
     learnI++;renderLearn();
   };
@@ -1251,7 +1405,7 @@ function renderLearn(){
 
 // generic finish card: stars, then buttons
 function endCard(n,N,o){
-  screen='end';const frac=N?n/N:1;
+  screen='end';if(trip)o.backLabel='🗺️ Yatra';const frac=N?n/N:1;
   const line=frac>=0.9?['Ekdam ramro!','एकदम राम्रो!','Amazing!']:frac>=0.6?['Syabaas!','स्याबास!','Well done!']:['Ramro kosis!','राम्रो कोसिस!','Good try!'];
   main.innerHTML=`<div class="end"><div class="trophy" aria-hidden="true">${o.trophy||(frac>=0.9?'🏆':frac>=0.6?'🥇':'🌟')}</div>
     <h1>${esc(o.title||line[0])}<small>${esc(o.sub||line[2])}${o.newBest?' · new best!':''}</small></h1>
@@ -1578,6 +1732,7 @@ function lookup(w){
 let story=null,pageI=0,path=null,branchK=-1,guessed=null;
 const storyOpen=(p,i)=>i===0||bestOf(p,'kathaa',STORIES[i-1].id)>=1;
 function openStories(){
+  if(tripBack())return;
   screen='stories';const p=P();
   main.innerHTML=`${backBtn('Ghar')}<h1>📖 Kathaa <small>कथा · Stories with Habre</small></h1>
    <label class="toggle"><input type="checkbox" id="guessT" ${S.storyGuess?'checked':''}> 🧩 Kun chitra? <small style="font-weight:500;color:var(--soft)">guess each page’s picture</small></label>
@@ -1769,6 +1924,7 @@ const V_ACTS=[
 ];
 const V_ABOUT={easy:'2-word sentences, the colours show where each word goes',medium:'3-word sentences',hard:'4-word sentences, one extra tile that doesn’t belong'};
 function openVakya(){
+  if(tripBack())return;
   screen='vakya';const p=P(),cur=levelOf('vakya'),grown=GROW.filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
   const rule=['Kaam janaaune shabda sadhai antyama aauchha.','काम जनाउने शब्द सधैं अन्त्यमा आउँछ।','The doing word always comes last, like the engine of a train.'];
   main.innerHTML=`${backBtn('Ghar')}<h1>🚂 Vakya <small>वाक्य · Sentences</small></h1>
@@ -2025,6 +2181,12 @@ function startQuiz(o){
     const vw=vSents(levelOf('vakya')).map(s=>[s.rom,s.dev,s.en,s.pic]);
     entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
       {t:VAKYA_T,it:rnd(vw),pool:vw.map(x=>({t:VAKYA_T,it:x})),lv:levelOf('vakya'),face:'hard'}]);
+  }else if(o.mode==='yatra'){
+    // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
+    const used=new Set();
+    entries=spread(o.stops,BOSS_N).map(s=>{const t=T(s.t),w=wordsFor(t,s.lv);let it=rnd(w);
+      for(let k=0;k<6&&used.has(keyOf(t,it));k++)it=rnd(w);used.add(keyOf(t,it));
+      return {t,it,pool:w.map(x=>({t,it:x})),lv:s.lv,face:s.lv};});
   }
   Q={...o,o,entries,n:entries.length,i:0,stars:0};
   if(!Q.back)Q.back=o.t?()=>openTopic(o.t):()=>goHome();
@@ -2113,6 +2275,7 @@ function endQuiz(){
   if(Q.mode==='play')key=Q.t.id+':'+Q.lv;
   else if(Q.mode==='check')key='check:'+Q.t.id;
   else if(Q.mode==='vchitra')key='vakya:chitra:'+Q.lv;
+  else if(Q.mode==='yatra')key='yatra:'+Q.rid;
   else if(Q.mode==='daily'){key='daily:'+today();const d=p.daily||{};if(d.last!==today()){d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();}p.daily=d;}
   let newBest=false;
   if(key&&n>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=n;newBest=true;}
@@ -2134,6 +2297,10 @@ function endQuiz(){
   }else if(Q.mode==='daily'){
     const d=p.daily||{};
     endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:()=>goHome(),backLabel:'Ghar'});
+  }else if(Q.mode==='yatra'){
+    const r=YATRA.find(x=>x.id===Q.rid),ok=n>=BOSS_N-2;
+    endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
+      sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${BOSS_N-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
   }else if(Q.mode==='vchitra'){
     endCard(n,N,{newBest,sub:`Find the picture · ${LEVELS[Q.lv].en}`,again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
   }else{
@@ -2158,6 +2325,7 @@ function renderProgress(p){
     <tbody>${DOORS.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>
    <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
     <tbody>${deckTopics.map(t=>`<tr><td>${t.kind==='letter'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
+   <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
    <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${GROW.filter((_,i)=>bestOf(p,'badhau',i)).length}/${GROW.length}</p>
    <p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length}) · <b>Stickers:</b> ${stickers}/${stickerItems().length}</p>
