@@ -771,6 +771,87 @@ const TOPICS=[
   ['charaharu','चराहरू','birds','🐦🐦🐦','chara___','haru'],['kukurko haddi','कुकुरको हड्डी','the dog’s bone','🐶🦴','kukur___ haddi','ko'],
   ['Machha paanima cha.','माछा पानीमा छ।','The fish is in the water.','🌊🐟','Machha paani___ cha.','ma'],
   ['didilai phul','दिदीलाई फूल','a flower for big sister','🌸➡️👧','didi___ phul','lai']]},
+ // ---- for children learning English: the alphabet and English grammar (section 'gramEn'). Each item's first and
+ // third fields are both the English, so it reads the same whichever way the game shows it; the second is the Nepali.
+ // letters: [small letter, capital letter (traced), capital again, picture, tier, word, its Devanagari, the word again]
+ {id:'abc',np:'ABC',dev:'अंग्रेजी अक्षर',en:'The alphabet',icon:'🔤',color:'#e8463a',kind:'letter',q:'letter',tiers:true,items:[
+  ['a','A','A','🍎',1,'apple','स्याउ','apple'],['b','B','B','⚽',1,'ball','भकुण्डो','ball'],['c','C','C','🐱',1,'cat','बिरालो','cat'],
+  ['d','D','D','🐶',1,'dog','कुकुर','dog'],['e','E','E','🥚',1,'egg','अण्डा','egg'],['f','F','F','🐟',1,'fish','माछा','fish'],
+  ['g','G','G','🐐',1,'goat','बाख्रा','goat'],['h','H','H','🎩',1,'hat','टोपी','hat'],
+  ['i','I','I','🍦',2,'ice cream','आइसक्रिम','ice cream'],['j','J','J','🧃',2,'juice','जुस','juice'],['k','K','K','🪁',2,'kite','चङ्गा','kite'],
+  ['l','L','L','🦁',2,'lion','सिंह','lion'],['m','M','M','🌙',2,'moon','जून','moon'],['n','N','N','👃',2,'nose','नाक','nose'],
+  ['o','O','O','🍊',2,'orange','सुन्तला','orange'],['p','P','P','🐷',2,'pig','सुँगुर','pig'],['q','Q','Q','👸',2,'queen','रानी','queen'],
+  ['r','R','R','🐰',3,'rabbit','खरायो','rabbit'],['s','S','S','☀️',3,'sun','घाम','sun'],['t','T','T','🐯',3,'tiger','बाघ','tiger'],
+  ['u','U','U','☂️',3,'umbrella','छाता','umbrella'],['v','V','V','🚐',3,'van','भ्यान','van'],['w','W','W','⌚',3,'watch','घडी','watch'],
+  ['x','X','X','🩻',3,'x-ray','एक्स-रे','x-ray'],['y','Y','Y','🪀',3,'yo-yo','योयो','yo-yo'],['z','Z','Z','🦓',3,'zebra','जेब्रा','zebra']]},
+ {id:'e-many',section:'gramEn',np:'One and many',dev:'एक र धेरै',en:'One and many',icon:'🐶',color:'#2fae6e',kind:'pic',q:'phrase',
+  rule:['Add -s for more than one: dog → dogs.','एकभन्दा धेरै भए अन्त्यमा -s थपिन्छ: dog (कुकुर) → dogs (कुकुरहरू)।','Add -s for more than one: dog → dogs.'],items:[
+  ['a dog','एउटा कुकुर','a dog','🐶'],['dogs','धेरै कुकुरहरू','dogs','🐶🐶🐶'],['a cat','एउटा बिरालो','a cat','🐱'],['cats','धेरै बिरालाहरू','cats','🐱🐱🐱'],
+  ['a bird','एउटा चरा','a bird','🐦'],['birds','धेरै चराहरू','birds','🐦🐦🐦'],['a flower','एउटा फूल','a flower','🌸'],['flowers','धेरै फूलहरू','flowers','🌸🌸🌸']]},
+ {id:'e-big',section:'gramEn',np:'Big and small',dev:'ठूलो र सानो',en:'Big and small',icon:'🐘',color:'#c27c2c',kind:'pic',q:'phrase',
+  rule:['The describing word comes first: a big dog.','नेपालीमा जस्तै, वर्णन गर्ने शब्द पहिले आउँछ: a big dog = ठूलो कुकुर।','The describing word comes first: a big dog.'],items:[
+  ['a big dog','ठूलो कुकुर','a big dog','<span class="sz-l">🐶</span>'],['a small dog','सानो कुकुर','a small dog','<span class="sz-s">🐶</span>'],
+  ['a big house','ठूलो घर','a big house','<span class="sz-l">🏠</span>'],['a small house','सानो घर','a small house','<span class="sz-s">🏠</span>'],
+  ['a big apple','ठूलो स्याउ','a big apple','<span class="sz-l">🍎</span>'],['a small apple','सानो स्याउ','a small apple','<span class="sz-s">🍎</span>'],
+  ['a big ball','ठूलो भकुण्डो','a big ball','<span class="sz-l">⚽</span>'],['a small ball','सानो भकुण्डो','a small ball','<span class="sz-s">⚽</span>']]},
+ {id:'e-rang',section:'gramEn',np:'Colour + thing',dev:'रङ र चीज',en:'Colour + thing',icon:'🍏',color:'#8e5be8',kind:'pic',q:'phrase',
+  rule:['The colour comes before the thing: a red apple.','रङ पहिले आउँछ, नेपालीमा जस्तै: a red apple = रातो स्याउ।','The colour comes before the thing: a red apple.'],items:[
+  ['a red apple','रातो स्याउ','a red apple','🍎'],['a green apple','हरियो स्याउ','a green apple','🍏'],['a red car','रातो कार','a red car','🚗'],['a blue car','निलो कार','a blue car','🚙'],
+  ['a yellow flower','पहेंलो फूल','a yellow flower','🌻'],['a red flower','रातो फूल','a red flower','🌹'],['a yellow banana','पहेंलो केरा','a yellow banana','🍌'],['a green tree','हरियो रूख','a green tree','🌳']]},
+ {id:'e-where',section:'gramEn',np:'Where is it?',dev:'कहाँ छ?',en:'Where is it?',icon:'📦',color:'#00a6b8',kind:'pic',q:'phrase',
+  rule:['Place words come before the thing: on the box.','अंग्रेजीमा ठाउँ जनाउने शब्द अगाडि आउँछ: on the box = बाकस माथि।','Place words come before the thing: on the box.'],items:[
+  ['The ball is on the box.','भकुण्डो बाकस माथि छ।','The ball is on the box.','<span class="place v"><span>⚽</span><span>📦</span></span>'],
+  ['The ball is under the box.','भकुण्डो बाकस मुनि छ।','The ball is under the box.','<span class="place v"><span>📦</span><span>⚽</span></span>'],
+  ['The ball is in the box.','भकुण्डो बाकस भित्र छ।','The ball is in the box.','<span class="place in"><span>📦</span><span class="inner">⚽</span></span>'],
+  ['The ball is next to the box.','भकुण्डो बाकसको छेउमा छ।','The ball is next to the box.','<span class="place h"><span>📦</span><span>⚽</span></span>'],
+  ['The cat is on the box.','बिरालो बाकस माथि छ।','The cat is on the box.','<span class="place v"><span>🐱</span><span>📦</span></span>'],
+  ['The cat is under the box.','बिरालो बाकस मुनि छ।','The cat is under the box.','<span class="place v"><span>📦</span><span>🐱</span></span>'],
+  ['The cat is in the box.','बिरालो बाकस भित्र छ।','The cat is in the box.','<span class="place in"><span>📦</span><span class="inner">🐱</span></span>'],
+  ['The cat is next to the box.','बिरालो बाकसको छेउमा छ।','The cat is next to the box.','<span class="place h"><span>📦</span><span>🐱</span></span>']]},
+ {id:'e-ing',section:'gramEn',np:'Doing words',dev:'के गर्दै छ?',en:'Doing words',icon:'🏃',color:'#ff9f1c',kind:'pic',q:'phrase',
+  rule:['-ing means doing it right now: eat → eating.','-ing ले अहिले गर्दै छ भन्छ: eat (खानु) → eating (खाँदै)।','-ing means doing it right now: eat → eating.'],items:[
+  ['eating','खाँदै','eating','😋'],['sleeping','सुत्दै','sleeping','😴'],['running','दौडँदै','running','🏃'],['reading','पढ्दै','reading','📖'],
+  ['dancing','नाच्दै','dancing','💃'],['singing','गाउँदै','singing','🎤'],['crying','रुँदै','crying','😭'],['laughing','हाँस्दै','laughing','😂']]},
+ {id:'e-ulto',section:'gramEn',np:'Opposites',dev:'उल्टो',en:'Opposites',icon:'🔥',color:'#e8463a',kind:'pic',q:'kun',
+  rule:['Words come in pairs: hot ↔ cold.','शब्दका जोडी: hot (तातो) ↔ cold (चिसो)।','Words come in pairs: hot and cold.'],items:[
+  ['hot','तातो','hot','🔥'],['cold','चिसो','cold','🧊'],['day','दिन','day','☀️'],['night','रात','night','🌙'],['happy','खुसी','happy','😀'],['sad','दुःखी','sad','😢'],
+  ['fast','छिटो','fast','🐇'],['slow','बिस्तारै','slow','🐢'],['big','ठूलो','big','🐘'],['small','सानो','small','🐭']]},
+ {id:'e-whose',section:'gramEn',np:'Whose is it?',dev:'कसको?',en:'Whose is it?',icon:'☂️',color:'#3a7bf2',kind:'pic',q:'phrase',
+  rule:['’s means whose: Mum’s umbrella.','’s ले कसको भन्छ: Mum’s umbrella = आमाको छाता।','’s means whose: Mum’s umbrella.'],items:[
+  ['Mum’s umbrella','आमाको छाता','Mum’s umbrella','👩☂️'],['Dad’s glasses','बुवाको चस्मा','Dad’s glasses','👨👓'],['my sister’s book','दिदीको किताब','my sister’s book','👧📖'],
+  ['my brother’s ball','भाइको भकुण्डो','my brother’s ball','👶⚽'],['Grandpa’s cap','हजुरबुवाको टोपी','Grandpa’s cap','👴🧢'],['the dog’s bone','कुकुरको हड्डी','the dog’s bone','🐶🦴'],
+  ['the cat’s milk','बिरालोको दूध','the cat’s milk','🐱🥛'],['Habre’s bicycle','हाब्रेको साइकल','Habre’s bicycle','🐼🚲']]},
+ // yes/no topics: items are [question, devanagari, english, picture, 1 = yes / 0 = no]
+ {id:'e-is',section:'gramEn',np:'Is it…?',dev:'हो कि होइन?',en:'Is it…?',icon:'✅',color:'#ff7eb6',kind:'yesno',q:'yesno',
+  yes:['Yes, it is.','हो।','Yes, it is.'],no:['No, it isn’t.','होइन।','No, it isn’t.'],
+  rule:['Is it a cat? Yes, it is. / No, it isn’t.','Is it…? भनेको “यो … हो?” हो: Yes, it is (हो) / No, it isn’t (होइन)।','Is it a cat? Yes, it is. No, it isn’t.'],items:[
+  ['Is it a cat?','यो बिरालो हो?','Is it a cat?','🐱',1],['Is it a dog?','यो कुकुर हो?','Is it a dog?','🐴',0],['Is it an apple?','यो स्याउ हो?','Is it an apple?','🍎',1],
+  ['Is it a banana?','यो केरा हो?','Is it a banana?','🥭',0],['Is it an elephant?','यो हात्ती हो?','Is it an elephant?','🐘',1],['Is it a shoe?','यो जुत्ता हो?','Is it a shoe?','🧦',0],
+  ['Is it the moon?','यो जून हो?','Is it the moon?','🌙',1],['Is it a fish?','यो माछा हो?','Is it a fish?','🐸',0]]},
+ {id:'e-there',section:'gramEn',np:'Is there…?',dev:'छ कि छैन?',en:'Is there…?',icon:'🌳',color:'#2fae6e',kind:'yesno',q:'yesno',
+  yes:['Yes, there is.','छ।','Yes, there is.'],no:['No, there isn’t.','छैन।','No, there isn’t.'],
+  rule:['Is there a bird? Yes, there is. / No, there isn’t.','Is there…? भनेको “… छ?” हो: Yes, there is (छ) / No, there isn’t (छैन)।','Is there a bird? Yes, there is. No, there isn’t.'],items:[
+  ['Is there a bird in the tree?','रूखमा चरा छ?','Is there a bird in the tree?','🌳🐦',1],['Is there a momo on the plate?','थालमा मोमो छ?','Is there a momo on the plate?','🍽️',0],
+  ['Is there a fish in the water?','पानीमा माछा छ?','Is there a fish in the water?','🌊🐟',1],['Is there a rainbow in the sky?','आकाशमा इन्द्रेणी छ?','Is there a rainbow in the sky?','☁️',0],
+  ['Is there a cat in the box?','बाकसमा बिरालो छ?','Is there a cat in the box?','<span class="place in"><span>📦</span><span class="inner">🐱</span></span>',1],
+  ['Is there a monkey in the tree?','रूखमा बाँदर छ?','Is there a monkey in the tree?','🌳🐦',0],['Is there a moon in the sky?','आकाशमा जून छ?','Is there a moon in the sky?','🌙⭐',1],
+  ['Is there a duck in the water?','पानीमा हाँस छ?','Is there a duck in the water?','🌊🐟',0]]},
+ {id:'e-q',section:'gramEn',np:'Question words',dev:'प्रश्न',en:'Question words',icon:'❓',color:'#8e5be8',kind:'pic',q:'phrase',
+  rule:['Question words: what, who, where, how many.','प्रश्न गर्ने शब्द: what (के), who (को), where (कहाँ), how many (कति)।','Question words: what, who, where, how many.'],items:[
+  ['what','के','what','❓📦'],['who','को','who','❓🧑'],['where','कहाँ','where','❓📍'],['how many','कति','how many','❓🔢'],
+  ['when','कहिले','when','❓⏰'],['why','किन','why','❓🤔'],['what kind','कस्तो','what kind','❓🌈']]},
+ {id:'e-ed',section:'gramEn',np:'It already happened',dev:'भइसक्यो',en:'It already happened',icon:'🐸',color:'#c27c2c',kind:'pic',q:'phrase',
+  rule:['-ed means it already happened: jump → jumped.','-ed ले भइसकेको कुरा भन्छ: jump (उफ्रिनु) → jumped (उफ्रियो)।','-ed means it already happened: jump → jumped.'],items:[
+  ['The frog jumped.','भ्यागुतो उफ्रियो।','The frog jumped.','🐸'],['The baby cried.','बच्चा रोयो।','The baby cried.','😭'],['It rained.','पानी पर्‍यो।','It rained.','🌧️'],
+  ['Habre laughed.','हाब्रे हाँस्यो।','Habre laughed.','😂'],['The cat played.','बिरालो खेल्यो।','The cat played.','🐱🧶'],['Mum cooked.','आमाले पकाउनुभयो।','Mum cooked.','👩‍🍳'],
+  ['The flower opened.','फूल फुल्यो।','The flower opened.','🌸'],['Habre walked.','हाब्रे हिँड्यो।','Habre walked.','🚶']]},
+ // endings: [whole word, devanagari, english, picture, word with a gap (___), the missing ending]
+ {id:'e-tukra',section:'gramEn',np:'Fix the ending',dev:'टुक्रा जोड',en:'Fix the ending',icon:'🔗',color:'#e8463a',kind:'ending',q:'ending',
+  rule:['Little endings: -s many, -ing doing now, -ed already happened, ’s whose.','सानो टुक्रा: -s धेरै, -ing गर्दै, -ed भइसक्यो, ’s कसको।','Little endings: many, doing now, already happened, whose.'],items:[
+  ['cats','बिरालाहरू','cats','🐱🐱🐱','cat___','s'],['dogs','कुकुरहरू','dogs','🐶🐶🐶','dog___','s'],
+  ['eating','खाँदै','eating','😋','eat___','ing'],['jumping','उफ्रँदै','jumping','🐸','jump___','ing'],
+  ['jumped','उफ्रियो','jumped','🐸💨','jump___','ed'],['played','खेल्यो','played','⚽','play___','ed'],
+  ['Mum’s umbrella','आमाको छाता','Mum’s umbrella','👩☂️','Mum___ umbrella','’s'],['the dog’s bone','कुकुरको हड्डी','the dog’s bone','🐶🦴','the dog___ bone','’s']]},
  {id:'kathaa',np:'Kathaa',dev:'कथा',en:'Stories',icon:'📖',color:'#8e5be8',kind:'story',items:[]},
  {id:'bhanai',np:'Bhanai',dev:'भनाइ',en:'Sayings',icon:'💬',color:'#ff7eb6',kind:'pic',q:'phrase',items:[
   ['pakka','पक्का','for sure!','👍'],['sahi ho','सही हो','that’s right!','✅'],['ek chin','एक छिन','just a moment','⏳'],
@@ -1114,7 +1195,7 @@ function shopBarFor(x){
   };
 }
 function pictureOf(t,it){
-  if(t.kind==='letter')return `<span class="letter" lang="ne">${it[1]}</span>`;
+  if(t.kind==='letter')return `<span class="letter"${t.id==='abc'?'':' lang="ne"'}>${it[1]}</span>`;
   if(t.kind==='color')return `<span class="swatch" style="background:${it[3]}"></span>`;
   if(t.kind==='num')return `<span class="digit">${it[3]}</span>`;
   return `<span class="pic">${it[3]}</span>`;
@@ -1199,8 +1280,9 @@ function editProfile(p){
 
 // ---------- sections ----------
 const WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
-const GRAM_T=()=>TOPICS.filter(t=>t.section==='gram');
-const AKSHAR=()=>TOPICS.find(t=>t.id==='akshar');
+// the grammar lessons and letters for the player's direction: Nepali ones, or English ones for an English learner
+const GRAM_T=()=>TOPICS.filter(t=>t.section===(EN()?'gramEn':'gram'));
+const AKSHAR=()=>TOPICS.find(t=>t.id===(EN()?'abc':'akshar'));
 const CHECK_N=6,STICKER_AT=2,V_N=5;
 const MEM_PAIRS={easy:3,medium:4,hard:6};
 const dayStr=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -1213,12 +1295,13 @@ const topicDone=(p,t)=>(LV_KEYS.filter(k=>passed(p,t.id,k)).length+(checked(p,t)
 const ynOf=(t,it)=>it[4]?t.yes:t.no;
 const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':label}</button>`;
 function hearItem(t,it){
-  if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
+  if(t.id==='abc')say(it[1],it[6],`${it[1]}, ${it[5]}`);
+  else if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
   else if(t.kind==='yesno'){const a=ynOf(t,it);say(it[0]+' '+a[0],it[1]+' '+a[1],null);}
   else sayT(it[0],it[1],it[2]);
 }
 function findCard(key){
-  const i=key.indexOf('|'),tid=key.slice(0,i),w=key.slice(i+1),t=tid==='vakya'?VAKYA_T:TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);
+  const i=key.indexOf('|'),tid=key.slice(0,i),w=key.slice(i+1),t=tid==='vakya'?VAKYA_T:tid==='vakyaEn'?VAKYA_EN_T:TOPICS.find(x=>x.id===tid),it=t&&t.items.find(x=>x[0]===w);
   return t&&it?{t,it}:null;
 }
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
@@ -1230,7 +1313,7 @@ function progressOf(p){
     shabda:avg(WORD_T().map(t=>topicDone(p,t))),
     akshar:topicDone(p,ak)*0.7+Math.min(1,Object.keys(p.traced||{}).length/ak.items.length)*0.3,
     vyakaran:avg(GRAM_T().map(t=>topicDone(p,t))),
-    vakya:avg(V_ACTS.flatMap(a=>LV_KEYS.map(k=>bestOf(p,'vakya:'+a.id,k)>=V_N-1?1:0)))*0.75+avg(GROW.map((_,i)=>bestOf(p,'badhau',i)>=2?1:0))*0.25,
+    vakya:avg(V_ACTS.flatMap(a=>LV_KEYS.map(k=>bestOf(p,'vakya:'+a.id,k)>=V_N-1?1:0)))*0.75+avg(grows().map((_,i)=>bestOf(p,'badhau',i)>=2?1:0))*0.25,
     patti:all.length?all.filter(c=>boxOf(p,c)===2).length/all.length:0,
   };
 }
@@ -1277,7 +1360,7 @@ const ROOMS=[
   ['aina','ऐना','mirror','',60,32.7,0,16,26],['burus','बुरुस','toothbrush','🪥',53.5,48.7,5],['saabun','साबुन','soap','🧼',66.25,50,4.5],
   ['charpi','चर्पी','toilet','',85.25,60,0,21,40],['baalti','बाल्टी','bucket','🪣',70,87.3,6],['spanj','स्पन्ज','sponge','🧽',42,52,4.5]]},
  {id:'aphis',np:'Aphis',dev:'अफिस',en:'Office',icon:'💻',color:'#3a7bf2',
-  topics:['akshar'],sections:['vyakaran','patti','shabda'],items:[
+  topics:['akshar','abc'],sections:['vyakaran','patti','shabda'],items:[
   ['kyalendar','क्यालेन्डर','calendar','📅',82.5,23.3,6],['glob','ग्लोब','globe','🌍',25,37.3,5,'u'],['batti','बत्ती','light','💡',37.5,9.3,5],
   ['mobail','मोबाइल','mobile phone','📱',12.5,48,5,'d'],['kalam','कलम','pen','🖊️',23.75,48.3,5,'u'],['kampyutar','कम्प्युटर','computer','💻',50,45.3,9,'d'],
   ['sisakalam','सिसाकलम','pencil','✏️',35,48.3,5,'d'],['kainchi','कैंची','scissors','✂️',65,48.7,5,'u'],['kitab','किताब','books','📚',13,22.7,6],
@@ -1404,9 +1487,10 @@ const FIND_N=8;
 // the room that holds a section or a word topic
 const roomOf=id=>ROOMS.find(r=>r.sections.includes(id)||r.topics.includes(id));
 // the letters, grammar and sentence train teach Nepali, so an English learner's rooms leave them out
-const NE_ONLY=['akshar','vyakaran','vakya'];
-const roomTopics=r=>EN()?r.topics.filter(id=>!NE_ONLY.includes(id)):r.topics;
-const roomSections=r=>EN()?r.sections.filter(id=>!NE_ONLY.includes(id)):r.sections;
+// the office holds the Devanagari letters for a Nepali learner and the alphabet for an English learner
+const NOT_FOR={en:['akshar'],ne:['abc']};
+const roomTopics=r=>r.topics.filter(id=>!NOT_FOR[EN()?'en':'ne'].includes(id));
+const roomSections=r=>r.sections;
 const toRoom=id=>()=>openRoom(roomOf(id));
 // how far through a room: things looked at, the find game, and its word topics
 function roomProgress(p,r){
@@ -1471,8 +1555,9 @@ function roomAsk(){
   const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
   $('#rProg i').style.width=RF.i/FIND_N*100+'%';
-  $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}<small lang="ne">${it[1]} कहाँ छ?</small>`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
-  speech(cap(it[0])+' kahaa cha?',it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
+  // an English learner finds it from the English alone; the Nepali shows once it is found
+  $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
+  speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
 }
 function roomPick(b){
   if(RF.lock)return;
@@ -1536,7 +1621,7 @@ function stopDone(p,s){
 const yatraAt=p=>{const i=STOPS.findIndex(s=>!stopDone(p,s));return i<0?STOPS.length:i;};
 // what a stop looks like: [picture, romanized, devanagari, english, badge]
 function stopFace(s){
-  if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.kind==='letter'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
+  if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.id==='akshar'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
   if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
   if(s.k==='story'){const st=STORIES.find(x=>x.id===s.id);return [st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
   if(s.k==='vakya'){const a=V_ACTS.find(x=>x.id===s.a),L=LEVELS[s.lv];return [a.icon,a.np,a.dev,`${a.en} · ${L.en.toLowerCase()}`,L.icon];}
@@ -1717,14 +1802,14 @@ function openWords(){
 }
 function openGram(){
   screen='gram';topic=null;const p=P();
-  main.innerHTML=`${backBtn('Aphis')}<h1>🧩 Vyakaran <small>व्याकरण · How Nepali fits together</small></h1>
+  main.innerHTML=`${backBtn('Aphis')}<h1>🧩 ${EN()?'Grammar <small lang="ne">व्याकरण · अंग्रेजी कसरी बन्छ</small>':'Vyakaran <small>व्याकरण · How Nepali fits together</small>'}</h1>
    <div class="topics">${GRAM_T().map((t,i)=>topicTile(t,i,p)).join('')}</div>`;
   $('#backBtn').onclick=toRoom('vyakaran');
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(TOPICS.find(t=>t.id===b.dataset.t)));
   speech('Vyakaran!','व्याकरण!','Pick a little lesson.');say('Vyakaran!','व्याकरण!',null);mood('wave');
 }
 // a topic goes back to the room it lives in; the trip topics go back to the list of every word topic
-const topicBack=t=>t.section==='gram'?['Vyakaran',openGram]:roomOf(t.id)?[roomOf(t.id).np,toRoom(t.id)]:['Shabda',openWords];
+const topicBack=t=>t.section==='gram'||t.section==='gramEn'?[EN()?'Grammar':'Vyakaran',openGram]:roomOf(t.id)?[roomOf(t.id).np,toRoom(t.id)]:['Shabda',openWords];
 // a topic: pick a level, then learn → play → check, plus memory match and flashcards
 function openTopic(t){
   if(tripBack())return;
@@ -1732,8 +1817,8 @@ function openTopic(t){
   topic=t;screen='topic';
   const p=P(),cur=levelOf(t.id),[bl,bf]=topicBack(t),tick='<em>✔</em>';
   const seen=(p.seen||{})[t.id],played=LV_KEYS.some(k=>passed(p,t.id,k));
-  main.innerHTML=`${backBtn(bl)}<h1>${t.kind==='letter'?'<span lang="ne">अ</span>':t.icon} ${nmOf(t)[0]} <small>${nmOf(t)[1]}</small></h1>
-   ${t.rule?`<button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>${esc(t.rule[0])}</b><small lang="ne">${t.rule[1]}</small></span></button>`:''}
+  main.innerHTML=`${backBtn(bl)}<h1>${t.id==='akshar'?'<span lang="ne">अ</span>':t.icon} ${nmOf(t)[0]} <small>${nmOf(t)[1]}</small></h1>
+   ${t.rule?`<button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span>${t.section==='gramEn'?`<b lang="ne">${t.rule[1]}</b><small>${esc(t.rule[2])}</small>`:`<b>${esc(t.rule[0])}</b><small lang="ne">${t.rule[1]}</small>`}</span></button>`:''}
    <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
    <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}">
      <span aria-hidden="true">${L.icon}</span><b>${L.np}</b><small>${L.en}</small><small class="best">★ ${bestOf(p,t.id,k)}/${L.n}</small></button>`;}).join('')}</div>
@@ -1747,7 +1832,8 @@ function openTopic(t){
     <button class="mode cards" id="mCards" style="animation-delay:300ms"><span aria-hidden="true">🃏</span>Patti<small>Flashcards</small></button>
    </div>`;
   $('#backBtn').onclick=bf;
-  if(t.rule)$('#ruleCard').onclick=()=>{speech(...t.rule);say(...t.rule);mood('happy');};
+  // an English lesson's rule is explained in Nepali first (said in Nepali), with the English example under it
+  if(t.rule)$('#ruleCard').onclick=()=>{if(t.section==='gramEn'){speech('',t.rule[1],null);say(t.rule[1],t.rule[1],null);}else{speech(...t.rule);say(...t.rule);}mood('happy');};
   main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{
     p.lv=p.lv||{};p.lv[t.id]=b.dataset.lv;save();
     main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
@@ -1766,7 +1852,7 @@ function openTopic(t){
 function renderLearn(){
   screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter',yn=t.kind==='yesno'?ynOf(t,it):null;
   const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
-  const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english?` · ${it[7]}`:''}</span>`
+  const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english&&t.id!=='abc'?` · ${it[7]}`:''}</span>`
     :EN()&&!yn?`<b>${esc(it[2])}</b><span class="dev" lang="ne">${it[1]}</span>`:`<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${esc(it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!<small lang="ne">${yn[1]}${S.english?' · '+esc(yn[2]):''}</small></span>`:''}`;
   main.innerHTML=`${backBtn(t.np)}<div class="big" id="card" role="button" tabindex="0" aria-label="Hear it again">${pic}${text}</div>
    ${isL?`<button class="listen write" id="writeBtn">✏️ Lekhaun <small style="font-weight:500">let’s write it</small></button><div id="traceBox" hidden></div>`:''}
@@ -1776,7 +1862,7 @@ function renderLearn(){
     <button class="arrow" id="next" aria-label="Next">▶</button>
    </div>
    <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
-  const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,it[0]+', as in '+it[7]);mood('happy');}
+  const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,(t.id==='abc'?it[1]:it[0])+', as in '+it[7]);mood('happy');}
     :yn?()=>{say(it[0]+' '+yn[0],it[1]+' '+yn[1],it[2]+' '+yn[2]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
   $('#backBtn').onclick=()=>openTopic(t);
   if(isL)$('#writeBtn').onclick=()=>{$('#writeBtn').hidden=true;openTrace(it);};
@@ -1816,6 +1902,7 @@ function memFace(x){
   if(x.side==='pic')return t.kind==='num'?`<span class="digit">${it[3]}</span>`:pictureOf(t,it);
   if(t.kind==='letter')return `<span class="pic" style="font-size:2rem">${it[3]}</span><b>${esc(it[5])}</b><span class="dev" lang="ne">${it[6]}</span>`;
   const [w,help]=tw(it);
+  if(EN())return `<b>${esc(w)}</b>`;
   return `<b>${esc(w)}</b><span class="dev" lang="ne">${help}</span>`;
 }
 function startMemory(cards,o){
@@ -1872,7 +1959,7 @@ function openStickers(){
 // ---------- patti (flashcards) ----------
 // every card sits in one of Habre's three baskets: 0 = new / again, 1 = practising, 2 = I know it
 const boxOf=(p,c)=>((p.box||{})[keyOf(c.t,c.it)])||0;
-const allCards=()=>[...WORD_T(),AKSHAR(),...GRAM_T(),VAKYA_T].flatMap(t=>t.items.map(it=>({t,it})));
+const allCards=()=>[...WORD_T(),AKSHAR(),...GRAM_T(),vakyaT()].flatMap(t=>t.items.map(it=>({t,it})));
 function deckSession(cards,p){
   const by=[[],[],[]];cards.forEach(c=>by[boxOf(p,c)].push(c));
   if(!by[0].length&&!by[1].length)return shuffle(cards).slice(0,12);
@@ -1896,20 +1983,20 @@ function openPatti(){
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
   add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
   add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
-  if(!EN())add('vakya','🚂','Vakya','Sentences','#ff9f1c',VAKYA_T.items.map(it=>({t:VAKYA_T,it})));
+  add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
   const special=decks.length;
-  [...WORD_T(),...(EN()?[]:[AKSHAR()])].forEach(t=>add(t.id,t.kind==='letter'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
+  [...WORD_T(),AKSHAR()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const words=decks.length;
-  (EN()?[]:GRAM_T()).forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it}))));
+  GRAM_T().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
     return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(EN()?d.en:d.np)}</b><span class="en"${EN()?' lang="ne"':''}>${EN()?(d.dev||''):esc(d.en)} · ${d.cards.length}</span>
       <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
   main.innerHTML=`${backBtn('Aphis')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
-   <h2 class="sub">Mero patti <small>my decks</small></h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
+   <h2 class="sub">${EN()?'My decks <small lang="ne">मेरो पत्ती</small>':'Mero patti <small>my decks</small>'}</h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
    <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':'Shabda ra Akshar <small>words and letters</small>'}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
-   ${decks.length>words?`<h2 class="sub">Vyakaran <small>grammar</small></h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
+   ${decks.length>words?`<h2 class="sub">${EN()?'Grammar <small lang="ne">व्याकरण</small>':'Vyakaran <small>grammar</small>'}</h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
   $('#backBtn').onclick=toRoom('patti');
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
   main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
@@ -1945,9 +2032,12 @@ function drawKCard(){
     return;
   }
   const {t,it}=c,isL=t.kind==='letter',pic=kPicture(t,it),yn=t.kind==='yesno'?ynOf(t,it):null;
-  const word=EN()&&!isL&&!yn?`<b>${esc(it[2])}</b><span class="dev" lang="ne">${it[1]}</span>`
+  // an English learner's card: the English alone on the word side, the Nepali only once it is turned over
+  const enC=EN()&&!yn,help=t.id==='abc'?`${it[3]} ${it[5]} · ${it[6]}`:it[1];
+  const word=enC?`<b>${esc(t.id==='abc'?it[1]+' '+it[0]:it[2])}</b>`
     :`<b>${esc(it[0])}</b><span class="dev" lang="ne">${isL?it[1]+' · '+it[6]:it[1]}</span>${S.english?`<span class="en">${esc(isL?it[5]+' = '+it[7]:it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!</span>`:''}`;
-  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+(EN()?`<span class="dev" lang="ne">${it[1]}</span>`:`<span class="en">${esc(isL?it[5]:it[2])}</span>`):pic+word;
+  const helpL=enC?`<span class="dev" lang="ne">${help}</span>`:'';
+  const front=KF.wordFirst?word:pic,back=KF.wordFirst?pic+(enC?helpL:`<span class="en">${esc(isL?it[5]:it[2])}</span>`):pic+word+helpL;
   const pos=KF.total-KF.queue.length+1;
   main.innerHTML=`<div class="kfc-top"><span>${esc(KF.title)} · ${Math.min(pos,KF.total)}/${KF.total} <span class="baskets" style="display:inline-flex"><span><i class="b${boxOf(p,c)}"></i></span></span></span><label><input type="checkbox" id="kWordFirst" ${KF.wordFirst?'checked':''}> Word first</label></div>
    <button class="kfc ${KF.flipped?'flipped':''}" id="kCard" type="button" aria-label="Tap to flip">
@@ -2263,7 +2353,7 @@ function storyOrder(){
 const ROLES={w:['Ko?','को?','who','#3a7bf2'],a:['Kasto?','कस्तो?','what kind','#8e5be8'],t:['Ke?','के?','what','#2fae6e'],p:['Kahaa?','कहाँ?','where','#00a6b8'],d:['Ke garchha?','के गर्छ?','doing word','#e8463a']};
 const W=(rom,dev,r)=>({rom,dev,r});
 const sRom=w=>cap(w.map(x=>x.rom).join(' '))+(w.length>1?'.':'');
-const sDev=w=>w.map(x=>x.dev).join(' ')+(w.length>1?'।':'');
+const sDev=w=>w.dev||w.map(x=>x.dev).join(' ')+(w.length>1?'।':'');
 const SENTS=[
  ['🐱💤','The cat sleeps.',W('biralo','बिरालो','w'),W('sutchha','सुत्छ','d')],
  ['🐶','The dog barks.',W('kukur','कुकुर','w'),W('bhukchha','भुक्छ','d')],
@@ -2290,7 +2380,7 @@ const SENTS=[
 ].map(([pic,en,...w])=>({pic,en,w,rom:sRom(w),dev:sDev(w)}));
 const VAKYA_T={id:'vakya',np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',color:'#ff9f1c',kind:'pic',q:'phrase',items:SENTS.map(s=>[s.rom,s.dev,s.en,s.pic])};
 const V_LEN={easy:2,medium:3,hard:4};
-const vSents=lv=>SENTS.filter(s=>s.w.length===V_LEN[lv]);
+const vSents=lv=>sents().filter(s=>s.w.length===V_LEN[lv]);
 // grow a sentence one word at a time
 const GROW=[
  {pic:'🐱',en:['cat','The cat sleeps.','The little cat sleeps.','The little cat sleeps on the bed.'],steps:[
@@ -2319,6 +2409,53 @@ const QA=[
  ['Aaja mausam kasto cha?','आज मौसम कस्तो छ?','What’s the weather like today?','🌧️','Aaja paani pardai cha.','आज पानी पर्दै छ।','It’s raining today.'],
  ['Timi kahaa jaanchhau?','तिमी कहाँ जान्छौ?','Where are you going?','🏫','Ma school jaanchhu.','म स्कूल जान्छु।','I’m going to school.'],
 ];
+// ---- the English sentence train, for children learning English. The tiles are English (with their Nepali under
+// them) and the order is English: who → doing word → what → where. A describing word goes on the tile with "The".
+// Each sentence carries its own Nepali (.dev), since the Nepali words in English order would not be Nepali.
+const SW=(dev,...w)=>Object.assign(w,{dev});
+const SENTS_EN=[
+ ['🐱💤','बिरालो सुत्छ।',W('The cat','बिरालो','w'),W('sleeps','सुत्छ','d')],
+ ['🐶','कुकुर भुक्छ।',W('The dog','कुकुर','w'),W('barks','भुक्छ','d')],
+ ['🐦','चरा उड्छ।',W('The bird','चरा','w'),W('flies','उड्छ','d')],
+ ['🐟','माछा पौडिन्छ।',W('The fish','माछा','w'),W('swims','पौडिन्छ','d')],
+ ['🐸','भ्यागुतो उफ्रिन्छ।',W('The frog','भ्यागुतो','w'),W('jumps','उफ्रिन्छ','d')],
+ ['🐴','घोडा दौडन्छ।',W('The horse','घोडा','w'),W('runs','दौडन्छ','d')],
+ ['😭','बच्चा रुन्छ।',W('The baby','बच्चा','w'),W('cries','रुन्छ','d')],
+ ['💃','हाब्रे नाच्छ।',W('Habre','हाब्रे','w'),W('dances','नाच्छ','d')],
+ ['🍎','हाब्रे स्याउ खान्छ।',W('Habre','हाब्रे','w'),W('eats','खान्छ','d'),W('an apple','स्याउ','t')],
+ ['🐱🥛','बिरालो दूध पिउँछ।',W('The cat','बिरालो','w'),W('drinks','पिउँछ','d'),W('milk','दूध','t')],
+ ['🐒🍌','बाँदर केरा खान्छ।',W('The monkey','बाँदर','w'),W('eats','खान्छ','d'),W('a banana','केरा','t')],
+ ['📖','हाब्रे किताब पढ्छ।',W('Habre','हाब्रे','w'),W('reads','पढ्छ','d'),W('a book','किताब','t')],
+ ['🐶⚽','कुकुर भकुण्डो खेल्छ।',W('The dog','कुकुर','w'),W('plays with','खेल्छ','d'),W('a ball','भकुण्डो','t')],
+ ['🐄🌿','गाई घाँस खान्छ।',W('The cow','गाई','w'),W('eats','खान्छ','d'),W('grass','घाँस','t')],
+ ['🎨','हाब्रे चित्र कोर्छ।',W('Habre','हाब्रे','w'),W('draws','कोर्छ','d'),W('a picture','चित्र','t')],
+ ['🐘','ठूलो हात्ती हिँड्छ।',W('The big','ठूलो','a'),W('elephant','हात्ती','w'),W('walks','हिँड्छ','d')],
+ ['🏠🍚','हाब्रे घरमा भात खान्छ।',W('Habre','हाब्रे','w'),W('eats','खान्छ','d'),W('rice','भात','t'),W('at home','घरमा','p')],
+ ['🐱🥛','सानो बिरालो दूध पिउँछ।',W('The little','सानो','a'),W('cat','बिरालो','w'),W('drinks','पिउँछ','d'),W('milk','दूध','t')],
+ ['🐘💧','ठूलो हात्ती पानी पिउँछ।',W('The big','ठूलो','a'),W('elephant','हात्ती','w'),W('drinks','पिउँछ','d'),W('water','पानी','t')],
+ ['🐶⚽🌳','कुकुर बगैंचामा भकुण्डो खेल्छ।',W('The dog','कुकुर','w'),W('plays with','खेल्छ','d'),W('a ball','भकुण्डो','t'),W('in the garden','बगैंचामा','p')],
+ ['🏫📖','हाब्रे स्कूलमा किताब पढ्छ।',W('Habre','हाब्रे','w'),W('reads','पढ्छ','d'),W('a book','किताब','t'),W('at school','स्कूलमा','p')],
+ ['🐦🌳','रातो चरा रूखमा बस्छ।',W('The red','रातो','a'),W('bird','चरा','w'),W('sits','बस्छ','d'),W('in the tree','रूखमा','p')],
+].map(([pic,dev,...w])=>{w=SW(dev,...w);return {pic,w,rom:sRom(w),dev,en:sRom(w)};});
+const VAKYA_EN_T={...VAKYA_T,id:'vakyaEn',np:'Sentences',items:SENTS_EN.map(s=>[s.rom,s.dev,s.en,s.pic])};
+const GROW_EN=[
+ {pic:'🥟',steps:[SW('हाब्रे',W('Habre','हाब्रे','w')),SW('हाब्रे खान्छ।',W('Habre','हाब्रे','w'),W('eats','खान्छ','d')),
+  SW('हाब्रे मोमो खान्छ।',W('Habre','हाब्रे','w'),W('eats','खान्छ','d'),W('momos','मोमो','t')),
+  SW('हाब्रे घरमा मोमो खान्छ।',W('Habre','हाब्रे','w'),W('eats','खान्छ','d'),W('momos','मोमो','t'),W('at home','घरमा','p'))]},
+ {pic:'🐶',steps:[SW('कुकुर',W('The dog','कुकुर','w')),SW('कुकुर खेल्छ।',W('The dog','कुकुर','w'),W('plays','खेल्छ','d')),
+  SW('कुकुर भकुण्डोसँग खेल्छ।',W('The dog','कुकुर','w'),W('plays','खेल्छ','d'),W('with a ball','भकुण्डोसँग','t')),
+  SW('कुकुर बगैंचामा भकुण्डोसँग खेल्छ।',W('The dog','कुकुर','w'),W('plays','खेल्छ','d'),W('with a ball','भकुण्डोसँग','t'),W('in the garden','बगैंचामा','p'))]},
+ {pic:'🐦',steps:[SW('चरा',W('The bird','चरा','w')),SW('चरा गाउँछ।',W('The bird','चरा','w'),W('sings','गाउँछ','d')),
+  SW('चरा गीत गाउँछ।',W('The bird','चरा','w'),W('sings','गाउँछ','d'),W('a song','गीत','t')),
+  SW('चरा रूखमा गीत गाउँछ।',W('The bird','चरा','w'),W('sings','गाउँछ','d'),W('a song','गीत','t'),W('in the tree','रूखमा','p'))]},
+ {pic:'🐱',steps:[SW('बिरालो',W('The cat','बिरालो','w')),SW('बिरालो पिउँछ।',W('The cat','बिरालो','w'),W('drinks','पिउँछ','d')),
+  SW('बिरालो दूध पिउँछ।',W('The cat','बिरालो','w'),W('drinks','पिउँछ','d'),W('milk','दूध','t')),
+  SW('बिरालो भान्छामा दूध पिउँछ।',W('The cat','बिरालो','w'),W('drinks','पिउँछ','d'),W('milk','दूध','t'),W('in the kitchen','भान्छामा','p'))]},
+].map(g=>({...g,en:g.steps.map(sRom)}));
+// ask and answer in English: the same questions, the English as the words and the Nepali as the help
+const QA_EN=QA.map(q=>[q[2],q[1],q[2],q[3],q[6],q[5],q[6]]);
+// the sentence data for the player's direction
+const sents=()=>EN()?SENTS_EN:SENTS,grows=()=>EN()?GROW_EN:GROW,qas=()=>EN()?QA_EN:QA,vakyaT=()=>EN()?VAKYA_EN_T:VAKYA_T;
 const V_ACTS=[
  {id:'build',icon:'🚂',np:'Rel banau',dev:'रेल बनाऊ',en:'Build the sentence train'},
  {id:'chitra',icon:'🖼️',np:'Kun chitra?',dev:'कुन चित्र?',en:'Hear it, find the picture'},
@@ -2328,18 +2465,20 @@ const V_ACTS=[
 const V_ABOUT={easy:'2-word sentences, the colours show where each word goes',medium:'3-word sentences',hard:'4-word sentences, one extra tile that doesn’t belong'};
 function openVakya(){
   if(tripBack())return;
-  screen='vakya';const p=P(),cur=levelOf('vakya'),grown=GROW.filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
-  const rule=['Kaam janaaune shabda sadhai antyama aauchha.','काम जनाउने शब्द सधैं अन्त्यमा आउँछ।','The doing word always comes last, like the engine of a train.'];
-  main.innerHTML=`${backBtn('Baithak')}<h1>🚂 Vakya <small>वाक्य · Sentences</small></h1>
-   <button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span><b>The doing word is the engine: it always goes last. Biralo sutchha = the cat sleeps.</b><small lang="ne">${rule[1]}</small></span></button>
-   <div class="legend">${Object.values(ROLES).map(r=>`<span style="background:${r[3]}">${r[0]} <small>${r[2]}</small></span>`).join('')}</div>
+  screen='vakya';const p=P(),cur=levelOf('vakya'),grown=grows().filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
+  const en=EN(),rule=en?['','अंग्रेजीमा काम गर्ने शब्द “को?” पछि तुरुन्तै आउँछ: The cat sleeps = बिरालो सुत्छ।','In English the doing word comes right after who: The cat sleeps.']
+    :['Kaam janaaune shabda sadhai antyama aauchha.','काम जनाउने शब्द सधैं अन्त्यमा आउँछ।','The doing word always comes last, like the engine of a train.'];
+  main.innerHTML=`${backBtn('Baithak')}<h1>🚂 ${en?'Sentences <small lang="ne">वाक्य</small>':'Vakya <small>वाक्य · Sentences</small>'}</h1>
+   <button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span>${en?`<b lang="ne">${rule[1]}</b><small>${rule[2]}</small>`
+     :`<b>The doing word is the engine: it always goes last. Biralo sutchha = the cat sleeps.</b><small lang="ne">${rule[1]}</small>`}</span></button>
+   <div class="legend">${Object.values(ROLES).map(r=>`<span style="background:${r[3]}">${en?`${r[2]} <small lang="ne">${r[1]}</small>`:`${r[0]} <small>${r[2]}</small>`}</span>`).join('')}</div>
    <h2 class="sub">Kati gaaro? <small>How hard?</small></h2>
    <div class="levels">${LV_KEYS.map(k=>{const L=LEVELS[k];return `<button class="lv" style="--lc:${L.color}" aria-pressed="${k===cur}" data-lv="${k}"><span aria-hidden="true">${L.icon}</span><b>${L.np}</b><small>${V_ABOUT[k]}</small></button>`;}).join('')}</div>
-   <div class="topics">${V_ACTS.map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${a.np}</b><span class="dev" lang="ne">${a.dev}</span><span class="en">${a.en}</span>
+   <div class="topics">${V_ACTS.map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${en?a.en:a.np}</b><span class="dev" lang="ne">${a.dev}</span>${en?'':`<span class="en">${a.en}</span>`}
       <span class="medals">${LV_KEYS.map(k=>`<span class="${bestOf(p,'vakya:'+a.id,k)>=V_N-1?'on':''}" title="${LEVELS[k].en}">${LEVELS[k].icon}</span>`).join('')}</span></button>`).join('')}
-     <button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>Badhau</b><span class="dev" lang="ne">बढाऊ</span><span class="en">Grow a sentence</span><span class="medals"><span class="on">🌱 ${grown}/${GROW.length}</span></span></button></div>`;
+     <button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>${en?'Grow a sentence':'Badhau'}</b><span class="dev" lang="ne">बढाऊ</span>${en?'':'<span class="en">Grow a sentence</span>'}<span class="medals"><span class="on">🌱 ${grown}/${grows().length}</span></span></button></div>`;
   $('#backBtn').onclick=toRoom('vakya');
-  $('#ruleCard').onclick=()=>{speech(...rule);say(...rule);mood('happy');};
+  $('#ruleCard').onclick=()=>{if(en){speech('',rule[1],null);say(rule[1],rule[1],null);}else{speech(...rule);say(...rule);}mood('happy');};
   main.querySelectorAll('.lv').forEach(b=>b.onclick=()=>{p.lv=p.lv||{};p.lv.vakya=b.dataset.lv;save();
     main.querySelectorAll('.lv').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));const L=LEVELS[b.dataset.lv];speech(L.np,L.dev,L.en);say(L.np,L.dev,L.en);});
   main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>vStart(b.dataset.a));
@@ -2350,35 +2489,37 @@ function vStart(act){
   const lv=levelOf('vakya');
   if(act==='chitra'){startQuiz({mode:'vchitra',back:openVakya});return;}
   if(act==='grow'){vGrowStart();return;}
-  const pool=act==='sodhau'?QA:vSents(lv);
+  const pool=act==='sodhau'?qas():vSents(lv);
   V={act,lv,list:shuffle(pool).slice(0,V_N),i:0,stars:0,cur:null};
   vNext();
 }
 function vNext(){if(V.i>=V.list.length){vEnd();return;}V.tries=0;V.cur=null;({build:vBuild,ulto:vSilly,sodhau:vAsk})[V.act]();}
 const vBar=()=>`<div class="progress" aria-label="Sentence ${V.i+1} of ${V.list.length}"><i style="width:${V.i/V.list.length*100}%"></i></div>`;
-function carHtml(tile,k,n,o){
+// the engine is the car where the doing word belongs: last in Nepali, straight after "who" in English
+const engAt=w=>EN()?w.findIndex(x=>x.r==='d'):w.length-1;
+function carHtml(tile,k,eng,o){
   const col=tile?(o.colour?ROLES[tile.r][3]:''):(o.hint?ROLES[o.want[k].r][3]:'');
-  const cls=['car',tile?'':'empty',tile&&!o.colour?'plain':'',k===n-1?'engine':'',o.cls&&o.cls[k]||''].filter(Boolean).join(' ');
-  return `<button class="${cls}" data-c="${k}" ${col?`style="--rc:${col}"`:''} aria-label="${tile?esc(tile.rom):'Empty car '+(k+1)}">${k===n-1?'<span class="chim" aria-hidden="true"></span>':''}${tile?`${esc(tile.rom)}<small lang="ne">${tile.dev}</small>`:(o.hint?`<small>${ROLES[o.want[k].r][0]}</small>`:'')}</button>`;
+  const cls=['car',tile?'':'empty',tile&&!o.colour?'plain':'',k===eng?'engine':'',o.cls&&o.cls[k]||''].filter(Boolean).join(' ');
+  return `<button class="${cls}" data-c="${k}" ${col?`style="--rc:${col}"`:''} aria-label="${tile?esc(tile.rom):'Empty car '+(k+1)}">${k===eng?'<span class="chim" aria-hidden="true"></span>':''}${tile?`${esc(tile.rom)}<small lang="ne">${tile.dev}</small>`:(o.hint?`<small${EN()?' lang="ne"':''}>${ROLES[o.want[k].r][EN()?1:0]}</small>`:'')}</button>`;
 }
 // build: tap the word tiles into the train cars in the right order
 function vBuild(){
   screen='vbuild';const s=V.list[V.i],n=s.w.length,colour=V.lv!=='hard',hint=V.lv==='easy';
   if(!V.cur){
     const tiles=[...s.w];
-    if(V.lv==='hard'){const dec=shuffle(SENTS.flatMap(x=>x.w)).find(x=>!s.w.some(y=>y.rom===x.rom));if(dec)tiles.push(dec);}
+    if(V.lv==='hard'){const dec=shuffle(sents().flatMap(x=>x.w)).find(x=>!s.w.some(y=>y.rom===x.rom));if(dec)tiles.push(dec);}
     V.cur={slots:Array(n).fill(null),pool:shuffle(tiles).map(t=>({...t,used:false})),cls:[]};
   }
   const C=V.cur;
   main.innerHTML=`${backBtn('Vakya')}${vBar()}
-   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">${S.english?esc(s.en):'Rel banau!'}<small>Rel banau · build the sentence train</small></div><button class="again" id="again" aria-label="Hear the sentence">🔊</button></div>
-   <div class="train">${C.slots.map((t,k)=>carHtml(t&&t.tile,k,n,{colour,hint,want:s.w,cls:C.cls})).join('')}</div>
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">${EN()?`<span lang="ne">${s.dev}</span><small lang="ne">अंग्रेजीमा रेल बनाऊ</small>`:`${S.english?esc(s.en):'Rel banau!'}<small>Rel banau · build the sentence train</small>`}</div><button class="again" id="again" aria-label="Hear the sentence">🔊</button></div>
+   <div class="train">${C.slots.map((t,k)=>carHtml(t&&t.tile,k,engAt(s.w),{colour,hint,want:s.w,cls:C.cls})).join('')}</div>
    <div class="pool">${C.pool.map((t,k)=>t.used?'':`<button class="tile${colour?'':' plain'}" data-p="${k}" ${colour?`style="--rc:${ROLES[t.r][3]}"`:''}>${esc(t.rom)}<small lang="ne">${t.dev}</small></button>`).join('')}</div>`;
-  const hear=()=>say(s.rom,s.dev,null);
+  const hear=()=>sayT(s.rom,s.dev,s.en);
   $('#backBtn').onclick=openVakya;$('#again').onclick=hear;
   main.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{
     if(C.done)return;const k=+b.dataset.p,slot=C.slots.findIndex(x=>!x);if(slot<0)return;
-    C.pool[k].used=true;C.slots[slot]={tile:C.pool[k],p:k};C.cls=[];say(C.pool[k].rom,C.pool[k].dev,null);
+    C.pool[k].used=true;C.slots[slot]={tile:C.pool[k],p:k};C.cls=[];sayT(C.pool[k].rom,C.pool[k].dev,C.pool[k].rom);
     if(C.slots.every(Boolean))vCheckBuild();else vBuild();
   });
   main.querySelectorAll('.car').forEach(b=>b.onclick=()=>{
@@ -2390,20 +2531,20 @@ function vCheckBuild(){
   const s=V.list[V.i],C=V.cur,ok=C.slots.every((x,k)=>x.tile.rom===s.w[k].rom);
   if(ok){
     C.done=true;C.cls=s.w.map(()=>'good');if(V.tries===0)V.stars++;vBuild();confetti();mood('happy');
-    const p=rnd(PRAISE);speech(p[0]+' '+s.rom,p[1]+' '+s.dev,s.en);say(s.rom,s.dev,null);
+    const p=rnd(PRAISE);speech(p[0]+' '+s.rom,p[1]+' '+s.dev,s.en);sayT(s.rom,s.dev,s.en);
     const v=V;setTimeout(()=>{if(screen==='vbuild'&&V===v){V.i++;vNext();}},2300);return;
   }
   V.tries++;mood('sad');
   if(V.tries>=2){
     C.done=true;C.slots=s.w.map(w=>({tile:C.pool.find(t=>t.rom===w.rom),p:-1}));C.cls=s.w.map(()=>'good');vBuild();
-    speech(s.rom,s.dev,'Like this!');say(s.rom,s.dev,null);const v=V;setTimeout(()=>{if(screen==='vbuild'&&V===v){V.i++;vNext();}},3200);return;
+    speech(s.rom,s.dev,'Like this!');sayT(s.rom,s.dev,s.en);const v=V;setTimeout(()=>{if(screen==='vbuild'&&V===v){V.i++;vNext();}},3200);return;
   }
   // send the wrong ones back to the pile, keep the right ones
-  const engineWrong=C.slots[C.slots.length-1].tile.r!=='d';
+  const engineWrong=C.slots[engAt(s.w)].tile.r!=='d',where=EN()?['Kaam garne shabda ko pachhi!','काम गर्ने शब्द “को?” पछि!','The doing word comes right after who!']:['Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!'];
   C.cls=C.slots.map((x,k)=>x.tile.rom===s.w[k].rom?'good':'bad');
   C.slots=C.slots.map((x,k)=>{if(x.tile.rom===s.w[k].rom)return x;C.pool[x.p].used=false;return null;});
   vBuild();
-  if(engineWrong){speech('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');say('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');}
+  if(engineWrong){speech(...where);say(...where);}
   else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
 }
 // silly sentence: Habre muddled the order; tap two cars to swap them
@@ -2412,17 +2553,17 @@ function vSilly(){
   if(!V.cur){let o;do{o=shuffle(s.w);}while(o.every((x,k)=>x.rom===s.w[k].rom));V.cur={order:o,sel:-1,swaps:0};}
   const C=V.cur,right=C.order.every((x,k)=>x.rom===s.w[k].rom);
   main.innerHTML=`${backBtn('Vakya')}${vBar()}
-   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">Ulto-pulto bhayo!<small>${S.english?esc(s.en)+' · ':''}Tap two cars to swap them</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
-   <div class="train">${C.order.map((t,k)=>carHtml(t,k,n,{colour,cls:C.order.map((x,j)=>right?'good':j===C.sel?'sel':'')})).join('')}</div>`;
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${s.pic}</span><div class="say" style="font-size:1.3rem">Ulto-pulto bhayo!<small>${EN()?`<span lang="ne">${s.dev}</span> · `:S.english?esc(s.en)+' · ':''}Tap two cars to swap them</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
+   <div class="train">${C.order.map((t,k)=>carHtml(t,k,engAt(s.w),{colour,cls:C.order.map((x,j)=>right?'good':j===C.sel?'sel':'')})).join('')}</div>`;
   $('#backBtn').onclick=openVakya;
-  $('#again').onclick=()=>say(C.order.map(x=>x.rom).join(' '),C.order.map(x=>x.dev).join(' '),null);
+  $('#again').onclick=()=>{const r=C.order.map(x=>x.rom).join(' ');sayT(r,C.order.map(x=>x.dev).join(' '),r);};
   main.querySelectorAll('.car').forEach(b=>b.onclick=()=>{
     if(right)return;const k=+b.dataset.c;
-    if(C.sel<0){C.sel=k;say(C.order[k].rom,C.order[k].dev,null);vSilly();return;}
+    if(C.sel<0){C.sel=k;sayT(C.order[k].rom,C.order[k].dev,C.order[k].rom);vSilly();return;}
     if(C.sel!==k){[C.order[C.sel],C.order[k]]=[C.order[k],C.order[C.sel]];C.swaps++;}
     C.sel=-1;
     if(C.order.every((x,j)=>x.rom===s.w[j].rom)){
-      if(C.swaps<=n-1)V.stars++;vSilly();confetti();mood('happy');speech('Milyo! '+s.rom,s.dev,s.en);say(s.rom,s.dev,null);
+      if(C.swaps<=n-1)V.stars++;vSilly();confetti();mood('happy');speech('Milyo! '+s.rom,s.dev,s.en);sayT(s.rom,s.dev,s.en);
       const v=V;setTimeout(()=>{if(screen==='vsilly'&&V===v){V.i++;vNext();}},2300);
     }else vSilly();
   });
@@ -2431,24 +2572,25 @@ function vSilly(){
 // ask and answer: hear the question, pick the answer that fits
 function vAsk(){
   screen='vask';const qa=V.list[V.i],c=Math.min(3,LEVELS[V.lv].choices),hide=V.lv==='hard'&&canListen();
-  if(!V.cur)V.cur={opts:shuffle([qa,...shuffle(QA.filter(x=>x!==qa)).slice(0,c-1)]),lock:false};
+  if(!V.cur)V.cur={opts:shuffle([qa,...shuffle(qas().filter(x=>x!==qa)).slice(0,c-1)]),lock:false};
   const C=V.cur;
   main.innerHTML=`${backBtn('Vakya')}${vBar()}
-   <div class="q${hide?' listenonly':''}"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${qa[3]}</span><div class="say" id="qSay">${hide?'Suna ra jawaaf deu!<small>Listen and answer</small>':`${esc(qa[0])}<small lang="ne">${qa[1]}${S.english&&V.lv==='easy'?` · ${esc(qa[2])}`:''}</small>`}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
+   <div class="q${hide?' listenonly':''}"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${qa[3]}</span><div class="say" id="qSay">${hide?'Suna ra jawaaf deu!<small>Listen and answer</small>':`${esc(qa[0])}<small lang="ne">${!EN()||V.lv==='easy'?qa[1]:''}${S.english&&V.lv==='easy'&&!EN()?` · ${esc(qa[2])}`:''}</small>`}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <button class="btn ghost" id="hearAns" style="align-self:center">👂 Hear the answers</button>
-   <div class="ansopts">${C.opts.map((o,k)=>`<button class="ansopt" data-k="${k}" style="animation-delay:${k*80}ms">${esc(o[4])}<small lang="ne">${o[5]}${S.english&&V.lv==='easy'?` · ${esc(o[6])}`:''}</small></button>`).join('')}</div>`;
-  const ask=()=>{if(!hide)speech(qa[0],qa[1],qa[2]);say(qa[0],qa[1],V.lv==='easy'?qa[2]:null);};
+   <div class="ansopts">${C.opts.map((o,k)=>`<button class="ansopt" data-k="${k}" style="animation-delay:${k*80}ms">${esc(o[4])}<small lang="ne">${!EN()||V.lv==='easy'?o[5]:''}${S.english&&V.lv==='easy'&&!EN()?` · ${esc(o[6])}`:''}</small></button>`).join('')}</div>`;
+  // an English learner sees the Nepali help on the easy level only, like the English help for a Nepali learner
+  const ask=()=>{if(!hide)speech(qa[0],!EN()||V.lv==='easy'?qa[1]:'',qa[2]);say(qa[0],qa[1],V.lv==='easy'||EN()?qa[2]:null);};
   $('#backBtn').onclick=openVakya;$('#again').onclick=ask;
-  $('#hearAns').onclick=()=>C.opts.forEach((o,k)=>say(o[4],o[5],null,{keep:k>0}));
+  $('#hearAns').onclick=()=>C.opts.forEach((o,k)=>sayT(o[4],o[5],o[6],{keep:k>0}));
   main.querySelectorAll('.ansopt').forEach(b=>b.onclick=()=>{
     if(C.lock)return;const o=C.opts[+b.dataset.k];
     if(o===qa){
       C.lock=true;if(V.tries===0)V.stars++;b.classList.add('right');confetti();mood('happy');
-      $('#qSay').innerHTML=`${esc(qa[0])}<small lang="ne">${qa[1]} · ${esc(qa[2])}</small>`;
-      speech(qa[4],qa[5],qa[6]);say(qa[4],qa[5],null);const v=V;setTimeout(()=>{if(screen==='vask'&&V===v){V.i++;vNext();}},2300);
+      $('#qSay').innerHTML=EN()?`${esc(qa[2])}<small lang="ne">${qa[1]}</small>`:`${esc(qa[0])}<small lang="ne">${qa[1]} · ${esc(qa[2])}</small>`;
+      speech(qa[4],qa[5],qa[6]);sayT(qa[4],qa[5],qa[6]);const v=V;setTimeout(()=>{if(screen==='vask'&&V===v){V.i++;vNext();}},2300);
     }else{
       V.tries++;b.classList.add('wrong');b.disabled=true;mood('sad');
-      if(V.tries>=2){const rb=main.querySelector(`.ansopt[data-k="${C.opts.indexOf(qa)}"]`);rb.classList.add('hint');speech(qa[4],qa[5],'This one!');say(qa[4],qa[5],null);}
+      if(V.tries>=2){const rb=main.querySelector(`.ansopt[data-k="${C.opts.indexOf(qa)}"]`);rb.classList.add('hint');speech(qa[4],qa[5],EN()?qa[6]:'This one!');sayT(qa[4],qa[5],qa[6]);}
       else{speech(RETRY[0],RETRY[1],RETRY[2]);say(RETRY[0],RETRY[1],RETRY[2]);}
     }
   });
@@ -2462,34 +2604,34 @@ function vEnd(){
 }
 // grow: a sentence gets one more word each time; tap the gap where it goes
 function vGrowStart(){
-  const p=P();let i=GROW.findIndex((_,k)=>bestOf(p,'badhau',k)<3);if(i<0)i=Math.floor(Math.random()*GROW.length);
+  const p=P();let i=grows().findIndex((_,k)=>bestOf(p,'badhau',k)<3);if(i<0)i=Math.floor(Math.random()*grows().length);
   V={act:'grow',g:i,step:1,stars:0,tries:0};vGrow();
 }
 function vGrow(){
-  screen='vgrow';const g=GROW[V.g],prev=g.steps[V.step-1],next=g.steps[V.step];
-  const add=next.find(x=>!prev.some(y=>y.rom===x.rom)),want=next.indexOf(add),n=prev.length,eng=prev[n-1].r==='d'?n:n+1;
+  screen='vgrow';const g=grows()[V.g],prev=g.steps[V.step-1],next=g.steps[V.step];
+  const add=next.find(x=>!prev.some(y=>y.rom===x.rom)),want=next.indexOf(add),n=prev.length,eng=EN()?prev.findIndex(x=>x.r==='d'):prev[n-1].r==='d'?n-1:-1;
   const gap=k=>`<button class="gap${V.tries>=2&&k===want?' hint':''}" data-g="${k}" aria-label="Put it here">+</button>`;
   main.innerHTML=`${backBtn('Vakya')}<div class="progress"><i style="width:${(V.step-1)/(g.steps.length-1)*100}%"></i></div>
-   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${g.pic}</span><div class="say" style="font-size:1.3rem">${esc(sRom(prev))}<small lang="ne">${sDev(prev)}${S.english?' · '+esc(g.en[V.step-1]):''}</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
+   <div class="q"><span class="pic" style="font-size:3.4rem;line-height:1" aria-hidden="true">${g.pic}</span><div class="say" style="font-size:1.3rem">${esc(sRom(prev))}<small lang="ne">${sDev(prev)}${S.english&&!EN()?' · '+esc(g.en[V.step-1]):''}</small></div><button class="again" id="again" aria-label="Hear it">🔊</button></div>
    <div class="train">${gap(0)}${prev.map((t,k)=>carHtml(t,k,eng,{colour:true})+gap(k+1)).join('')}</div>
-   <h2 class="sub" style="text-align:center">Yo kahaa jaanchha? <small>Where does this word go?${S.english?' · '+esc(g.en[V.step]):''}</small></h2>
+   <h2 class="sub" style="text-align:center">Yo kahaa jaanchha? <small>Where does this word go?${EN()?' · '+sDev(next):S.english?' · '+esc(g.en[V.step]):''}</small></h2>
    <div class="pool"><span class="tile new" style="--rc:${ROLES[add.r][3]}">${esc(add.rom)}<small lang="ne">${add.dev}</small></span></div>`;
-  $('#backBtn').onclick=openVakya;$('#again').onclick=()=>say(sRom(prev),sDev(prev),null);
+  $('#backBtn').onclick=openVakya;$('#again').onclick=()=>sayT(sRom(prev),sDev(prev),sRom(prev));
   main.querySelectorAll('.gap').forEach(b=>b.onclick=()=>{
     if(+b.dataset.g===want){
       if(V.tries===0)V.stars++;V.step++;V.tries=0;confetti();mood('happy');
-      speech(sRom(next),sDev(next),g.en[V.step-1]);say(sRom(next),sDev(next),null);
+      speech(sRom(next),sDev(next),g.en[V.step-1]);sayT(sRom(next),sDev(next),sRom(next));
       const v=V;if(V.step>=g.steps.length){setTimeout(()=>{if(screen==='vgrow'&&V===v)vGrowEnd();},1800);main.querySelectorAll('.gap').forEach(x=>x.disabled=true);}
       else setTimeout(()=>{if(screen==='vgrow'&&V===v)vGrow();},1500);
     }else{V.tries++;b.classList.add('wrong');b.disabled=true;mood('sad');
       if(V.tries>=2)vGrow();
-      if(add.r==='d'){speech('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');}else speech(RETRY[0],RETRY[1],RETRY[2]);
+      if(add.r==='d'){if(EN())speech('Kaam garne shabda ko pachhi!','काम गर्ने शब्द “को?” पछि!','The doing word comes right after who!');else speech('Kaam garne shabda antyama!','काम गर्ने शब्द अन्त्यमा!','The doing word goes at the end!');}else speech(RETRY[0],RETRY[1],RETRY[2]);
       say(RETRY[0],RETRY[1],null);}
   });
-  if(V.tries===0){say(sRom(prev),sDev(prev),null,{});speech(sRom(prev),sDev(prev),'Let’s make it longer!');}
+  if(V.tries===0){sayT(sRom(prev),sDev(prev),sRom(prev));speech(sRom(prev),sDev(prev),'Let’s make it longer!');}
 }
 function vGrowEnd(){
-  const p=P(),key='badhau:'+V.g,g=GROW[V.g],last=g.steps[g.steps.length-1];let nb=false;
+  const p=P(),key='badhau:'+V.g,g=grows()[V.g],last=g.steps[g.steps.length-1];let nb=false;
   if(V.stars>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=V.stars;nb=true;}
   save();earn(V.stars);
   endCard(V.stars,3,{trophy:'🌱',title:sRom(last),titleDev:sDev(last),sub:g.en[g.en.length-1],newBest:nb,again:vGrowStart,back:openVakya,backLabel:'Vakya'});
@@ -2549,14 +2691,15 @@ function openTrace(it){
 
 // ---------- quiz engine: play, check, today's practice, listen-and-tap flashcards, Vakya picture rounds ----------
 // each question is an entry {t, it, pool (entries to draw wrong answers from), lv (level), face (how answers are labelled), hide (listen only)}
-const ENDING_DEV={haru:'हरू',ko:'को',ma:'मा',lai:'लाई',le:'ले',sanga:'सँग'};
-const ENDING_EN={haru:'many',ko:'whose',ma:'in',lai:'to / for',le:'did it',sanga:'with'};
+const ENDING_DEV={haru:'हरू',ko:'को',ma:'मा',lai:'लाई',le:'ले',sanga:'सँग',s:'धेरै',ing:'गर्दै',ed:'भइसक्यो','’s':'को'};
+const ENDING_EN={haru:'many',ko:'whose',ma:'in',lai:'to / for',le:'did it',sanga:'with',s:'many',ing:'doing now',ed:'already happened','’s':'whose'};
 function questionLine(t,it){
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
   if(t.kind==='yesno')return [it[0],it[1],it[2]];
   if(t.kind==='ending')return ['Kun tukra milchha?','कुन टुक्रा मिल्छ?','Which ending fits?'];
   if(t.q==='kun')return [`${cap(it[0])} kun ho?`,`${it[1]} कुन हो?`,`Which one is ${it[2]}?`];
   if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
+  if(t.id==='abc')return [`${cap(it[5])}: kun akshar?`,`${it[6]} (${it[5]}) कुन अक्षरबाट सुरु हुन्छ?`,`Which letter does “${it[5]}” start with?`];
   if(t.kind==='letter')return [`“${it[0]}” kun akshar?`,`${it[1]}। ${it[1]} कुन अक्षर?`,`Which letter says “${it[0]}”?`];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,whereEn(it[2])];
 }
@@ -2576,15 +2719,14 @@ function startQuiz(o){
     const t=o.t;entries=mk(t,t.items,'check',{face:'hard',choices:3})(spread(t.items,CHECK_N));
   }else if(o.mode==='vchitra'){
     const lv=levelOf('vakya'),words=vSents(lv).map(s=>[s.rom,s.dev,s.en,s.pic]);o.lv=lv;
-    entries=mk(VAKYA_T,words,lv,{hide:lv==='hard',face:'hard'})(spread(words,V_N));
+    entries=mk(vakyaT(),words,lv,{hide:lv==='hard',face:'hard'})(spread(words,V_N));
   }else if(o.mode==='listen'){
     entries=spread(o.cards,Math.min(8,o.cards.length)).map(c=>({...c,pool:o.cards,lv:'listen',face:'hard',hide:true,choices:3,pick:true}));
   }else if(o.mode==='daily'){
     const one=t=>{const lv=levelOf(t.id),w=wordsFor(t,lv);return {t,it:rnd(w),pool:w.map(x=>({t,it:x})),lv,face:lv};};
     const vw=vSents(levelOf('vakya')).map(s=>[s.rom,s.dev,s.en,s.pic]);
-    // an English learner gets word topics only: the letters, grammar and sentences are about Nepali
-    entries=EN()?shuffle(WORD_T()).slice(0,8).map(one):shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
-      {t:VAKYA_T,it:rnd(vw),pool:vw.map(x=>({t:VAKYA_T,it:x})),lv:levelOf('vakya'),face:'hard'}]);
+    entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
+      {t:vakyaT(),it:rnd(vw),pool:vw.map(x=>({t:vakyaT(),it:x})),lv:levelOf('vakya'),face:'hard'}]);
   }else if(o.mode==='yatra'){
     // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
     const used=new Set();
@@ -2606,6 +2748,8 @@ function distractors(e,n){
 // what an answer button shows: easy = picture + Nepali + English, medium = picture + Nepali, hard = picture only.
 // Whatever is hidden is revealed (.lab) once the button is answered.
 function optionFace(t,o,lv){
+  // the alphabet asks which letter a word starts with, so its buttons show only the letter until answered
+  if(t.id==='abc')return pictureOf(t,o)+(lv!=='hard'?`<span class="w">${o[0]}</span>`:'')+`<span class="lab">${o[3]} ${o[5]}</span>`;
   if(t.kind==='letter'){
     const ex=`${o[3]} ${o[5]}`;
     return pictureOf(t,o)+(lv!=='hard'?`<span class="w">${o[0]}</span>`:'')+(lv==='easy'?`<span class="w-en">${ex}</span>`:'')
@@ -2633,17 +2777,17 @@ function renderQ(){
   const [rom,dev,en]=kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
   const hide=e.hide&&canListen()&&!['num','yesno','ending'].includes(kind);
   const showEn=S.english&&e.lv==='easy';
-  const face=o=>kind==='yesno'?`<span class="pic">${o.it[3]}</span><span class="w">${o.it[0]}</span>${S.english?`<span class="w-en">${esc(o.it[2])}</span>`:''}`
+  const face=o=>kind==='yesno'?`<span class="pic">${o.it[3]}</span><span class="w">${o.it[EN()?2:0]}</span>${EN()?`<span class="w-en" lang="ne">${o.it[1]}</span>`:S.english?`<span class="w-en">${esc(o.it[2])}</span>`:''}`
     :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lv!=='hard'?' · '+esc(o.it[2]):''}</span>`
     :optionFace(o.t,o.it,e.face);
   main.innerHTML=`${Q.back?backBtn('Back'):''}<div class="progress" aria-label="Question ${Q.i+1} of ${Q.n}"><i style="width:${Q.i/Q.n*100}%"></i></div>
-   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?`${esc(en)}<small lang="ne">${dev}</small>`:`${esc(rom)}<small lang="ne">${dev}${showEn?` · ${esc(en)}`:''}</small>`)}</div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?`${esc(en)}${e.lv==='easy'?`<small lang="ne">${dev}</small>`:''}`:`${esc(rom)}<small lang="ne">${dev}${showEn?` · ${esc(en)}`:''}</small>`)}</div>
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
    ${kind==='num'?`<div class="counter">${countHtml(it[3],rnd(COUNT_PICS),`aria-label="${it[3]} things"`)}</div>`:''}
    ${kind==='yesno'||kind==='ending'?`<div class="counter"><span class="pic" style="font-size:4.6rem;line-height:1.1" aria-hidden="true">${it[3]}</span></div>`:''}
-   ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}</div></div>`:''}
+   ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}${EN()?`<small lang="ne">${it[1]}</small>`:''}</div></div>`:''}
    <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
-  const ask=()=>{if(!hide)speech(rom,dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
+  const ask=()=>{if(!hide)speech(rom,EN()&&e.lv!=='easy'?'':dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
     if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,e.lv==='easy'||EN()?en:null);};
   if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
@@ -2729,10 +2873,10 @@ function renderProgress(p){
    <div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
     <tbody>${DOORS.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>
    <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
-    <tbody>${deckTopics.map(t=>`<tr><td>${t.kind==='letter'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
+    <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
-   <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${GROW.filter((_,i)=>bestOf(p,'badhau',i)).length}/${GROW.length}</p>
+   <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>
    <p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length}) · <b>Stickers:</b> ${stickers}/${stickerItems().length}</p>
    <p><b>Gems:</b> 💎 ${gemsOf(p)} to spend · ${ITEMS.filter(x=>owns(p,x)&&!x.free).length} of ${ITEMS.filter(x=>!x.free).length} shop things owned</p>
    <p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>
@@ -2740,7 +2884,7 @@ function renderProgress(p){
    ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
    <h3>Your flashcard deck for ${esc(p.name)}</h3>
    <p>Tick words for ${esc(p.name)} to practise. They appear in Patti as the “Thulo maanchhe” (grown-ups’) deck. ${custom.size} chosen.</p>
-   <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.kind==='letter'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
+   <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.id==='akshar'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
    <div class="cd" id="cdWords"></div>`;
   const drawCd=()=>{const t=TOPICS.find(x=>x.id===$('#cdTopic').value);
     $('#cdWords').innerHTML=t.items.map(it=>{const k=keyOf(t,it);return `<label><input type="checkbox" data-key="${esc(k)}" ${custom.has(k)?'checked':''}> ${t.kind==='color'?`<i class="dot" style="background:${it[3]}"></i>`:t.kind==='num'?it[3]:t.kind==='letter'?it[1]:it[3]} ${esc(it[0])}</label>`;}).join('');

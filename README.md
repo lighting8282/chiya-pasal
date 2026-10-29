@@ -11,7 +11,24 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 - The Devanagari sits underneath as the help, and the romanized spelling is hidden.
 - Habre's other lines are in Nepali when they have no English.
 - It covers the rooms, the trips, the 19 word topics, flashcards, memory match, stickers, daily practice and the stories, where each English word lights up as it is read and can be tapped.
-- The letters, grammar and sentence train teach Nepali, so they are left out for now.
+- The Nepali help shows on the easy level and after answering, so the child works from the English.
+
+The sections that teach Nepali have English versions instead:
+- **The alphabet:** A–Z, capital and small, each with a picture word (A a 🍎 apple स्याउ). It has Learn cards, tracing, and "Which letter does *apple* start with?".
+- **Grammar:** twelve lessons with the rule explained in Nepali:
+  - plural *-s*
+  - big and small
+  - colour + thing
+  - *on / under / in / next to*
+  - *-ing*
+  - opposites
+  - *’s*
+  - *Is it…? Yes, it is*
+  - *Is there…? Yes, there is*
+  - question words
+  - *-ed*
+  - a "fix the ending" game
+- **The sentence train:** English sentences in English order (who → doing word → what → where). The engine sits straight after "who", and the child builds the English from the Nepali. Grow-a-sentence and ask-and-answer are in English too.
 
 A grown-up can change the choice later under "Change player". The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
 
