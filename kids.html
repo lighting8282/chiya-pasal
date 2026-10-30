@@ -304,6 +304,11 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .daily b{font-size:1.5rem;display:block;line-height:1.1}
 .daily small{display:block;font-size:.9rem}
 .noscript .dev:empty,.noscript small:empty{display:none}
+.moment{cursor:pointer}.moment .story-pic{font-size:6rem}.moment b{font-size:2.6rem}
+.road{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;font-size:1.6rem}
+.road i{width:14px;height:14px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal}
+.road i.past{background:var(--green)}.road i.now{width:auto;height:auto;background:none;font-size:1.8rem}
+body.little .speech .en{display:none}
 .why{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff7e0;border:3px solid #ffcf5c;border-radius:20px;padding:10px 14px}
 .why>span:first-child{font-size:2rem}
 .why small{display:block;color:var(--soft)}
@@ -1105,7 +1110,7 @@ function cleanTree(n){
 }
 const scriptObs=new MutationObserver(ms=>{if(!document.body.classList.contains('noscript'))return;
   ms.forEach(m=>m.type==='characterData'?cleanText(m.target):m.addedNodes.forEach(cleanTree));});
-function applyScript(){const on=noScript();document.body.classList.toggle('noscript',on);if(on)cleanTree(document.querySelector('.app'));}
+function applyScript(){const on=noScript();document.body.classList.toggle('noscript',on);document.body.classList.toggle('little',!!P()&&isLittle());if(on)cleanTree(document.querySelector('.app'));}
 function renderTop(){
   const p=P();
   $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
@@ -1675,8 +1680,10 @@ function roomAsk(){
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
   $('#rProg i').style.width=RF.i/findN()*100+'%';
   // an English learner finds it from the English alone; the Nepali shows once it is found
-  $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
-  speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
+  if(isLittle()){$('#qSay').innerHTML=EN()?`${esc(cap(it[2]))}?`:`${esc(cap(it[0]))}?<small lang="ne">${it[1]}${S.english?` · ${esc(it[2])}`:''}</small>`;
+    speech(cap(it[0])+'?',EN()?'':it[1]+'?',cap(it[2])+'?');say(it[0],it[1],EN()?it[2]:null);}
+  else{$('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
+  speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);}
 }
 function roomPick(b){
   if(RF.lock)return;
@@ -1897,14 +1904,14 @@ const newPostcard=p=>TRIP_ENDS.find(te=>te.done(p)&&!sentPostcard(p,te));
 function openPostcard(te,fresh,back){
   if(!P()){goWho();return;}
   screen='postcard';const p=P(),en=EN(),sv=te.souvenir;
-  const line=([r,d,e])=>en?`<p><b>${e}</b><small lang="ne">${d}</small></p>`:`<p><b>${r}</b><small><span lang="ne">${d}</span> · ${e}</small></p>`;
+  const line=([r,d,e])=>en?`<p><b>${e}</b><small lang="ne">${d}</small></p>`:`<p><b>${r}</b><small><span lang="ne">${d} · </span>${e}</small></p>`;
   main.innerHTML=`${fresh?'':backBtn(back===openMap?'🗺️ Naksa':back===openCollection?'📌 Sangalo':'🛋️ Baithak')}
    <h1>📮 Postcard <small lang="ne">पोस्टकार्ड · ${fresh?'You finished the map!':'to Hajuraama'}</small></h1>
    <div class="pcard"><div class="pc-pic" style="--pbg:${te.bg}" aria-hidden="true">${te.pic}<span>${en?te.place[2]:te.place[0]}</span></div>
-    <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${te.note.map(line).join('')}
+    <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${(isLittle()?te.note.slice(0,1):te.note).map(line).join('')}
      <p class="pc-sign"><b>${en?'Love, Habre and Mimi':'Maya, Habre ra Mimi'}</b><small lang="ne">माया, हाब्रे र मिमी</small></p></div></div>
    <div class="souv"><span aria-hidden="true">${sv.icon}</span><span><b>${en?sv.en:sv.np}</b><small lang="ne">${sv.dev}${en?'':' · '+sv.en}</small>
-    <small>${fresh?'A souvenir to take home! It goes in the glass case in the living room, and the postcard on the board.':'In the glass case in the living room.'}</small></span></div>
+    ${isLittle()?'':`<small>${fresh?'A souvenir to take home! It goes in the glass case in the living room, and the postcard on the board.':'In the glass case in the living room.'}</small>`}</span></div>
    ${fresh?`<div class="btns"><button class="btn" style="background:var(--purple)" id="pcSend">📮 Pathau! · Send it</button></div>`:''}`;
   if(fresh){
     $('#pcSend').onclick=()=>{p.postcards={...(p.postcards||{}),[te.id]:today()};save();confetti();setTimeout(confetti,500);
@@ -1948,7 +1955,7 @@ function stopDone(p,s){
   if(s.k==='play')return passed(p,s.t,s.lv)||({r1:LV_KEYS,r2:['medium','hard']}[s.lv]||[]).some(l=>bestOf(p,s.t,l)>=Math.ceil(LEVELS[l].n*0.7));
   if(s.k==='check')return checked(p,T(s.t));
   if(s.k==='story'){
-    if(bestOf(p,'kathaa',s.id)>=1)return true;
+    if(bestOf(p,'kathaa',s.id)>=1||littleSkip(p,s))return true;
     // a journey part counts as done for players who were already past it before the story was added
     const i=s.j?STOPS.indexOf(s):-1,nx=STOPS[i+1];return i>=0&&!!nx&&nx.k!=='story'&&stopDone(p,nx);
   }
@@ -1963,6 +1970,7 @@ function stopFace(s){
   if(s.k==='play'&&isRound(s.lv)){const t=T(s.t),R=ROUNDS[s.lv];return [R.icon,R.np,R.dev,`${R.en} · ${t.en.toLowerCase()}`,''];}
   if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.id==='akshar'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
   if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
+  if(s.k==='story'&&s.j&&isLittle()){const m=MOMENTS[s.r.id];return [m[0],m[1],m[2],m[3],'👀'];}
   if(s.k==='story'){const st=storyOf(s.id);return st.journey?[st.icon,JOURNEY_PART[st.part][0],JOURNEY_PART[st.part][1],'Story: '+JOURNEY_PART[st.part][2].toLowerCase(),'📖']:[st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
   if(s.k==='vakya'){const a=V_ACTS.find(x=>x.id===s.a),L=LEVELS[s.lv];return [a.icon,a.np,a.dev,`${a.en} · ${L.en.toLowerCase()}`,L.icon];}
   if(s.k==='boss')return ['🏆','Thulo jaanch','ठूलो जाँच',`Big check: ${s.r.en.toLowerCase()}`,''];
@@ -1976,6 +1984,7 @@ function goStop(s){
     // the first time a round is played, see its new words first
     if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t,round:s.lv});}
   }else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
+  else if(s.k==='story'&&s.j&&isLittle())openMoment(s.r.id,()=>{const p=P();if(bestOf(p,'kathaa',s.id)<1){p.best=p.best||{};p.best['kathaa:'+s.id]=1;save();earn(1);}if(!tripBack())openMap();});
   else if(s.k==='story')readStory(storyOf(s.id));
   else if(s.k==='vakya'){p.lv.vakya=s.lv;save();vStart(s.a);}
   else if(s.k==='boss'){
@@ -2002,14 +2011,14 @@ function openPath(rid){
   if(!placeOpen(p,ri)){openMap();return;}
   screen='yatra';
   const moved=at>prev;y.at=at;y.seen=1;save();
-  const first=regionFirst(r),list=STOPS.filter(s=>s.r===r),H=list.length*104;
+  const first=regionFirst(r),list=STOPS.filter(s=>s.r===r&&!littleSkip(p,s)),H=list.length*104;
   const xs=list.map((_,k)=>Math.round(50+30*Math.sin((first+k)*0.95)));
   let d=`M${xs[0]} 0L${xs[0]} 52`;
   for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
   d+=`L${xs[xs.length-1]} ${H}`;
   // optional side stories sit beside the path, next to the practice rounds and the big check, open any time
-  const sideAt={},sides=r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
-  const rows=list.map((s,k)=>{const i=first+k,f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
+  const sideAt={},sides=isLittle()?[]:r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
+  const rows=list.map((s,k)=>{const i=STOPS.indexOf(s),f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
     const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4],sid=sideAt[k],st=sid&&STORIES.find(x=>x.id===sid);
     const side=st?`<button class="xstory${bestOf(p,'kathaa',sid)>=1?' read':''}" style="left:${xs[k]>50?20:80}%;top:52px" data-side="${sid}" aria-label="Extra story: ${esc(st.en)}"><span class="xd" aria-hidden="true">${st.icon}</span><span class="xl">${EN()?st.en:st.np}${bestOf(p,'kathaa',sid)>=1?' ✓':''}</span></button>`
       :`<span class="deco" style="left:${xs[k]>50?16:84}%;top:52px" aria-hidden="true">${r.deco[k%r.deco.length]}</span>`;
@@ -2018,16 +2027,16 @@ function openPath(rid){
       ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
       <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
       <span class="lb">${esc(EN()?f[3].split(' · ')[0]:f[1])}</span></button></div>`;}).join('');
-  const before=ri?YATRA[ri-1]:null,after=YATRA[ri+1],done=Math.max(0,Math.min(at-first,list.length));
+  const before=ri?YATRA[ri-1]:null,after=YATRA[ri+1],done=list.filter(s=>STOPS.indexOf(s)<at).length;
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${list.length}</small></h1>
-   <div class="btns" style="justify-content:flex-start;margin-top:-6px"><button class="btn ghost" id="jBtn">📖 Kathaa · The story so far</button></div>
+   ${isLittle()?'':`<div class="btns" style="justify-content:flex-start;margin-top:-6px"><button class="btn ghost" id="jBtn">📖 Kathaa · The story so far</button></div>`}
    <div class="trail">
     <div class="trail-end"><span class="pic" aria-hidden="true">${before?before.icon:'🏠'}</span>${before?before.np:'Habreko ghar'}<small>${before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
     <div class="trail-end"><span class="pic" aria-hidden="true">${after?after.icon:'🏔️🚩'}</span>${after?after.np:'Himalko tuppo'}<small>${after?(at>=regionEnd(ri)?'Open now!':'Opens when you finish here'):'The top of the mountain'}</small></div>
    </div>`;
   main.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>goStop({k:'story',id:b.dataset.side,r}));
-  $('#jBtn').onclick=openJourney;
+  if($('#jBtn'))$('#jBtn').onclick=openJourney;
   $('#backBtn').onclick=openMap;
   main.querySelectorAll('.stop').forEach(b=>b.onclick=()=>{
     const i=+b.dataset.i,s=STOPS[i],f=stopFace(s);
@@ -2055,7 +2064,7 @@ const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17]
 function openMap(){
   if(!P()){goWho();return;}
   {const pc=newPostcard(P());if(pc){openPostcard(pc,true);return;}}
-  if(!P().introSeen){P().introSeen=1;save();readStory(JOURNEY_INTRO);return;}
+  if(!P().introSeen){P().introSeen=1;save();if(isLittle())openMoment('ghar',()=>goHome());else readStory(JOURNEY_INTRO);return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
   const p=P(),y=p.yatra=p.yatra||{},stars=starsOf(p),at=yatraAt(p),gate=stars>=GATE;
   const open=YATRA.map((_,i)=>placeOpen(p,i)),nOpen=open.filter(Boolean).length;
@@ -2082,14 +2091,14 @@ function openMap(){
    </div>
    <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>
    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
-   <button class="daily jstory" id="jBtn"><span class="ic" aria-hidden="true">📖</span><span><b>Habreko kathaa</b><small>The story so far: hear it again any time</small></span></button>
+   ${isLittle()?'':`<button class="daily jstory" id="jBtn"><span class="ic" aria-hidden="true">📖</span><span><b>Habreko kathaa</b><small>The story so far: hear it again any time</small></span></button>`}
    ${shelved('patti')?'':`<button class="daily patti" id="pattiBtn"><span class="ic" aria-hidden="true">🃏</span><span><b>Patti</b><small>Flashcards and memory match: train any time${known?` · ${known} words known`:''}</small></span></button>`}
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
      <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
      <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
   $('#dailyBtn').onclick=startDaily;
   if($('#pattiBtn'))$('#pattiBtn').onclick=openPatti;
-  $('#jBtn').onclick=openJourney;
+  if($('#jBtn'))$('#jBtn').onclick=openJourney;
   $('#wardBtn').onclick=()=>openShop();
   main.querySelectorAll('.place').forEach(b=>b.onclick=()=>{
     const k=+b.dataset.n,o=nodes[k];
@@ -2118,7 +2127,7 @@ function goHome(quiet){
        <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span>${o.icon}</span></span><span class="knob"></span></span></span>
        <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;};
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Habreko ghar <small>हाब्रेको घर · Pick a room</small></h1>
-   ${gate?'':`<button class="why" id="whyBtn"><span aria-hidden="true">👵🏔️</span><span><b>Hajuraamalaai bhetna jaana, pahile shabda sikau!</b><small lang="ne">हजुरआमालाई भेट्न जान, पहिले शब्द सिकौं!</small><small>To visit Grandma, first learn words here. Find things in the rooms for ★ stars: ${stars} of ${GATE}. Tap to hear the story.</small></span></button>`}
+   ${gate?'':isLittle()?`<button class="why" id="whyBtn" aria-label="${stars} of ${GATE} stars to go to Grandma"><span aria-hidden="true">👵🏔️</span><span><b>⭐ ${stars} / ${GATE}</b></span></button>`:`<button class="why" id="whyBtn"><span aria-hidden="true">👵🏔️</span><span><b>Hajuraamalaai bhetna jaana, pahile shabda sikau!</b><small lang="ne">हजुरआमालाई भेट्न जान, पहिले शब्द सिकौं!</small><small>To visit Grandma, first learn words here. Find things in the rooms for ★ stars: ${stars} of ${GATE}. Tap to hear the story.</small></span></button>`}
    <div class="house">
     <div class="roof" aria-hidden="true"><span class="gajur"></span><span class="tier t2"></span><span class="tier t1"><span class="sign">Habreko ghar<small>हाब्रेको घर · Habre’s house</small></span></span></div>
     <div class="walls">
@@ -2135,7 +2144,7 @@ function goHome(quiet){
        :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
   main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');sayT(o.np,o.dev,o.en);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
   $('#backBtn').onclick=openMap;
-  if($('#whyBtn'))$('#whyBtn').onclick=()=>readStory(JOURNEY_INTRO);
+  if($('#whyBtn'))$('#whyBtn').onclick=()=>isLittle()?openMoment('ghar',()=>goHome()):readStory(JOURNEY_INTRO);
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
     const en=`Collect ${GATE-stars} more stars in the rooms to open the gate!`;
@@ -2678,6 +2687,24 @@ const LITTLE_WORDS={
  'Habre ra bandar syau baadchhan.':['saathi','साथी','friend'],
 };
 const isLittle=()=>ageOf(P()).id==='little';
+// Ages 3-5 get no story to read: each section opens with one picture and one word instead (a "moment"), and a row of
+// dots from Habre's house to Hajuraama shows how close he is. The rest of the journey's story stops are skipped.
+const MOMENTS={bagaicha:['🌻','Bagaicha','बगैंचा','garden'],gaaun:['🏘️','Gaaun','गाउँ','village'],bazaar:['🛍️','Bazaar','बजार','market'],
+ mandir:['🛕','Mandir','मन्दिर','temple'],jangal:['🌲','Jangal','जङ्गल','forest'],taal:['🏞️','Taal','ताल','lake'],
+ chidiyakhana:['🦒','Chidiyakhaana','चिडियाखाना','zoo'],bagaan:['🍊','Suntala','सुन्तला','oranges'],pahad:['⛰️','Pahaad','पहाड','hills'],
+ himal:['👵🏔️','Hajuraama!','हजुरआमा!','Grandma!'],ghar:['✉️👵🏔️','Hajuraama!','हजुरआमा!','Grandma!']};
+const littleSkip=(p,s)=>s.k==='story'&&!!s.j&&ageOf(p).id==='little'&&!/_1$/.test(s.id);
+// the moment: a big picture, its word read aloud, the road to Hajuraama, and one big button
+function openMoment(rid,onGo){
+  screen='moment';const m=MOMENTS[rid],ri=YATRA.findIndex(r=>r.id===rid);
+  const road=['🏠',...YATRA.map((r,k)=>`<i class="${k<ri?'past':k===ri?'now':''}">${k===ri?r.icon:''}</i>`),'👵'].map(x=>x.startsWith('<')?x:`<span>${x}</span>`).join('');
+  main.innerHTML=`<div class="big story moment"><span class="story-pic" aria-hidden="true">${m[0]}</span><b>${m[1]}</b><span class="dev" lang="ne">${m[2]}</span><span class="en">${m[3]}</span></div>
+   <div class="road" aria-hidden="true">${road}</div>
+   <div class="btns"><button class="btn" style="background:var(--green);font-size:2rem;padding:10px 40px" id="mGo" aria-label="Go on">${rid==='ghar'?'🏠':'▶'}</button></div>`;
+  const hear=()=>{speech(m[1],m[2],m[3]);say(m[1],m[2],m[3]);};
+  main.querySelector('.moment').onclick=hear;$('#mGo').onclick=onGo;hear();mood('happy');
+}
+
 // the one-word version of a story page: [picture, word, its Devanagari, its English]
 function littlePage(pg,st){
   const pick=LITTLE_WORDS[pg[1]];if(pick)return [pick[3]||pg[0],pick[0],pick[1],pick[2]];
@@ -3189,6 +3216,7 @@ function openTrace(it){
 const ENDING_DEV={haru:'हरू',ko:'को',ma:'मा',lai:'लाई',le:'ले',sanga:'सँग',s:'धेरै',ing:'गर्दै',ed:'भइसक्यो','’s':'को'};
 const ENDING_EN={haru:'many',ko:'whose',ma:'in',lai:'to / for',le:'did it',sanga:'with',s:'many',ing:'doing now',ed:'already happened','’s':'whose'};
 function questionLine(t,it){
+  if(isLittle()&&t.kind==='pic')return [cap(it[0])+'?',it[1]+'?',cap(it[2])+'?'];
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
   if(t.kind==='yesno')return [it[0],it[1],it[2]];
   if(t.kind==='ending')return ['Kun tukra milchha?','कुन टुक्रा मिल्छ?','Which ending fits?'];

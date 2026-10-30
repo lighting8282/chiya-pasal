@@ -52,7 +52,12 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 
 **No Nepali script for 3–8, for now:** players aged 3–5 and 6–8 who are learning Nepali see romanised Nepali, English and pictures only. Children learning English keep the Devanagari, since it's the Nepali meaning under their English words. Any Devanagari the game puts on screen is removed as it appears, along with the separators it leaves behind (`noScript` and `stripDeva` in `kids.html`). The voice still speaks Nepali. 9–11 still sees Devanagari.
 
-**Stories for 3–5 are one word at a time:** every story page (Habre's Journey and the side stories) shows the picture with a single word, read aloud, instead of the whole sentence. The word is the section's own word on that page where there is one, such as *phul* (flower) on the page where Habre picks a flower, and otherwise one chosen by hand in `LITTLE_WORDS`. Side stories also skip their question and ordering game for 3–5: reading to the end is enough.
+**Ages 3–5 are pictures and words only:**
+- **No story to read.** Instead, each section opens with one **picture moment**: a big picture and one word, read aloud, such as 🌻 *Bagaicha* (garden) or 🦒 *Chidiyakhaana* (zoo). The last one is 👵🏔️ *Hajuraama!* (Grandma). Under it, a row of dots runs from 🏠 to 👵, showing how close Habre is to Grandma's. The section's other story stops, the side stories and the "story so far" button are left out.
+- **The opening** is one moment too (✉️👵🏔️ *Hajuraama!*), and the house banner shows only 👵🏔️ and the stars collected.
+- **Questions are just the word:** "Makura?" (with "Spider?" for English learners), not "Makura kahaa cha?". Habre's speech bubble keeps only the short word, without the English instruction.
+- **The postcard** shows just "Dear Grandma" and the signature.
+- **If a 3–5 child opens a story page** (from a grown-up's story-so-far, for example), it shows one word with the picture (`LITTLE_WORDS`).
 
 Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
 

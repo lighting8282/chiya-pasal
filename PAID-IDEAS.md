@@ -33,6 +33,14 @@ Ideas for what a paid version of Habre's Nepali (`kids.html`) could include. Not
   - Decide what a locked replay shows: a lock and a short "replay with Habre Plus" note behind the grown-ups' gate, so children aren't asked to buy anything.
   - Decide whether the 4 stories that aren't on the path (*Habre ko bihana*, *Habreko janmadin*, *Daktarkahaa*, *Schoolma*) become paid-only.
 
+## Sentence building and grammar, by age
+
+Ages 3–5 stay pictures and words only (built). For the older groups, each section could get one more stop. These would be paid:
+- **6–8: make a phrase.** 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *biralo sutchha* (the cat sleeps).
+- **9–11: the sentence train plus a grammar point.** Full sentences (who → what → where → doing word) and one short grammar point per section.
+
+The shelved sentence train (`vakya`) and grammar lessons (`vyakaran`, see `SHELVED.md`) are a starting point for both.
+
 ## Future map ideas
 
 Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section.
