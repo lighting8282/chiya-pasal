@@ -50,12 +50,17 @@ Every room of the house keeps its picture and its look-and-find game; only the l
 | Akshar · Letters | `akshar` | letters (Nepali learners) | the Nepali letters, with tracing | office, daily practice, flashcards, grown-ups' progress ("Letters written") |
 | ABC · The alphabet | `abc` | letters (English learners) | the English alphabet a to z | same as above |
 | Vyakaran · Grammar | `vyakaran` | section | 12 grammar lessons (and the 12 English ones for English learners) | office, daily practice (two grammar questions), flashcards, grown-ups' progress |
-| Patti · Flashcards | `patti` | section | flashcard decks for every topic, the three baskets, and the deck a grown-up picks | office, grown-ups' page (baskets and "Your flashcard deck") |
 | Sabai shabda · Every word topic | `shabda` | section | the full list of word topics, and the sticker book (only reached from there) | office, grown-ups' page (stickers) |
+
+## Brought back
+
+| What | Id | When | Notes |
+|---|---|---|---|
+| Patti · Flashcards | `patti` | 2026-10-29 | Back in the office, with flip cards, memory match (Jodi) and listen-and-tap. Its decks are only what's in play: story words, tricky words, the grown-ups' deck and the journey's word topics. Letter, grammar and sentence decks stay hidden while those are shelved. |
 
 ## While shelved
 
-- **What's left to play:** the rooms' look-and-find games, the journey (its trips, stories, checks and big checks), and daily practice, which now draws from the journey's word topics only.
+- **What's left to play:** the rooms' look-and-find games, the journey (its trips, stories, checks and big checks), flashcards and memory match in the office, and daily practice, which now draws from the journey's word topics only.
 - **Stories** are still read along the journey; only the bedroom's shelf of all stories is gone.
 - **Story words** from shelved topics (for example *aama*) still show their meaning when tapped in a story.
 - **Back buttons** that used to lead to the word list lead to the map instead while it is shelved.

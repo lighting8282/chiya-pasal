@@ -1286,7 +1286,7 @@ const SHELVED={
   topics:['pariwar','bhavana','saman','bhanai',  // baithak
     'khana','ganti','thulo','kapada','rang','sharir',  // kitchen, dining room, bedroom, bathroom
     'akshar','abc'],  // office
-  sections:['vakya','kathaa','vyakaran','patti','shabda']};
+  sections:['vakya','kathaa','vyakaran','shabda']};
 const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
@@ -1995,15 +1995,15 @@ const PATTI_MODES=[['flip','🃏 Palta','flip'],['jodi','🧠 Jodi','match pairs
 function openPatti(){
   screen='patti';const p=P(),mode=S.pattiMode||'flip',decks=[];
   const add=(id,icon,np,en,color,cards,dev)=>{if(cards.length)decks.push({id,icon,np,en,color,cards,dev});};
-  const tricky=trickyCards(p),custom=(p.custom||[]).map(findCard).filter(Boolean);
+  const inPlay=c=>c&&!shelved(c.t.id),tricky=trickyCards(p).filter(inPlay),custom=(p.custom||[]).map(findCard).filter(inPlay);
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
   add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
   add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
   if(!shelved('vakya'))add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
   const special=decks.length;
-  [...WORD_T(),AKSHAR()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
+  [...WORD_T(),...AKSHAR_ON()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const words=decks.length;
-  GRAM_T().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
+  GRAM_ON().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
     return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(EN()?d.en:d.np)}</b><span class="en"${EN()?' lang="ne"':''}>${EN()?(d.dev||''):esc(d.en)} · ${d.cards.length}</span>
       <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
@@ -2011,7 +2011,7 @@ function openPatti(){
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
    <h2 class="sub">${EN()?'My decks <small lang="ne">मेरो पत्ती</small>':'Mero patti <small>my decks</small>'}</h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
-   <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':'Shabda ra Akshar <small>words and letters</small>'}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
+   <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':(AKSHAR_ON().length?'Shabda ra Akshar <small>words and letters</small>':'Shabda <small>words</small>')}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
    ${decks.length>words?`<h2 class="sub">${EN()?'Grammar <small lang="ne">व्याकरण</small>':'Vyakaran <small>grammar</small>'}</h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
   $('#backBtn').onclick=toRoom('patti');
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
