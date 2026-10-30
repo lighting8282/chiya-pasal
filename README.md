@@ -48,7 +48,16 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 | 🏅 Practice 2 | the other 5 words, 4 questions | all 10 words, 8 questions | all 10 words, 10 questions |
 | ✅ Check (all 10 words) | 4 questions, 3 to pass | 6 questions, 5 to pass | 6 questions, 5 to pass |
 | 🏆 Big check | 5 questions, 3 to pass | 8 questions, 6 to pass | 8 questions, 6 to pass |
-| 🔍 Room find game | 5 things | 8 things | 8 things |
+| 🔍 Room find game | 4 things | 6 things | 8 things |
+
+**No Nepali script for 3–8, for now:** players aged 3–5 and 6–8 who are learning Nepali see romanised Nepali, English and pictures only. Children learning English keep the Devanagari, since it's the Nepali meaning under their English words. Any Devanagari the game puts on screen is removed as it appears, along with the separators it leaves behind (`noScript` and `stripDeva` in `kids.html`). The voice still speaks Nepali. 9–11 still sees Devanagari.
+
+**Ages 3–5 are pictures and words only:**
+- **No story to read.** Instead, each section opens with one **picture moment**: a big picture and one word, read aloud, such as 🌻 *Bagaicha* (garden) or 🦒 *Chidiyakhaana* (zoo). The last one is 👵🏔️ *Hajuraama!* (Grandma). Under it, a row of dots runs from 🏠 to 👵, showing how close Habre is to Grandma's. The section's other story stops, the side stories and the "story so far" button are left out.
+- **The opening** is one moment too (✉️👵🏔️ *Hajuraama!*), and the house banner shows only 👵🏔️ and the stars collected.
+- **Questions are just the word:** "Makura?" (with "Spider?" for English learners), not "Makura kahaa cha?". Habre's speech bubble keeps only the short word, without the English instruction.
+- **The postcard** shows just "Dear Grandma" and the signature.
+- **If a 3–5 child opens a story page** (from a grown-up's story-so-far, for example), it shows one word with the picture (`LITTLE_WORDS`).
 
 Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
 
@@ -56,7 +65,7 @@ Each room is a picture full of things. In **Herau** (look), the child taps anyth
 
 | Room | Things to find | Lessons there |
 |---|---|---|
-| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | the souvenir shelf (see below); no lessons for now: family, feelings, things at home, sayings and the sentence train are shelved (see `SHELVED.md`) |
+| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | the postcard board and souvenir case (see below); no lessons for now: family, feelings, things at home, sayings and the sentence train are shelved (see `SHELVED.md`) |
 | **Bhanchha** (kitchen) | kettle, pan, pot, tap, spoon, salt, vegetables… | none for now: food is shelved (see `SHELVED.md`) |
 | **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | none for now: counting and big numbers are shelved (see `SHELVED.md`) |
 | **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | none for now: clothes, colours and the story shelf are shelved (see `SHELVED.md`) |
@@ -102,14 +111,20 @@ Every section's trail is the same:
 
 | Stop | What happens |
 |---|---|
+| 📖 **Suru** (the start) | The section's part of Habre's Journey begins: a few short pages, read aloud |
 | 🎯 **Abhyas 1** (practice 1) | Learn cards for the section's first 5 words, then questions on them |
+| 📖 **Ani** (and then) | More of the story |
 | 🏅 **Abhyas 2** (practice 2) | Learn cards for the other 5 words, then questions on all 10 (on just those 5 for ages 3–5) |
 | ✅ **Jaanch** (check) | Questions on all 10 words, with no help |
 | 🏆 **Thulo jaanch** (big check) | A mix of the section's words; at the mountains, words from every section |
-| 📖 **Habre's Journey chapter** | Required, once written (see `JOURNEY-STORY.md`). It ends with a cliffhanger leading to the next section |
+| 📖 **Ke hola?** (what next?) | The end of the section's story, on a cliffhanger leading to the next section. A screen then asks "Ani pachhi ke hola? · What happens next?" |
 | 🎁 **Present** | A chest of 💎 gems, opened once |
 
-Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories, listed under its trail to read any time. English learners play the same stops with the English word as the answer.
+**The opening:** the first time a player reaches the map, a short story explains the game. Hajuraama's letter arrives ("Come and see me before the snow falls"), the mountains are far away, Habre will need lots of new words on the way, so first he learns at home: find things in every room, and 10 ★ open the garden gate. It ends with "Tayaar? Gharmaa jaau! · Ready? Into the house!". Until the gate opens, the house shows the same reason in a banner with the stars so far, and tapping it plays the opening again.
+
+**Habre's Journey** runs through the whole map: Habre and Mimi the cat travel to visit Hajuraama in the mountains before the first snow. Each section's three story stops are required, and each uses the section's 10 words. The story is in `JOURNEY_PAGES` in `kids.html`, with the outline in `JOURNEY-STORY.md`. The **📖 Habreko kathaa · The story so far** button, on the map and on every section's trail, lists every part the child has reached, to hear one at a time or all together. Players who were already further along when the story arrived keep their place, and find the earlier parts there.
+
+Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories: dashed purple bubbles beside the path that can be read any time and never block the trail. A read one turns solid with a ✓. English learners play the same stops with the English word as the answer.
 
 #### 1. 🌻 Bagaicha (the garden)
 
@@ -119,7 +134,7 @@ Words: putali (butterfly), kamila (ant), **jun** (moon), mauri (bee), makura (sp
 
 #### 2. 🏘️ Gaaun (the farm village)
 
-Side stories: *Haraeko biralo*, *Bhok lagyo!*. Present: 💎 15.
+Side stories: *Bhok lagyo!*. Present: 💎 15.
 
 Words: gai (cow), kukhura (chicken), **hans** (duck), bakhra (goat), ghoda (horse), **aalu** (potato), kukur (dog), muso (mouse), **phul** (flower), challa (chick)
 
@@ -149,29 +164,29 @@ Words: saanp (snake), kachhuwa (turtle), **hans** (duck), gohi (crocodile), bhya
 
 #### 7. 🦒 Chidiyakhana (the zoo)
 
-Side stories: *Schoolma*, *Habreko janmadin*. Present: 💎 30.
+Side stories: none. Present: 💎 30.
 
 Words: jiraph (giraffe), jebra (zebra), **singha** (lion), chituwa (leopard), panda, **bandar** (monkey), hatti (elephant), bagh (tiger), **gohi** (crocodile), penguin
 
 #### 8. 🍊 Suntala bagaan (the orange orchard)
 
-Side stories: none yet. Present: 💎 30.
+Side stories: none. Present: 💎 30.
 
 Words: suntala (orange), syau (apple), **bandar** (monkey), aanp (mango), kera (banana), **rukh** (tree), angur (grapes), nashpati (pear), **putali** (butterfly), bhuin katahar (pineapple)
 
 #### 9. ⛰️ Pahad (the hills)
 
-Side stories: *Daktarkahaa*. Present: 💎 35.
+Side stories: none. Present: 💎 35.
 
 Words: ullu (owl), mayur (peacock), **ghaam** (sun), parewa (pigeon), chil (eagle), **putali** (butterfly), bhangera (sparrow), suga (parrot), **bakhra** (goat), indreni (rainbow)
 
 #### 10. 🏔️ Himal (the mountains)
 
-Side stories: *Himalko yatra*, *Lhosar*. Present: 💎 50.
+Side stories: *Lhosar*. Present: 💎 50.
 
 Words: hiu (snow), himal (snowy mountain), **jun** (moon), tara (star), badal (cloud), **chil** (eagle), aago (fire), helikoptar (helicopter), **bhalu** (bear), hawaijahaj (aeroplane)
 
-**Postcards and souvenirs:** finishing a map shows a postcard from Habre to Hajuraama, with a picture of the place and a short note in Nepali and English. The child sends it, and Habre brings home a souvenir. For the free map, that's Hajuraama's old map. Souvenirs sit on a shelf in the living room, and tapping one shows its postcard again. Grown-ups see the postcards sent on the progress page. Each map adds its own entry to `TRIP_ENDS` in `kids.html`.
+**Postcards and souvenirs:** finishing a map shows a postcard from Habre to Hajuraama, with a picture of the place and a short note in Nepali and English. The child sends it, and Habre brings home a souvenir. For the free map, that's Hajuraama's old map. Both go up in the living room. Postcards are pinned to a cork **suchana paati** (bulletin board), and tapping one reads it again. Souvenirs stand in a **sisako daraaj** (glass display case), and tapping one says its name. Empty spots show where the next trips' postcards and souvenirs will go. The 📌 button in the header opens both together on their own screen, **Mero sangalo** (my collection), from anywhere in the game. Grown-ups see the postcards sent on the progress page. Each map adds its own entry to `TRIP_ENDS` in `kids.html`.
 
 **Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: stars per topic and level, how far along the journey they are, stories, flashcard baskets and the words they keep missing. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 

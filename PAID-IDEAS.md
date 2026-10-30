@@ -44,6 +44,14 @@ Still to add:
 - A Nepali speaker's check of the new words.
 - More maps: see the ideas below.
 
+## Sentence building and grammar, by age
+
+Ages 3–5 stay pictures and words only (built). For the older groups, each section could get one more stop. These would be paid:
+- **6–8: make a phrase.** 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *biralo sutchha* (the cat sleeps).
+- **9–11: the sentence train plus a grammar point.** Full sentences (who → what → where → doing word) and one short grammar point per section.
+
+The shelved sentence train (`vakya`) and grammar lessons (`vyakaran`, see `SHELVED.md`) are a starting point for both.
+
 ## Future map ideas
 
 Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section.
@@ -52,7 +60,7 @@ Each map has the same shape as the free map: 10 sections of 10 words, and a Habr
 
 **Postcards and souvenirs** (built for the free map; each paid map needs its own entry in `TRIP_ENDS`):
 - **A postcard to Hajuraama** when a map is finished: a picture of the place and a short note from Habre, kept for grown-ups to see (and maybe in the game too).
-- **A souvenir** from every map, such as a seashell from the water map or a model rocket from the sky map. Souvenirs go on a shelf in Habre's living room, which gives the room a new purpose now that its lessons are shelved.
+- **A souvenir** from every map, such as a seashell from the water map or a model rocket from the sky map. Postcards go on a bulletin board and souvenirs in a glass case in Habre's living room, which gives the room a new purpose now that its lessons are shelved.
 
 - 🌊 **Water**: built on the `habre-plus` branch.
 - ☁️ **Sky**: built on the `habre-plus` branch.

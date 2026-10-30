@@ -1,6 +1,6 @@
 # Habre's Journey: the free map (draft outline)
 
-A draft for review. Nothing here is built yet.
+**Status:** built for the free map. The game's text is a shorter version for young children, in `JOURNEY_PAGES` in `kids.html`: each section's part is split into three stops (start, middle, cliffhanger). This outline is the longer version. The Nepali needs checking by a Nepali speaker.
 
 **The story in one line:** Hajuraama (Habre's grandmother) lives high in the mountains, where red pandas come from. Habre sets off to visit her before the first snow, with a present.
 
@@ -11,7 +11,7 @@ A draft for review. Nothing here is built yet.
 - Each chapter uses the section's 10 words (listed under it), so the story repeats what the child has just learned.
 - Each chapter ends with a hook that leads to the next place.
 - The last chapter leaves the door open to more maps. Every later map is one of Habre's adventures: a trip of its own that starts at home and stands alone, so the child can pick any open map next.
-- Finishing a map sends **a postcard to Hajuraama** and brings home **a souvenir** for the shelf in Habre's living room. For the free map, the souvenir could be Hajuraama's old map, the one with all the other places on it.
+- Finishing a map sends **a postcard to Hajuraama** and brings home **a souvenir** for the glass case in Habre's living room, and the postcard goes on the bulletin board there. For the free map, the souvenir could be Hajuraama's old map, the one with all the other places on it.
 
 **Who's in it:**
 - **Habre**, the red panda.
@@ -20,6 +20,10 @@ A draft for review. Nothing here is built yet.
 - A few friends met on the way.
 
 ---
+
+## 0. 🏠 Habreko ghar (the house): the opening
+
+Shown once, the first time a player reaches the map, and kept in the story so far. The letter arrives: "Come and see me before the snow falls." Grandma lives far away in the mountains, and Habre will meet lots of things on the way, so he needs new words. First he learns at home: he finds things in every room, and 10 stars open the garden gate. "Ready? Into the house!" The house repeats the reason in a banner until the gate opens.
 
 ## 1. 🌻 Bagaicha (the garden): *Hajuraamako chitthi* (A letter from Grandma)
 
@@ -114,20 +118,19 @@ Snow (**hiu**) begins to fall on the snowy mountain (**himal**). Clouds (**badal
 
 ---
 
-## Where today's stories go (all optional side stories)
+## Where today's stories go (optional side stories, beside the trail)
 
 | Section | Side stories |
 |---|---|
 | Garden | Habre ko bihana, Bagaichama |
-| Farm village | Haraeko biralo, Bhok lagyo! |
+| Farm village | Bhok lagyo! |
 | Market | Bazaar ma |
 | Temple square | Tihar aayo, Dashain aayo, Rangko chaad |
 | Forest | Kahaa jaane? |
 | Lake | Paani paryo |
-| Zoo | Schoolma, Habreko janmadin |
-| Orange orchard | none yet |
-| Hills | Daktarkahaa |
-| Mountains | Himalko yatra, Lhosar |
+| Mountains | Lhosar |
+
+*Haraeko biralo*, *Himalko yatra*, *Daktarkahaa*, *Schoolma* and *Habreko janmadin* are shelved (see `SHELVED.md`).
 
 ## Classic stories and rhymes that could go here later
 
