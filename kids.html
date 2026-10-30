@@ -303,6 +303,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .daily .ic{font-size:3rem;line-height:1}
 .daily b{font-size:1.5rem;display:block;line-height:1.1}
 .daily small{display:block;font-size:.9rem}
+.noscript .dev:empty,.noscript small:empty{display:none}
 .why{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff7e0;border:3px solid #ffcf5c;border-radius:20px;padding:10px 14px}
 .why>span:first-child{font-size:2rem}
 .why small{display:block;color:var(--soft)}
@@ -1090,6 +1091,20 @@ function confetti(){
 
 // ---------- shared bits ----------
 const main=$('#main');
+// ---------- no Nepali script for ages 3-8, for now ----------
+// Players in the two younger age groups see romanized Nepali and English only: any Devanagari the game writes on
+// screen is taken out as it appears, with the dots and brackets it leaves behind. The voice still speaks Nepali.
+const noScript=()=>!!P()&&ageOf(P()).id!=='big';
+const stripDeva=t=>t.replace(/["“]?[\u0900-\u097F][\u0900-\u097F\s।॥,.!?:;"“”'’()\-–]*["”]?/g,' ')
+  .replace(/(\s*·\s*){2,}/g,' · ').replace(/^\s*·\s*|\s*·\s*$/g,'').replace(/\(\s*\)/g,'').replace(/\s{2,}/g,' ').replace(/^\s+$/,'');
+function cleanText(n){if(/[\u0900-\u097F]/.test(n.data)){const v=stripDeva(n.data);if(v!==n.data)n.data=v;}}
+function cleanTree(n){
+  if(n.nodeType===3){cleanText(n);return;}
+  if(n.nodeType!==1)return;const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT);let t;while((t=w.nextNode()))cleanText(t);
+}
+const scriptObs=new MutationObserver(ms=>{if(!document.body.classList.contains('noscript'))return;
+  ms.forEach(m=>m.type==='characterData'?cleanText(m.target):m.addedNodes.forEach(cleanTree));});
+function applyScript(){const on=noScript();document.body.classList.toggle('noscript',on);if(on)cleanTree(document.querySelector('.app'));}
 function renderTop(){
   const p=P();
   $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
@@ -1107,6 +1122,7 @@ function renderTop(){
     }
   }
   renderOutfit();
+  applyScript();
 }
 
 // ---------- heera (gems) and Habre's shop ----------
@@ -3404,6 +3420,7 @@ $('#grownBtn').onclick=renderGrown;
 $('#gemBtn').onclick=()=>{if(P())openShop();};
 function renderSound(){const b=$('#soundBtn');b.setAttribute('aria-pressed',String(S.sound));b.setAttribute('aria-label',S.sound?'Sound on':'Sound off');b.textContent=S.sound?'🔊':'🔇';}
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
+scriptObs.observe(document.querySelector('.app'),{subtree:true,childList:true,characterData:true});
 save();renderSound();renderTop();
 // with more than one player (or none yet), ask who is playing first
 if(S.profiles.length===1&&P())openMap();else goWho();
