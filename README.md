@@ -32,18 +32,25 @@ The sections that teach Nepali have English versions instead:
 
 A grown-up can change the choice later under "Change player".
 
-**Age groups:** when setting up a player, a grown-up also picks an age group: 🧸 3–5, 🎒 6–8 or 📚 9–11. Players made before age groups count as 6–8. Every group plays the same maps and words. The 3–5 group gets fewer words at a time:
+**Age groups and difficulty:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). The age group sets the player's difficulty, which decides how hard every question is: in practice rounds, checks and big checks alike. A grown-up can choose a different difficulty under "Kati gaaro? · How hard?". Players made before age groups count as 6–8.
 
-| Level | 6–8 and 9–11 | 3–5 |
+| Difficulty | A question looks like | Default for |
 |---|---|---|
-| 🐣 Easy | 6 words, 6 questions, 2 pictures | 4 words, 4 questions, 2 pictures |
-| 🐥 Medium | all 10 words, 8 questions, 3 pictures | 7 words, 5 questions, 2 pictures |
-| 🦅 Hard | all 10 words, 10 questions, 4 pictures | all 10 words, 6 questions, 3 pictures |
-| ✅ Check | 6 questions, 3 pictures (5 to pass) | 4 questions, 2 pictures (3 to pass) |
-| 🏆 Big check | 8 questions (6 to pass) | 5 questions (3 to pass) |
-| 🔍 Room find game | 8 things | 5 things |
+| 🐣 Easy | 2 pictures, labelled in Nepali and English | 3–5 |
+| 🐥 Medium | 3 pictures, labelled in Nepali only (checks have no labels) | 6–8 |
+| 🦅 Hard | 4 pictures with no labels; the word is only spoken until the child answers | 9–11 |
 
-Pass marks stay at about 70%. For now 9–11 plays like 6–8. The group can be changed later under "Change player", and it shows on the grown-ups' progress page. The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
+The age group also sets the number of questions. The 3–5 group gets fewer words at a time:
+
+| | 3–5 | 6–8 | 9–11 |
+|---|---|---|---|
+| 🎯 Practice 1 (the first 5 words) | 4 questions | 6 questions | 6 questions |
+| 🏅 Practice 2 | the other 5 words, 4 questions | all 10 words, 8 questions | all 10 words, 10 questions |
+| ✅ Check (all 10 words) | 4 questions, 3 to pass | 6 questions, 5 to pass | 6 questions, 5 to pass |
+| 🏆 Big check | 5 questions, 3 to pass | 8 questions, 6 to pass | 8 questions, 6 to pass |
+| 🔍 Room find game | 5 things | 8 things | 8 things |
+
+Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
 
 Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
 
@@ -91,142 +98,76 @@ The lessons:
 
 **Habreko yatra (Habre's journey)** is the ten places, or sections. Every section has exactly 10 words: 7 new ones and 3 the child has already seen in the house or an earlier section (shown in **bold** below), so there's always something familiar to build on. The garden opens once the child has 10 ★ from the rooms (the look-and-find games give up to 8 ★ a room). Each later section opens when the one before it is finished. Inside a trip, a winding path of stops is played in order: the child taps the glowing stop, and the next one unlocks once it's passed. Lessons a child has already passed count on the trail.
 
-The kinds of stop:
+Every section's trail is the same:
 
-| Stop | What happens | To pass |
-|---|---|---|
-| 🐣 **Sajilo** (easy) | the first 6 words of the section (2 of them familiar); 6 questions with 2 pictures, labelled in Nepali and English | 5 of 6 |
-| 🐥 **Thikka** (medium) | every word; 8 questions with 3 pictures, labelled in Nepali only | 6 of 8 |
-| 🦅 **Gaaro** (hard) | every word; 10 questions with 4 unlabelled pictures, the word only spoken until the child answers | 7 of 10 |
-| 📖 **Story** | A story read aloud, each word lighting up as it's spoken | read to the end |
-| ✅ **Jaanch** (check) | 6 questions on the whole topic, 3 pictures, no help | 5 of 6 |
-| 🏆 **Thulo jaanch** (big check) | 8 questions on the section's words, mixing the levels | 6 of 8 |
-| 🎁 **Present** | A chest of 💎 gems, opened once | — |
+| Stop | What happens |
+|---|---|
+| 🎯 **Abhyas 1** (practice 1) | Learn cards for the section's first 5 words, then questions on them |
+| 🏅 **Abhyas 2** (practice 2) | Learn cards for the other 5 words, then questions on all 10 (on just those 5 for ages 3–5) |
+| ✅ **Jaanch** (check) | Questions on all 10 words, with no help |
+| 🏆 **Thulo jaanch** (big check) | A mix of the section's words; at the mountains, words from every section |
+| 📖 **Habre's Journey chapter** | Required, once written (see `JOURNEY-STORY.md`). It ends with a cliffhanger leading to the next section |
+| 🎁 **Present** | A chest of 💎 gems, opened once |
 
-The first time a word stop is opened, Learn cards show its words before the questions. English learners play the same stops with the English word as the answer.
+Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories, listed under its trail to read any time. English learners play the same stops with the English word as the answer.
 
 #### 1. 🌻 Bagaicha (the garden)
 
-1. Words, easy
-2. Story: *Habre ko bihana* (Habre's morning)
-3. Words, medium
-4. Story: *Bagaichama* (In the garden)
-5. Words, hard
-6. Check
-7. Big check
-8. Present: 💎 10
+Side stories: *Habre ko bihana*, *Bagaichama*. Present: 💎 10.
 
 Words: putali (butterfly), kamila (ant), **jun** (moon), mauri (bee), makura (spider), **gamala** (flower pot), phul (flower), rukh (tree), **biralo** (cat), ghaam (sun)
 
 #### 2. 🏘️ Gaaun (the farm village)
 
-1. Words, easy
-2. Story: *Haraeko biralo* (The lost cat)
-3. Words, medium
-4. Story: *Bhok lagyo!* (I'm hungry!). The child chooses what Habre does, and there are two endings.
-5. Words, hard
-6. Check
-7. Big check
-8. Present: 💎 15
+Side stories: *Haraeko biralo*, *Bhok lagyo!*. Present: 💎 15.
 
 Words: gai (cow), kukhura (chicken), **hans** (duck), bakhra (goat), ghoda (horse), **aalu** (potato), kukur (dog), muso (mouse), **phul** (flower), challa (chick)
 
 #### 3. 🛍️ Bazaar (the market)
 
-1. Words, easy
-2. Story: *Bazaar ma* (At the market)
-3. Words, medium
-4. Words, hard
-5. Check
-6. Big check
-7. Present: 💎 20
+Side stories: *Bazaar ma*. Present: 💎 20.
 
 Words: kaar (car), bas (bus), **golbheda** (tomato), saikal (bicycle), trak (lorry), **pyaaj** (onion), motorsaikal (motorbike), bellun (balloon), **momo**, changa (kite)
 
 #### 4. 🛕 Mandir (the temple square)
 
-1. Words, easy
-2. Story: *Tihar aayo* (Tihar is here)
-3. Words, medium
-4. Story: *Dashain aayo* (Dashain is here)
-5. Words, hard
-6. Story: *Rangko chaad* (The festival of colours)
-7. Check
-8. Big check
-9. Present: 💎 20
+Side stories: *Tihar aayo*, *Dashain aayo*, *Rangko chaad*. Present: 💎 20.
 
 Words: diyo (oil lamp), upahaar (present), **mainbatti** (candle), mala (garland), dhol (drum), **phul** (flower), phuljhadi (sparkler), pichkari (water pistol), **changa** (kite), dhwaja (flag)
 
 #### 5. 🌲 Jangal (the forest)
 
-1. Words, easy
-2. Story: *Kahaa jaane?* (Where shall we go?). The child chooses what Habre does, and there are two endings.
-3. Words, medium
-4. Words, hard
-5. Check
-6. Big check
-7. Present: 💎 25
+Side stories: *Kahaa jaane?*. Present: 💎 25.
 
 Words: singha (lion), bhalu (bear), **rukh** (tree), gaida (rhino), kharayo (rabbit), **makura** (spider), harin (deer), phyauro (fox), **mauri** (bee), bandar (monkey)
 
 #### 6. 🏞️ Taal (the lake)
 
-1. Words, easy
-2. Story: *Paani paryo* (It rained)
-3. Words, medium
-4. Words, hard
-5. Check
-6. Big check
-7. Present: 💎 25
+Side stories: *Paani paryo*. Present: 💎 25.
 
 Words: saanp (snake), kachhuwa (turtle), **hans** (duck), gohi (crocodile), bhyaguto (frog), **phul** (flower), machha (fish), dunga (boat), **harin** (deer), laamkhutte (mosquito)
 
 #### 7. 🦒 Chidiyakhana (the zoo)
 
-1. Words, easy
-2. Story: *Schoolma* (At school). The child chooses what Habre does, and there are two endings.
-3. Words, medium
-4. Story: *Habreko janmadin* (Habre's birthday)
-5. Words, hard
-6. Check
-7. Big check
-8. Present: 💎 30
+Side stories: *Schoolma*, *Habreko janmadin*. Present: 💎 30.
 
 Words: jiraph (giraffe), jebra (zebra), **singha** (lion), chituwa (leopard), panda, **bandar** (monkey), hatti (elephant), bagh (tiger), **gohi** (crocodile), penguin
 
 #### 8. 🍊 Suntala bagaan (the orange orchard)
 
-1. Words, easy
-2. Words, medium
-3. Words, hard
-4. Check
-5. Big check
-6. Present: 💎 30
+Side stories: none yet. Present: 💎 30.
 
 Words: suntala (orange), syau (apple), **bandar** (monkey), aanp (mango), kera (banana), **rukh** (tree), angur (grapes), nashpati (pear), **putali** (butterfly), bhuin katahar (pineapple)
 
 #### 9. ⛰️ Pahad (the hills)
 
-1. Words, easy
-2. Story: *Daktarkahaa* (At the doctor's)
-3. Words, medium
-4. Words, hard
-5. Check
-6. Big check
-7. Present: 💎 35
+Side stories: *Daktarkahaa*. Present: 💎 35.
 
 Words: ullu (owl), mayur (peacock), **ghaam** (sun), parewa (pigeon), chil (eagle), **putali** (butterfly), bhangera (sparrow), suga (parrot), **bakhra** (goat), indreni (rainbow)
 
 #### 10. 🏔️ Himal (the mountains)
 
-1. Words, easy
-2. Story: *Himalko yatra* (Trip to the mountains)
-3. Words, medium
-4. Story: *Lhosar* (Lhosar, the new year)
-5. Words, hard
-6. Check
-7. Big check: mixes words from every section, all at the hard level
-8. Present: 💎 50
+Side stories: *Himalko yatra*, *Lhosar*. Present: 💎 50.
 
 Words: hiu (snow), himal (snowy mountain), **jun** (moon), tara (star), badal (cloud), **chil** (eagle), aago (fire), helikoptar (helicopter), **bhalu** (bear), hawaijahaj (aeroplane)
 

@@ -7,7 +7,7 @@ The shape every map follows:
 - **Every map has exactly 10 sections, and every section has exactly 10 words.**
 - **In each section, 7 words are new and 3 are words the child has already seen** (30%). "Seen" means the word was in the house or in an earlier section.
 - **Paid maps open once the free map is finished.** After that, a child can switch to any map.
-- **Every section has the same stops:** easy (the first 6 words) → medium (all 10) → hard → check → big check → present. A section can also have story stops between them.
+- **Every section has the same stops:** practice 1 (the first 5 words) → practice 2 → check → big check → its Habre's Journey chapter → present. Every question is at the player's difficulty, which is set by the age group or by a grown-up. Other stories are optional side stories.
 
 ## The free map
 
