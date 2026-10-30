@@ -357,27 +357,47 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 
 ## Project layout
 
-**Habre Plus (paid paths, not live yet).** `kids.html` has the structure for a paid pack:
-- **`PACKS` and `PLUS_PATHS`:** the pack and its paths, shown under the map and locked until owned. A path is a few places played in order: each place opens when the one before it is finished. Tapping a path shows its places, and each place has a trail of stops like the free journey's.
-- **Topics marked `plus:'plus'`** belong to the paths. They join daily practice and flashcards only once the pack is owned.
+**Habre Plus (paid maps, not live yet).** `kids.html` has the structure for a paid pack:
+- **`PACKS` and `PLUS_PATHS`:** the pack and its two maps, shown under the free map. A paid map opens once the pack is owned and the child has finished the free map. After that the child can play either map.
+- **Same shape as the free map:** each map has 10 sections, played in order, and each section has exactly 10 words: 7 new and 3 the child has already seen in the free map, the house or an earlier section of that map. Every section plays easy → medium → hard → check → big check → present.
+- **Each section has its own word topic** (`p_` + the section's id, marked `plus:'plus'`). These join daily practice and flashcards only once the pack is owned.
 - **The unlock screen** sits behind a grown-ups-only question.
 - **Ownership** is a per-device flag (`S.owned`).
-- **Adding content:** add a place to a path's `places` with its `stops` (the same kinds as a trip), and it gets a trail with a big check and a present. A place with no stops shows "coming soon".
-
-The paths so far (every stop ends with a big check of 8 questions, 6 to pass, then a present):
-
-| Path | Place | Stops | Words |
-|---|---|---|---|
-| 🌊 **Paaniko yatra** (the water path) | 1. 🏞️ Khola (the river) | Jal (water) and Jalchar (river life), each easy → medium → hard, taking turns; a check on each; 💎 40 | **Jal:** paani (water), khola (river), chhaal (wave), dhunga (stone), pul (bridge), balchhi (fishing rod), bhumari (whirlpool), kinaar (beach). **Jalchar:** udbiralo (otter), rajhans (swan), jalgaida (hippo), chiplekira (snail), kamal (lotus), flamingo |
-| | 2. 🐠 Samundra muni (under the sea) | Samundri jiv (sea life) easy → medium → hard, then a check; 💎 45 | phulne machha (puffer fish), skwid (squid), lobstar (lobster), munga (coral), sil (seal), samudri kachhuwa (sea turtle) |
-| | 3. 🤿 Gahiro samundra (the deep sea) | Gahiro samundra (the deep sea) easy → medium → hard, then a check; 💎 50 | jahaj (ship), langar (anchor), gotakhor (diver), phoka (bubbles), khajana (treasure), moti (pearl), torch, samudri daaku (pirate) |
-| ☁️ **Aakaashko yatra** (the sky path) | 1. 🌦️ Aakaash (the sky) | Mausam (weather) easy → medium → hard, then a check; 💎 40 | hawa (wind), barsha (rain), chhaata (umbrella), kuhiro (fog), chatyaang (lightning), asina (hail), aandhi (storm) |
-| | 2. 🪂 Udaan (up and away) | Udne kura (things that fly) easy → medium → hard, then a check; 💎 45 | pyarasut (parachute), chamero (bat), pwaakh (feather), dhukur (dove), gund (nest), pari (fairy), ajingar (dragon) |
-| | 3. 🚀 Antariksha (outer space) | Antariksha (space) easy → medium → hard, then a check; 💎 50 | raket (rocket), graha (planet), prithvi (Earth), durbin (telescope), upagraha (satellite), puchchhre tara (comet), aakaashganga (Milky Way), antarikshayatri (astronaut), udan tashtari (flying saucer) |
-
-The paths have no stories yet.
+- **Adding a section:** use `sec(...)` with 7 new words and 3 seen ones. A new word can be a word already in the game, written as its romanized name.
 - **`PAY`:** where real payments plug in, either Google Play Billing in the Play Store app or a web checkout whose codes are checked by a server. While `PAY.ready` is false, buying shows "not switched on yet".
 - **Testing on one device:** `habrePlus.test(true)` in the browser console unlocks the pack.
+
+**🌊 Paaniko yatra (the water map)**
+
+| # | Section | 7 new words | 3 seen words |
+|---|---|---|---|
+| 1 | 🏞️ Khola (the river) · 💎 20 | paani (water), khola (river), pul (bridge), dhunga (stone), bhumari (whirlpool), udbiralo (otter), kenu (canoe) | machha (fish), bhyaguto (frog), hans (duck) |
+| 2 | 🌾 Khet (the rice fields) · 💎 20 | dhaan (rice plant), barsha (rain), chhata (umbrella), gadyaula (earthworm), bhainsi (buffalo), goru (ox), makai (corn) | gai (cow), laamkhutte (mosquito), paani (water) |
+| 3 | 🛶 Phewa Taal (Phewa Lake) · 💎 25 | kamal (lotus), rajhans (swan), tapu (island), suryaasta (sunset), flamingo, jalgaida (hippo), chiplekira (snail) | kenu (canoe), machha (fish), phul (flower) |
+| 4 | 🎣 Machhuwa gaun (the fishing village) · 💎 25 | balchhi (fishing rod), tokari (basket), dori (rope), jhupadi (hut), kaanta (hook), laalten (lantern), taraju (scales) | machha (fish), dunga (boat), baalti (bucket) |
+| 5 | 🏖️ Samudri kinaar (the beach) · 💎 30 | kinaar (beach), nariwal (coconut), taad (palm tree), chashma (sunglasses), baluwako mahal (sandcastle), aaiskrim (ice cream), bholiball (volleyball) | gangato (crab), sankha (seashell), ghaam (sun) |
+| 6 | 🪸 Mungako chattan (the coral reef) · 💎 30 | munga (coral), phulne machha (puffer fish), skwid (squid), samudri kachhuwa (sea turtle), jalpari (mermaid), lobstar (lobster), jhinge machha (shrimp) | rangichangi machha (tropical fish), aktopas (octopus), shark |
+| 7 | 🚢 Samudri yatra (across the sea) · 💎 35 | jahaj (ship), langar (anchor), kampas (compass), jeevan rakshak (life ring), motor dunga (motorboat), samundra (sea), kren (crane) | hvel (whale), dalphin (dolphin), tapu (island) |
+| 8 | 🤿 Gahiro samundra (the deep sea) · 💎 35 | torch, moti (pearl), phoka (bubbles), gotakhor (diver), heera (diamond), haddi (bone), jwaalaamukhi (volcano) | skwid (squid), jalpari (mermaid), aktopas (octopus) |
+| 9 | 🏴‍☠️ Khajana tapu (treasure island) · 💎 40 | naksa (map), khajana (treasure), samudri daaku (pirate), sikka (coin), saancho (key), tarwaar (sword), mukut (crown) | suga (parrot), tapu (island), jahaj (ship) |
+| 10 | 🧊 Hiuko samundra (the frozen sea) · 💎 60 | baraf (ice), seto bhalu (polar bear), sil (seal), slej (sled), panja (gloves), galbandi (scarf), hiumaanchhe (snowman) | penguin, hiu (snow), hvel (whale) |
+
+**☁️ Aakaashko yatra (the sky map)**
+
+| # | Section | 7 new words | 3 seen words |
+|---|---|---|---|
+| 1 | 🪁 Chhat (on the roof) · 💎 20 | hawa (wind), dhaago (thread), bharyang (ladder), topi (cap), yoyo (yo-yo), ghanti (bell), pwaakh (feather) | changa (kite), ghaam (sun), bellun (balloon) |
+| 2 | 🌦️ Mausam (the weather) · 💎 20 | kuhiro (fog), chatyaang (lightning), aandhi (storm), garjan (thunder), tharmamitar (thermometer), ghaam paani (sun and rain), sireto (cold wind) | badal (cloud), indreni (rainbow), hawa (wind) |
+| 3 | 🪹 Rukhko tuppo (the treetops) · 💎 25 | gund (nest), anda (egg), paat (leaf), chara (bird), chamero (bat), lokharke (squirrel), maha (honey) | rukh (tree), ullu (owl), challa (chick) |
+| 4 | ☁️ Badal maathi (above the clouds) · 💎 25 | pari (fairy), ajingar (dragon), yunikarn (unicorn), sapana (dream), darbar (palace), jaadugar (wizard), chhadi (magic wand) | badal (cloud), pwaakh (feather), chara (bird) |
+| 5 | 🛫 Bimanasthal (the airport) · 💎 30 | pailat (pilot), tikat (ticket), sutkes (suitcase), sano jahaj (small plane), udaan (take-off), avataran (landing), rahadani (passport) | hawaijahaj (aeroplane), helikoptar (helicopter), jhola (school bag) |
+| 6 | 🪂 Pokhara (flying over Pokhara) · 💎 30 | pyarasut (paraglider), helmet, kyamera (camera), buut (boots), paal (tent), sooryodaya (sunrise), daada (hill) | chil (eagle), himal (snowy mountain), hawa (wind) |
+| 7 | 🌃 Raat (the night sky) · 💎 35 | raat (night), nakshatra (constellation), durbin (telescope), khasne tara (shooting star), purnima (full moon), aadha jun (half moon), aunsi (new moon) | jun (moon), tara (star), ullu (owl) |
+| 8 | 🪐 Grahaharu (the sun and planets) · 💎 35 | surya (the Sun), graha (planet), prithvi (Earth), mangal (Mars), puchchhre tara (comet), grahan (eclipse), kaksha (orbit) | khasne tara (shooting star), jun (moon), durbin (telescope) |
+| 9 | 🚀 Raket udaan (the rocket launch) · 💎 40 | raket (rocket), antarikshayatri (astronaut), sanket (satellite dish), upagraha (satellite), byaatri (battery), chumbak (magnet), paila (footprints) | ghadi (clock), kampyutar (computer), aago (fire) |
+| 10 | 🌌 Tadhako antariksha (far out in space) · 💎 60 | aliyan (alien), udan tashtari (flying saucer), robot, daitya (space monster), chamkine tara (shining star), kaalo pwaal (black hole), aakaashganga (Milky Way) | raket (rocket), tara (star), graha (planet) |
+
+The paid maps have no stories yet.
 
 The lock lives in the page, so it is not secure on its own: real payments need the store or a server to confirm them.
 

@@ -33,15 +33,16 @@ Ideas for what a paid version of Habre's Nepali (`kids.html`) could include. Not
   - Decide what a locked replay shows: a lock and a short "replay with Habre Plus" note behind the grown-ups' gate, so children aren't asked to buy anything.
   - Decide whether the 4 stories that aren't on the path (*Habre ko bihana*, *Habreko janmadin*, *Daktarkahaa*, *Schoolma*) become paid-only.
 
-## Paid paths
+## Paid maps
 
-Built on the `habre-plus` branch (local, not pushed): two paths, each three places played in order, with new word topics (see the README's Habre Plus section).
-- 🌊 **The water path:** the river → under the sea → the deep sea.
-- ☁️ **The sky path:** the sky and weather → things that fly → outer space.
+Built on the `habre-plus` branch (local, not pushed): two maps shaped like the free one, each 10 sections of 10 words (7 new, 3 already seen). They open once the free map is finished. Every word is listed in the README's Habre Plus section.
+- 🌊 **The water map:** river → rice fields → Phewa Lake → fishing village → beach → coral reef → across the sea → deep sea → treasure island → frozen sea.
+- ☁️ **The sky map:** roof → weather → treetops → above the clouds → airport → paragliding over Pokhara → night sky → sun and planets → rocket launch → far out in space.
 
 Still to add:
-- Stories along each path.
-- Ideas for more paths: Kathmandu (the big city), Chitwan (jungle safari), a mountain trek, the fair.
+- Stories along each map.
+- A Nepali speaker's check of the new words.
+- Ideas for more maps: Kathmandu (the big city), Chitwan (jungle safari), a mountain trek, the fair.
 
 ## Also sketched on the `habre-plus` branch
 

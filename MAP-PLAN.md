@@ -1,6 +1,6 @@
 # Map plan
 
-**Status:** the free map is built as planned (`YATRA` and `SECTION_WORDS` in `kids.html`). The paid maps are still to do, on the `habre-plus` branch.
+**Status:** the free map is built as planned (`YATRA` and `SECTION_WORDS` in `kids.html`). The two paid maps are built too, on the `habre-plus` branch (`PLUS_PATHS`), and are listed word by word in the README's Habre Plus section.
 
 The shape every map follows:
 - **Habre's house** is the separate starting spot. It isn't one of the 10 sections.
@@ -51,7 +51,7 @@ All 15 stories are then on the map.
 
 These 9 words are in today's topics but aren't in any section above: fatyangro (grasshopper), bichchhi (scorpion), chheparo (lizard), dainosor (dinosaur), jhinge machha (shrimp), chara (bird), rel (train), jamara (barley shoots), khapse (biscuit). They could go into the paid maps.
 
-## The paid maps (themes only; words still to choose)
+## The paid maps (built on `habre-plus`)
 
 Each map has 10 sections. 3 of each section's words come from words the child has already seen, in the free map or earlier in the same map.
 
