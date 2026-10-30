@@ -1,6 +1,6 @@
 # Habre's Journey: the free map (draft outline)
 
-A draft for review. Nothing here is built yet.
+**Status:** built for the free map. The game's text is a shorter version for young children, in `JOURNEY_PAGES` in `kids.html`: each section's part is split into three stops (start, middle, cliffhanger). This outline is the longer version. The Nepali needs checking by a Nepali speaker.
 
 **The story in one line:** Hajuraama (Habre's grandmother) lives high in the mountains, where red pandas come from. Habre sets off to visit her before the first snow, with a present.
 

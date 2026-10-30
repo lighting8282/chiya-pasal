@@ -102,12 +102,16 @@ Every section's trail is the same:
 
 | Stop | What happens |
 |---|---|
+| 📖 **Suru** (the start) | The section's part of Habre's Journey begins: a few short pages, read aloud |
 | 🎯 **Abhyas 1** (practice 1) | Learn cards for the section's first 5 words, then questions on them |
+| 📖 **Ani** (and then) | More of the story |
 | 🏅 **Abhyas 2** (practice 2) | Learn cards for the other 5 words, then questions on all 10 (on just those 5 for ages 3–5) |
 | ✅ **Jaanch** (check) | Questions on all 10 words, with no help |
 | 🏆 **Thulo jaanch** (big check) | A mix of the section's words; at the mountains, words from every section |
-| 📖 **Habre's Journey chapter** | Required, once written (see `JOURNEY-STORY.md`). It ends with a cliffhanger leading to the next section |
+| 📖 **Ke hola?** (what next?) | The end of the section's story, on a cliffhanger leading to the next section. A screen then asks "Ani pachhi ke hola? · What happens next?" |
 | 🎁 **Present** | A chest of 💎 gems, opened once |
+
+**Habre's Journey** runs through the whole map: Habre and Mimi the cat travel to visit Hajuraama in the mountains before the first snow. Each section's three story stops are required, and each uses the section's 10 words. The story is in `JOURNEY_PAGES` in `kids.html`, with the outline in `JOURNEY-STORY.md`. The **📖 Habreko kathaa · The story so far** button, on the map and on every section's trail, lists every part the child has reached, to hear one at a time or all together. Players who were already further along when the story arrived keep their place, and find the earlier parts there.
 
 Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories, listed under its trail to read any time. English learners play the same stops with the English word as the answer.
 
