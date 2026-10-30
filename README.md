@@ -30,7 +30,20 @@ The sections that teach Nepali have English versions instead:
   - a "fix the ending" game
 - **The sentence train:** English sentences in English order (who → doing word → what → where). The engine sits straight after "who", and the child builds the English from the Nepali. Grow-a-sentence and ask-and-answer are in English too.
 
-A grown-up can change the choice later under "Change player". The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
+A grown-up can change the choice later under "Change player".
+
+**Age groups:** when setting up a player, a grown-up also picks an age group: 🧸 3–5, 🎒 6–8 or 📚 9–11. Players made before age groups count as 6–8. Every group plays the same maps and words. The 3–5 group gets fewer words at a time:
+
+| Level | 6–8 and 9–11 | 3–5 |
+|---|---|---|
+| 🐣 Easy | 6 words, 6 questions, 2 pictures | 4 words, 4 questions, 2 pictures |
+| 🐥 Medium | all 10 words, 8 questions, 3 pictures | 7 words, 5 questions, 2 pictures |
+| 🦅 Hard | all 10 words, 10 questions, 4 pictures | all 10 words, 6 questions, 3 pictures |
+| ✅ Check | 6 questions, 3 pictures (5 to pass) | 4 questions, 2 pictures (3 to pass) |
+| 🏆 Big check | 8 questions (6 to pass) | 5 questions (3 to pass) |
+| 🔍 Room find game | 8 things | 5 things |
+
+Pass marks stay at about 70%. For now 9–11 plays like 6–8. The group can be changed later under "Change player", and it shows on the grown-ups' progress page. The first place on it is Habre's house, a Nepali-style house with six rooms behind doors that swing open when tapped. The wreath on each door fills up as the child works through that room.
 
 Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
 

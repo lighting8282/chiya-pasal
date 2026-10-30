@@ -156,6 +156,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .langpick button span{font-size:2rem;font-weight:800;line-height:1.1}
 .langpick button small{color:var(--soft)}
 .langpick button[aria-pressed="true"]{border-color:var(--green);background:#e4f7ec}
+.langpick.ages{grid-template-columns:repeat(3,minmax(0,1fr))}
 .warn{background:#fff1ef;border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 
 /* learn card */
@@ -891,6 +892,27 @@ const LEVELS={
    about:'4 pictures with no labels, every word, counting to 20; the word is only spoken, not written, until you answer'},
 };
 const LV_KEYS=Object.keys(LEVELS);
+// ---------- age groups ----------
+// A grown-up picks each player's age group. Everyone plays the same maps and words; the youngest (3–5) get fewer
+// words in each round, fewer questions and pictures to choose from, and shorter checks and find games.
+const AGES=[
+ {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',
+  lv:{easy:{choices:2,n:4,words:4,about:'2 pictures to choose from, each labelled in Nepali and English; the first 4 words; counting to 5'},
+   medium:{choices:2,n:5,words:7,about:'2 pictures labelled in Nepali only, 7 words, counting to 10'},
+   hard:{choices:3,n:6,about:'3 pictures with no labels, every word, counting to 20; the word is only spoken, not written, until you answer'}},
+  check:4,checkChoices:2,boss:5,find:5},
+ {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒'},
+ {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚'},
+];
+const LEVELS_BASE=JSON.parse(JSON.stringify(LEVELS));
+// players made before age groups count as 6–8, the game as it was
+const ageOf=p=>AGES.find(a=>a.id===(p&&p.age))||AGES[1];
+// LEVELS is read all over the game, so it's fitted to the current player's age group in place
+let ageNow=null;
+function syncAge(p){const a=ageOf(p);if(a===ageNow)return;ageNow=a;LV_KEYS.forEach(k=>Object.assign(LEVELS[k],LEVELS_BASE[k],(a.lv||{})[k]||{}));}
+function checkN(){return ageOf(P()).check||CHECK_N;}
+function bossN(){return ageOf(P()).boss||BOSS_N;}
+function findN(){return ageOf(P()).find||FIND_N;}
 // voice speed presets for the grown-ups panel (kids' speeds sit a little slower than the adult game's)
 const SPEEDS=[['Dherai bistarai','very slow',0.55],['Bistarai','slow',0.7],['Samanya','normal',0.85],['Chhito','fast',1.0]];
 const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
@@ -924,7 +946,7 @@ delete S.best;
 const OLD_OUTFIT={'🧢':'cap','🎀':'bow','🕶️':'shades','👑':'crown','🎩':'tophat','🎓':'grad','🏅':'medal','🌼':'daisy'};
 S.profiles.forEach(p=>{if(p.outfit)for(const k in p.outfit)if(OLD_OUTFIT[p.outfit[k]])p.outfit[k]=OLD_OUTFIT[p.outfit[k]];});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
-const P=()=>S.profiles.find(p=>p.id===S.cur)||null;
+const P=()=>{const p=S.profiles.find(p=>p.id===S.cur)||null;syncAge(p);return p;};
 const bestOf=(p,tid,lv)=>((p&&p.best)||{})[tid+':'+lv]||0;
 const starsOf=p=>p?Object.values(p.best||{}).reduce((a,b)=>a+b,0):0;
 const levelOf=tid=>(P()&&P().lv&&P().lv[tid])||'easy';
@@ -1271,6 +1293,8 @@ function editProfile(p){
      <div class="colors">${PCOLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour"></button>`).join('')}</div>
      <label>Ke sikne? <small style="font-weight:500;color:var(--soft)" lang="ne">के सिक्ने? · What will you learn?</small></label>
      <div class="langpick">${[['ne','अ','Nepali','नेपाली सिक्ने'],['en','A','English','अंग्रेजी सिक्ने']].map(([l,ic,nm,dv])=>`<button type="button" aria-pressed="${(d.learn||'ne')===l}" data-l="${l}"><span aria-hidden="true">${ic}</span><b>${nm}</b><small lang="ne">${dv}</small></button>`).join('')}</div>
+     <label>Kati barsha? <small style="font-weight:500;color:var(--soft)" lang="ne">कति वर्ष? · How old? (for grown-ups to pick)</small></label>
+     <div class="langpick ages">${AGES.map(a=>`<button type="button" aria-pressed="${ageOf(d)===a}" data-age="${a.id}"><span>${a.icon}</span><b>${a.en}</b><small>${a.np} · ${a.id==='little'?'fewer words at a time':a.id==='middle'?'the usual game':'for bigger kids'}</small></button>`).join('')}</div>
      <div class="btns" style="justify-content:flex-start">
        <button type="submit" class="btn" style="background:var(--green)">✔ Thik cha <small style="font-weight:500">save</small></button>
        ${S.profiles.length?`<button type="button" class="btn ghost" id="pCancel">Back</button>`:''}
@@ -1283,12 +1307,13 @@ function editProfile(p){
    </form>`;
   main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{d.icon=b.dataset.a;main.querySelectorAll('[data-a]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{d.color=b.dataset.c;main.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-age]').forEach(b=>b.onclick=()=>{d.age=b.dataset.age;main.querySelectorAll('[data-age]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{d.learn=b.dataset.l;main.querySelectorAll('[data-l]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   $('#pf').onsubmit=e=>{
     e.preventDefault();
-    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne';
-    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
-    else Object.assign(p,{name,icon:d.icon,color:d.color,learn});
+    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne',age=ageOf(d).id;
+    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
+    else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age});
     // a new player goes straight to the map, to see where the journey goes
     save();renderTop();if(isNew)openMap();else goWho();
   };
@@ -1331,7 +1356,7 @@ const today=()=>dayStr(new Date());
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayStr(d);};
 const stat=p=>(p.stat=p.stat||{plays:0,right:{},miss:{}});
 const keyOf=(t,it)=>t.id+'|'+it[0];
-const checked=(p,t)=>bestOf(p,'check',t.id)>=CHECK_N-1;
+const checked=(p,t)=>bestOf(p,'check',t.id)>=checkN()-1;
 const topicDone=(p,t)=>(LV_KEYS.filter(k=>passed(p,t.id,k)).length+(checked(p,t)?1:0))/4;
 const ynOf=(t,it)=>it[4]?t.yes:t.no;
 const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':label}</button>`;
@@ -1535,7 +1560,7 @@ const roomSections=r=>r.sections.filter(id=>!shelved(id));
 const toRoom=id=>()=>openRoom(roomOf(id));
 // how far through a room: things looked at, the find game, and its word topics
 function roomProgress(p,r){
-  const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(FIND_N-1));
+  const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(findN()-1));
   const ts=roomTopics(r);
   return ts.length?seen*0.25+find*0.35+avg(ts.map(id=>topicDone(p,T(id))))*0.4:seen*0.4+find*0.6;
 }
@@ -1546,7 +1571,7 @@ function openRoom(r){
   const p=P();
   main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]}</small></h1>
    <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
-    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${FIND_N}</small></button></div>
+    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${findN()}</small></button></div>
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
    ${roomScene(r)}
@@ -1588,7 +1613,7 @@ function roomLook(r,b){
 }
 // find it: Habre names a thing, the child taps it in the room
 function roomFind(r){
-  RF={r,list:spread(r.items.map((_,k)=>k),FIND_N),i:0,stars:0};
+  RF={r,list:spread(r.items.map((_,k)=>k),findN()),i:0,stars:0};
   $('#room').classList.add('find');$('#rLook').setAttribute('aria-pressed','false');$('#rFind').setAttribute('aria-pressed','true');
   $('#rQ').hidden=false;$('#rProg').hidden=false;$('#again').onclick=roomAsk;
   $('#room').scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});
@@ -1597,7 +1622,7 @@ function roomFind(r){
 function roomAsk(){
   const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
-  $('#rProg i').style.width=RF.i/FIND_N*100+'%';
+  $('#rProg i').style.width=RF.i/findN()*100+'%';
   // an English learner finds it from the English alone; the Nepali shows once it is found
   $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
   speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
@@ -1608,7 +1633,7 @@ function roomPick(b){
   if(k===want){
     RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right');showName(b);confetti();mood('happy');
     const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':null);
-    setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<FIND_N)roomAsk();else roomEnd();},1500);
+    setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<findN())roomAsk();else roomEnd();},1500);
   }else{
     RF.tries++;b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');mood('sad');
     const o=RF.r.items[k];speech(cap(o[0])+'!',o[1],`That’s the ${o[2]}. Try again!`);sayT(o[0],o[1],`That’s the ${o[2]}.`);
@@ -1619,7 +1644,7 @@ function roomEnd(){
   const r=RF.r,n=RF.stars,p=P();let nb=false;
   if(n>bestOf(p,'room',r.id)){p.best=p.best||{};p.best['room:'+r.id]=n;nb=true;}
   stat(p).plays++;stat(p).last=today();save();earn(n);renderTop();RF=null;
-  endCard(n,FIND_N,{newBest:nb,sub:`${r.en} · find it`,again:()=>{openRoom(r);roomFind(r);},back:()=>openRoom(r),backLabel:r.np});
+  endCard(n,findN(),{newBest:nb,sub:`${r.en} · find it`,again:()=>{openRoom(r);roomFind(r);},back:()=>openRoom(r),backLabel:r.np});
 }
 
 // ---------- yatra (Habre's journey): trips from the house to the garden, the farm, the forest… up to the mountains ----------
@@ -1722,7 +1747,7 @@ function stopDone(p,s){
   if(s.k==='check')return checked(p,T(s.t));
   if(s.k==='story')return bestOf(p,'kathaa',s.id)>=1;
   if(s.k==='vakya')return bestOf(p,'vakya:'+s.a,s.lv)>=V_N-1;
-  if(s.k==='boss')return bestOf(p,'yatra',s.r.id)>=BOSS_N-2;
+  if(s.k==='boss')return bestOf(p,'yatra',s.r.id)>=bossN()-2;
   return !!((p.yatra||{}).chest||{})[s.r.id];
 }
 // the stop a player is on: the first one not done yet
@@ -1939,7 +1964,7 @@ function openTopic(t){
    <div class="path">
     <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>1 · Learn</small>${seen?tick:''}</button>
     <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>2 · Play</small>${played?tick:''}</button>
-    <button class="mode check" id="mCheck" style="animation-delay:160ms"><span aria-hidden="true">✅</span>Jaanch<small>3 · Check · ★ ${bestOf(p,'check',t.id)}/${CHECK_N}</small>${checked(p,t)?tick:''}</button>
+    <button class="mode check" id="mCheck" style="animation-delay:160ms"><span aria-hidden="true">✅</span>Jaanch<small>3 · Check · ★ ${bestOf(p,'check',t.id)}/${checkN()}</small>${checked(p,t)?tick:''}</button>
    </div>
    <div class="extras">
     ${t.kind!=='yesno'?`<button class="mode memo" id="mMemo" style="animation-delay:240ms"><span aria-hidden="true">🧠</span>Jodi<small>Memory match · ★ ${bestOf(p,'jodi',t.id)}/3</small></button>`:''}
@@ -2833,7 +2858,7 @@ function startQuiz(o){
     const t=o.t,lv=levelOf(t.id),words=wordsFor(t,lv);o.lv=lv;
     entries=mk(t,words,lv,{hide:LEVELS[lv].listen})(spread(words,LEVELS[lv].n));
   }else if(o.mode==='check'){
-    const t=o.t;entries=mk(t,t.items,'check',{face:'hard',choices:3})(spread(t.items,CHECK_N));
+    const t=o.t;entries=mk(t,t.items,'check',{face:'hard',choices:ageOf(P()).checkChoices||3})(spread(t.items,checkN()));
   }else if(o.mode==='vchitra'){
     const lv=levelOf('vakya'),words=vSents(lv).map(s=>[s.rom,s.dev,s.en,s.pic]);o.lv=lv;
     entries=mk(vakyaT(),words,lv,{hide:lv==='hard',face:'hard'})(spread(words,V_N));
@@ -2847,7 +2872,7 @@ function startQuiz(o){
   }else if(o.mode==='yatra'){
     // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
     const used=new Set();
-    entries=spread(o.stops,BOSS_N).map(s=>{const t=T(s.t),w=wordsFor(t,s.lv);let it=rnd(w);
+    entries=spread(o.stops,bossN()).map(s=>{const t=T(s.t),w=wordsFor(t,s.lv);let it=rnd(w);
       for(let k=0;k<6&&used.has(keyOf(t,it));k++)it=rnd(w);used.add(keyOf(t,it));
       return {t,it,pool:w.map(x=>({t,it:x})),lv:s.lv,face:s.lv};});
   }
@@ -2957,16 +2982,16 @@ function endQuiz(){
     if($('#toCheck'))$('#toCheck').onclick=()=>startQuiz({mode:'check',t});
     $('#toLearn').onclick=()=>{topic=t;learnI=0;renderLearn();};
   }else if(Q.mode==='check'){
-    const t=Q.t,ok=n>=CHECK_N-1;
-    endCard(n,N,{newBest,trophy:ok?'✅':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',sub:ok?`You know ${t.en.toLowerCase()}!`:`Get ${CHECK_N-1} right to pass. Play a bit more, then try again.`,
+    const t=Q.t,ok=n>=checkN()-1;
+    endCard(n,N,{newBest,trophy:ok?'✅':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',sub:ok?`You know ${t.en.toLowerCase()}!`:`Get ${checkN()-1} right to pass. Play a bit more, then try again.`,
       again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
   }else if(Q.mode==='daily'){
     const d=p.daily||{};
     endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:openMap,backLabel:'🗺️ Naksa'});
   }else if(Q.mode==='yatra'){
-    const r=YATRA.find(x=>x.id===Q.rid),ok=n>=BOSS_N-2;
+    const r=YATRA.find(x=>x.id===Q.rid),ok=n>=bossN()-2;
     endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
-      sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${BOSS_N-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
+      sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${bossN()-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
   }else if(Q.mode==='vchitra'){
     endCard(n,N,{newBest,sub:`Find the picture · ${LEVELS[Q.lv].en}`,again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
   }else{
@@ -2980,13 +3005,13 @@ function startDaily(){startQuiz({mode:'daily'});}
 function renderProgress(p){
   if(!p)return;
   const st=stat(p),pr=progressOf(p),cell=(t,k)=>{const b=bestOf(p,t.id,k),n=LEVELS[k].n;return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
-  const ck=t=>{const b=bestOf(p,'check',t.id);return `<td class="${checked(p,t)?'pass':b?'some':''}">${b?`${b}/${CHECK_N}`:'–'}</td>`;};
+  const ck=t=>{const b=bestOf(p,'check',t.id);return `<td class="${checked(p,t)?'pass':b?'some':''}">${b?`${b}/${checkN()}`:'–'}</td>`;};
   const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:findCard(x.k)})).filter(x=>x.f);
   const traced=Object.keys(p.traced||{}),cards=allCards(),bx=[0,0,0];cards.forEach(c=>bx[boxOf(p,c)]++);
   const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
   const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id)),custom=new Set(p.custom||[]);
   $('#progBody').innerHTML=`
-   <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
+   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}, change it under Change player): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
    ${doors.length?`<div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
     <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
    <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
