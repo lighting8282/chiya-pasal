@@ -1697,6 +1697,8 @@ const regionFirst=r=>STOPS.findIndex(s=>s.r===r);
 const regionEnd=ri=>ri+1<YATRA.length?regionFirst(YATRA[ri+1]):STOPS.length;
 // the garden opens at GATE stars; every other place opens once the place before it is finished
 const placeOpen=(p,ri)=>starsOf(p)>=GATE&&yatraAt(p)>=regionFirst(YATRA[ri]);
+// a section's words open for flashcards and memory match once the section is open on the map
+const topicOpen=(p,t)=>{const ri=YATRA.findIndex(r=>'w_'+r.id===t.id);return ri<0||placeOpen(p,ri);};
 // one place: its own stops along a winding path. With no id, the place the player is on now.
 function openPath(rid){
   if(!P()){goWho();return;}
@@ -2019,10 +2021,10 @@ function trickyCards(p){
   const st=stat(p);
   return Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,12).map(x=>findCard(x.k)).filter(Boolean);
 }
-// story words that are also picture words
-function storyWordCards(){
+// picture words from the stories the child has read
+function storyWordCards(p){
   const out=[],seen=new Set();
-  STORIES.forEach(s=>pagesOf(s).forEach(pg=>pg[1].split(' ').forEach(w=>{const L=lookup(w);if(L&&!seen.has(keyOf(L.t,L.it))){seen.add(keyOf(L.t,L.it));out.push(L);}})));
+  STORIES.filter(s=>bestOf(p,'kathaa',s.id)>=1).forEach(s=>pagesOf(s).forEach(pg=>pg[1].split(' ').forEach(w=>{const L=lookup(w);if(L&&!seen.has(keyOf(L.t,L.it))){seen.add(keyOf(L.t,L.it));out.push(L);}})));
   return out;
 }
 const PATTI_MODES=[['flip','🃏 Palta','flip'],['jodi','🧠 Jodi','match pairs'],['suna','👂 Suna ra chhana','listen and tap']];
@@ -2032,10 +2034,11 @@ function openPatti(){
   const inPlay=c=>c&&!shelved(c.t.id),tricky=trickyCards(p).filter(inPlay),custom=(p.custom||[]).map(findCard).filter(inPlay);
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
   if(!shelved('custom'))add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
-  add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
+  add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards(p));
   if(!shelved('vakya'))add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
   const special=decks.length;
-  [...WORD_T(),...AKSHAR_ON()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
+  // only the sections the child has opened on the map
+  [...WORD_T().filter(t=>topicOpen(p,t)),...AKSHAR_ON()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const words=decks.length;
   GRAM_ON().forEach(t=>add(t.id,t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
@@ -2044,8 +2047,10 @@ function openPatti(){
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
-   <h2 class="sub">${EN()?'My decks <small lang="ne">मेरो पत्ती</small>':'Mero patti <small>my decks</small>'}</h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
-   <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':(AKSHAR_ON().length?'Shabda ra Akshar <small>words and letters</small>':'Shabda <small>words</small>')}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
+   ${special?`<h2 class="sub">${EN()?'My decks <small lang="ne">मेरो पत्ती</small>':'Mero patti <small>my decks</small>'}</h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>`:''}
+   <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':(AKSHAR_ON().length?'Shabda ra Akshar <small>words and letters</small>':'Shabda <small>words</small>')}</h2>
+   ${words>special?`<div class="topics">${decks.slice(special,words).map(tile).join('')}</div>`:''}
+   <p class="maphint">${words>special?'More decks open as you open more places on the map.':'Open the garden on the map to get your first deck! 🌻'}</p>
    ${decks.length>words?`<h2 class="sub">${EN()?'Grammar <small lang="ne">व्याकरण</small>':'Vyakaran <small>grammar</small>'}</h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
   $('#backBtn').onclick=openMap;
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
