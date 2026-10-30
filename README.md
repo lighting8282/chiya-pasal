@@ -48,7 +48,7 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 | 🏅 Practice 2 | the other 5 words, 4 questions | all 10 words, 8 questions | all 10 words, 10 questions |
 | ✅ Check (all 10 words) | 4 questions, 3 to pass | 6 questions, 5 to pass | 6 questions, 5 to pass |
 | 🏆 Big check | 5 questions, 3 to pass | 8 questions, 6 to pass | 8 questions, 6 to pass |
-| 🔍 Room find game | 5 things | 8 things | 8 things |
+| 🔍 Room find game | 4 things | 6 things | 8 things |
 
 Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
 

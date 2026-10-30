@@ -908,9 +908,9 @@ const LV_KEYS=Object.keys(LEVELS);
 // grown-up can change, and how many questions there are. The youngest (3-5) also get fewer words at a time, and
 // shorter checks and find games.
 const AGES=[
- {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',diff:'easy',split:true,rounds:{r1:4,r2:4},check:4,boss:5,find:5},
- {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒',diff:'medium',rounds:{r1:6,r2:8}},
- {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚',diff:'hard',rounds:{r1:6,r2:10}},
+ {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',diff:'easy',split:true,rounds:{r1:4,r2:4},check:4,boss:5,find:4},
+ {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒',diff:'medium',rounds:{r1:6,r2:8},find:6},
+ {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚',diff:'hard',rounds:{r1:6,r2:10},find:8},
 ];
 // players made before age groups count as 6–8
 const ageOf=p=>AGES.find(a=>a.id===(p&&p.age))||AGES[1];
@@ -1592,7 +1592,7 @@ function openRoom(r){
   const p=P();
   main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]}</small></h1>
    <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
-    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${findN()}</small></button></div>
+    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${Math.min(bestOf(p,'room',r.id),findN())}/${findN()}</small></button></div>
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
    ${roomScene(r)}
