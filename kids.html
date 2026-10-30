@@ -581,6 +581,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .topic.plus.lock .ic{filter:grayscale(.6);opacity:.7}
 .pbadge{font-size:.75rem;font-weight:800;color:#fff;background:var(--purple);border-radius:999px;padding:1px 10px;margin-top:4px}
 .topic.plus:not(.lock) .pbadge{background:var(--green)}
+.topic.plus .places{font-size:1.1rem;letter-spacing:2px}
 .plusinfo{display:grid;gap:8px;background:var(--card);border-radius:22px;padding:14px 16px;box-shadow:0 6px 0 var(--line)}
 .plusinfo div{display:flex;gap:12px;align-items:center}
 .plusinfo div>span:first-child{font-size:1.8rem}
@@ -649,6 +650,29 @@ const TOPICS=[
   ['machha','माछा','fish','🐟'],['hvel','ह्वेल','whale','🐋'],['dalphin','डल्फिन','dolphin','🐬'],['gangato','गँगटो','crab','🦀'],
   ['aktopas','अक्टोपस','octopus','🐙'],['shark','सार्क','shark','🦈'],['jhinge machha','झिंगे माछा','shrimp','🦐'],
   ['sankha','शङ्ख','seashell','🐚'],['rangichangi machha','रङ्गीचङ्गी माछा','tropical fish','🐠']]},
+ // Habre Plus topics (plus:'plus'): only in play, and only in daily practice and flashcards, once the pack is owned
+ {id:'jal',np:'Jal',dev:'जल',en:'Water',icon:'💧',color:'#00a6b8',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['paani','पानी','water','💧'],['khola','खोला','river','🏞️'],['chhaal','छाल','wave','🌊'],['dhunga','ढुङ्गा','stone','🪨'],
+  ['pul','पुल','bridge','🌉'],['balchhi','बल्छी','fishing rod','🎣'],['bhumari','भुमरी','whirlpool','🌀'],['kinaar','किनार','beach','🏖️']]},
+ {id:'jalchar',np:'Jalchar',dev:'जलचर',en:'River life',icon:'🦦',color:'#2fae6e',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['udbiralo','उदबिरालो','otter','🦦'],['rajhans','राजहाँस','swan','🦢'],['jalgaida','जलगैंडा','hippo','🦛'],
+  ['chiplekira','चिप्लेकीरा','snail','🐌'],['kamal','कमल','lotus','🪷'],['flamingo','फ्लेमिङ्गो','flamingo','🦩']]},
+ {id:'samundri',np:'Samundri jiv',dev:'समुद्री जीव',en:'Sea life',icon:'🐡',color:'#3a7bf2',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['phulne machha','फुल्ने माछा','puffer fish','🐡'],['skwid','स्क्विड','squid','🦑'],['lobstar','लबस्टर','lobster','🦞'],
+  ['munga','मुगा','coral','🪸'],['sil','सिल','seal','🦭'],['samudri kachhuwa','समुद्री कछुवा','sea turtle','🐢']]},
+ {id:'gahiro',np:'Gahiro samundra',dev:'गहिरो समुद्र',en:'The deep sea',icon:'⚓',color:'#5b4bd6',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['jahaj','जहाज','ship','🚢'],['langar','लंगर','anchor','⚓'],['gotakhor','गोताखोर','diver','🤿'],['phoka','फोका','bubbles','🫧'],
+  ['khajana','खजाना','treasure','💰'],['moti','मोती','pearl','🦪'],['torch','टर्च','torch','🔦'],['samudri daaku','समुद्री डाकु','pirate','🏴‍☠️']]},
+ {id:'mausam',np:'Mausam',dev:'मौसम',en:'Weather',icon:'🌦️',color:'#00a6b8',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['hawa','हावा','wind','💨'],['barsha','वर्षा','rain','🌧️'],['chhaata','छाता','umbrella','☂️'],['kuhiro','कुहिरो','fog','🌫️'],
+  ['chatyaang','चट्याङ','lightning','⚡'],['asina','असिना','hail','🧊'],['aandhi','आँधी','storm','🌪️']]},
+ {id:'udne',np:'Udne kura',dev:'उड्ने कुरा',en:'Things that fly',icon:'🪂',color:'#ff9f1c',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['pyarasut','प्यारासुट','parachute','🪂'],['chamero','चमेरो','bat','🦇'],['pwaakh','प्वाँख','feather','🪶'],['dhukur','ढुकुर','dove','🕊️'],
+  ['gund','गुँड','nest','🪹'],['pari','परी','fairy','🧚'],['ajingar','अजिङ्गर','dragon','🐉']]},
+ {id:'antariksha',np:'Antariksha',dev:'अन्तरिक्ष',en:'Space',icon:'🚀',color:'#5b4bd6',kind:'pic',q:'kahaa',plus:'plus',items:[
+  ['raket','रकेट','rocket','🚀'],['graha','ग्रह','planet','🪐'],['prithvi','पृथ्वी','Earth','🌍'],['durbin','दूरबिन','telescope','🔭'],
+  ['upagraha','उपग्रह','satellite','🛰️'],['puchchhre tara','पुच्छ्रे तारा','comet','☄️'],['aakaashganga','आकाशगंगा','Milky Way','🌌'],
+  ['antarikshayatri','अन्तरिक्षयात्री','astronaut','🧑‍🚀'],['udan tashtari','उडन तस्तरी','flying saucer','🛸']]},
  {id:'kira',np:'Kira',dev:'कीरा',en:'Bugs',icon:'🦋',color:'#8e5be8',kind:'pic',q:'kahaa',items:[
   ['putali','पुतली','butterfly','🦋'],['kamila','कमिला','ant','🐜'],['mauri','मौरी','bee','🐝'],['makura','माकुरा','spider','🕷️'],
   ['laamkhutte','लामखुट्टे','mosquito','🦟'],['fatyangro','फट्याङ्ग्रो','grasshopper','🦗'],['bichchhi','बिच्छी','scorpion','🦂']]},
@@ -1311,7 +1335,7 @@ const SHELVED={
 const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
-const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id));
+const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id)&&(!t.plus||hasPack(t.plus)));
 // the letters and grammar topics, or none while they're shelved
 const AKSHAR_ON=()=>shelved(AKSHAR().id)?[]:[AKSHAR()];
 const GRAM_ON=()=>shelved('vyakaran')?[]:GRAM_T();
@@ -1682,24 +1706,36 @@ function goStop(s){
   }
 }
 // ---------- Habre Plus: paid places ----------
-// The free game is the house and the eight trips. Habre Plus adds places of their own, shown under the map and
-// locked until the pack is owned. To add content, give a place its stops (the same kinds as a trip: W play, K story,
-// J check); a big check and a present are added at the end. A place with no stops yet shows "coming soon".
+// The free game is the house and the eight trips. Habre Plus adds paths of their own, shown under the map and
+// locked until the pack is owned. A path is a few places, each opening once the one before it is finished. To add
+// content, give a place its stops (the same kinds as a trip: W play, K story, J check); a big check and a present are
+// added at the end. A place with no stops yet shows "coming soon".
 // Ownership is kept on this device (S.owned) and shared by every player on it.
 const PACKS={
  plus:{id:'plus',icon:'✨',np:'Habre Plus',dev:'हाब्रे प्लस',en:'Habre Plus',price:{npr:'रु 399',usd:'$4.99'},
-  includes:[['🗺️','New places on the map, each a trip of its own','नक्सामा नयाँ ठाउँहरू'],['📖','New stories in every place','हरेक ठाउँमा नयाँ कथा'],
+  includes:[['🗺️','New paths: deep under the water, and up into the sky and space','नयाँ बाटो: पानीमुनि र आकाशमा'],['📖','New stories in every place','हरेक ठाउँमा नयाँ कथा'],
    ['🎙️','A real person reading the words and stories (coming)','शब्द र कथा पढ्ने मान्छेको आवाज'],['📊','A weekly report for grown-ups (coming)','ठूला मान्छेका लागि साप्ताहिक रिपोर्ट']]},
 };
-const PLUS=[
- {id:'kathmandu',pack:'plus',np:'Kathmandu',dev:'काठमाडौं',en:'The big city',icon:'🏙️',bg:'#efe6da',gems:40,deco:['🛕','🛺','🕊️','🏪'],about:'Temples, buses, shops and street food.',stops:[]},
- {id:'chitwan',pack:'plus',np:'Chitwan',dev:'चितवन',en:'Jungle safari',icon:'🐘',bg:'#dcefd2',gems:40,deco:['🦏','🐊','🌿','🦚'],about:'Rhinos, elephants and a canoe on the river.',stops:[]},
- {id:'trek',pack:'plus',np:'Himalko trek',dev:'हिमालको ट्रेक',en:'Mountain trek',icon:'🎒',bg:'#e8eef7',gems:40,deco:['🏔️','🐐','⛺','🧗'],about:'Walking to base camp with a porter.',stops:[]},
- {id:'mela',pack:'plus',np:'Mela',dev:'मेला',en:'The fair',icon:'🎡',bg:'#fde4ec',gems:40,deco:['🎠','🍭','🎈','🥁'],about:'Rides, sweets, music and games at the fair.',stops:[]},
-];
+const PLUS_PATHS=(()=>{const W=(t,lv)=>({k:'play',t,lv}),J=t=>({k:'check',t}),lvs=t=>[W(t,'easy'),W(t,'medium'),W(t,'hard')];return [
+ {id:'paaniko',pack:'plus',np:'Paaniko yatra',dev:'पानीको यात्रा',en:'The water path',icon:'🌊',about:'Down the river, under the sea and into the deep.',places:[
+  {id:'khola',np:'Khola',dev:'खोला',en:'The river',icon:'🏞️',bg:'#dcf0f7',gems:40,deco:['🪨','🌿','🦆','🐸'],stops:[
+   W('jal','easy'),W('jalchar','easy'),W('jal','medium'),W('jalchar','medium'),W('jal','hard'),W('jalchar','hard'),J('jal'),J('jalchar')]},
+  {id:'samundramuni',np:'Samundra muni',dev:'समुद्र मुनि',en:'Under the sea',icon:'🐠',bg:'#cfe8f7',gems:45,deco:['🪸','🐚','🐟','🫧'],stops:[...lvs('samundri'),J('samundri')]},
+  {id:'gahiro',np:'Gahiro samundra',dev:'गहिरो समुद्र',en:'The deep sea',icon:'🤿',bg:'#c9d6f2',gems:50,deco:['🫧','🐙','⚓','🐋'],stops:[...lvs('gahiro'),J('gahiro')]}]},
+ {id:'aakaashko',pack:'plus',np:'Aakaashko yatra',dev:'आकाशको यात्रा',en:'The sky path',icon:'☁️',about:'Up through the weather, among things that fly, and out into space.',places:[
+  {id:'aakaash',np:'Aakaash',dev:'आकाश',en:'The sky',icon:'🌦️',bg:'#e3f1fb',gems:40,deco:['☁️','🌈','💨','☀️'],stops:[...lvs('mausam'),J('mausam')]},
+  {id:'udaan',np:'Udaan',dev:'उडान',en:'Up and away',icon:'🪂',bg:'#eef0fb',gems:45,deco:['🎈','🪁','🕊️','☁️'],stops:[...lvs('udne'),J('udne')]},
+  {id:'antariksha',np:'Antariksha',dev:'अन्तरिक्ष',en:'Outer space',icon:'🚀',bg:'#dcd8f5',gems:50,deco:['⭐','🌙','✨','🪐'],stops:[...lvs('antariksha'),J('antariksha')]}]},
+];})();
+// every Habre Plus place, each knowing its path; the trail (openPath) plays these like the free journey's places
+const PLUS=PLUS_PATHS.flatMap(pa=>pa.places.map((pl,k)=>Object.assign(pl,{pack:pa.pack,path:pa,k})));
 const plusStopsCache={};
 const plusStops=pl=>plusStopsCache[pl.id]||(plusStopsCache[pl.id]=[...pl.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r:pl})));
 const hasPack=id=>!!(S.owned||{})[id];
+const plusFinished=(p,pl)=>plusStops(pl).every(s=>stopDone(p,s));
+const plusDoneN=(p,pl)=>plusStops(pl).filter(s=>stopDone(p,s)).length;
+// the first place of a path is open straight away; each later one once the place before it is finished
+const plusOpen=(p,pl)=>hasPack(pl.pack)&&!!pl.stops.length&&(!pl.k||plusFinished(p,pl.path.places[pl.k-1]));
 function grantPack(id,source){S.owned={...(S.owned||{}),[id]:{source,at:Date.now()}};save();}
 // the price shown: rupees in Nepal, dollars elsewhere
 const priceOf=pk=>{let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}return /Kathmandu|Katmandu/.test(tz)?pk.price.npr:pk.price.usd;};
@@ -1713,6 +1749,27 @@ const PAY={
 };
 // for testing on this device only, from the browser console: habrePlus.test(true) unlocks, habrePlus.test(false) locks again
 window.habrePlus={test(on){if(on)grantPack('plus','test');else{const o={...(S.owned||{})};delete o.plus;S.owned=o;save();}if(screen==='map')openMap();return hasPack('plus');}};
+
+// a Habre Plus path: its places in order, each opening the trail of its stops
+function openTrack(id){
+  if(!P()){goWho();return;}
+  const pa=PLUS_PATHS.find(x=>x.id===id);if(!pa||!hasPack(pa.pack)){openPlus();return;}
+  screen='track';trip=null;const p=P();
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${pa.icon} ${EN()?pa.en:pa.np} <small lang="ne">${EN()?pa.dev:pa.en} · ${pa.about}</small></h1>
+   <div class="topics">${pa.places.map((pl,i)=>{const open=plusOpen(p,pl),n=plusStops(pl).length,d=plusDoneN(p,pl);
+     return `<button class="topic plus${open?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-pl="${pl.id}" aria-label="${esc(pl.en)}${open?'':' (locked)'}">
+      <span class="ic" aria-hidden="true">${pl.icon}</span><b>${i+1}. ${EN()?pl.en:pl.np}</b><span class="dev" lang="ne">${EN()?pl.dev:pl.en}</span>
+      <span class="pbadge">${!pl.stops.length?'Coming soon':!open?'🔒':d>=n?'⭐ Done':`${d} / ${n}`}</span></button>`;}).join('')}</div>
+   <p class="maphint">Each place opens when you finish the one before it.</p>`;
+  $('#backBtn').onclick=openMap;
+  main.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{
+    const pl=PLUS.find(x=>x.id===b.dataset.pl);
+    if(!pl.stops.length){speech('Chhitai aaudai cha!','छिट्टै आउँदै छ!',`${pl.en}: coming soon!`);say('Chhitai aaudai cha!','छिट्टै आउँदै छ!',null);mood('wave');return;}
+    if(!plusOpen(p,pl)){const pb=pa.places[pl.k-1],m=[`Pahile ${pb.np} sakau!`,`पहिले ${pb.dev} सकौं!`,`Finish ${pb.en.toLowerCase()} first!`];speech(...m);say(...m);mood('sad');return;}
+    speech(pl.np,pl.dev,pl.en);sayT(pl.np,pl.dev,pl.en);mood('happy');openPath(pl.id);
+  });
+  speech(pa.np,pa.dev,pa.en+'!');say(pa.np,pa.dev,null);mood('wave');
+}
 
 // grown-ups only: a sum written in words, so a child who can't read yet can't get through to the buying screen
 const NUM_WORDS=['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
@@ -1729,12 +1786,12 @@ function grownGate(onPass,back){
 function openPlus(){
   if(!P()){goWho();return;}
   screen='plus';const pk=PACKS.plus,own=hasPack(pk.id);
-  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${pk.icon} ${pk.np} <small lang="ne">${pk.dev} · more places with Habre</small></h1>
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${pk.icon} ${pk.np} <small lang="ne">${pk.dev} · more paths with Habre</small></h1>
    <div class="plusinfo">${pk.includes.map(([ic,en,dv])=>`<div><span aria-hidden="true">${ic}</span><span><b>${en}</b><small lang="ne">${dv}</small></span></div>`).join('')}</div>
-   <div class="topics">${PLUS.map(pl=>`<div class="topic plus${own?'':' lock'}" style="--tc:#8e5be8"><span class="ic" aria-hidden="true">${pl.icon}</span><b>${EN()?pl.en:pl.np}</b><span class="dev" lang="ne">${pl.dev}</span><span class="en">${pl.about}</span></div>`).join('')}</div>
-   ${own?`<p class="plusown">✓ Habre Plus is unlocked on this device. New places appear on the map as they are ready.</p>`
+   <div class="topics">${PLUS_PATHS.map(pl=>`<div class="topic plus${own?'':' lock'}" style="--tc:#8e5be8"><span class="ic" aria-hidden="true">${pl.icon}</span><b>${EN()?pl.en:pl.np}</b><span class="dev" lang="ne">${pl.dev}</span><span class="places" aria-hidden="true">${pl.places.map(x=>x.icon).join(' ')}</span><span class="en">${pl.about}</span></div>`).join('')}</div>
+   ${own?`<p class="plusown">✓ Habre Plus is unlocked on this device. New paths appear on the map as they are ready.</p>`
      :`<div class="btns"><button class="btn" style="background:var(--purple)" id="plusBuy">✨ Unlock for ${priceOf(pk)}</button><button class="btn ghost" id="plusCode">I have a code</button></div>
-       <p class="plusnote">One payment unlocks every Habre Plus place, now and later, for every player on this device.</p>`}
+       <p class="plusnote">One payment unlocks every Habre Plus path, now and later, for every player on this device.</p>`}
    <div id="plusMsg"></div>`;
   $('#backBtn').onclick=openMap;
   const msg=(h,cls)=>{$('#plusMsg').innerHTML=`<p class="plusmsg ${cls||''}">${h}</p>`;};
@@ -1747,7 +1804,7 @@ function openPlus(){
       $('#plusGo').onclick=()=>{const c=$('#plusIn').value.trim();if(!c)return;if(!PAY.ready){notYet();return;}PAY.redeem(pk,c).then(done,()=>msg('That code didn’t work.','bad'));};
     },openPlus);
   }
-  speech(pk.np,pk.dev,own?'Thank you for supporting Habre!':'More places to explore with Habre.');mood('wave');
+  speech(pk.np,pk.dev,own?'Thank you for supporting Habre!':'More paths to explore with Habre.');mood('wave');
 }
 
 // a section page opened while on a trip goes back to that place on the trail instead
@@ -1757,13 +1814,13 @@ const regionEnd=ri=>ri+1<YATRA.length?regionFirst(YATRA[ri+1]):STOPS.length;
 // the garden opens at GATE stars; every other place opens once the place before it is finished
 const placeOpen=(p,ri)=>starsOf(p)>=GATE&&yatraAt(p)>=regionFirst(YATRA[ri]);
 // one place: its own stops along a winding path. With no id, the place the player is on now.
-// A Habre Plus place (see PLUS) opens here too, once its pack is owned and it has stops: its stops are its own,
-// counted from its first, and it can be played in any order with the free journey.
+// A Habre Plus place (see PLUS) opens here too, once its pack is owned and the place before it on its path is
+// finished: its stops are its own, counted from its first, and it can be played in any order with the free journey.
 function openPath(rid){
   if(!P()){goWho();return;}
   trip=null;
   const p=P(),y=p.yatra=p.yatra||{},pl=PLUS.find(x=>x.id===rid);
-  if(pl&&(!hasPack(pl.pack)||!pl.stops.length)){openMap();return;}
+  if(pl&&!plusOpen(p,pl)){if(hasPack(pl.pack))openTrack(pl.path.id);else openMap();return;}
   const gat=yatraAt(p),list=pl?plusStops(pl):null,at=pl?(i=>i<0?list.length:i)(list.findIndex(s=>!stopDone(p,s))):gat,prev=pl?at:y.at||0;
   const cur=gat<STOPS.length?STOPS[gat].r:YATRA[YATRA.length-1];
   const r=pl||YATRA.find(x=>x.id===rid)||cur,ri=YATRA.indexOf(r);
@@ -1782,14 +1839,14 @@ function openPath(rid){
       ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
       <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
       <span class="lb">${esc(EN()?f[3].split(' · ')[0]:f[1])}</span></button></div>`;}).join('');
-  const before=pl?null:ri?YATRA[ri-1]:null,after=pl?null:YATRA[ri+1],done=Math.max(0,Math.min(at-first,stops.length));
-  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${stops.length}</small></h1>
+  const pb=pl&&pl.path.places[pl.k-1],pa=pl&&pl.path.places[pl.k+1],before=pl?null:ri?YATRA[ri-1]:null,after=pl?null:YATRA[ri+1],done=Math.max(0,Math.min(at-first,stops.length));
+  main.innerHTML=`${backBtn(pl?pl.path.icon+' '+(EN()?pl.path.en:pl.path.np):'🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${stops.length}</small></h1>
    <div class="trail">
-    <div class="trail-end"><span class="pic" aria-hidden="true">${pl?'✨':before?before.icon:'🏠'}</span>${pl?'Habre Plus':before?before.np:'Habreko ghar'}<small>${pl?'A trip of its own':before?'Where you came from':'Suru · the start'}</small></div>
+    <div class="trail-end"><span class="pic" aria-hidden="true">${pl?(pb?pb.icon:pl.path.icon):before?before.icon:'🏠'}</span>${pl?(pb?pb.np:pl.path.np):before?before.np:'Habreko ghar'}<small>${pl?(pb?'Where you came from':'Suru · the start'):before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
-    <div class="trail-end"><span class="pic" aria-hidden="true">${pl?'🚩':after?after.icon:'🏔️🚩'}</span>${pl?'Yatra sakiyo':after?after.np:'Himalko tuppo'}<small>${pl?'The end of the trip':after?(finished?'Open now!':'Opens when you finish here'):'The top of the mountain'}</small></div>
+    <div class="trail-end"><span class="pic" aria-hidden="true">${pl?(pa?pa.icon:'🚩'):after?after.icon:'🏔️🚩'}</span>${pl?(pa?pa.np:'Yatra sakiyo'):after?after.np:'Himalko tuppo'}<small>${pl?(pa?(finished?'Open now!':'Opens when you finish here'):'The end of the path'):after?(finished?'Open now!':'Opens when you finish here'):'The top of the mountain'}</small></div>
    </div>`;
-  $('#backBtn').onclick=openMap;
+  $('#backBtn').onclick=pl?()=>openTrack(pl.path.id):openMap;
   main.querySelectorAll('.stop').forEach(b=>b.onclick=()=>{
     const i=+b.dataset.i,s=stopAt(i),f=stopFace(s);
     if(i>at){speech('Pahile yo!','पहिले यो!','Do the glowing stop first!');say('Pahile yo!','पहिले यो!','Do the glowing stop first!');mood('sad');
@@ -1799,7 +1856,7 @@ function openPath(rid){
       y.chest=y.chest||{};y.chest[s.r.id]=1;save();earn(s.r.gems);b.classList.add('done');confetti();setTimeout(confetti,500);mood('happy');
       speech(`Upahaar! 💎 ${s.r.gems}`,'उपहार!',`${s.r.gems} gems for Habre’s shop!`);say('Upahaar!','उपहार!',`${s.r.gems} gems!`);
       // the place is finished: back to the map, where the next place opens
-      setTimeout(()=>{if(screen==='yatra')openMap();},2400);return;
+      setTimeout(()=>{if(screen==='yatra'){if(pl)openTrack(pl.path.id);else openMap();}},2400);return;
     }
     speech(f[1],f[2],f[3]);sayT(f[1],f[2],f[3]);mood('happy');
     setTimeout(()=>{if(screen==='yatra')goStop(s);},RM?0:700);
@@ -1840,11 +1897,12 @@ function openMap(){
        <span class="lb">${EN()?o.en:o.np}<small${EN()?' lang="ne"':''}>${EN()?o.dev:o.en}</small></span></button>`;}).join('')}
    </div>
    <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>
-   <h2 class="sub">✨ Habre Plus <small>more places · हाब्रे प्लस</small></h2>
-   <div class="topics plusgrid">${PLUS.map((pl,i)=>{const own=hasPack(pl.pack),soon=own&&!pl.stops.length;
-     return `<button class="topic plus${own?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-plus="${pl.id}" aria-label="${esc(pl.en)}${own?soon?' (coming soon)':'':' (Habre Plus)'}">
-      <span class="ic" aria-hidden="true">${pl.icon}</span><b>${EN()?pl.en:pl.np}</b><span class="dev" lang="ne">${pl.dev}</span>
-      <span class="pbadge">${own?soon?'Coming soon':'Open':'🔒 Plus'}</span></button>`;}).join('')}</div>
+   <h2 class="sub">✨ Habre Plus <small>more paths · हाब्रे प्लस</small></h2>
+   <div class="topics plusgrid">${PLUS_PATHS.map((pa,i)=>{const own=hasPack(pa.pack),dn=pa.places.filter(pl=>plusFinished(p,pl)).length;
+     return `<button class="topic plus${own?'':' lock'}" style="--tc:#8e5be8;animation-delay:${i*50}ms" data-plus="${pa.id}" aria-label="${esc(pa.en)}${own?'':' (Habre Plus)'}">
+      <span class="ic" aria-hidden="true">${pa.icon}</span><b>${EN()?pa.en:pa.np}</b><span class="dev" lang="ne">${EN()?pa.dev:pa.en}</span>
+      <span class="places" aria-hidden="true">${pa.places.map(pl=>pl.icon).join(' ')}</span>
+      <span class="pbadge">${own?`${dn} / ${pa.places.length} places`:'🔒 Plus'}</span></button>`;}).join('')}</div>
    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
    ${shelved('patti')?'':`<button class="daily patti" id="pattiBtn"><span class="ic" aria-hidden="true">🃏</span><span><b>Patti</b><small>Flashcards and memory match: train any time${known?` · ${known} words known`:''}</small></span></button>`}
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
@@ -1854,10 +1912,8 @@ function openMap(){
   if($('#pattiBtn'))$('#pattiBtn').onclick=openPatti;
   $('#wardBtn').onclick=()=>openShop();
   main.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>{
-    const pl=PLUS.find(x=>x.id===b.dataset.plus);
-    if(!hasPack(pl.pack)){openPlus();return;}
-    if(!pl.stops.length){speech('Chhitai aaudai cha!','छिट्टै आउँदै छ!',`${pl.en}: coming soon!`);say('Chhitai aaudai cha!','छिट्टै आउँदै छ!',null);mood('wave');return;}
-    openPath(pl.id);
+    const pa=PLUS_PATHS.find(x=>x.id===b.dataset.plus);
+    if(!hasPack(pa.pack))openPlus();else openTrack(pa.id);
   });
   main.querySelectorAll('.place').forEach(b=>b.onclick=()=>{
     const k=+b.dataset.n,o=nodes[k];

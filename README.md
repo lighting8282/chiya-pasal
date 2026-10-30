@@ -344,11 +344,25 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 
 ## Project layout
 
-**Habre Plus (paid places, not live yet).** `kids.html` has the structure for a paid pack:
-- **`PACKS` and `PLUS`:** the pack and its places, shown under the map and locked until owned. The places are Kathmandu, Chitwan, a mountain trek and the fair.
+**Habre Plus (paid paths, not live yet).** `kids.html` has the structure for a paid pack:
+- **`PACKS` and `PLUS_PATHS`:** the pack and its paths, shown under the map and locked until owned. A path is a few places played in order: each place opens when the one before it is finished. Tapping a path shows its places, and each place has a trail of stops like the free journey's.
+- **Topics marked `plus:'plus'`** belong to the paths. They join daily practice and flashcards only once the pack is owned.
 - **The unlock screen** sits behind a grown-ups-only question.
 - **Ownership** is a per-device flag (`S.owned`).
-- **Adding content:** give a place `stops` (the same kinds as a trip), and it gets a trail with a big check and a present. Until then it shows "coming soon".
+- **Adding content:** add a place to a path's `places` with its `stops` (the same kinds as a trip), and it gets a trail with a big check and a present. A place with no stops shows "coming soon".
+
+The paths so far (every stop ends with a big check of 8 questions, 6 to pass, then a present):
+
+| Path | Place | Stops | Words |
+|---|---|---|---|
+| 🌊 **Paaniko yatra** (the water path) | 1. 🏞️ Khola (the river) | Jal (water) and Jalchar (river life), each easy → medium → hard, taking turns; a check on each; 💎 40 | **Jal:** paani (water), khola (river), chhaal (wave), dhunga (stone), pul (bridge), balchhi (fishing rod), bhumari (whirlpool), kinaar (beach). **Jalchar:** udbiralo (otter), rajhans (swan), jalgaida (hippo), chiplekira (snail), kamal (lotus), flamingo |
+| | 2. 🐠 Samundra muni (under the sea) | Samundri jiv (sea life) easy → medium → hard, then a check; 💎 45 | phulne machha (puffer fish), skwid (squid), lobstar (lobster), munga (coral), sil (seal), samudri kachhuwa (sea turtle) |
+| | 3. 🤿 Gahiro samundra (the deep sea) | Gahiro samundra (the deep sea) easy → medium → hard, then a check; 💎 50 | jahaj (ship), langar (anchor), gotakhor (diver), phoka (bubbles), khajana (treasure), moti (pearl), torch, samudri daaku (pirate) |
+| ☁️ **Aakaashko yatra** (the sky path) | 1. 🌦️ Aakaash (the sky) | Mausam (weather) easy → medium → hard, then a check; 💎 40 | hawa (wind), barsha (rain), chhaata (umbrella), kuhiro (fog), chatyaang (lightning), asina (hail), aandhi (storm) |
+| | 2. 🪂 Udaan (up and away) | Udne kura (things that fly) easy → medium → hard, then a check; 💎 45 | pyarasut (parachute), chamero (bat), pwaakh (feather), dhukur (dove), gund (nest), pari (fairy), ajingar (dragon) |
+| | 3. 🚀 Antariksha (outer space) | Antariksha (space) easy → medium → hard, then a check; 💎 50 | raket (rocket), graha (planet), prithvi (Earth), durbin (telescope), upagraha (satellite), puchchhre tara (comet), aakaashganga (Milky Way), antarikshayatri (astronaut), udan tashtari (flying saucer) |
+
+The paths have no stories yet.
 - **`PAY`:** where real payments plug in, either Google Play Billing in the Play Store app or a web checkout whose codes are checked by a server. While `PAY.ready` is false, buying shows "not switched on yet".
 - **Testing on one device:** `habrePlus.test(true)` in the browser console unlocks the pack.
 
