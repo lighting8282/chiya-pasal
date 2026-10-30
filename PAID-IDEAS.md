@@ -42,9 +42,26 @@ Built on the `habre-plus` branch (local, not pushed): two maps shaped like the f
 Still to add:
 - Stories along each map.
 - A Nepali speaker's check of the new words.
-- Ideas for more maps: Kathmandu (the big city), Chitwan (jungle safari), a mountain trek, the fair.
+- More maps: see the ideas below.
+
+## Future map ideas
+
+Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section. Maps after the free map open in a set order (still to decide), so the journey story carries on from one map to the next.
+
+- 🌊 **Water**: built on the `habre-plus` branch.
+- ☁️ **Sky**: built on the `habre-plus` branch.
+- 🚀 **Space**: the sky map already ends with three space sections, so a space map could replace those or carry on from them.
+- 🏙️ **City**: for example Kathmandu (temples, buses, shops, street food).
+- 🏫 **School**: the classroom, the playground, lunch, books, sports day.
+- 🎃 **Seasonal and holiday maps**, Nepali and American:
+  - Nepali: Dashain, Tihar, Holi, Lhosar, Teej, Chhath, Nepali New Year
+  - American: Halloween, Thanksgiving, Christmas, Easter, the Fourth of July
+  - The free map's temple square already has the Tihar, Dashain and Holi side stories.
+- Older ideas: Chitwan (jungle safari), a mountain trek, the fair.
+- And more to come.
 
 ## Also sketched on the `habre-plus` branch
 
+- New stories in every place.
 - A real person reading the words and stories.
 - A weekly report for grown-ups (this overlaps with the analytics idea above).

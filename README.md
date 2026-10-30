@@ -181,7 +181,7 @@ Words: saanp (snake), kachhuwa (turtle), **hans** (duck), gohi (crocodile), bhya
 
 Words: jiraph (giraffe), jebra (zebra), **singha** (lion), chituwa (leopard), panda, **bandar** (monkey), hatti (elephant), bagh (tiger), **gohi** (crocodile), penguin
 
-#### 8. 🌊 Samundra (the seaside)
+#### 8. 🍊 Suntala bagaan (the orange orchard)
 
 1. Words, easy
 2. Words, medium
@@ -190,7 +190,7 @@ Words: jiraph (giraffe), jebra (zebra), **singha** (lion), chituwa (leopard), pa
 5. Big check
 6. Present: 💎 30
 
-Words: hvel (whale), dalphin (dolphin), **machha** (fish), gangato (crab), aktopas (octopus), **dunga** (boat), shark, sankha (seashell), **kachhuwa** (turtle), rangichangi machha (tropical fish)
+Words: suntala (orange), syau (apple), **bandar** (monkey), aanp (mango), kera (banana), **rukh** (tree), angur (grapes), nashpati (pear), **putali** (butterfly), bhuin katahar (pineapple)
 
 #### 9. ⛰️ Pahad (the hills)
 
