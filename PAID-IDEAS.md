@@ -35,7 +35,13 @@ Ideas for what a paid version of Habre's Nepali (`kids.html`) could include. Not
 
 ## Future map ideas
 
-Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section. Maps after the free map open in a set order (still to decide), so the journey story carries on from one map to the next.
+Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section.
+
+**Habre's adventures:** every map is a trip of its own. Habre is going around the world, and to many other places, to learn as much as he can, just like the child playing. Each map's story starts at home and stands alone, so the order doesn't matter: once the free map is finished, the child picks whichever open map they like. Trips that aren't holidays (school, helpers in town, the farming year) can be days out, and the most fantastical ones (the magic kingdom, the tiny world, inside the body) can be dreams.
+
+**Postcards and souvenirs** (built for the free map; each paid map needs its own entry in `TRIP_ENDS`):
+- **A postcard to Hajuraama** when a map is finished: a picture of the place and a short note from Habre, kept for grown-ups to see (and maybe in the game too).
+- **A souvenir** from every map, such as a seashell from the water map or a model rocket from the sky map. Souvenirs go on a shelf in Habre's living room, which gives the room a new purpose now that its lessons are shelved.
 
 - 🌊 **Water**: built on the `habre-plus` branch.
 - ☁️ **Sky**: built on the `habre-plus` branch.

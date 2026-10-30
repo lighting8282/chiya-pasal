@@ -412,6 +412,23 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
   .mc-face .pic{font-size:2rem}
 }
 
+/* postcards to Hajuraama and the souvenir shelf in the living room */
+.pcard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);background:#fffdf6;border-radius:18px;box-shadow:0 6px 0 var(--line);overflow:hidden;transform:rotate(-1deg)}
+.pc-pic{background:var(--pbg);font-size:5rem;line-height:1;display:grid;place-items:center;align-content:center;gap:8px;padding:18px;min-height:210px;border-right:2px dashed #e4d7c1}
+.pc-pic span{font-size:1rem;font-weight:800}
+.pc-note{position:relative;padding:16px 18px 18px;display:grid;gap:8px;align-content:start}
+.pc-note p{margin:0}.pc-note b{display:block}.pc-note small{color:var(--soft);display:block}
+.pc-note p:first-of-type{padding-right:64px}
+.pc-stamp{position:absolute;top:12px;right:12px;width:52px;height:60px;display:grid;place-items:center;font-size:1.9rem;border:3px dotted #e8463a;border-radius:6px;background:#fff;transform:rotate(4deg)}
+.pc-sign{margin-top:4px!important}
+.souv{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:20px;padding:12px 16px;box-shadow:0 6px 0 var(--line)}
+.souv>span:first-child{font-size:2.6rem}
+.souv small{display:block;color:var(--soft)}
+.shelf{display:flex;flex-wrap:wrap;gap:12px;padding:12px 14px 18px;border-radius:18px;background:linear-gradient(to top,#b07a45 0 10px,#f6ead6 10px)}
+.souvb{width:86px;display:grid;justify-items:center;gap:2px;padding:8px 4px;border-radius:14px;background:#fff;box-shadow:0 4px 0 #e4d7c1;font-size:.72rem;font-weight:700;line-height:1.1;text-align:center}
+.souvb span{font-size:2.2rem;line-height:1.1}
+.souvb.empty{background:transparent;box-shadow:none;border:2px dashed #d9c7a8;color:#c4ad88;font-size:1.6rem;place-items:center;min-height:62px}
+@media (max-width:520px){.pcard{grid-template-columns:minmax(0,1fr)}.pc-pic{border-right:0;border-bottom:2px dashed #e4d7c1;min-height:130px;font-size:4rem}}
 /* gems, shop, and Habre's backdrop + magic */
 .gems{background:#d9f3ff;border-radius:999px;padding:4px 14px;font-weight:800;box-shadow:0 4px 0 #8fd0f0;font-variant-numeric:tabular-nums;position:relative}
 .gems.pop{animation:yay .6s cubic-bezier(.3,1.6,.5,1)}
@@ -1535,10 +1552,12 @@ function openRoom(r){
    ${roomScene(r)}
    ${roomTopics(r).length||roomSections(r).length?'<h2 class="sub">Yo kothama <small>More in this room</small></h2>':''}
    <div class="topics">${roomTopics(r).map((id,i)=>topicTile(T(id),i,p)).join('')}${roomSections(r).map((id,i)=>{const s=SECTIONS[id];
-     return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${EN()?s.en:s.np}</b><span class="dev" lang="ne">${s.dev}</span>${EN()?'':`<span class="en">${s.en}</span>`}</button>`;}).join('')}</div>`;
+     return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${EN()?s.en:s.np}</b><span class="dev" lang="ne">${s.dev}</span>${EN()?'':`<span class="en">${s.en}</span>`}</button>`;}).join('')}</div>
+   ${r.id==='baithak'?shelfHtml(p):''}`;
   $('#backBtn').onclick=()=>goHome(true);
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(T(b.dataset.t)));
   main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>SECTIONS[b.dataset.sec].open());
+  main.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>openPostcard(TRIP_ENDS.find(te=>te.id===b.dataset.pc),false,()=>openRoom(r)));
   main.querySelectorAll('.ritem').forEach(b=>b.onclick=()=>RF?roomPick(b):roomLook(r,b));
   $('#rLook').onclick=()=>openRoom(r);
   $('#rFind').onclick=()=>roomFind(r);
@@ -1654,6 +1673,48 @@ const OLD_TRIP_T=['kira','prakriti','janawar','savari','chaad','jangali','sarisr
 })();
 const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
 const T=id=>TOPICS.find(t=>t.id===id);
+// ---------- postcards and souvenirs ----------
+// Finishing a map sends Hajuraama a postcard and brings a souvenir home to the shelf in the living room (baithak).
+// Each map gets an entry: when it counts as finished, the postcard's picture and note, and the souvenir.
+const TRIP_ENDS=[
+ {id:'free',done:p=>yatraAt(p)>=STOPS.length,pic:'🏔️',bg:'#e6f0fb',place:['Himal','हिमाल','the mountains'],
+  note:[['Pyaari Hajuraama,','प्यारी हजुरआमा,','Dear Grandma,'],
+   ['Mimi ra ma sakushal ghar aaipugyau.','मिमी र म सकुशल घर आइपुग्यौं।','Mimi and I got home safely.'],
+   ['Ramailo Lhosarko laagi dhanyabaad!','रमाइलो ल्होसारको लागि धन्यवाद!','Thank you for the happy Lhosar!'],
+   ['Tapaaiko purano naksa mero baithakma raakhe.','तपाईंको पुरानो नक्सा मेरो बैठकमा राखें।','I put your old map in my living room.'],
+   ['Aba kahaa jaane hola?','अब कहाँ जाने होला?','Where shall I go next?']],
+  souvenir:{icon:'🗺️',np:'Hajuraamako purano naksa',dev:'हजुरआमाको पुरानो नक्सा',en:'Grandma’s old map'}},
+];
+const sentPostcard=(p,te)=>!!((p&&p.postcards)||{})[te.id];
+// a finished map whose postcard hasn't gone yet
+const newPostcard=p=>TRIP_ENDS.find(te=>te.done(p)&&!sentPostcard(p,te));
+// fresh: just finished, so the only way on is to send it; otherwise it's being looked at again, and back goes to back
+function openPostcard(te,fresh,back){
+  if(!P()){goWho();return;}
+  screen='postcard';const p=P(),en=EN(),sv=te.souvenir;
+  const line=([r,d,e])=>en?`<p><b>${e}</b><small lang="ne">${d}</small></p>`:`<p><b>${r}</b><small><span lang="ne">${d}</span> · ${e}</small></p>`;
+  main.innerHTML=`${fresh?'':backBtn(back===openMap?'🗺️ Naksa':'🛋️ Baithak')}
+   <h1>📮 Postcard <small lang="ne">पोस्टकार्ड · ${fresh?'You finished the map!':'to Hajuraama'}</small></h1>
+   <div class="pcard"><div class="pc-pic" style="--pbg:${te.bg}" aria-hidden="true">${te.pic}<span>${en?te.place[2]:te.place[0]}</span></div>
+    <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${te.note.map(line).join('')}
+     <p class="pc-sign"><b>${en?'Love, Habre and Mimi':'Maya, Habre ra Mimi'}</b><small lang="ne">माया, हाब्रे र मिमी</small></p></div></div>
+   <div class="souv"><span aria-hidden="true">${sv.icon}</span><span><b>${en?sv.en:sv.np}</b><small lang="ne">${sv.dev}${en?'':' · '+sv.en}</small>
+    <small>${fresh?'A souvenir to take home! It goes on the shelf in the living room.':'On the shelf in the living room.'}</small></span></div>
+   ${fresh?`<div class="btns"><button class="btn" style="background:var(--purple)" id="pcSend">📮 Pathau! · Send it</button></div>`:''}`;
+  if(fresh){
+    $('#pcSend').onclick=()=>{p.postcards={...(p.postcards||{}),[te.id]:today()};save();confetti();setTimeout(confetti,500);
+      openPostcard(te,false,openMap);speech('Pathayo!','पठायो!','The postcard is on its way to Hajuraama!');say('Pathayo!','पठायो!',null);mood('happy');};
+    speech('Hajuraamalai postcard!','हजुरआमालाई पोस्टकार्ड!','Send a postcard to Grandma!');say('Hajuraamalai postcard!','हजुरआमालाई पोस्टकार्ड!',null);mood('happy');
+  }else $('#backBtn').onclick=back||openMap;
+}
+// the souvenir shelf, shown in the living room
+function shelfHtml(p){
+  const got=TRIP_ENDS.filter(te=>sentPostcard(p,te));
+  return `<h2 class="sub">Smritichinha <small lang="ne">स्मृतिचिन्ह · My souvenirs</small></h2>
+   <div class="shelf">${got.map(te=>`<button class="souvb" data-pc="${te.id}" aria-label="${esc(te.souvenir.en)}"><span aria-hidden="true">${te.souvenir.icon}</span>${EN()?te.souvenir.en:te.souvenir.np}</button>`).join('')}${
+     Array.from({length:Math.max(1,3-got.length)},()=>'<span class="souvb empty" aria-hidden="true">?</span>').join('')}</div>
+   <p class="maphint">${got.length?'Tap a souvenir to see its postcard.':'Finish a map to bring home a souvenir!'}</p>`;
+}
 // the stop being played right now, when it was started from the trail
 let trip=null;
 function stopDone(p,s){
@@ -1754,6 +1815,7 @@ const MAP_POS=[[72,91],[28,82.8],[72,74.6],[28,66.4],[72,58.2],[28,50],[72,41.8]
 const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17],['🦒',92,33],['🌲',8,46],['🌳',92,50],['🍊',92,64],['🪔',8,62],['🐐',8,78],['🌷',92,83],['🐄',8,94]];
 function openMap(){
   if(!P()){goWho();return;}
+  {const pc=newPostcard(P());if(pc){openPostcard(pc,true);return;}}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
   const p=P(),y=p.yatra=p.yatra||{},stars=starsOf(p),at=yatraAt(p),gate=stars>=GATE;
   const open=YATRA.map((_,i)=>placeOpen(p,i)),nOpen=open.filter(Boolean).length;
@@ -2929,6 +2991,7 @@ function renderProgress(p){
     <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
    <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
     <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
+   <p><b>Postcards to Hajuraama:</b> ${TRIP_ENDS.filter(te=>sentPostcard(p,te)).map(te=>`${te.souvenir.icon} ${te.place[2]} (sent ${p.postcards[te.id]})`).join(' · ')||'none yet: one is sent each time a map is finished'}</p>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
    ${shelved('vakya')?'':`<p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>`}
