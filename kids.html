@@ -1984,7 +1984,7 @@ function stopDone(p,s){
   if(s.k==='play')return passed(p,s.t,s.lv)||({r1:LV_KEYS,r2:['medium','hard']}[s.lv]||[]).some(l=>bestOf(p,s.t,l)>=Math.ceil(LEVELS[l].n*0.7));
   if(s.k==='check')return checked(p,T(s.t));
   // a phrase stop also counts as done in sections the player had already finished before it appeared
-  if(s.k==='phrase'){if(skipStop(p,s)||bestOf(p,'phrase',s.rid)>=PHRASE_PASS)return true;const nx=STOPS[STOPS.indexOf(s)+1];return !!nx&&stopDone(p,nx);}
+  if(s.k==='phrase'){if(skipStop(p,s)||bestOf(p,'phrase',s.rid)>=PHRASE_PASS)return true;const L=s.r&&s.r.path?plusStops(s.r):STOPS,nx=L[L.indexOf(s)+1];return !!nx&&stopDone(p,nx);}
   if(s.k==='story'){
     if(bestOf(p,'kathaa',s.id)>=1||skipStop(p,s))return true;
     // a journey part counts as done for players who were already past it before the story was added
@@ -2188,7 +2188,70 @@ PLUS.forEach(pl=>{
   const t='p_'+pl.id,W=lv=>({k:'play',t,lv});
   TOPICS.push({id:t,np:pl.np,dev:pl.dev,en:pl.en,icon:pl.icon,color:'#8e5be8',kind:'pic',q:'kahaa',plus:pl.pack,
     items:pl.words.map(w=>Array.isArray(w)?w:findWord(w))});
-  pl.stops=[W('r1'),W('r2'),{k:'check',t}];
+  pl.stops=[W('r1'),W('r2'),{k:'phrase',rid:pl.id},{k:'check',t}];
+});
+// the paid maps' phrases, one set of five for each of their sections (by the section's id)
+Object.assign(PHRASES,{
+ khola:[['💧',['chiso','paani'],['चिसो','पानी'],['cold','water']],['🪨',['thulo','dhunga'],['ठूलो','ढुङ्गा'],['big','stone']],
+  ['🦦',['udbiralo','paudi','khelchha'],['उदबिरालो','पौडी','खेल्छ'],['the','otter','swims']],['🛶🛶',['dui','kenu'],['दुई','केनु'],['two','canoes']],
+  ['🌉',['laamo','pul'],['लामो','पुल'],['long','bridge']]],
+ khet:[['🌾',['hariyo','dhaan'],['हरियो','धान'],['green','rice']],['🌧️',['barsha','hunchha'],['वर्षा','हुन्छ'],['rain','falls']],
+  ['☂️',['thulo','chhata'],['ठूलो','छाता'],['big','umbrella']],['🐃',['kalo','bhainsi'],['कालो','भैंसी'],['black','buffalo']],
+  ['🌽🌽🌽',['tin','makai'],['तीन','मकै'],['three','corn cobs']]],
+ phewa:[['🪷',['sundar','kamal'],['सुन्दर','कमल'],['beautiful','lotus']],['🦢',['seto','rajhans'],['सेतो','राजहाँस'],['white','swan']],
+  ['🦩',['gulaabi','flamingo'],['गुलाबी','फ्लेमिङ्गो'],['pink','flamingo']],['🐌',['chiplekira','bistaarai','hidchha'],['चिप्लेकीरा','बिस्तारै','हिँड्छ'],['the','snail','walks','slowly']],
+  ['🏝️',['sano','tapu'],['सानो','टापु'],['small','island']]],
+ machhuwa:[['🧺',['thulo','tokari'],['ठूलो','टोकरी'],['big','basket']],['🪢',['laamo','dori'],['लामो','डोरी'],['long','rope']],
+  ['🏮',['laalten','balchha'],['लालटिन','बल्छ'],['the','lantern','glows']],['🐟🐟',['dui','machha'],['दुई','माछा'],['two','fish']],
+  ['🛖',['sano','jhupadi'],['सानो','झुपडी'],['small','hut']]],
+ kinaar:[['🥥',['thulo','nariwal'],['ठूलो','नरिवल'],['big','coconut']],['🦀',['rato','gangato'],['रातो','गँगटो'],['red','crab']],
+  ['🐚🐚🐚',['tin','sankha'],['तीन','शङ्ख'],['three','seashells']],['🍦',['chiso','aaiskrim'],['चिसो','आइसक्रिम'],['cold','ice cream']],
+  ['🌴',['aglo','taad'],['अग्लो','ताड'],['tall','palm tree']]],
+ munga:[['🪸',['rangichangi','munga'],['रंगीचंगी','मुगा'],['colourful','coral']],['🐢',['samudri','kachhuwa'],['समुद्री','कछुवा'],['sea','turtle']],
+  ['🐙',['aktopas','lukchha'],['अक्टोपस','लुक्छ'],['the','octopus','hides']],['🦞',['rato','lobstar'],['रातो','लबस्टर'],['red','lobster']],
+  ['🧜‍♀️',['jalpari','gaauchhe'],['जलपरी','गाउँछे'],['the','mermaid','sings']]],
+ samudriyatra:[['🚢',['thulo','jahaj'],['ठूलो','जहाज'],['big','ship']],['🐋',['nilo','hvel'],['निलो','ह्वेल'],['blue','whale']],
+  ['🐬',['dalphin','uphrinchha'],['डल्फिन','उफ्रिन्छ'],['the','dolphin','jumps']],['🌊',['gahiro','samundra'],['गहिरो','समुद्र'],['deep','sea']],
+  ['⚓',['gahrungo','langar'],['गह्रुङ्गो','लंगर'],['heavy','anchor']]],
+ gahiro:[['🔦',['torch','balchha'],['टर्च','बल्छ'],['the','torch','shines']],['🦪',['seto','moti'],['सेतो','मोती'],['white','pearl']],
+  ['🫧🫧',['dherai','phoka'],['धेरै','फोका'],['many','bubbles']],['🦈',['shark','paudi','khelchha'],['सार्क','पौडी','खेल्छ'],['the','shark','swims']],
+  ['🌋',['taato','jwaalaamukhi'],['तातो','ज्वालामुखी'],['hot','volcano']]],
+ khajana:[['🗺️',['purano','naksa'],['पुरानो','नक्सा'],['old','map']],['🪙🪙🪙',['tin','sikka'],['तीन','सिक्का'],['three','coins']],
+  ['👑',['sunko','mukut'],['सुनको','मुकुट'],['gold','crown']],['🗝️',['sano','saancho'],['सानो','साँचो'],['small','key']],
+  ['🦜',['suga','bolchha'],['सुगा','बोल्छ'],['the','parrot','talks']]],
+ hiusamundra:[['🧊',['chiso','baraf'],['चिसो','बरफ'],['cold','ice']],['🦭',['sil','sutchha'],['सिल','सुत्छ'],['the','seal','sleeps']],
+  ['🧣',['rato','galbandi'],['रातो','गलबन्दी'],['red','scarf']],['🧤🧤',['dui','panja'],['दुई','पन्जा'],['two','gloves']],
+  ['⛄',['thulo','hiumaanchhe'],['ठूलो','हिउँमान्छे'],['big','snowman']]],
+ chhat:[['🪁',['changa','udchha'],['चङ्गा','उड्छ'],['the','kite','flies']],['🧵',['laamo','dhaago'],['लामो','धागो'],['long','thread']],
+  ['🧢',['nilo','topi'],['निलो','टोपी'],['blue','cap']],['🔔',['ghanti','bajchha'],['घण्टी','बज्छ'],['the','bell','rings']],
+  ['🪶',['haluka','pwaakh'],['हलुका','प्वाँख'],['light','feather']]],
+ mausam:[['💨',['chiso','hawa'],['चिसो','हावा'],['cold','wind']],['☁️',['kalo','badal'],['कालो','बादल'],['dark','cloud']],
+  ['🌈',['sundar','indreni'],['सुन्दर','इन्द्रेणी'],['beautiful','rainbow']],['🌫️',['baakhlo','kuhiro'],['बाक्लो','कुहिरो'],['thick','fog']],
+  ['⚡',['chatyaang','parchha'],['चट्याङ','पर्छ'],['lightning','strikes']]],
+ rukhtuppo:[['🥚🥚🥚',['tin','anda'],['तीन','अण्डा'],['three','eggs']],['🍃',['hariyo','paat'],['हरियो','पात'],['green','leaf']],
+  ['🐦',['chara','gaauchha'],['चरा','गाउँछ'],['the','bird','sings']],['🍯',['mitho','maha'],['मीठो','मह'],['sweet','honey']],
+  ['🐿️',['lokharke','kudchha'],['लोखर्के','कुद्छ'],['the','squirrel','runs']]],
+ badalmathi:[['🐉',['hariyo','ajingar'],['हरियो','अजिङ्गर'],['green','dragon']],['🧚',['pari','udchhe'],['परी','उड्छे'],['the','fairy','flies']],
+  ['🦄',['seto','yunikarn'],['सेतो','युनिकर्न'],['white','unicorn']],['🏯',['thulo','darbar'],['ठूलो','दरबार'],['big','palace']],
+  ['🪄',['jaadu','chhadi'],['जादु','छडी'],['magic','wand']]],
+ bimanasthal:[['🧳',['gahrungo','sutkes'],['गह्रुङ्गो','सुटकेस'],['heavy','suitcase']],['✈️',['hawaijahaj','udchha'],['हवाईजहाज','उड्छ'],['the','plane','flies']],
+  ['🎫🎫',['dui','tikat'],['दुई','टिकट'],['two','tickets']],['🧑‍✈️',['pailat','muskuraauchha'],['पाइलट','मुस्कुराउँछ'],['the','pilot','smiles']],
+  ['🚁',['rato','helikoptar'],['रातो','हेलिकप्टर'],['red','helicopter']]],
+ pokhara:[['🪂',['rangichangi','pyarasut'],['रंगीचंगी','प्यारासुट'],['colourful','paraglider']],['⛑️',['rato','helmet'],['रातो','हेल्मेट'],['red','helmet']],
+  ['📷',['sano','kyamera'],['सानो','क्यामेरा'],['small','camera']],['🥾🥾',['dui','buut'],['दुई','बुट'],['two','boots']],
+  ['🦅',['chil','ghumchha'],['चिल','घुम्छ'],['the','eagle','circles']]],
+ raat:[['🌃',['andhyaaro','raat'],['अँध्यारो','रात'],['dark','night']],['⭐⭐⭐',['tin','tara'],['तीन','तारा'],['three','stars']],
+  ['🌕',['thulo','jun'],['ठूलो','जून'],['big','moon']],['🔭',['laamo','durbin'],['लामो','दूरबिन'],['long','telescope']],
+  ['🦉',['ullu','jaagchha'],['उल्लु','जाग्छ'],['the','owl','wakes']]],
+ grahaharu:[['🌞',['taato','surya'],['तातो','सूर्य'],['hot','sun']],['🔴',['rato','mangal'],['रातो','मंगल'],['red','Mars']],
+  ['🌏',['nilo','prithvi'],['निलो','पृथ्वी'],['blue','Earth']],['🪐',['ghumne','graha'],['घुम्ने','ग्रह'],['spinning','planet']],
+  ['☄️',['puchchhre','tara','udchha'],['पुच्छ्रे','तारा','उड्छ'],['the','comet','flies']]],
+ raketudaan:[['🚀',['raket','udchha'],['रकेट','उड्छ'],['the','rocket','flies']],['🧑‍🚀',['bahadur','antarikshayatri'],['बहादुर','अन्तरिक्षयात्री'],['brave','astronaut']],
+  ['🔋',['naya','byaatri'],['नयाँ','ब्याट्री'],['new','battery']],['🧲',['rato','chumbak'],['रातो','चुम्बक'],['red','magnet']],
+  ['👣',['sano','paila'],['सानो','पाइला'],['small','footprints']]],
+ tadhako:[['👽',['hariyo','aliyan'],['हरियो','एलियन'],['green','alien']],['🤖',['robot','naachchha'],['रोबोट','नाच्छ'],['the','robot','dances']],
+  ['🛸',['udan','tashtari','ghumchha'],['उडन','तस्तरी','घुम्छ'],['the','saucer','spins']],['👾',['sano','daitya'],['सानो','दैत्य'],['small','monster']],
+  ['🌟',['chamkilo','tara'],['चम्किलो','तारा'],['shining','star']]],
 });
 // each paid map's postcard to Hajuraama and souvenir, sent once all of its places are finished
 const PLUS_ENDS={
@@ -2316,14 +2379,14 @@ function openPath(rid){
   if(!pl&&!placeOpen(p,ri)){openMap();return;}
   screen='yatra';
   const moved=at>prev;if(!pl)y.at=at;y.seen=1;save();
-  const first=pl?0:regionFirst(r),stops=pl?list:STOPS.filter(s=>s.r===r&&!skipStop(p,s)),H=stops.length*104,stopAt=i=>pl?list[i]:STOPS[i],finished=pl?at>=list.length:at>=regionEnd(ri);
+  const first=pl?0:regionFirst(r),stops=(pl?list:STOPS).filter(s=>(pl||s.r===r)&&!skipStop(p,s)),H=stops.length*104,stopAt=i=>pl?list[i]:STOPS[i],finished=pl?at>=list.length:at>=regionEnd(ri);
   const xs=stops.map((_,k)=>Math.round(50+30*Math.sin((first+k)*0.95)));
   let d=`M${xs[0]} 0L${xs[0]} 52`;
   for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
   d+=`L${xs[xs.length-1]} ${H}`;
   // optional side stories sit beside the path, next to the practice rounds and the big check, open any time
   const sideAt={},sides=pl||isLittle()?[]:r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
-  const rows=stops.map((s,k)=>{const i=pl?k:STOPS.indexOf(s),f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
+  const rows=stops.map((s,k)=>{const i=(pl?list:STOPS).indexOf(s),f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
     const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4],sid=sideAt[k],st=sid&&STORIES.find(x=>x.id===sid);
     const side=st?`<button class="xstory${bestOf(p,'kathaa',sid)>=1?' read':''}" style="left:${xs[k]>50?20:80}%;top:52px" data-side="${sid}" aria-label="Extra story: ${esc(st.en)}"><span class="xd" aria-hidden="true">${st.icon}</span><span class="xl">${EN()?st.en:st.np}${bestOf(p,'kathaa',sid)>=1?' ✓':''}</span></button>`
       :`<span class="deco" style="left:${xs[k]>50?16:84}%;top:52px" aria-hidden="true">${r.deco[k%r.deco.length]}</span>`;
@@ -2332,7 +2395,7 @@ function openPath(rid){
       ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
       <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
       <span class="lb">${esc(EN()?f[3].split(' · ')[0]:f[1])}</span></button></div>`;}).join('');
-  const pb=pl&&pl.path.places[pl.k-1],pa=pl&&pl.path.places[pl.k+1],before=pl?null:ri?YATRA[ri-1]:null,after=pl?null:YATRA[ri+1],done=pl?Math.max(0,Math.min(at,stops.length)):stops.filter(s=>STOPS.indexOf(s)<at).length;
+  const pb=pl&&pl.path.places[pl.k-1],pa=pl&&pl.path.places[pl.k+1],before=pl?null:ri?YATRA[ri-1]:null,after=pl?null:YATRA[ri+1],done=stops.filter(s=>(pl?list:STOPS).indexOf(s)<at).length;
   main.innerHTML=`${backBtn(pl?pl.path.icon+' '+(EN()?pl.path.en:pl.path.np):'🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${stops.length}</small></h1>
    ${pl||isLittle()?'':`<div class="btns" style="justify-content:flex-start;margin-top:-6px"><button class="btn ghost" id="jBtn">📖 Kathaa · The story so far</button></div>`}
    <div class="trail">
