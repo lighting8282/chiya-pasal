@@ -56,7 +56,7 @@ Each room is a picture full of things. In **Herau** (look), the child taps anyth
 
 | Room | Things to find | Lessons there |
 |---|---|---|
-| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | the souvenir shelf (see below); no lessons for now: family, feelings, things at home, sayings and the sentence train are shelved (see `SHELVED.md`) |
+| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | the postcard board and souvenir case (see below); no lessons for now: family, feelings, things at home, sayings and the sentence train are shelved (see `SHELVED.md`) |
 | **Bhanchha** (kitchen) | kettle, pan, pot, tap, spoon, salt, vegetables… | none for now: food is shelved (see `SHELVED.md`) |
 | **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | none for now: counting and big numbers are shelved (see `SHELVED.md`) |
 | **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | none for now: clothes, colours and the story shelf are shelved (see `SHELVED.md`) |
@@ -177,7 +177,7 @@ Side stories: *Lhosar*. Present: 💎 50.
 
 Words: hiu (snow), himal (snowy mountain), **jun** (moon), tara (star), badal (cloud), **chil** (eagle), aago (fire), helikoptar (helicopter), **bhalu** (bear), hawaijahaj (aeroplane)
 
-**Postcards and souvenirs:** finishing a map shows a postcard from Habre to Hajuraama, with a picture of the place and a short note in Nepali and English. The child sends it, and Habre brings home a souvenir. For the free map, that's Hajuraama's old map. Souvenirs sit on a shelf in the living room, and tapping one shows its postcard again. Grown-ups see the postcards sent on the progress page. Each map adds its own entry to `TRIP_ENDS` in `kids.html`.
+**Postcards and souvenirs:** finishing a map shows a postcard from Habre to Hajuraama, with a picture of the place and a short note in Nepali and English. The child sends it, and Habre brings home a souvenir. For the free map, that's Hajuraama's old map. Both go up in the living room. Postcards are pinned to a cork **suchana paati** (bulletin board), and tapping one reads it again. Souvenirs stand in a **sisako daraaj** (glass display case), and tapping one says its name. Empty spots show where the next trips' postcards and souvenirs will go. The 📌 button in the header opens both together on their own screen, **Mero sangalo** (my collection), from anywhere in the game. Grown-ups see the postcards sent on the progress page. Each map adds its own entry to `TRIP_ENDS` in `kids.html`.
 
 **Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: stars per topic and level, how far along the journey they are, stories, flashcard baskets and the words they keep missing. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 

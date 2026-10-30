@@ -11,7 +11,7 @@
 - Each chapter uses the section's 10 words (listed under it), so the story repeats what the child has just learned.
 - Each chapter ends with a hook that leads to the next place.
 - The last chapter leaves the door open to more maps. Every later map is one of Habre's adventures: a trip of its own that starts at home and stands alone, so the child can pick any open map next.
-- Finishing a map sends **a postcard to Hajuraama** and brings home **a souvenir** for the shelf in Habre's living room. For the free map, the souvenir could be Hajuraama's old map, the one with all the other places on it.
+- Finishing a map sends **a postcard to Hajuraama** and brings home **a souvenir** for the glass case in Habre's living room, and the postcard goes on the bulletin board there. For the free map, the souvenir could be Hajuraama's old map, the one with all the other places on it.
 
 **Who's in it:**
 - **Habre**, the red panda.

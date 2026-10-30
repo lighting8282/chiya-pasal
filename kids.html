@@ -431,10 +431,22 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .souv{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:20px;padding:12px 16px;box-shadow:0 6px 0 var(--line)}
 .souv>span:first-child{font-size:2.6rem}
 .souv small{display:block;color:var(--soft)}
-.shelf{display:flex;flex-wrap:wrap;gap:12px;padding:12px 14px 18px;border-radius:18px;background:linear-gradient(to top,#b07a45 0 10px,#f6ead6 10px)}
-.souvb{width:86px;display:grid;justify-items:center;gap:2px;padding:8px 4px;border-radius:14px;background:#fff;box-shadow:0 4px 0 #e4d7c1;font-size:.72rem;font-weight:700;line-height:1.1;text-align:center}
-.souvb span{font-size:2.2rem;line-height:1.1}
-.souvb.empty{background:transparent;box-shadow:none;border:2px dashed #d9c7a8;color:#c4ad88;font-size:1.6rem;place-items:center;min-height:62px}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:18px 14px;padding:22px 16px 16px;border-radius:14px;border:10px solid #8a5a2b;
+  background:radial-gradient(circle at 20% 30%,#b9824c 1.5px,transparent 2px) 0 0/14px 14px,radial-gradient(circle at 70% 60%,#d9a86f 1.5px,transparent 2px) 0 0/18px 18px,#c8955c;box-shadow:0 6px 0 var(--line)}
+.pin{position:relative;display:grid;justify-items:center;gap:4px;padding:8px 6px 6px;border-radius:6px;background:#fffdf6;box-shadow:0 3px 8px rgba(0,0,0,.28);transform:rotate(var(--r));font-size:.72rem;font-weight:800;line-height:1.1;text-align:center}
+.pin::before{content:'📌';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:1.1rem}
+.pin .pp{width:100%;padding:8px 0;border-radius:4px;background:var(--pbg);font-size:2rem;line-height:1}
+.pin.empty{background:rgba(255,255,255,.2);box-shadow:none;border:2px dashed rgba(255,255,255,.75);color:#fff;font-size:1.6rem;min-height:96px;place-items:center}
+.pin.empty::before{content:none}
+.case{position:relative;padding:10px 12px 4px;border-radius:14px;border:10px solid #6b4a2b;overflow:hidden;box-shadow:0 6px 0 var(--line);
+  background:linear-gradient(160deg,#e8f5fd,#f8fcff 45%,#d9eef9)}
+.case::after{content:'';position:absolute;top:-20%;left:12%;width:18%;height:140%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);transform:rotate(20deg);pointer-events:none}
+.case .crow{display:flex;justify-content:center;gap:12px;padding:8px 0 0;border-bottom:8px solid #b07a45;margin-bottom:10px}
+.case .crow:last-child{margin-bottom:0}
+.citem{width:88px;display:grid;justify-items:center;gap:2px;padding-bottom:4px;background:none}
+.citem>span:first-child{font-size:2.4rem;line-height:1.15;filter:drop-shadow(0 3px 2px rgba(0,0,0,.2))}
+.citem small{font-size:.64rem;font-weight:800;line-height:1.1;text-align:center;background:#f6e7c8;color:#6b4a2b;border-radius:4px;padding:1px 5px}
+.citem.empty>span:first-child{color:#a9c4d6;font-size:1.8rem;filter:none;border:2px dashed #a9c4d6;border-radius:12px;width:56px;height:52px;display:grid;place-items:center}
 @media (max-width:520px){.pcard{grid-template-columns:minmax(0,1fr)}.pc-pic{border-right:0;border-bottom:2px dashed #e4d7c1;min-height:130px;font-size:4rem}}
 /* gems, shop, and Habre's backdrop + magic */
 .gems{background:#d9f3ff;border-radius:999px;padding:4px 14px;font-weight:800;box-shadow:0 4px 0 #8fd0f0;font-variant-numeric:tabular-nums;position:relative}
@@ -623,6 +635,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
     <button class="who" id="whoBtn" aria-label="Switch player"><span class="av" id="whoAv">🦊</span><span class="nm" id="whoNm"></span></button>
     <span class="stars" id="stars" aria-label="Stars">★ 0</span>
     <button class="gems" id="gemBtn" aria-label="Gems: open Habre’s shop">💎 0</button>
+    <button class="round" id="collBtn" aria-label="My postcards and souvenirs">📌</button>
     <button class="round" id="soundBtn" aria-pressed="true" aria-label="Sound on">🔊</button>
     <button class="round" id="grownBtn" aria-label="For grown-ups">⚙</button>
   </header>
@@ -1603,7 +1616,7 @@ function openRoom(r){
   $('#backBtn').onclick=()=>goHome(true);
   main.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>openTopic(T(b.dataset.t)));
   main.querySelectorAll('[data-sec]').forEach(b=>b.onclick=()=>SECTIONS[b.dataset.sec].open());
-  main.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>openPostcard(TRIP_ENDS.find(te=>te.id===b.dataset.pc),false,()=>openRoom(r)));
+  bindShelf(()=>openRoom(r));
   main.querySelectorAll('.ritem').forEach(b=>b.onclick=()=>RF?roomPick(b):roomLook(r,b));
   $('#rLook').onclick=()=>openRoom(r);
   $('#rFind').onclick=()=>roomFind(r);
@@ -1868,13 +1881,13 @@ function openPostcard(te,fresh,back){
   if(!P()){goWho();return;}
   screen='postcard';const p=P(),en=EN(),sv=te.souvenir;
   const line=([r,d,e])=>en?`<p><b>${e}</b><small lang="ne">${d}</small></p>`:`<p><b>${r}</b><small><span lang="ne">${d}</span> · ${e}</small></p>`;
-  main.innerHTML=`${fresh?'':backBtn(back===openMap?'🗺️ Naksa':'🛋️ Baithak')}
+  main.innerHTML=`${fresh?'':backBtn(back===openMap?'🗺️ Naksa':back===openCollection?'📌 Sangalo':'🛋️ Baithak')}
    <h1>📮 Postcard <small lang="ne">पोस्टकार्ड · ${fresh?'You finished the map!':'to Hajuraama'}</small></h1>
    <div class="pcard"><div class="pc-pic" style="--pbg:${te.bg}" aria-hidden="true">${te.pic}<span>${en?te.place[2]:te.place[0]}</span></div>
     <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${te.note.map(line).join('')}
      <p class="pc-sign"><b>${en?'Love, Habre and Mimi':'Maya, Habre ra Mimi'}</b><small lang="ne">माया, हाब्रे र मिमी</small></p></div></div>
    <div class="souv"><span aria-hidden="true">${sv.icon}</span><span><b>${en?sv.en:sv.np}</b><small lang="ne">${sv.dev}${en?'':' · '+sv.en}</small>
-    <small>${fresh?'A souvenir to take home! It goes on the shelf in the living room.':'On the shelf in the living room.'}</small></span></div>
+    <small>${fresh?'A souvenir to take home! It goes in the glass case in the living room, and the postcard on the board.':'In the glass case in the living room.'}</small></span></div>
    ${fresh?`<div class="btns"><button class="btn" style="background:var(--purple)" id="pcSend">📮 Pathau! · Send it</button></div>`:''}`;
   if(fresh){
     $('#pcSend').onclick=()=>{p.postcards={...(p.postcards||{}),[te.id]:today()};save();confetti();setTimeout(confetti,500);
@@ -1882,13 +1895,34 @@ function openPostcard(te,fresh,back){
     speech('Hajuraamalai postcard!','हजुरआमालाई पोस्टकार्ड!','Send a postcard to Grandma!');say('Hajuraamalai postcard!','हजुरआमालाई पोस्टकार्ड!',null);mood('happy');
   }else $('#backBtn').onclick=back||openMap;
 }
-// the souvenir shelf, shown in the living room
+// tapping a postcard reads it (and back comes here again); tapping a souvenir says its name
+function bindShelf(back){
+  main.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>openPostcard(TRIP_ENDS.find(te=>te.id===b.dataset.pc),false,back));
+  main.querySelectorAll('[data-sv]').forEach(b=>b.onclick=()=>{const sv=TRIP_ENDS.find(te=>te.id===b.dataset.sv).souvenir;speech(sv.np,sv.dev,sv.en);sayT(sv.np,sv.dev,sv.en);mood('happy');});
+}
+// the bulletin board and glass case on their own, from the 📌 button in the header, without going to the living room
+function openCollection(){
+  if(!P()){goWho();return;}
+  screen='collection';trip=null;topic=null;clearTry();
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>📌 Mero sangalo <small lang="ne">मेरो सँगालो · My postcards and souvenirs</small></h1>${shelfHtml(P())}`;
+  $('#backBtn').onclick=openMap;bindShelf(openCollection);
+  speech('Mero sangalo','मेरो सँगालो','My postcards and souvenirs.');say('Mero sangalo','मेरो सँगालो',null);mood('wave');
+}
+// the living room's collection: postcards pinned on a bulletin board, souvenirs in a glass case, with an empty spot
+// for each map still to finish (at least two, so there's always more to look forward to)
 function shelfHtml(p){
-  const got=TRIP_ENDS.filter(te=>sentPostcard(p,te));
-  return `<h2 class="sub">Smritichinha <small lang="ne">स्मृतिचिन्ह · My souvenirs</small></h2>
-   <div class="shelf">${got.map(te=>`<button class="souvb" data-pc="${te.id}" aria-label="${esc(te.souvenir.en)}"><span aria-hidden="true">${te.souvenir.icon}</span>${EN()?te.souvenir.en:te.souvenir.np}</button>`).join('')}${
-     Array.from({length:Math.max(1,3-got.length)},()=>'<span class="souvb empty" aria-hidden="true">?</span>').join('')}</div>
-   <p class="maphint">${got.length?'Tap a souvenir to see its postcard.':'Finish a map to bring home a souvenir!'}</p>`;
+  const got=TRIP_ENDS.filter(te=>sentPostcard(p,te)),empty=Math.max(2,TRIP_ENDS.length-got.length),en=EN(),tilt=k=>[-4,3,-2,5,-3,2][k%6];
+  const cards=[...got.map((te,k)=>`<button class="pin" style="--r:${tilt(k)}deg" data-pc="${te.id}" aria-label="Postcard from ${esc(te.place[2])}"><span class="pp" style="--pbg:${te.bg}" aria-hidden="true">${te.pic}</span>${en?te.place[2]:te.place[0]}</button>`),
+    ...Array.from({length:empty},(_,k)=>`<span class="pin empty" style="--r:${tilt(got.length+k)}deg" aria-hidden="true">?</span>`)];
+  const items=[...got.map(te=>`<button class="citem" data-sv="${te.id}" aria-label="${esc(te.souvenir.en)}"><span aria-hidden="true">${te.souvenir.icon}</span><small>${en?te.souvenir.en:te.souvenir.np}</small></button>`),
+    ...Array.from({length:empty},()=>'<span class="citem empty" aria-hidden="true"><span>?</span></span>')];
+  const rows=[];for(let k=0;k<items.length;k+=3)rows.push(`<div class="crow">${items.slice(k,k+3).join('')}</div>`);
+  return `<h2 class="sub">📌 Suchana paati <small lang="ne">सूचना पाटी · Postcards from my trips</small></h2>
+   <div class="board">${cards.join('')}</div>
+   <p class="maphint">${got.length?'Tap a postcard to read it.':'Finish a map to pin up a postcard!'}</p>
+   <h2 class="sub">🏺 Sisako daraaj <small lang="ne">सिसाको दराज · My souvenirs</small></h2>
+   <div class="case">${rows.join('')}</div>
+   <p class="maphint">${got.length?'Tap a souvenir to hear its name.':'Every map brings home a souvenir for the glass case!'}</p>`;
 }
 // the stop being played right now, when it was started from the trail
 let trip=null;
@@ -3286,6 +3320,7 @@ function renderGrown(){
 }
 
 $('#homeBtn').onclick=()=>openMap();
+$('#collBtn').onclick=()=>openCollection();
 $('#whoBtn').onclick=goWho;
 $('#grownBtn').onclick=renderGrown;
 $('#gemBtn').onclick=()=>{if(P())openShop();};
