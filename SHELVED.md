@@ -64,11 +64,11 @@ Shelved so that free flashcards are the built-in categories only. Making your ow
 
 | What | Id | When | Notes |
 |---|---|---|---|
-| Patti · Flashcards | `patti` | 2026-10-29 | Back in the office, with flip cards, memory match (Jodi) and listen-and-tap. Its decks are only what's in play: story words, tricky words and the journey's word topics. Letter, grammar and sentence decks stay hidden while those are shelved. |
+| Patti · Flashcards | `patti` | 2026-10-29 | Back as its own section: a Patti button on the map, under today's practice (moved out of the office on 2026-10-30). It has flip cards, memory match (Jodi) and listen-and-tap. Its decks are only what's in play: story words, tricky words and the journey's word topics. Letter, grammar and sentence decks stay hidden while those are shelved. |
 
 ## While shelved
 
-- **What's left to play:** the rooms' look-and-find games, the journey (its trips, stories, checks and big checks), flashcards and memory match in the office, and daily practice, which now draws from the journey's word topics only.
+- **What's left to play:** the rooms' look-and-find games, the journey (its trips, stories, checks and big checks), flashcards and memory match (the Patti button on the map), and daily practice, which now draws from the journey's word topics only.
 - **Stories** are still read along the journey; only the bedroom's shelf of all stories is gone.
 - **Story words** from shelved topics (for example *aama*) still show their meaning when tapped in a story.
 - **Back buttons** that used to lead to the word list lead to the map instead while it is shelved.

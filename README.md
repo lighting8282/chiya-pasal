@@ -41,9 +41,9 @@ Each room is a picture full of things. In **Herau** (look), the child taps anyth
 | **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | none for now: counting and big numbers are shelved (see `SHELVED.md`) |
 | **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | none for now: clothes, colours and the story shelf are shelved (see `SHELVED.md`) |
 | **Nuhaune kotha** (bathroom) | shower, bath, mirror, toothbrush, soap, bucket… | none for now: the body is shelved (see `SHELVED.md`) |
-| **Aphis** (office) | computer, pen, pencil, scissors, calendar, globe… | flashcards and memory match, for the words in play; letters, grammar and the word list are shelved (see `SHELVED.md`) |
+| **Aphis** (office) | computer, pen, pencil, scissors, calendar, globe… | none for now: letters, grammar and the word list are shelved (see `SHELVED.md`) |
 
-All the room lessons except flashcards are shelved for now (see `SHELVED.md`). They are described below as they were, for when they come back.
+All the room lessons are shelved for now (see `SHELVED.md`). Flashcards are no longer in a room: the **Patti** button on the map, under today's practice, opens them from anywhere. They are described below as they were, for when they come back.
 
 The lessons:
 

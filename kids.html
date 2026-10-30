@@ -300,6 +300,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .daily .ic{font-size:3rem;line-height:1}
 .daily b{font-size:1.5rem;display:block;line-height:1.1}
 .daily small{display:block;font-size:.9rem}
+.daily.patti{background:linear-gradient(135deg,#3a7bf2,#8e5be8);box-shadow:0 7px 0 #2a52a8}
 .daily:active,.reward:active{transform:translateY(4px)}
 .reward{background:#fff7d6;border-radius:24px;padding:10px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 5px 0 #f0d77a;flex-wrap:wrap;text-align:left}
 .reward .next{font-size:2.2rem;line-height:1}
@@ -1377,7 +1378,7 @@ const ROOMS=[
   ['aina','ऐना','mirror','',60,32.7,0,16,26],['burus','बुरुस','toothbrush','🪥',53.5,48.7,5],['saabun','साबुन','soap','🧼',66.25,50,4.5],
   ['charpi','चर्पी','toilet','',85.25,60,0,21,40],['baalti','बाल्टी','bucket','🪣',70,87.3,6],['spanj','स्पन्ज','sponge','🧽',42,52,4.5]]},
  {id:'aphis',np:'Aphis',dev:'अफिस',en:'Office',icon:'💻',color:'#3a7bf2',
-  topics:['akshar','abc'],sections:['vyakaran','patti','shabda'],items:[
+  topics:['akshar','abc'],sections:['vyakaran','shabda'],items:[
   ['kyalendar','क्यालेन्डर','calendar','📅',82.5,23.3,6],['glob','ग्लोब','globe','🌍',25,37.3,5,'u'],['batti','बत्ती','light','💡',37.5,9.3,5],
   ['mobail','मोबाइल','mobile phone','📱',12.5,48,5,'d'],['kalam','कलम','pen','🖊️',23.75,48.3,5,'u'],['kampyutar','कम्प्युटर','computer','💻',50,45.3,9,'d'],
   ['sisakalam','सिसाकलम','pencil','✏️',35,48.3,5,'d'],['kainchi','कैंची','scissors','✂️',65,48.7,5,'u'],['kitab','किताब','books','📚',13,22.7,6],
@@ -1730,6 +1731,7 @@ function openMap(){
   const fresh=y.open!=null&&nOpen>y.open?nOpen-1:-1,first=!y.mapSeen;
   y.open=nOpen;y.mapSeen=1;save();
   const d=p.daily||{},done=d.last===today(),streak=(done||d.last===yesterday())&&d.streak>1?` · 🔥 ${d.streak} days in a row`:'';
+  const known=allCards().filter(c=>boxOf(p,c)===2).length;
   const gl=GIFTS(),nx=gl.find(g=>g.gift>stars),from=nx?((gl[gl.indexOf(nx)-1]||{gift:0}).gift):0;
   const nodes=[{icon:'🏠',np:'Habreko ghar',dev:'हाब्रेको घर',en:'Habre’s house',open:true,pct:Math.min(1,stars/GATE),done:gate,cur:curI<0},
     ...YATRA.map((r,i)=>{const f=regionFirst(r),n=regionEnd(i)-f;return {icon:r.icon,np:r.np,dev:r.dev,en:r.en,open:open[i],pct:open[i]?Math.max(0,Math.min(at-f,n))/n:0,done:at>=regionEnd(i),cur:curI===i,fresh:fresh===i};})];
@@ -1747,10 +1749,12 @@ function openMap(){
    </div>
    <p class="maphint">Tap a place to go there. 🔒 places open one by one as you learn.</p>
    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
+   ${shelved('patti')?'':`<button class="daily patti" id="pattiBtn"><span class="ic" aria-hidden="true">🃏</span><span><b>Patti</b><small>Flashcards and memory match: train any time${known?` · ${known} words known`:''}</small></span></button>`}
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
      <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
      <span class="mini">🛍️ Pasal · 💎 ${gemsOf(p)}</span></button>`;
   $('#dailyBtn').onclick=startDaily;
+  if($('#pattiBtn'))$('#pattiBtn').onclick=openPatti;
   $('#wardBtn').onclick=()=>openShop();
   main.querySelectorAll('.place').forEach(b=>b.onclick=()=>{
     const k=+b.dataset.n,o=nodes[k];
@@ -2008,13 +2012,13 @@ function openPatti(){
   const tile=(d,i)=>{const n=[0,0,0];d.cards.forEach(c=>n[boxOf(p,c)]++);
     return `<button class="topic" style="--tc:${d.color};animation-delay:${Math.min(i,12)*40}ms" data-k="${d.id}"><span class="ic" aria-hidden="true">${d.icon}</span><b>${esc(EN()?d.en:d.np)}</b><span class="en"${EN()?' lang="ne"':''}>${EN()?(d.dev||''):esc(d.en)} · ${d.cards.length}</span>
       <span class="baskets" aria-label="${n[0]} new, ${n[1]} practising, ${n[2]} known"><span><i class="b0"></i>${n[0]}</span><span><i class="b1"></i>${n[1]}</span><span><i class="b2"></i>${n[2]}</span></span></button>`;};
-  main.innerHTML=`${backBtn('Aphis')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
+  main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>🃏 Patti <small>पत्ती · Flashcards</small></h1>
    <div class="seg" role="group" aria-label="How to play the cards">${PATTI_MODES.map(m=>`<button aria-pressed="${m[0]===mode}" data-m="${m[0]}">${m[1]} <small style="font-weight:500;color:var(--soft)">${m[2]}</small></button>`).join('')}</div>
    <div class="baskets" style="justify-content:flex-start;font-size:.95rem"><span><i class="b0"></i> Naya · new or again</span><span><i class="b1"></i> Abhyas · practising</span><span><i class="b2"></i> Aayo! · I know it</span></div>
    <h2 class="sub">${EN()?'My decks <small lang="ne">मेरो पत्ती</small>':'Mero patti <small>my decks</small>'}</h2><div class="topics">${decks.slice(0,special).map(tile).join('')}</div>
    <h2 class="sub">${EN()?'Words <small lang="ne">शब्द</small>':(AKSHAR_ON().length?'Shabda ra Akshar <small>words and letters</small>':'Shabda <small>words</small>')}</h2><div class="topics">${decks.slice(special,words).map(tile).join('')}</div>
    ${decks.length>words?`<h2 class="sub">${EN()?'Grammar <small lang="ne">व्याकरण</small>':'Vyakaran <small>grammar</small>'}</h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
-  $('#backBtn').onclick=toRoom('patti');
+  $('#backBtn').onclick=openMap;
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
   main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
     const d=decks.find(x=>x.id===b.dataset.k),pics=new Set(d.cards.map(c=>c.it[3])).size;
