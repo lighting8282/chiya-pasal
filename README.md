@@ -36,12 +36,14 @@ Each room is a picture full of things. In **Herau** (look), the child taps anyth
 
 | Room | Things to find | Lessons there |
 |---|---|---|
-| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | family, feelings, things at home, sayings, and the sentence train |
-| **Bhanchha** (kitchen) | kettle, pan, pot, tap, spoon, salt, vegetables… | food |
-| **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | counting and big numbers |
-| **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | clothes, colours, and the stories |
-| **Nuhaune kotha** (bathroom) | shower, bath, mirror, toothbrush, soap, bucket… | the body |
-| **Aphis** (office) | computer, pen, pencil, scissors, calendar, globe… | letters, grammar, flashcards, and every word topic |
+| **Baithak** (living room) | sofa, TV, window, door, phone, radio… | none for now: family, feelings, things at home, sayings and the sentence train are shelved (see `SHELVED.md`) |
+| **Bhanchha** (kitchen) | kettle, pan, pot, tap, spoon, salt, vegetables… | none for now: food is shelved (see `SHELVED.md`) |
+| **Khane kotha** (dining room) | rice, tea, bread, plate, bowl, momos… | none for now: counting and big numbers are shelved (see `SHELVED.md`) |
+| **Sutne kotha** (bedroom) | bed, moon, clock, teddy, slippers… | none for now: clothes, colours and the story shelf are shelved (see `SHELVED.md`) |
+| **Nuhaune kotha** (bathroom) | shower, bath, mirror, toothbrush, soap, bucket… | none for now: the body is shelved (see `SHELVED.md`) |
+| **Aphis** (office) | computer, pen, pencil, scissors, calendar, globe… | none for now: letters, grammar, flashcards and the word list are shelved (see `SHELVED.md`) |
+
+All the room lessons are shelved for now (see `SHELVED.md`). They are described below as they were, for when they come back.
 
 The lessons:
 

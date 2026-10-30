@@ -1279,7 +1279,23 @@ function editProfile(p){
 }
 
 // ---------- sections ----------
-const WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
+// ---------- shelved for now (see SHELVED.md) ----------
+// Lessons taken out of the game for the time being. Their content stays in TOPICS and the sentence data, so taking an
+// id out of these lists brings it back everywhere: its room, the word list, daily practice, flashcards and stickers.
+const SHELVED={
+  topics:['pariwar','bhavana','saman','bhanai',  // baithak
+    'khana','ganti','thulo','kapada','rang','sharir',  // kitchen, dining room, bedroom, bathroom
+    'akshar','abc'],  // office
+  sections:['vakya','kathaa','vyakaran','patti','shabda']};
+const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
+// every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
+const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
+const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id));
+// the letters and grammar topics, or none while they're shelved
+const AKSHAR_ON=()=>shelved(AKSHAR().id)?[]:[AKSHAR()];
+const GRAM_ON=()=>shelved('vyakaran')?[]:GRAM_T();
+// where the word list sends you back to; the map while it's shelved
+const wordsBack=()=>shelved('shabda')?['🗺️ Naksa',openMap]:['Shabda',openWords];
 // the grammar lessons and letters for the player's direction: Nepali ones, or English ones for an English learner
 const GRAM_T=()=>TOPICS.filter(t=>t.section===(EN()?'gramEn':'gram'));
 const AKSHAR=()=>TOPICS.find(t=>t.id===(EN()?'abc':'akshar'));
@@ -1489,8 +1505,8 @@ const roomOf=id=>ROOMS.find(r=>r.sections.includes(id)||r.topics.includes(id));
 // the letters, grammar and sentence train teach Nepali, so an English learner's rooms leave them out
 // the office holds the Devanagari letters for a Nepali learner and the alphabet for an English learner
 const NOT_FOR={en:['akshar'],ne:['abc']};
-const roomTopics=r=>r.topics.filter(id=>!NOT_FOR[EN()?'en':'ne'].includes(id));
-const roomSections=r=>r.sections;
+const roomTopics=r=>r.topics.filter(id=>!NOT_FOR[EN()?'en':'ne'].includes(id)&&!shelved(id));
+const roomSections=r=>r.sections.filter(id=>!shelved(id));
 const toRoom=id=>()=>openRoom(roomOf(id));
 // how far through a room: things looked at, the find game, and its word topics
 function roomProgress(p,r){
@@ -1509,7 +1525,7 @@ function openRoom(r){
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
    ${roomScene(r)}
-   <h2 class="sub">Yo kothama <small>More in this room</small></h2>
+   ${roomTopics(r).length||roomSections(r).length?'<h2 class="sub">Yo kothama <small>More in this room</small></h2>':''}
    <div class="topics">${roomTopics(r).map((id,i)=>topicTile(T(id),i,p)).join('')}${roomSections(r).map((id,i)=>{const s=SECTIONS[id];
      return `<button class="topic" style="--tc:${r.color};animation-delay:${(r.topics.length+i)*40}ms" data-sec="${id}"><span class="ic" aria-hidden="true">${s.icon}</span><b>${EN()?s.en:s.np}</b><span class="dev" lang="ne">${s.dev}</span>${EN()?'':`<span class="en">${s.en}</span>`}</button>`;}).join('')}</div>`;
   $('#backBtn').onclick=()=>goHome(true);
@@ -1809,7 +1825,7 @@ function openGram(){
   speech('Vyakaran!','व्याकरण!','Pick a little lesson.');say('Vyakaran!','व्याकरण!',null);mood('wave');
 }
 // a topic goes back to the room it lives in; the trip topics go back to the list of every word topic
-const topicBack=t=>t.section==='gram'||t.section==='gramEn'?[EN()?'Grammar':'Vyakaran',openGram]:roomOf(t.id)?[roomOf(t.id).np,toRoom(t.id)]:['Shabda',openWords];
+const topicBack=t=>t.section==='gram'||t.section==='gramEn'?[EN()?'Grammar':'Vyakaran',openGram]:roomOf(t.id)?[roomOf(t.id).np,toRoom(t.id)]:wordsBack();
 // a topic: pick a level, then learn → play → check, plus memory match and flashcards
 function openTopic(t){
   if(tripBack())return;
@@ -1959,7 +1975,7 @@ function openStickers(){
 // ---------- patti (flashcards) ----------
 // every card sits in one of Habre's three baskets: 0 = new / again, 1 = practising, 2 = I know it
 const boxOf=(p,c)=>((p.box||{})[keyOf(c.t,c.it)])||0;
-const allCards=()=>[...WORD_T(),AKSHAR(),...GRAM_T(),vakyaT()].flatMap(t=>t.items.map(it=>({t,it})));
+const allCards=()=>[...WORD_T(),...AKSHAR_ON(),...GRAM_ON(),...(shelved('vakya')?[]:[vakyaT()])].flatMap(t=>t.items.map(it=>({t,it})));
 function deckSession(cards,p){
   const by=[[],[],[]];cards.forEach(c=>by[boxOf(p,c)].push(c));
   if(!by[0].length&&!by[1].length)return shuffle(cards).slice(0,12);
@@ -1983,7 +1999,7 @@ function openPatti(){
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
   add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
   add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
-  add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
+  if(!shelved('vakya'))add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
   const special=decks.length;
   [...WORD_T(),AKSHAR()].forEach(t=>add(t.id,t.id==='akshar'?'अ':t.icon,t.np,t.en,t.color,wordsFor(t,levelOf(t.id)).map(it=>({t,it})),t.dev));
   const words=decks.length;
@@ -2205,7 +2221,7 @@ const pagesOf=s=>[...s.pages,...(s.branches||[]).flat()];
 const ENDINGS=['haru','sanga','lai','ko','ma','le'];
 let LEX=null;
 function lookup(w){
-  if(!LEX){LEX={};WORD_T().forEach(t=>t.items.forEach(it=>{if(!/\s/.test(it[0])&&!LEX[it[0]])LEX[it[0]]={t,it};}));}
+  if(!LEX){LEX={};ALL_WORD_T().forEach(t=>t.items.forEach(it=>{if(!/\s/.test(it[0])&&!LEX[it[0]])LEX[it[0]]={t,it};}));}
   w=w.toLowerCase().replace(/[^a-z]/g,'');
   if(LEX[w])return LEX[w];
   for(const e of ENDINGS)if(w.endsWith(e)&&LEX[w.slice(0,-e.length)])return LEX[w.slice(0,-e.length)];
@@ -2214,7 +2230,7 @@ function lookup(w){
 // the same for an English story word (apples → apple)
 let LEXE=null;
 function lookupEn(w){
-  if(!LEXE){LEXE={};WORD_T().forEach(t=>t.items.forEach(it=>{const k=it[2].toLowerCase();if(!/\s/.test(k)&&!LEXE[k])LEXE[k]={t,it};}));}
+  if(!LEXE){LEXE={};ALL_WORD_T().forEach(t=>t.items.forEach(it=>{const k=it[2].toLowerCase();if(!/\s/.test(k)&&!LEXE[k])LEXE[k]={t,it};}));}
   w=w.toLowerCase().replace(/[^a-z]/g,'');
   return LEXE[w]||LEXE[w.replace(/s$/,'')]||LEXE[w.replace(/es$/,'')]||null;
 }
@@ -2725,8 +2741,8 @@ function startQuiz(o){
   }else if(o.mode==='daily'){
     const one=t=>{const lv=levelOf(t.id),w=wordsFor(t,lv);return {t,it:rnd(w),pool:w.map(x=>({t,it:x})),lv,face:lv};};
     const vw=vSents(levelOf('vakya')).map(s=>[s.rom,s.dev,s.en,s.pic]);
-    entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_T()).slice(0,2).map(one),one(AKSHAR()),
-      {t:vakyaT(),it:rnd(vw),pool:vw.map(x=>({t:vakyaT(),it:x})),lv:levelOf('vakya'),face:'hard'}]);
+    entries=shuffle([...shuffle(WORD_T()).slice(0,4).map(one),...shuffle(GRAM_ON()).slice(0,2).map(one),...AKSHAR_ON().map(one),
+      ...(shelved('vakya')?[one(rnd(WORD_T()))]:[{t:vakyaT(),it:rnd(vw),pool:vw.map(x=>({t:vakyaT(),it:x})),lv:levelOf('vakya'),face:'hard'}])]);
   }else if(o.mode==='yatra'){
     // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
     const used=new Set();
@@ -2867,29 +2883,30 @@ function renderProgress(p){
   const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:findCard(x.k)})).filter(x=>x.f);
   const traced=Object.keys(p.traced||{}),cards=allCards(),bx=[0,0,0];cards.forEach(c=>bx[boxOf(p,c)]++);
   const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
-  const deckTopics=[...WORD_T(),AKSHAR(),...GRAM_T()],custom=new Set(p.custom||[]);
+  const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id)),custom=new Set(p.custom||[]);
   $('#progBody').innerHTML=`
    <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
-   <div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
-    <tbody>${DOORS.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>
+   ${doors.length?`<div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
+    <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
    <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
     <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
-   <p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>
-   <p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length}) · <b>Stickers:</b> ${stickers}/${stickerItems().length}</p>
+   ${shelved('vakya')?'':`<p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>`}
+   ${shelved('patti')?'':`<p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length})</p>`}
+   ${shelved('shabda')?'':`<p><b>Stickers:</b> ${stickers}/${stickerItems().length}</p>`}
    <p><b>Gems:</b> 💎 ${gemsOf(p)} to spend · ${ITEMS.filter(x=>owns(p,x)&&!x.free).length} of ${ITEMS.filter(x=>!x.free).length} shop things owned</p>
-   <p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>
+   ${shelved(AKSHAR().id)?'':`<p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>`}
    <h3>Words to practise</h3>
    ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
-   <h3>Your flashcard deck for ${esc(p.name)}</h3>
+   ${shelved('patti')?'':`<h3>Your flashcard deck for ${esc(p.name)}</h3>
    <p>Tick words for ${esc(p.name)} to practise. They appear in Patti as the “Thulo maanchhe” (grown-ups’) deck. ${custom.size} chosen.</p>
    <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.id==='akshar'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
-   <div class="cd" id="cdWords"></div>`;
+   <div class="cd" id="cdWords"></div>`}`;
   const drawCd=()=>{const t=TOPICS.find(x=>x.id===$('#cdTopic').value);
     $('#cdWords').innerHTML=t.items.map(it=>{const k=keyOf(t,it);return `<label><input type="checkbox" data-key="${esc(k)}" ${custom.has(k)?'checked':''}> ${t.kind==='color'?`<i class="dot" style="background:${it[3]}"></i>`:t.kind==='num'?it[3]:t.kind==='letter'?it[1]:it[3]} ${esc(it[0])}</label>`;}).join('');
     $('#cdWords').querySelectorAll('input').forEach(c=>c.onchange=()=>{if(c.checked)custom.add(c.dataset.key);else custom.delete(c.dataset.key);p.custom=[...custom];save();});};
-  $('#cdTopic').onchange=drawCd;drawCd();
+  if($('#cdTopic')){$('#cdTopic').onchange=drawCd;drawCd();}
 }
 // grown-ups panel
 function renderGrown(){
