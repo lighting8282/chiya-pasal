@@ -2583,6 +2583,82 @@ function openStories(){
   speech('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');say('Kathaa sunau!','कथा सुनौं!','Let’s hear a story!');mood('wave');
 }
 // An English learner reads the English line (each word lit up as it is said, and tappable) with the Devanagari under it.
+// ---------- one word at a time for ages 3-5 ----------
+// Story pages for the youngest show and read just one word with the picture, not the whole sentence. The word is the
+// section's own word on that page if there is one, then any picture word in the game; the pages with neither are
+// chosen here, by the page's romanized text: [romanized, Devanagari, English].
+const LITTLE_WORDS={
+ 'Yo Habreko ghar ho.':['ghar','घर','house'],
+ 'Ek din Habrelaai euta chitthi aayo.':['chitthi','चिठी','letter'],
+ 'Baatomaa dherai kura bhetinchhan. Habrelaai naya shabda chahinchha!':['shabda','शब्द','words'],
+ 'Pahile gharmaa sikau. Harek kothaamaa kura khoja.':['kotha','कोठा','room'],
+ 'Bholi gaaunmaa ke hola?':['gaaun','गाउँ','village'],
+ 'Habre ra Mimi gaaunmaa pugchhan.':['gaaun','गाउँ','village'],
+ 'Mimi musolaai kudaauchhe.':['muso','मुसो','mouse'],
+ 'Bazaarmaa dherai halla cha!':['bazaar','बजार','market'],
+ 'Changawaala bhanchha: "Mandirmaa chaad cha. Jaau!"':['mandir','मन्दिर','temple'],
+ 'Chaadmaa ke hola?':['chaad','चाड','festival'],
+ 'Mimi bhijchhe. Sabai haanschhan!':['Mimi','मिमी','Mimi'],
+ '"Himaltira jaana jangalko baato chhito cha."':['jangal','जङ्गल','forest'],
+ 'Agaadi thulo taal cha. Kasari paar garne?':['taal','ताल','lake'],
+ 'Taal thulo ra nilo cha.':['taal','ताल','lake'],
+ 'Habre bhanchha: "Hoina, dhanyabaad!"':['dhanyabaad','धन्यवाद','thank you'],
+ 'Taal paari euta sahar cha. Tyahaa chidiyakhaana cha!':['chidiyakhaana','चिडियाखाना','zoo'],
+ 'Baato ukaalo cha.':['ukaalo','उकालो','uphill'],
+ 'Habrelaai chiso laagchha. "Haachhyu!"':['chiso','चिसो','cold'],
+ 'Habre uthyo.':['bihaana','बिहान','morning'],
+ 'Habre school jaanchha. Bye bye!':['school','स्कूल','school'],
+ 'Paani paryo!':['paani','पानी','rain'],
+ 'Habrelai majja aayo!':['majja','मज्जा','fun'],
+ 'Habre bagaichama jaanchha.':['bagaicha','बगैंचा','garden'],
+ 'Chiplekira bistarai hidchha.':['chiplekira','चिप्लेकीरा','snail'],
+ 'Habre botlai paani dinchha.':['bot','बोट','plant'],
+ 'Bagaicha kati sundar!':['sundar','सुन्दर','beautiful'],
+ 'Habrelai bhok lagyo.':['bhok','भोक','hungry'],
+ 'Pet bhariyo. Habrelai nindra lagyo.':['nindra','निद्रा','sleepy'],
+ 'Pahilo din kaaglai khana dinchhan.':['kaag','काग','crow'],
+ 'Raati sabai deusi khelchhan.':['deusi','देउसी','Deusi songs'],
+ 'Aaja bida ho.':['bida','बिदा','holiday'],
+ 'Habre sochchha: Kahaa jaane?':['kahaa','कहाँ','where?'],
+ 'Habre taalma jaanchha.':['taal','ताल','lake'],
+ 'Habre chidiyakhanama jaanchha.':['chidiyakhaana','चिडियाखाना','zoo'],
+ 'Dashain aayo! Sabai ghar farkinchhan.':['Dashain','दशैं','Dashain'],
+ 'Gaaunma thulo ping cha. Habre ping khelchha.':['ping','पिङ','swing'],
+ 'Habre bhanchha: Dashainko shubhakamana!':['shubhakamana','शुभकामना','best wishes'],
+ 'Aaja Holi ho. Rangko chaad!':['Holi','होली','Holi'],
+ 'Habresanga rato, hariyo ra pahelo rang cha.':['rang','रङ','colours'],
+ 'Habreko anuhar rangichangi bhayo!':['rangichangi','रंगीचंगी','colourful'],
+ 'Sabai bhanchhan: Holiko shubhakamana!':['shubhakamana','शुभकामना','best wishes'],
+ 'Aaja Lhosar ho. Naya barsa aayo!':['Lhosar','ल्होसार','Lhosar'],
+ "Habreko saathi Pemba ho.":['saathi','साथी','friend'],
+ 'Sabai golo bhaera naachchhan.':['naach','नाच','dance'],
+ 'Habre bhanchha: Lhosarko shubhakamana!':['shubhakamana','शुभकामना','best wishes'],
+ // where the first picture word would be the wrong one: gai (went, not cow), tara (but, not star), or not the picture
+ 'Ae! Mimi kahaa gai?':['kahaa','कहाँ','where?'],
+ 'Ghoda gaadaa bazaar jaanchha. Bazaarmaa ke hola?':['bazaar','बजार','market'],
+ 'Tara jangal andhyaaro cha. Darr laagla?':['andhyaaro','अँध्यारो','dark'],
+ 'Chidiyakhaanaako didi bhanchhin: "Bholi mero trak pahaadtira jaanchha. Aau!"':['trak','ट्रक','lorry'],
+ 'Aama tin wota syau kinnuhunchha.':['syau','स्याउ','apple'],
+ 'Aamale taato momo banaunubhayo.':['momo','मोमो','momo'],
+ 'Habre buwasanga changa udauchha.':['changa','चङ्गा','kite'],
+ 'Pembako aama khapse banaunuhunchha.':['khapse','खाप्से','khapse biscuits'],
+};
+const isLittle=()=>ageOf(P()).id==='little';
+// the one-word version of a story page: [picture, word, its Devanagari, its English]
+function littlePage(pg,st){
+  const pick=LITTLE_WORDS[pg[1]];if(pick)return [pg[0],...pick];
+  const toks=pg[1].split(' ').map(w=>w.replace(/[.,!?:;“”"’']/g,'').toLowerCase()),line=' '+toks.join(' ')+' ';
+  const own=st&&st.rid&&T('w_'+st.rid)?T('w_'+st.rid).items.find(it=>line.includes(' '+it[0]+' ')):null;
+  if(own)return [pg[0],own[0],own[1],own[2]];
+  for(const w of toks){const L=lookup(w);if(L&&L.t.kind==='pic')return [pg[0],L.it[0],L.it[1],L.it[2]];}
+  return pg;
+}
+// ages 3-5 skip a side story's question and ordering game (both in whole sentences): reading it is enough
+function littleStoryEnd(){
+  const p=P();if(bestOf(p,'kathaa',story.id)<1){p.best=p.best||{};p.best['kathaa:'+story.id]=1;save();earn(2);}
+  speech('Syabaas!','स्याबास!','You read the whole story!');say('Syabaas!','स्याबास!',null);confetti();mood('happy');
+  if(!tripBack())openStories();
+}
 function readStory(s){story=s;pageI=0;path=s.pages.slice();branchK=-1;guessed=new Set();renderPage();}
 // the end of a part of Habre's Journey: a section's last part ends on its cliffhanger, then it's on to the present
 function journeyEnd(){
@@ -2622,7 +2698,8 @@ function openJourney(){
   speech('Habreko kathaa','हाब्रेको कथा','The story so far. Tap a part to hear it.');say('Habreko kathaa','हाब्रेको कथा',null);mood('wave');
 }
 function renderPage(quiet){
-  screen='story';const en=EN(),pg=path[pageI],rt=(en?pg[3]:pg[1]).split(' '),dt=pg[2].split(' '),same=!en&&rt.length===dt.length;
+  // ages 3-5 see one word a page instead of the sentence
+  screen='story';const en=EN(),pg=isLittle()?littlePage(path[pageI],story):path[pageI],rt=(en?pg[3]:pg[1]).split(' '),dt=pg[2].split(' '),same=!en&&rt.length===dt.length;
   const guess=S.storyGuess&&!guessed.has(pageI),more=story.choice&&branchK<0;
   let gopts=[];
   if(guess){const others=[...new Set(pagesOf(story).map(x=>x[0]).filter(x=>x!==pg[0]))];gopts=shuffle([pg[0],...shuffle(others).slice(0,2)]);}
@@ -2662,6 +2739,7 @@ function renderPage(quiet){
     else if(more)renderChoice();
     else if(story.choice)branchEnd();
     else if(story.journey)journeyEnd();
+    else if(isLittle())littleStoryEnd();
     else storyQuiz();
   };
   main.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{

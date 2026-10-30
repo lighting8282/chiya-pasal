@@ -50,6 +50,8 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 | 🏆 Big check | 5 questions, 3 to pass | 8 questions, 6 to pass | 8 questions, 6 to pass |
 | 🔍 Room find game | 4 things | 6 things | 8 things |
 
+**Stories for 3–5 are one word at a time:** every story page (Habre's Journey and the side stories) shows the picture with a single word, read aloud, instead of the whole sentence. The word is the section's own word on that page where there is one, such as *phul* (flower) on the page where Habre picks a flower, and otherwise one chosen by hand in `LITTLE_WORDS`. Side stories also skip their question and ordering game for 3–5: reading to the end is enough.
+
 Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
 
 Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
