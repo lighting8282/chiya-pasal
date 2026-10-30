@@ -424,6 +424,9 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .fx{position:absolute;inset:0;z-index:2;pointer-events:none;container-type:size}
 .fx span{position:absolute;bottom:4%;font-size:14cqw;opacity:0;animation:floaty 3.4s ease-in infinite}
 @keyframes floaty{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:1}100%{transform:translateY(-95cqh) rotate(25deg) scale(1.05);opacity:0}}
+/* petals, leaves and snow drift down instead, swaying side to side */
+.fx.fall span{bottom:auto;top:-4%;animation-name:drift;animation-timing-function:linear}
+@keyframes drift{0%{transform:translate(0,0) rotate(0);opacity:0}12%{opacity:1}30%{transform:translate(5cqw,28cqh) rotate(40deg)}55%{transform:translate(-5cqw,52cqh) rotate(-20deg)}80%{transform:translate(4cqw,76cqh) rotate(30deg);opacity:1}100%{transform:translate(0,96cqh) rotate(0);opacity:0}}
 .wallet{display:flex;align-items:center;gap:14px;background:#e8f7ff;border-radius:22px;padding:10px 16px;box-shadow:0 5px 0 #b9e3f7;flex-wrap:wrap}
 .wallet small{display:block;color:var(--soft);font-size:.85rem}
 .gemsbig{font-size:2rem;font-weight:800}
@@ -445,7 +448,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .shopbar .sbt{flex:1;min-width:120px}
 .shopbar .sbt small{display:block;color:var(--soft)}
 .shopbar .need{font-weight:700;color:var(--soft)}
-@media (prefers-reduced-motion: reduce){.fx span{opacity:.8;bottom:40%}}
+@media (prefers-reduced-motion: reduce){.fx span,.fx.fall span{opacity:.8;top:auto;bottom:40%}}
 @media (max-width:680px){.shopgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.sitem .si{font-size:2rem}.gems{padding:4px 10px}}
 
 /* confetti */
@@ -1117,13 +1120,14 @@ const ITEMS=[
  I('bg-candy','bg','','Mithai','मिठाई','candy land',25,{grad:'#ffd1e6,#ffeef6',deco:[['🍭',14,30,14],['🍬',86,24,12],['🧁',86,80,14]]}),
  I('bg-rainbow','bg','','Indreni','इन्द्रेणी','rainbow',30,{grad:'#ff8a80,#ffc070,#fff38a,#9fe39b,#8fd0ff,#c3a6ff',deco:[['☁️',16,80,18],['☁️',84,76,18]]}),
  I('bg-space','bg','','Antariksh','अन्तरिक्ष','outer space',35,{grad:'#0b0d2a,#26235a',deco:[['🪐',78,20,18],['🚀',18,28,14],['⭐',50,8,7],['⭐',88,62,7]]}),
- // magic: things that float up around Habre
+ // magic: things that float up around Habre (petals, leaves and snow fall down instead; see FX_FALL)
  I('fx-flowers','fx','🌸','Phul','फूल','flower petals',15),I('fx-leaves','fx','🍂','Paat','पात','autumn leaves',15),
  I('fx-sparkle','fx','✨','Chamak','चमक','sparkles',20),I('fx-hearts','fx','❤️','Maya','माया','hearts',20),I('fx-stars','fx','⭐','Tara','तारा','stars',20),
  I('fx-snow','fx','❄️','Hiu','हिउँ','snowflakes',20),I('fx-music','fx','🎵','Sangit','संगीत','music notes',20),
  I('fx-butterflies','fx','🦋','Putali','पुतली','butterflies',25),I('fx-party','fx','🎉','Ramaailo','रमाइलो','party poppers',30),
 ];
 const ITEM=Object.fromEntries(ITEMS.map(x=>[x.id,x]));
+const FX_FALL=['fx-flowers','fx-leaves','fx-snow'];
 const GIFTS=()=>ITEMS.filter(x=>x.gift).sort((a,b)=>a.gift-b.gift);
 const FUR_KEYS=['#c4471f','#d9572b','#7a2a12','#8a2e14','#3b2016','#fff4e8'];
 const SLOT_POS={hat:[80,22,46],eyes:[80,68,52],neck:[80,114,30],hand:[128,130,36]};
@@ -1157,7 +1161,9 @@ function renderOutfit(){
   sc.style.background=bg?`linear-gradient(180deg,${bg.grad})`:'';sc.classList.toggle('on',!!bg);
   sc.innerHTML=bg?bg.deco.map(([e,x,y,s])=>`<span style="left:${x}%;top:${y}%;font-size:${s}cqw">${e}</span>`).join(''):'';
   const fx=it('fx');
-  $('#hbFx').innerHTML=fx?Array.from({length:7},(_,k)=>`<span style="left:${8+k*13}%;animation-delay:${(k*0.53)%3.2}s;animation-duration:${3+(k%3)*0.6}s">${fx.e}</span>`).join(''):'';
+  const fall=!!fx&&FX_FALL.includes(fx.id);$('#hbFx').classList.toggle('fall',fall);
+  // falling things drift down more slowly than rising ones float up
+  $('#hbFx').innerHTML=fx?Array.from({length:7},(_,k)=>`<span style="left:${8+k*13}%;animation-delay:${(k*(fall?0.7:0.53))%(fall?4.4:3.2)}s;animation-duration:${(fall?4.6:3)+(k%3)*0.6}s">${fx.e}</span>`).join(''):'';
 }
 let shopCat='hat',shopSel=null;
 function openShop(cat){
