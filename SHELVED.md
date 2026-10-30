@@ -52,11 +52,19 @@ Every room of the house keeps its picture and its look-and-find game; only the l
 | Vyakaran · Grammar | `vyakaran` | section | 12 grammar lessons (and the 12 English ones for English learners) | office, daily practice (two grammar questions), flashcards, grown-ups' progress |
 | Sabai shabda · Every word topic | `shabda` | section | the full list of word topics, and the sticker book (only reached from there) | office, grown-ups' page (stickers) |
 
+## From the flashcards
+
+| What | Id | Kind | What it held | Where it appeared |
+|---|---|---|---|---|
+| Thulo maanchhe · Grown-ups' deck | `custom` | flashcard deck | one flashcard set a grown-up builds by ticking words on the grown-ups' page | flashcards (a deck under "My decks"), grown-ups' page ("Your flashcard deck" picker) |
+
+Shelved so that free flashcards are the built-in categories only. Making your own sets is an idea for the paid version (see `PAID-IDEAS.md`). Words a grown-up already ticked are kept with the player.
+
 ## Brought back
 
 | What | Id | When | Notes |
 |---|---|---|---|
-| Patti · Flashcards | `patti` | 2026-10-29 | Back in the office, with flip cards, memory match (Jodi) and listen-and-tap. Its decks are only what's in play: story words, tricky words, the grown-ups' deck and the journey's word topics. Letter, grammar and sentence decks stay hidden while those are shelved. |
+| Patti · Flashcards | `patti` | 2026-10-29 | Back in the office, with flip cards, memory match (Jodi) and listen-and-tap. Its decks are only what's in play: story words, tricky words and the journey's word topics. Letter, grammar and sentence decks stay hidden while those are shelved. |
 
 ## While shelved
 

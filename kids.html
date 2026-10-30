@@ -1286,7 +1286,8 @@ const SHELVED={
   topics:['pariwar','bhavana','saman','bhanai',  // baithak
     'khana','ganti','thulo','kapada','rang','sharir',  // kitchen, dining room, bedroom, bathroom
     'akshar','abc'],  // office
-  sections:['vakya','kathaa','vyakaran','shabda']};
+  sections:['vakya','kathaa','vyakaran','shabda',
+    'custom']};  // the grown-ups' own flashcard deck (an idea for the paid version)
 const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
@@ -1997,7 +1998,7 @@ function openPatti(){
   const add=(id,icon,np,en,color,cards,dev)=>{if(cards.length)decks.push({id,icon,np,en,color,cards,dev});};
   const inPlay=c=>c&&!shelved(c.t.id),tricky=trickyCards(p).filter(inPlay),custom=(p.custom||[]).map(findCard).filter(inPlay);
   add('tricky','⭐','Gaaro shabda','My tricky words','#ff9f1c',tricky);
-  add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
+  if(!shelved('custom'))add('custom','👪','Thulo maanchhe','Grown-ups’ deck','#ff7eb6',custom);
   add('kathaa','📖','Kathaa shabda','Story words','#8e5be8',storyWordCards());
   if(!shelved('vakya'))add('vakya','🚂','Vakya','Sentences','#ff9f1c',vakyaT().items.map(it=>({t:vakyaT(),it})),'वाक्य');
   const special=decks.length;
@@ -2899,7 +2900,7 @@ function renderProgress(p){
    ${shelved(AKSHAR().id)?'':`<p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>`}
    <h3>Words to practise</h3>
    ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
-   ${shelved('patti')?'':`<h3>Your flashcard deck for ${esc(p.name)}</h3>
+   ${shelved('patti')||shelved('custom')?'':`<h3>Your flashcard deck for ${esc(p.name)}</h3>
    <p>Tick words for ${esc(p.name)} to practise. They appear in Patti as the “Thulo maanchhe” (grown-ups’) deck. ${custom.size} chosen.</p>
    <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.id==='akshar'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
    <div class="cd" id="cdWords"></div>`}`;

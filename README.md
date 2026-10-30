@@ -69,7 +69,7 @@ The lessons:
   - hear a sentence and find its picture
   - fix Habre's muddled sentence
   - pick the right answer to a question
-- **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks. Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
+- **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks (the grown-ups' deck is shelved for now, see `SHELVED.md`). Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
 
 **Naksa (the map)** is the front page, and a new player lands on it straight away. It shows Habre's house at the bottom and a road winding up through eight trips to the mountains. At first only the house is open and the other places show a lock. A ring around each place fills as the child works through it, and the child's avatar stands at the place they're on. Tapping a place goes there, and tapping a locked one says what to do first. Below the map are **Aajako abhyas** (a five-minute mixed practice with a day streak) and the next free gift for Habre.
 
