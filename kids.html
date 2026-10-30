@@ -559,7 +559,7 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 @keyframes hotYes{30%{background:rgba(255,210,60,.45)}}
 @keyframes hotNo{30%{background:rgba(232,70,58,.3)}}
 /* naksa: the map of every place, from Habre's house at the bottom to the mountains at the top */
-.wmap{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:3/4.3;border-radius:32px;overflow:hidden;background:linear-gradient(to top,#a8dc8c 0%,#cdeeb8 30%,#d6eefb 68%,#f6fbff 100%);box-shadow:0 7px 0 var(--line)}
+.wmap{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:3/5.2;border-radius:32px;overflow:hidden;background:linear-gradient(to top,#a8dc8c 0%,#cdeeb8 30%,#d6eefb 68%,#f6fbff 100%);box-shadow:0 7px 0 var(--line)}
 .wmap svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .wmap .deco{position:absolute;transform:translate(-50%,-50%);font-size:1.6rem;opacity:.8;pointer-events:none}
 .place{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;z-index:1}
@@ -577,8 +577,8 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .place.r .me{left:auto;right:-30px}
 .place:active .disc{transform:translateY(3px)}
 .maphint{text-align:center;color:var(--soft);font-weight:600;font-size:.9rem;margin:0}
-@media (max-width:520px){.wmap{aspect-ratio:3/5}.place .disc{width:58px;height:58px;padding:5px}.place .in{font-size:1.7rem}.place .lb{font-size:.78rem}}
-@media (max-width:330px){.wmap{aspect-ratio:3/5.8}}
+@media (max-width:520px){.wmap{aspect-ratio:3/6}.place .disc{width:58px;height:58px;padding:5px}.place .in{font-size:1.7rem}.place .lb{font-size:.78rem}}
+@media (max-width:330px){.wmap{aspect-ratio:3/6.8}}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -1292,7 +1292,7 @@ const SHELVED={
 const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
-const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id));
+const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id)&&!OLD_TRIP_T.includes(t.id));
 // the letters and grammar topics, or none while they're shelved
 const AKSHAR_ON=()=>shelved(AKSHAR().id)?[]:[AKSHAR()];
 const GRAM_ON=()=>shelved('vyakaran')?[]:GRAM_T();
@@ -1603,26 +1603,47 @@ function roomEnd(){
 // saved scores, so anything already played counts too. Every trip ends with a big check (a mix of its words) and a
 // present of gems; the last one, the mountains, mixes every trip at the hard level. The gate opens at GATE stars.
 const GATE=10,BOSS_N=8;
-const YATRA=(()=>{const W=(t,lv)=>({k:'play',t,lv}),K=id=>({k:'story',id}),J=t=>({k:'check',t});return [
- {id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝'],stops:[
-  W('kira','easy'),W('prakriti','easy'),K('bagaicha'),W('kira','medium'),W('prakriti','medium'),K('paani'),
-  W('kira','hard'),W('prakriti','hard'),J('kira'),J('prakriti')]},
- {id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡'],stops:[
-  W('janawar','easy'),K('mimi'),W('janawar','medium'),K('bhok'),W('janawar','hard'),J('janawar')]},
- {id:'bazaar',np:'Bazaar',dev:'बजार',en:'The market',icon:'🛍️',bg:'#ffe6ee',gems:20,deco:['🍎','🍌','🧺','🎈'],stops:[
-  W('savari','easy'),K('bazaar'),W('chaad','easy'),W('savari','medium'),K('tihar'),W('chaad','medium'),
-  K('dashain'),W('savari','hard'),K('holi'),W('chaad','hard'),J('savari'),J('chaad')]},
- {id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️'],stops:[
-  W('jangali','easy'),K('bida'),W('jangali','medium'),W('jangali','hard'),J('jangali')]},
- {id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:25,deco:['🦆','🪷','🐸','🌾'],stops:[
-  W('sarisrip','easy'),W('sarisrip','medium'),W('sarisrip','hard'),J('sarisrip')]},
- {id:'samundra',np:'Samundra',dev:'समुद्र',en:'The seaside',icon:'🌊',bg:'#d4f1f9',gems:30,deco:['🐚','🌴','⛵','🦀'],stops:[
-  W('samundra','easy'),W('samundra','medium'),W('samundra','hard'),J('samundra')]},
- {id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿'],stops:[
-  W('chara','easy'),W('chara','medium'),W('chara','hard'),J('chara')]},
- {id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅'],stops:[
-  K('himal'),K('lhosar')]},
+const YATRA=(()=>{const K=id=>({k:'story',id});
+ // every section plays the same way on its own 10 words: easy, medium, hard, then a check, with its stories in between
+ const sec=(o,stories)=>{const t='w_'+o.id,W=lv=>({k:'play',t,lv}),st=stories.map(K);
+   return {...o,stops:[W('easy'),...st.slice(0,1),W('medium'),...st.slice(1,2),W('hard'),...st.slice(2),{k:'check',t}]};};
+ return [
+ sec({id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝']},['bihana','bagaicha']),
+ sec({id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡']},['mimi','bhok']),
+ sec({id:'bazaar',np:'Bazaar',dev:'बजार',en:'The market',icon:'🛍️',bg:'#ffe6ee',gems:20,deco:['🍎','🍌','🧺','🎈']},['bazaar']),
+ sec({id:'mandir',np:'Mandir',dev:'मन्दिर',en:'The temple square',icon:'🛕',bg:'#fff0dc',gems:20,deco:['🪔','🔔','🌼','🥁']},['tihar','dashain','holi']),
+ sec({id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️']},['bida']),
+ sec({id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:25,deco:['🦆','🪷','🐸','🌾']},['paani']),
+ sec({id:'chidiyakhana',np:'Chidiyakhana',dev:'चिडियाखाना',en:'The zoo',icon:'🦒',bg:'#f3ecd6',gems:30,deco:['🦓','🐘','🐧','🌴']},['school','janmadin']),
+ sec({id:'samundra',np:'Samundra',dev:'समुद्र',en:'The seaside',icon:'🌊',bg:'#d4f1f9',gems:30,deco:['🐚','🌴','⛵','🦀']},[]),
+ sec({id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿']},['daktar']),
+ sec({id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅']},['himal','lhosar']),
 ];})();
+// Each section's 10 words: 7 new and 3 the child has already seen in the house or an earlier section (marked •),
+// mixed so the easy level (the first 6) has 2 familiar ones. Words are looked up by their romanized name in the
+// word topics and then the rooms, so each keeps its spelling and picture. See MAP-PLAN.md.
+const SECTION_WORDS={
+ bagaicha:['putali','kamila','jun•','mauri','makura','gamala•','phul','rukh','biralo•','ghaam'],
+ gaaun:['gai','kukhura','hans•','bakhra','ghoda','aalu•','kukur','muso','phul•','challa'],
+ bazaar:['kaar','bas','golbheda•','saikal','trak','pyaaj•','motorsaikal','bellun','momo•','changa'],
+ mandir:['diyo','upahaar','mainbatti•','mala','dhol','phul•','phuljhadi','pichkari','changa•','dhwaja'],
+ jangal:['singha','bhalu','rukh•','gaida','kharayo','makura•','harin','phyauro','mauri•','bandar'],
+ taal:['saanp','kachhuwa','hans•','gohi','bhyaguto','phul•','machha','dunga','harin•','laamkhutte'],
+ chidiyakhana:['jiraph','jebra','singha•','chituwa','panda','bandar•','hatti','bagh','gohi•','penguin'],
+ samundra:['hvel','dalphin','machha•','gangato','aktopas','dunga•','shark','sankha','kachhuwa•','rangichangi machha'],
+ pahad:['ullu','mayur','ghaam•','parewa','chil','putali•','bhangera','suga','bakhra•','indreni'],
+ himal:['hiu','himal','jun•','tara','badal','chil•','aago','helikoptar','bhalu•','hawaijahaj'],
+};
+// the word topics the sections replaced; kept so story words and saved progress still find them, but not shown
+const OLD_TRIP_T=['kira','prakriti','janawar','savari','chaad','jangali','sarisrip','samundra','chara'];
+(()=>{
+  const look=rom=>{for(const t of TOPICS)if(!t.section&&t.kind==='pic'){const it=t.items.find(i=>i[0]===rom);if(it)return it.slice(0,4);}
+    for(const r of ROOMS){const it=r.items.find(i=>i[0]===rom&&i[3]);if(it)return it.slice(0,4);}
+    throw new Error('No word '+rom);};
+  const COLORS=['#2fae6e','#ff9f1c','#e8463a','#ff8c2e','#2fae6e','#00a6b8','#8e5be8','#3a7bf2','#8e5be8','#3a7bf2'];
+  YATRA.forEach((r,i)=>TOPICS.push({id:'w_'+r.id,np:r.np,dev:r.dev,en:r.en,icon:r.icon,color:COLORS[i],kind:'pic',q:'kahaa',
+    items:SECTION_WORDS[r.id].map(w=>look(w.replace('•','')))}));
+})();
 const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
 const T=id=>TOPICS.find(t=>t.id===id);
 // the stop being played right now, when it was started from the trail
@@ -1719,8 +1740,8 @@ function openPath(rid){
 }
 
 // ---------- naksa (the map): the front page. Habre's house at the bottom, the places above it, locked until reached ----------
-const MAP_POS=[[72,88],[28,78],[72,68.5],[28,59],[72,49],[28,39.5],[72,29.5],[28,20],[72,10]];
-const MAP_DECO=[['☀️',10,7],['☁️',48,3],['☁️',10,31],['🦅',92,20],['🌲',8,51],['🌳',92,42],['🦀',92,62],['🐐',8,71],['🌷',92,81],['🐄',8,91]];
+const MAP_POS=[[72,91],[28,82.8],[72,74.6],[28,66.4],[72,58.2],[28,50],[72,41.8],[28,33.6],[72,25.4],[28,17.2],[72,9]];
+const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17],['🦒',92,33],['🌲',8,46],['🌳',92,50],['🦀',92,64],['🪔',8,62],['🐐',8,78],['🌷',92,83],['🐄',8,94]];
 function openMap(){
   if(!P()){goWho();return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
