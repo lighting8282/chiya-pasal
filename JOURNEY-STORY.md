@@ -10,7 +10,8 @@ A draft for review. Nothing here is built yet.
 - **The journey is written fresh.** Today's 15 stories aren't rewritten; they stay as side stories.
 - Each chapter uses the section's 10 words (listed under it), so the story repeats what the child has just learned.
 - Each chapter ends with a hook that leads to the next place.
-- The last chapter leaves the door open to more maps, since their order isn't decided yet.
+- The last chapter leaves the door open to more maps. Every later map is one of Habre's adventures: a trip of its own that starts at home and stands alone, so the child can pick any open map next.
+- Finishing a map sends **a postcard to Hajuraama** and brings home **a souvenir** for the shelf in Habre's living room. For the free map, the souvenir could be Hajuraama's old map, the one with all the other places on it.
 
 **Who's in it:**
 - **Habre**, the red panda.
@@ -108,7 +109,7 @@ The path climbs. A parrot (**suga**) and a peacock (**mayur**) show off their co
 
 Snow (**hiu**) begins to fall on the snowy mountain (**himal**). Clouds (**badal**) hide the path, and Habre and Mimi are lost. Then the moon (**jun**) and the stars (**tara**) come out, and the eagle (**chil**) guides them. Far below, a helicopter (**helikoptar**) blinks its lights. They see the glow of a fire (**aago**). It's Hajuraama, with a bear (**bhalu**) neighbour. Habre gives her the kite, the garland and the basket of oranges. Hajuraama cries happy tears, and everyone celebrates Lhosar together.
 
-*The ending:* in the morning, an aeroplane (**hawaijahaj**) flies over the mountains. Hajuraama shows Habre an old map with many more places on it: "Where shall we go next?" That opens whichever map comes next.
+*The ending:* in the morning, an aeroplane (**hawaijahaj**) flies over the mountains. Hajuraama shows Habre an old map with many more places on it: "Where shall we go next?" From here the child picks the next adventure, and Habre sends his first postcard.
 *Side stories here:* *Himalko yatra*, *Lhosar*.
 
 ---
