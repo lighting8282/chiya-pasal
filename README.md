@@ -71,22 +71,140 @@ The lessons:
   - pick the right answer to a question
 - **Patti (flashcards):** decks for every topic, plus story words, sentences, the child's tricky words and a deck a grown-up picks (the grown-ups' deck is shelved for now, see `SHELVED.md`). Cards move between three baskets (new, practising, "I know it"). Play them as flip cards, as match-the-pairs or as listen-and-tap.
 
-**Naksa (the map)** is the front page, and a new player lands on it straight away. It shows Habre's house at the bottom and a road winding up through eight trips to the mountains. At first only the house is open and the other places show a lock. A ring around each place fills as the child works through it, and the child's avatar stands at the place they're on. Tapping a place goes there, and tapping a locked one says what to do first. Below the map are **Aajako abhyas** (a five-minute mixed practice with a day streak) and the next free gift for Habre.
+**Naksa (the map)** is the front page, and a new player lands on it straight away. It shows Habre's house at the bottom and a road winding up through eight trips to the mountains. At first only the house is open and the other places show a lock. A ring around each place fills as the child works through it, and the child's avatar stands at the place they're on. Tapping a place goes there, and tapping a locked one says what to do first. Below the map are:
+- **Aajako abhyas:** a five-minute mixed practice with a day streak.
+- **Patti:** flashcards and memory match, open any time.
+- The next free gift for Habre.
 
-**Habreko yatra (Habre's journey)** is the trips. Each one is about the creatures and things found there:
+**Habreko yatra (Habre's journey)** is the trips. The garden opens once the child has 10 ★ from the rooms (the look-and-find games give up to 8 ★ a room). Each later trip opens when the one before it is finished. Inside a trip, a winding path of stops is played in order: the child taps the glowing stop, and the next one unlocks once it's passed. Lessons a child has already passed count on the trail.
 
-1. **Bagaicha** (the garden): bugs and nature
-2. **Gaaun** (the farm village): animals
-3. **Bazaar** (the market): vehicles and festivals
-4. **Jangal** (the forest): wild animals
-5. **Taal** (the lake): reptiles and frogs
-6. **Samundra** (the seaside): sea animals
-7. **Pahad** (the hills): birds
-8. **Himal** (the mountains): the last climb
+The kinds of stop:
 
-The garden opens once the child has 10 ★ from the rooms, and each later trip opens when the one before it is finished. Inside a trip, a winding path of stops takes each topic from easy to medium to hard, then to a check, with the stories that happen there along the way. The child taps the glowing stop to play it, and a new word level starts with the Learn cards. Each trip ends with a big check that mixes its words (6 of 8 to pass) and a present of gems. The mountains' big check mixes every trip at the hard level. Lessons a child has already passed count on the trail. Every word topic can also be opened directly from the office.
+| Stop | What happens | To pass |
+|---|---|---|
+| 🐣 **Sajilo** (easy) | the first 6 words of the topic; 6 questions with 2 pictures, labelled in Nepali and English | 5 of 6 |
+| 🐥 **Thikka** (medium) | every word; 8 questions with 3 pictures, labelled in Nepali only | 6 of 8 |
+| 🦅 **Gaaro** (hard) | every word; 10 questions with 4 unlabelled pictures, the word only spoken until the child answers | 7 of 10 |
+| 📖 **Story** | A story read aloud, each word lighting up as it's spoken | read to the end |
+| ✅ **Jaanch** (check) | 6 questions on the whole topic, 3 pictures, no help | 5 of 6 |
+| 🏆 **Thulo jaanch** (big check) | 8 questions mixing words from every stop in the place, each at that stop's level | 6 of 8 |
+| 🎁 **Present** | A chest of 💎 gems, opened once | — |
 
-**Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: how far through each door they are, stars per topic and level, stories, sentences, flashcard baskets, letters written and the words they keep missing. Grown-ups also build their flashcard deck there. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
+The first time a word stop is opened, Learn cards show its words before the questions. English learners play the same stops with the English word as the answer.
+
+#### 1. 🌻 Bagaicha (the garden)
+
+1. Kira (bugs), easy
+2. Prakriti (nature), easy
+3. Story: *Bagaichama* (In the garden)
+4. Kira (bugs), medium
+5. Prakriti (nature), medium
+6. Story: *Paani paryo* (It rained)
+7. Kira (bugs), hard
+8. Prakriti (nature), hard
+9. Check: Kira (bugs)
+10. Check: Prakriti (nature)
+11. Big check
+12. Present: 💎 10
+
+Words:
+- **Kira (7):** putali (butterfly), kamila (ant), mauri (bee), makura (spider), laamkhutte (mosquito), fatyangro (grasshopper), bichchhi (scorpion)
+- **Prakriti (10):** ghaam (sun), jun (moon), tara (star), phul (flower), rukh (tree), badal (cloud), hiu (snow), himal (snowy mountain), indreni (rainbow), aago (fire)
+
+#### 2. 🏘️ Gaaun (the farm village)
+
+1. Janawar (animals), easy
+2. Story: *Haraeko biralo* (The lost cat)
+3. Janawar (animals), medium
+4. Story: *Bhok lagyo!* (I'm hungry!). The child chooses what Habre does, and there are two endings.
+5. Janawar (animals), hard
+6. Check: Janawar (animals)
+7. Big check
+8. Present: 💎 15
+
+Words:
+- **Janawar (12):** biralo (cat), kukur (dog), gai (cow), machha (fish), kukhura (chicken), hatti (elephant), bakhra (goat), bandar (monkey), chara (bird), bagh (tiger), muso (mouse), ghoda (horse)
+
+#### 3. 🛍️ Bazaar (the market)
+
+1. Savari (vehicles), easy
+2. Story: *Bazaar ma* (At the market)
+3. Chaad-parba (festivals), easy
+4. Savari (vehicles), medium
+5. Story: *Tihar aayo* (Tihar is here)
+6. Chaad-parba (festivals), medium
+7. Story: *Dashain aayo* (Dashain is here)
+8. Savari (vehicles), hard
+9. Story: *Rangko chaad* (The festival of colours, Holi)
+10. Chaad-parba (festivals), hard
+11. Check: Savari (vehicles)
+12. Check: Chaad-parba (festivals)
+13. Big check
+14. Present: 💎 20
+
+Words:
+- **Savari (9):** kaar (car), bas (bus), saikal (bicycle), rel (train), hawaijahaj (aeroplane), dunga (boat), trak (lorry), motorsaikal (motorbike), helikoptar (helicopter)
+- **Chaad-parba (12):** diyo (oil lamp), changa (kite), upahaar (present), bellun (balloon), mala (garland), dhol (drum), phuljhadi (sparkler), mainbatti (candle), pichkari (water pistol), jamara (barley shoots), khapse (biscuit), dhwaja (flag)
+
+#### 4. 🌲 Jangal (the forest)
+
+1. Jangali (wild animals), easy
+2. Story: *Kahaa jaane?* (Where shall we go?). The child chooses what Habre does, and there are two endings.
+3. Jangali (wild animals), medium
+4. Jangali (wild animals), hard
+5. Check: Jangali (wild animals)
+6. Big check
+7. Present: 💎 25
+
+Words:
+- **Jangali (10):** singha (lion), bhalu (bear), gaida (rhino), kharayo (rabbit), harin (deer), phyauro (fox), jiraph (giraffe), jebra (zebra), chituwa (leopard), panda (panda)
+
+#### 5. 🏞️ Taal (the lake)
+
+1. Sarisrip (reptiles and frogs), easy
+2. Sarisrip (reptiles and frogs), medium
+3. Sarisrip (reptiles and frogs), hard
+4. Check: Sarisrip (reptiles and frogs)
+5. Big check
+6. Present: 💎 25
+
+Words:
+- **Sarisrip (6):** saanp (snake), kachhuwa (turtle), gohi (crocodile), bhyaguto (frog), chheparo (lizard), dainosor (dinosaur)
+
+#### 6. 🌊 Samundra (the seaside)
+
+1. Samundra (sea animals), easy
+2. Samundra (sea animals), medium
+3. Samundra (sea animals), hard
+4. Check: Samundra (sea animals)
+5. Big check
+6. Present: 💎 30
+
+Words:
+- **Samundra (9):** machha (fish), hvel (whale), dalphin (dolphin), gangato (crab), aktopas (octopus), shark (shark), jhinge machha (shrimp), sankha (seashell), rangichangi machha (tropical fish)
+
+#### 7. ⛰️ Pahad (the hills)
+
+1. Chara (birds), easy
+2. Chara (birds), medium
+3. Chara (birds), hard
+4. Check: Chara (birds)
+5. Big check
+6. Present: 💎 35
+
+Words:
+- **Chara (9):** suga (parrot), hans (duck), ullu (owl), mayur (peacock), parewa (pigeon), challa (chick), chil (eagle), bhangera (sparrow), penguin (penguin)
+
+#### 8. 🏔️ Himal (the mountains)
+
+1. Story: *Himalko yatra* (Trip to the mountains)
+2. Story: *Lhosar* (Lhosar, the new year)
+3. Big check: mixes words from every trip, all at the hard level
+4. Present: 💎 50
+
+Four stories aren't on the path: *Habre ko bihana* (Habre's morning), *Habreko janmadin* (Habre's birthday), *Daktarkahaa* (At the doctor's) and *Schoolma* (At school). They were only reached from the bedroom's story shelf, which is shelved, so for now they can't be played.
+
+**Habreko pasal (Habre's shop):** every round, story, sentence game and traced letter earns 💎 gems. Children spend them on 84 things for Habre: hats (including a Nepali Dhaka topi), glasses, things to wear round his neck (a marigold mala, a khada), things to hold (a Dashain kite, a sparkler, momos), fur colours, backgrounds behind him (mountains, Tihar lights, outer space) and magic that floats around him. They can try anything on before buying it. Some hats and medals are free gifts when a child reaches a star milestone. Under ⚙, grown-ups get a progress page for each child: stars per topic and level, how far along the journey they are, stories, flashcard baskets and the words they keep missing. Voices use the browser's own speech: Microsoft Edge has Nepali voices, and Chrome reads the Devanagari with its Hindi voice. The ⚙ button also lets a grown-up pick the voice and speed.
 
 ### Install it as an app
 
