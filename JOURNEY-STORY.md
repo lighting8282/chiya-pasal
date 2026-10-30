@@ -5,7 +5,7 @@ A draft for review. Nothing here is built yet.
 **The story in one line:** Hajuraama (Habre's grandmother) lives high in the mountains, where red pandas come from. Habre sets off to visit her before the first snow, with a present.
 
 **How each chapter works:**
-- There's one chapter for each section of the free map. Chapters are **required** stops on the trail: the next stop opens only once the chapter is read.
+- There's one chapter for each section of the free map. Chapters are **required** stops on the trail. Each is the section's last stop, after the big check and before the present, so its cliffhanger leads straight on to the next section. The game already has the slot for it (`chapter` in `YATRA`).
 - All other stories are **optional** side stories in the section they fit: today's stories, classics, rhymes and songs. They're there to enjoy, but they never block the trail.
 - **The journey is written fresh.** Today's 15 stories aren't rewritten; they stay as side stories.
 - Each chapter uses the section's 10 words (listed under it), so the story repeats what the child has just learned.

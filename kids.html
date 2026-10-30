@@ -156,6 +156,9 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .langpick button span{font-size:2rem;font-weight:800;line-height:1.1}
 .langpick button small{color:var(--soft)}
 .langpick button[aria-pressed="true"]{border-color:var(--green);background:#e4f7ec}
+.langpick.ages{grid-template-columns:repeat(3,minmax(0,1fr))}
+.langpick.diffs{grid-template-columns:repeat(4,minmax(0,1fr))}
+.langpick.diffs button span{font-size:1.5rem}
 .warn{background:#fff1ef;border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 
 /* learn card */
@@ -911,6 +914,30 @@ const LEVELS={
    about:'4 pictures with no labels, every word, counting to 20; the word is only spoken, not written, until you answer'},
 };
 const LV_KEYS=Object.keys(LEVELS);
+// ---------- age groups, difficulty and practice rounds ----------
+// A grown-up picks each player's age group. Everyone plays the same maps and words. The age group sets the player's
+// difficulty (easy, medium or hard, from LEVELS: how many pictures, labels or not, listen-only or not), which a
+// grown-up can change, and how many questions there are. The youngest (3-5) also get fewer words at a time, and
+// shorter checks and find games.
+const AGES=[
+ {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',diff:'easy',split:true,rounds:{r1:4,r2:4},check:4,boss:5,find:5},
+ {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒',diff:'medium',rounds:{r1:6,r2:8}},
+ {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚',diff:'hard',rounds:{r1:6,r2:10}},
+];
+// players made before age groups count as 6–8
+const ageOf=p=>AGES.find(a=>a.id===(p&&p.age))||AGES[1];
+// the difficulty every question is asked at: the grown-up's choice, or the age group's
+const diffOf=p=>(p&&LEVELS[p.diff]&&p.diff)||ageOf(p).diff;
+// Each section is practised in two rounds before its check: round 1 on its first 5 words, round 2 on all 10
+// (for 3-5, on the other 5, so there are fewer words at a time). Learn cards before a round show only its new words.
+const ROUNDS={r1:{np:'Abhyas 1',dev:'अभ्यास १',en:'Practice 1',icon:'🎯'},r2:{np:'Abhyas 2',dev:'अभ्यास २',en:'Practice 2',icon:'🏅'}};
+const isRound=lv=>lv in ROUNDS;
+const roundWords=(t,rd)=>rd==='r1'?t.items.slice(0,5):ageOf(P()).split?t.items.slice(5,10):t.items.slice(0,10);
+const roundLearn=(t,rd)=>rd==='r1'?t.items.slice(0,5):t.items.slice(5,10);
+const roundN=rd=>ageOf(P()).rounds[rd];
+function checkN(){return ageOf(P()).check||CHECK_N;}
+function bossN(){return ageOf(P()).boss||BOSS_N;}
+function findN(){return ageOf(P()).find||FIND_N;}
 // voice speed presets for the grown-ups panel (kids' speeds sit a little slower than the adult game's)
 const SPEEDS=[['Dherai bistarai','very slow',0.55],['Bistarai','slow',0.7],['Samanya','normal',0.85],['Chhito','fast',1.0]];
 const COUNT_PICS=['🍎','🐥','⭐','🎈','🐟','🌸'];
@@ -947,8 +974,9 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const P=()=>S.profiles.find(p=>p.id===S.cur)||null;
 const bestOf=(p,tid,lv)=>((p&&p.best)||{})[tid+':'+lv]||0;
 const starsOf=p=>p?Object.values(p.best||{}).reduce((a,b)=>a+b,0):0;
-const levelOf=tid=>(P()&&P().lv&&P().lv[tid])||'easy';
-const passed=(p,tid,lv)=>bestOf(p,tid,lv)>=Math.ceil(LEVELS[lv].n*0.7);
+// flashcards, daily practice and the topic pages use the player's difficulty
+const levelOf=tid=>diffOf(P());
+const passed=(p,tid,lv)=>bestOf(p,tid,lv)>=Math.ceil((isRound(lv)?roundN(lv):LEVELS[lv].n)*0.7);
 // Each player learns one way: Nepali (the words in romanized Nepali, with Devanagari and English to help) or
 // English (for Nepali-speaking children: the words in English, with Devanagari to help, and no romanized spelling)
 const EN=()=>P()?.learn==='en';
@@ -1246,6 +1274,7 @@ function pictureOf(t,it){
 }
 // the words a level uses
 function wordsFor(t,lv){
+  if(isRound(lv))return roundWords(t,lv);
   const L=LEVELS[lv];
   if(t.tiers)return t.items.filter(it=>it[4]<=LV_KEYS.indexOf(lv)+1);
   if(t.kind==='num')return t.items.filter(it=>it[3]<=L.count);
@@ -1291,6 +1320,10 @@ function editProfile(p){
      <div class="colors">${PCOLORS.map(c=>`<button type="button" aria-pressed="${c===d.color}" data-c="${c}" style="background:${c}" aria-label="Colour"></button>`).join('')}</div>
      <label>Ke sikne? <small style="font-weight:500;color:var(--soft)" lang="ne">के सिक्ने? · What will you learn?</small></label>
      <div class="langpick">${[['ne','अ','Nepali','नेपाली सिक्ने'],['en','A','English','अंग्रेजी सिक्ने']].map(([l,ic,nm,dv])=>`<button type="button" aria-pressed="${(d.learn||'ne')===l}" data-l="${l}"><span aria-hidden="true">${ic}</span><b>${nm}</b><small lang="ne">${dv}</small></button>`).join('')}</div>
+     <label>Kati barsha? <small style="font-weight:500;color:var(--soft)" lang="ne">कति वर्ष? · How old? (for grown-ups to pick)</small></label>
+     <div class="langpick ages">${AGES.map(a=>`<button type="button" aria-pressed="${ageOf(d)===a}" data-age="${a.id}"><span>${a.icon}</span><b>${a.en}</b><small>${a.np} · ${a.id==='little'?'fewer words at a time':a.id==='middle'?'the usual game':'for bigger kids'}</small></button>`).join('')}</div>
+     <label>Kati gaaro? <small style="font-weight:500;color:var(--soft)" lang="ne">कति गाह्रो? · How hard? (for grown-ups)</small></label>
+     <div class="langpick diffs">${[['','✨','By age',`Follows the age group`],...LV_KEYS.map(k=>[k,LEVELS[k].icon,LEVELS[k].en,LEVELS[k].np])].map(([k,ic,en,sub])=>`<button type="button" aria-pressed="${(LEVELS[d.diff]?d.diff:'')===k}" data-diff="${k}"><span>${ic}</span><b>${en}</b><small>${sub}</small></button>`).join('')}</div>
      <div class="btns" style="justify-content:flex-start">
        <button type="submit" class="btn" style="background:var(--green)">✔ Thik cha <small style="font-weight:500">save</small></button>
        ${S.profiles.length?`<button type="button" class="btn ghost" id="pCancel">Back</button>`:''}
@@ -1303,12 +1336,14 @@ function editProfile(p){
    </form>`;
   main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{d.icon=b.dataset.a;main.querySelectorAll('[data-a]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{d.color=b.dataset.c;main.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-diff]').forEach(b=>b.onclick=()=>{d.diff=b.dataset.diff;main.querySelectorAll('[data-diff]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-age]').forEach(b=>b.onclick=()=>{d.age=b.dataset.age;main.querySelectorAll('[data-age]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{d.learn=b.dataset.l;main.querySelectorAll('[data-l]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   $('#pf').onsubmit=e=>{
     e.preventDefault();
-    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne';
-    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
-    else Object.assign(p,{name,icon:d.icon,color:d.color,learn});
+    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne',age=ageOf(d).id,diff=LEVELS[d.diff]?d.diff:'';
+    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,diff,best:{},lv:{}};S.profiles.push(np);S.cur=np.id;}
+    else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age,diff});
     // a new player goes straight to the map, to see where the journey goes
     save();renderTop();if(isNew)openMap();else goWho();
   };
@@ -1351,7 +1386,7 @@ const today=()=>dayStr(new Date());
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dayStr(d);};
 const stat=p=>(p.stat=p.stat||{plays:0,right:{},miss:{}});
 const keyOf=(t,it)=>t.id+'|'+it[0];
-const checked=(p,t)=>bestOf(p,'check',t.id)>=CHECK_N-1;
+const checked=(p,t)=>bestOf(p,'check',t.id)>=checkN()-1;
 const topicDone=(p,t)=>(LV_KEYS.filter(k=>passed(p,t.id,k)).length+(checked(p,t)?1:0))/4;
 const ynOf=(t,it)=>it[4]?t.yes:t.no;
 const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':label}</button>`;
@@ -1555,7 +1590,7 @@ const roomSections=r=>r.sections.filter(id=>!shelved(id));
 const toRoom=id=>()=>openRoom(roomOf(id));
 // how far through a room: things looked at, the find game, and its word topics
 function roomProgress(p,r){
-  const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(FIND_N-1));
+  const seen=((p.rooms||{})[r.id]||[]).length/r.items.length,find=Math.min(1,bestOf(p,'room',r.id)/(findN()-1));
   const ts=roomTopics(r);
   return ts.length?seen*0.25+find*0.35+avg(ts.map(id=>topicDone(p,T(id))))*0.4:seen*0.4+find*0.6;
 }
@@ -1566,7 +1601,7 @@ function openRoom(r){
   const p=P();
   main.innerHTML=`${backBtn('Ghar')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]}</small></h1>
    <div class="rbar"><button class="mode learn" id="rLook" aria-pressed="true"><span aria-hidden="true">👀</span>Herau<small>Look · tap anything</small></button>
-    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${FIND_N}</small></button></div>
+    <button class="mode play" id="rFind"><span aria-hidden="true">🔍</span>Khoja<small>Find it · ★ ${bestOf(p,'room',r.id)}/${findN()}</small></button></div>
    <div class="q" id="rQ" hidden><div class="say" id="qSay"></div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="progress" id="rProg" hidden><i></i></div>
    ${roomScene(r)}
@@ -1608,7 +1643,7 @@ function roomLook(r,b){
 }
 // find it: Habre names a thing, the child taps it in the room
 function roomFind(r){
-  RF={r,list:spread(r.items.map((_,k)=>k),FIND_N),i:0,stars:0};
+  RF={r,list:spread(r.items.map((_,k)=>k),findN()),i:0,stars:0};
   $('#room').classList.add('find');$('#rLook').setAttribute('aria-pressed','false');$('#rFind').setAttribute('aria-pressed','true');
   $('#rQ').hidden=false;$('#rProg').hidden=false;$('#again').onclick=roomAsk;
   $('#room').scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});
@@ -1617,7 +1652,7 @@ function roomFind(r){
 function roomAsk(){
   const it=RF.r.items[RF.list[RF.i]];RF.tries=0;RF.lock=false;
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
-  $('#rProg i').style.width=RF.i/FIND_N*100+'%';
+  $('#rProg i').style.width=RF.i/findN()*100+'%';
   // an English learner finds it from the English alone; the Nepali shows once it is found
   $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
   speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);
@@ -1628,7 +1663,7 @@ function roomPick(b){
   if(k===want){
     RF.lock=true;if(!RF.tries)RF.stars++;b.classList.add('right');showName(b);confetti();mood('happy');
     const pr=rnd(PRAISE);speech(pr[0]+' '+cap(it[0])+'!',pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':pr[2]);say(pr[0]+' '+it[0],pr[1]+' '+it[1],EN()?pr[2]+' '+cap(it[2])+'!':null);
-    setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<FIND_N)roomAsk();else roomEnd();},1500);
+    setTimeout(()=>{if(screen!=='room'||RF!==rf)return;RF.i++;if(RF.i<findN())roomAsk();else roomEnd();},1500);
   }else{
     RF.tries++;b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');mood('sad');
     const o=RF.r.items[k];speech(cap(o[0])+'!',o[1],`That’s the ${o[2]}. Try again!`);sayT(o[0],o[1],`That’s the ${o[2]}.`);
@@ -1639,19 +1674,20 @@ function roomEnd(){
   const r=RF.r,n=RF.stars,p=P();let nb=false;
   if(n>bestOf(p,'room',r.id)){p.best=p.best||{};p.best['room:'+r.id]=n;nb=true;}
   stat(p).plays++;stat(p).last=today();save();earn(n);renderTop();RF=null;
-  endCard(n,FIND_N,{newBest:nb,sub:`${r.en} · find it`,again:()=>{openRoom(r);roomFind(r);},back:()=>openRoom(r),backLabel:r.np});
+  endCard(n,findN(),{newBest:nb,sub:`${r.en} · find it`,again:()=>{openRoom(r);roomFind(r);},back:()=>openRoom(r),backLabel:r.np});
 }
 
 // ---------- yatra (Habre's journey): trips from the house to the garden, the farm, the forest… up to the mountains ----------
-// Each trip is about the creatures and things found there (bugs in the garden, birds in the hills…): its word topics
-// go easy → medium → hard → check, with the stories that happen there. A stop counts as done from the player's
-// saved scores, so anything already played counts too. Every trip ends with a big check (a mix of its words) and a
-// present of gems; the last one, the mountains, mixes every trip at the hard level. The gate opens at GATE stars.
+// Each section of the map has 10 words, practised in two rounds and then a check (see ROUNDS), all at the player's
+// difficulty. A stop counts as done from the player's saved scores, so anything already played counts too. Every
+// section ends with a big check (a mix of its words), its Habre's Journey chapter once written (chapter, a story id),
+// and a present of gems; the last one, the mountains, mixes every section. Other stories that fit a section are
+// optional side stories (side), read any time from its trail. The gate opens at GATE stars.
 const GATE=10,BOSS_N=8;
-const YATRA=(()=>{const K=id=>({k:'story',id});
- // every section plays the same way on its own 10 words: easy, medium, hard, then a check, with its stories in between
- const sec=(o,stories)=>{const t='w_'+o.id,W=lv=>({k:'play',t,lv}),st=stories.map(K);
-   return {...o,stops:[W('easy'),...st.slice(0,1),W('medium'),...st.slice(1,2),W('hard'),...st.slice(2),{k:'check',t}]};};
+const YATRA=(()=>{
+ // every section plays the same way on its own 10 words: two practice rounds, then a check; its stories are side stories
+ const sec=(o,side)=>{const t='w_'+o.id,W=lv=>({k:'play',t,lv});
+   return {...o,side,chapter:null,stops:[W('r1'),W('r2'),{k:'check',t}]};};
  return [
  sec({id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝']},['bihana','bagaicha']),
  sec({id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡']},['mimi','bhok']),
@@ -1694,7 +1730,7 @@ function findWord(rom){
   YATRA.forEach((r,i)=>TOPICS.push({id:'w_'+r.id,np:r.np,dev:r.dev,en:r.en,icon:r.icon,color:COLORS[i],kind:'pic',q:'kahaa',
     items:SECTION_WORDS[r.id].map(w=>Array.isArray(w)?w:findWord(w.replace('•','')))}));
 })();
-const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
+const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},...(r.chapter?[{k:'story',id:r.chapter}]:[]),{k:'chest'}].map(s=>({...s,r})));
 const T=id=>TOPICS.find(t=>t.id===id);
 // ---------- postcards and souvenirs ----------
 // Finishing a map sends Hajuraama a postcard and brings a souvenir home to the shelf in the living room (baithak).
@@ -1741,17 +1777,19 @@ function shelfHtml(p){
 // the stop being played right now, when it was started from the trail
 let trip=null;
 function stopDone(p,s){
-  if(s.k==='play')return passed(p,s.t,s.lv);
+  // rounds also count as done from the easy/medium/hard levels they replaced: any level for round 1, medium or hard for 2
+  if(s.k==='play')return passed(p,s.t,s.lv)||({r1:LV_KEYS,r2:['medium','hard']}[s.lv]||[]).some(l=>bestOf(p,s.t,l)>=Math.ceil(LEVELS[l].n*0.7));
   if(s.k==='check')return checked(p,T(s.t));
   if(s.k==='story')return bestOf(p,'kathaa',s.id)>=1;
   if(s.k==='vakya')return bestOf(p,'vakya:'+s.a,s.lv)>=V_N-1;
-  if(s.k==='boss')return bestOf(p,'yatra',s.r.id)>=BOSS_N-2;
+  if(s.k==='boss')return bestOf(p,'yatra',s.r.id)>=bossN()-2;
   return !!((p.yatra||{}).chest||{})[s.r.id];
 }
 // the stop a player is on: the first one not done yet
 const yatraAt=p=>{const i=STOPS.findIndex(s=>!stopDone(p,s));return i<0?STOPS.length:i;};
 // what a stop looks like: [picture, romanized, devanagari, english, badge]
 function stopFace(s){
+  if(s.k==='play'&&isRound(s.lv)){const t=T(s.t),R=ROUNDS[s.lv];return [R.icon,R.np,R.dev,`${R.en} · ${t.en.toLowerCase()}`,''];}
   if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.id==='akshar'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
   if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
   if(s.k==='story'){const st=STORIES.find(x=>x.id===s.id);return [st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
@@ -1763,9 +1801,9 @@ function stopFace(s){
 function goStop(s){
   const p=P();trip=s;p.lv=p.lv||{};p.yatra=p.yatra||{};
   if(s.k==='play'){
-    const t=T(s.t),lk=s.t+':'+s.lv,learn=p.yatra.learn=p.yatra.learn||{};p.lv[t.id]=s.lv;
-    // new words at a new level: see them first, then play
-    if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t});}
+    const t=T(s.t),lk=s.t+':'+s.lv,learn=p.yatra.learn=p.yatra.learn||{};
+    // the first time a round is played, see its new words first
+    if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t,round:s.lv});}
   }else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
   else if(s.k==='story'){story=STORIES.find(x=>x.id===s.id);pageI=0;path=story.pages.slice();branchK=-1;guessed=new Set();renderPage();}
   else if(s.k==='vakya'){p.lv.vakya=s.lv;save();vStart(s.a);}
@@ -1789,7 +1827,7 @@ const PACKS={
 // Each paid map is 10 sections of exactly 10 words, like the free map: 7 new words ([romanized, Devanagari, English,
 // picture], or the romanized name of a word already in the game) and 3 the child has already seen in the free map, the
 // house or an earlier section of this map. They are mixed so the easy level (the first 6 words) has 2 familiar ones.
-// Every section plays easy, medium, hard and a check on its words. See MAP-PLAN.md.
+// Every section plays like a free one: two practice rounds and a check at the player's difficulty. See MAP-PLAN.md.
 const PLUS_PATHS=(()=>{
  const sec=(o,nw,seen)=>({...o,nw,seen,words:[nw[0],nw[1],seen[0],nw[2],nw[3],seen[1],nw[4],nw[5],seen[2],nw[6]]});
  return [
@@ -1865,7 +1903,7 @@ PLUS.forEach(pl=>{
   const t='p_'+pl.id,W=lv=>({k:'play',t,lv});
   TOPICS.push({id:t,np:pl.np,dev:pl.dev,en:pl.en,icon:pl.icon,color:'#8e5be8',kind:'pic',q:'kahaa',plus:pl.pack,
     items:pl.words.map(w=>Array.isArray(w)?w:findWord(w))});
-  pl.stops=[W('easy'),W('medium'),W('hard'),{k:'check',t}];
+  pl.stops=[W('r1'),W('r2'),{k:'check',t}];
 });
 // each paid map's postcard to Hajuraama and souvenir, sent once all of its places are finished
 const PLUS_ENDS={
@@ -2011,7 +2049,11 @@ function openPath(rid){
     <div class="trail-end"><span class="pic" aria-hidden="true">${pl?(pb?pb.icon:pl.path.icon):before?before.icon:'🏠'}</span>${pl?(pb?pb.np:pl.path.np):before?before.np:'Habreko ghar'}<small>${pl?(pb?'Where you came from':'Suru · the start'):before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
     <div class="trail-end"><span class="pic" aria-hidden="true">${pl?(pa?pa.icon:'🚩'):after?after.icon:'🏔️🚩'}</span>${pl?(pa?pa.np:'Yatra sakiyo'):after?after.np:'Himalko tuppo'}<small>${pl?(pa?(finished?'Open now!':'Opens when you finish here'):'The end of the map'):after?(finished?'Open now!':'Opens when you finish here'):'The top of the mountain'}</small></div>
-   </div>`;
+   </div>
+   ${(r.side||[]).length?`<h2 class="sub">📖 Kathaa <small lang="ne">कथा · Stories here, read any time</small></h2>
+    <div class="topics">${r.side.map((id,k)=>{const st=STORIES.find(x=>x.id===id),read=bestOf(p,'kathaa',id)>=1;
+      return `<button class="topic" style="--tc:#8e5be8;animation-delay:${k*40}ms" data-side="${id}"><span class="ic" aria-hidden="true">${st.icon}</span><b>${EN()?st.en:st.np}</b><span class="dev" lang="ne">${st.dev}</span>${read?'<span class="en">✓ Read</span>':''}</button>`;}).join('')}</div>`:''}`;
+  main.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>goStop({k:'story',id:b.dataset.side,r}));
   $('#backBtn').onclick=pl?()=>openTrack(pl.path.id):openMap;
   main.querySelectorAll('.stop').forEach(b=>b.onclick=()=>{
     const i=+b.dataset.i,s=stopAt(i),f=stopFace(s);
@@ -2172,7 +2214,7 @@ function openTopic(t){
    <div class="path">
     <button class="mode learn" id="mLearn"><span aria-hidden="true">👀</span>Sikaun<small>1 · Learn</small>${seen?tick:''}</button>
     <button class="mode play" id="mPlay" style="animation-delay:80ms"><span aria-hidden="true">🎯</span>Khelaun<small>2 · Play</small>${played?tick:''}</button>
-    <button class="mode check" id="mCheck" style="animation-delay:160ms"><span aria-hidden="true">✅</span>Jaanch<small>3 · Check · ★ ${bestOf(p,'check',t.id)}/${CHECK_N}</small>${checked(p,t)?tick:''}</button>
+    <button class="mode check" id="mCheck" style="animation-delay:160ms"><span aria-hidden="true">✅</span>Jaanch<small>3 · Check · ★ ${bestOf(p,'check',t.id)}/${checkN()}</small>${checked(p,t)?tick:''}</button>
    </div>
    <div class="extras">
     ${t.kind!=='yesno'?`<button class="mode memo" id="mMemo" style="animation-delay:240ms"><span aria-hidden="true">🧠</span>Jodi<small>Memory match · ★ ${bestOf(p,'jodi',t.id)}/3</small></button>`:''}
@@ -2197,7 +2239,7 @@ function openTopic(t){
 
 // learn: one big card at a time, through this level's words
 function renderLearn(){
-  screen='learn';const t=topic,words=wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter',yn=t.kind==='yesno'?ynOf(t,it):null;
+  screen='learn';const t=topic,words=trip&&trip.k==='play'&&trip.t===t.id&&isRound(trip.lv)?roundLearn(t,trip.lv):wordsFor(t,levelOf(t.id)),it=words[learnI],isL=t.kind==='letter',yn=t.kind==='yesno'?ynOf(t,it):null;
   const pic=t.kind==='num'?`${countHtml(it[3],COUNT_PICS[learnI%COUNT_PICS.length],'aria-hidden="true"')}<span class="digit">${it[3]} · ${npDigits(it[3])}</span>`:pictureOf(t,it);
   const text=isL?`<b>${it[0]}</b><span class="ex"><span aria-hidden="true">${it[3]}</span> <b>${it[5]}</b> <span class="dev" lang="ne">${it[6]}</span>${S.english&&t.id!=='abc'?` · ${it[7]}`:''}</span>`
     :EN()&&!yn?`<b>${esc(it[2])}</b><span class="dev" lang="ne">${it[1]}</span>`:`<b>${esc(it[0])}</b><span class="dev" lang="ne">${it[1]}</span>${S.english?`<span class="en">${esc(it[2])}</span>`:''}${yn?`<span class="ans">→ ${yn[0]}!<small lang="ne">${yn[1]}${S.english?' · '+esc(yn[2]):''}</small></span>`:''}`;
@@ -3063,10 +3105,13 @@ function startQuiz(o){
   let entries=[];
   const mk=(t,words,lv,extra)=>spreadOf=>spreadOf.map(it=>({t,it,pool:words.map(w=>({t,it:w})),lv,face:lv,...extra}));
   if(o.mode==='play'){
-    const t=o.t,lv=levelOf(t.id),words=wordsFor(t,lv);o.lv=lv;
-    entries=mk(t,words,lv,{hide:LEVELS[lv].listen})(spread(words,LEVELS[lv].n));
+    // a practice round on the trail (o.round, or the stop being played), or a free round at the player's difficulty
+    const t=o.t,rd=o.round||(trip&&trip.k==='play'&&trip.t===t.id&&isRound(trip.lv)?trip.lv:null);
+    const lv=rd||levelOf(t.id),face=rd?diffOf(P()):lv,words=wordsFor(t,lv);o.lv=lv;
+    entries=mk(t,words,face,{hide:LEVELS[face].listen})(spread(words,rd?roundN(rd):LEVELS[lv].n));
   }else if(o.mode==='check'){
-    const t=o.t;entries=mk(t,t.items,'check',{face:'hard',choices:3})(spread(t.items,CHECK_N));
+    // a check is asked at the player's difficulty, without labels unless that's easy
+    const t=o.t,d=diffOf(P());entries=mk(t,t.items,'check',{face:d==='easy'?'easy':'hard',choices:LEVELS[d].choices,hide:LEVELS[d].listen})(spread(t.items,checkN()));
   }else if(o.mode==='vchitra'){
     const lv=levelOf('vakya'),words=vSents(lv).map(s=>[s.rom,s.dev,s.en,s.pic]);o.lv=lv;
     entries=mk(vakyaT(),words,lv,{hide:lv==='hard',face:'hard'})(spread(words,V_N));
@@ -3080,9 +3125,10 @@ function startQuiz(o){
   }else if(o.mode==='yatra'){
     // the big check at the end of a place: words from its stops, each at that stop's level, no word twice
     const used=new Set();
-    entries=spread(o.stops,BOSS_N).map(s=>{const t=T(s.t),w=wordsFor(t,s.lv);let it=rnd(w);
+    const d=diffOf(P());
+    entries=spread(o.stops,bossN()).map(s=>{const t=T(s.t),w=wordsFor(t,s.lv);let it=rnd(w);
       for(let k=0;k<6&&used.has(keyOf(t,it));k++)it=rnd(w);used.add(keyOf(t,it));
-      return {t,it,pool:w.map(x=>({t,it:x})),lv:s.lv,face:s.lv};});
+      return {t,it,pool:w.map(x=>({t,it:x})),lv:d,face:d,hide:LEVELS[d].listen};});
   }
   Q={...o,o,entries,n:entries.length,i:0,stars:0};
   if(!Q.back)Q.back=o.t?()=>openTopic(o.t):openMap;
@@ -3180,7 +3226,7 @@ function endQuiz(){
   if(key&&n>((p.best||{})[key]||0)){p.best=p.best||{};p.best[key]=n;newBest=true;}
   save();earn(n+(Q.mode==='daily'&&newBest?5:0));
   if(Q.mode==='play'){
-    const t=Q.t,lv=Q.lv,L=LEVELS[lv],next=LV_KEYS[LV_KEYS.indexOf(lv)+1],offerNext=next&&n/N>=0.7;
+    const t=Q.t,lv=Q.lv,L=isRound(lv)?ROUNDS[lv]:LEVELS[lv],next=isRound(lv)?null:LV_KEYS[LV_KEYS.indexOf(lv)+1],offerNext=next&&n/N>=0.7;
     endCard(n,N,{newBest,sub:`${L.icon} ${L.np} · ${L.en}`,
       extra:`${offerNext?`<button class="btn" style="background:${LEVELS[next].color}" id="nextLv">${LEVELS[next].icon} ${LEVELS[next].np} <small style="font-weight:500">try ${LEVELS[next].en.toLowerCase()}</small></button>`:''}
         ${n/N>=0.7&&!checked(p,t)?`<button class="btn" style="background:#ff9f1c" id="toCheck">✅ Jaanch <small style="font-weight:500">check</small></button>`:''}
@@ -3190,16 +3236,16 @@ function endQuiz(){
     if($('#toCheck'))$('#toCheck').onclick=()=>startQuiz({mode:'check',t});
     $('#toLearn').onclick=()=>{topic=t;learnI=0;renderLearn();};
   }else if(Q.mode==='check'){
-    const t=Q.t,ok=n>=CHECK_N-1;
-    endCard(n,N,{newBest,trophy:ok?'✅':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',sub:ok?`You know ${t.en.toLowerCase()}!`:`Get ${CHECK_N-1} right to pass. Play a bit more, then try again.`,
+    const t=Q.t,ok=n>=checkN()-1;
+    endCard(n,N,{newBest,trophy:ok?'✅':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',sub:ok?`You know ${t.en.toLowerCase()}!`:`Get ${checkN()-1} right to pass. Play a bit more, then try again.`,
       again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
   }else if(Q.mode==='daily'){
     const d=p.daily||{};
     endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:openMap,backLabel:'🗺️ Naksa'});
   }else if(Q.mode==='yatra'){
-    const r=YATRA.find(x=>x.id===Q.rid),ok=n>=BOSS_N-2;
+    const r=YATRA.find(x=>x.id===Q.rid),ok=n>=bossN()-2;
     endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
-      sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${BOSS_N-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
+      sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${bossN()-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
   }else if(Q.mode==='vchitra'){
     endCard(n,N,{newBest,sub:`Find the picture · ${LEVELS[Q.lv].en}`,again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
   }else{
@@ -3212,18 +3258,18 @@ function startDaily(){startQuiz({mode:'daily'});}
 // and a flashcard deck the grown-up picks for this child
 function renderProgress(p){
   if(!p)return;
-  const st=stat(p),pr=progressOf(p),cell=(t,k)=>{const b=bestOf(p,t.id,k),n=LEVELS[k].n;return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
-  const ck=t=>{const b=bestOf(p,'check',t.id);return `<td class="${checked(p,t)?'pass':b?'some':''}">${b?`${b}/${CHECK_N}`:'–'}</td>`;};
+  const st=stat(p),pr=progressOf(p),cell=(t,k)=>{const b=bestOf(p,t.id,k),n=roundN(k);return `<td class="${b>=Math.ceil(n*0.7)?'pass':b?'some':''}">${b?`${b}/${n}`:'–'}</td>`;};
+  const ck=t=>{const b=bestOf(p,'check',t.id);return `<td class="${checked(p,t)?'pass':b?'some':''}">${b?`${b}/${checkN()}`:'–'}</td>`;};
   const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:findCard(x.k)})).filter(x=>x.f);
   const traced=Object.keys(p.traced||{}),cards=allCards(),bx=[0,0,0];cards.forEach(c=>bx[boxOf(p,c)]++);
   const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
   const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id)),custom=new Set(p.custom||[]);
   $('#progBody').innerHTML=`
-   <p><b>${esc(p.name)}</b>: ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
+   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}, ${LEVELS[diffOf(p)].icon} ${LEVELS[diffOf(p)].en.toLowerCase()}${p.diff?' (set by a grown-up)':''}; change these under Change player): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
    ${doors.length?`<div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
     <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
-   <div class="progwrap"><table class="prog"><thead><tr><th>Topic</th>${LV_KEYS.map(k=>`<th>${LEVELS[k].icon} ${LEVELS[k].np}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
-    <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${LV_KEYS.map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
+   <div class="progwrap"><table class="prog"><thead><tr><th>Section</th>${Object.keys(ROUNDS).map(k=>`<th>${ROUNDS[k].icon} ${ROUNDS[k].en}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
+    <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${Object.keys(ROUNDS).map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
    <p><b>Postcards to Hajuraama:</b> ${TRIP_ENDS.filter(te=>sentPostcard(p,te)).map(te=>`${te.souvenir.icon} ${te.place[2]} (sent ${p.postcards[te.id]})`).join(' · ')||'none yet: one is sent each time a map is finished'}</p>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
