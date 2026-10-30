@@ -47,7 +47,7 @@ Still to add:
 ## Sentence building and grammar, by age
 
 Ages 3–5 stay pictures and words only (built). For the older groups, each section could get one more stop. These would be paid:
-- **6–8: make a phrase.** 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *biralo sutchha* (the cat sleeps).
+- **6–8: make a phrase.** Built on `habre-plus` for the free map's 10 sections (5 phrases each, in `PHRASES`); the paid maps' sections are still to do. 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *putali udchha* (the butterfly flies).
 - **9–11: the sentence train plus a grammar point.** Full sentences (who → what → where → doing word) and one short grammar point per section.
 
 The shelved sentence train (`vakya`) and grammar lessons (`vyakaran`, see `SHELVED.md`) are a starting point for both.

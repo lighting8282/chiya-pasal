@@ -309,6 +309,12 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .road i{width:14px;height:14px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal}
 .road i.past{background:var(--green)}.road i.now{width:auto;height:auto;background:none;font-size:1.8rem}
 body.little .speech .en{display:none}
+.slots{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.slot{min-width:96px;min-height:50px;padding:0 8px;display:grid;place-items:center;font-size:1.6rem;font-weight:800;border-bottom:4px dashed var(--line)}
+.slot.on{border-bottom:4px solid var(--green);color:var(--green)}
+.tiles{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.ptile{font-size:1.5rem;font-weight:800;color:var(--ink);padding:12px 22px;border-radius:16px;background:var(--card);box-shadow:0 5px 0 var(--line)}
+.ptile.used{opacity:.25}.ptile.wrong{animation:shake .45s;background:#ffe6e3}
 .why{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff7e0;border:3px solid #ffcf5c;border-radius:20px;padding:10px 14px}
 .why>span:first-child{font-size:2rem}
 .why small{display:block;color:var(--soft)}
@@ -1736,7 +1742,7 @@ const YATRA=(()=>{
  // every section plays the same way on its own 10 words: the start of its part of Habre's Journey, practice round 1,
  // more of the story, practice round 2 and a check; the story's cliffhanger (chapter) comes after the big check
  const sec=(o,side)=>{const t='w_'+o.id,W=lv=>({k:'play',t,lv}),J=k=>({k:'story',id:`j_${o.id}_${k}`,j:true});
-   return {...o,side,chapter:`j_${o.id}_3`,stops:[J(1),W('r1'),J(2),W('r2'),{k:'check',t}]};};
+   return {...o,side,chapter:`j_${o.id}_3`,stops:[J(1),W('r1'),J(2),W('r2'),{k:'phrase',rid:o.id},{k:'check',t}]};};
  return [
  sec({id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝']},['bihana','bagaicha']),
  sec({id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡']},['bhok']),
@@ -1977,8 +1983,10 @@ function stopDone(p,s){
   // rounds also count as done from the easy/medium/hard levels they replaced: any level for round 1, medium or hard for 2
   if(s.k==='play')return passed(p,s.t,s.lv)||({r1:LV_KEYS,r2:['medium','hard']}[s.lv]||[]).some(l=>bestOf(p,s.t,l)>=Math.ceil(LEVELS[l].n*0.7));
   if(s.k==='check')return checked(p,T(s.t));
+  // a phrase stop also counts as done in sections the player had already finished before it appeared
+  if(s.k==='phrase'){if(skipStop(p,s)||bestOf(p,'phrase',s.rid)>=PHRASE_PASS)return true;const nx=STOPS[STOPS.indexOf(s)+1];return !!nx&&stopDone(p,nx);}
   if(s.k==='story'){
-    if(bestOf(p,'kathaa',s.id)>=1||littleSkip(p,s))return true;
+    if(bestOf(p,'kathaa',s.id)>=1||skipStop(p,s))return true;
     // a journey part counts as done for players who were already past it before the story was added
     const i=s.j?STOPS.indexOf(s):-1,nx=STOPS[i+1];return i>=0&&!!nx&&nx.k!=='story'&&stopDone(p,nx);
   }
@@ -1992,6 +2000,7 @@ const yatraAt=p=>{const i=STOPS.findIndex(s=>!stopDone(p,s));return i<0?STOPS.le
 function stopFace(s){
   if(s.k==='play'&&isRound(s.lv)){const t=T(s.t),R=ROUNDS[s.lv];return [R.icon,R.np,R.dev,`${R.en} · ${t.en.toLowerCase()}`,''];}
   if(s.k==='play'){const t=T(s.t),L=LEVELS[s.lv];return [t.id==='akshar'?'<span lang="ne">अ</span>':t.icon,t.np,t.dev,`${t.en} · ${L.en.toLowerCase()}`,L.icon];}
+  if(s.k==='phrase')return ['🧩','Shabda jodau','शब्द जोडौं','Make a phrase','✨'];
   if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
   if(s.k==='story'&&s.j&&isLittle()){const m=MOMENTS[s.r.id];return [m[0],m[1],m[2],m[3],'👀'];}
   if(s.k==='story'){const st=storyOf(s.id);return st.journey?[st.icon,JOURNEY_PART[st.part][0],JOURNEY_PART[st.part][1],'Story: '+JOURNEY_PART[st.part][2].toLowerCase(),'📖']:[st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
@@ -2006,7 +2015,8 @@ function goStop(s){
     const t=T(s.t),lk=s.t+':'+s.lv,learn=p.yatra.learn=p.yatra.learn||{};
     // the first time a round is played, see its new words first
     if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t,round:s.lv});}
-  }else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
+  }else if(s.k==='phrase')startPhrase(s.rid);
+  else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
   else if(s.k==='story'&&s.j&&isLittle())openMoment(s.r.id,()=>{const p=P();if(bestOf(p,'kathaa',s.id)<1){p.best=p.best||{};p.best['kathaa:'+s.id]=1;save();earn(1);}if(!tripBack())openMap();});
   else if(s.k==='story')readStory(storyOf(s.id));
   else if(s.k==='vakya'){p.lv.vakya=s.lv;save();vStart(s.a);}
@@ -2016,6 +2026,78 @@ function goStop(s){
     startQuiz({mode:'yatra',rid:s.r.id,stops:s.r.final?all:own,back:openPath});
   }
 }
+// ---------- Shabda jodau (make a phrase): Habre Plus, ages 6-8 ----------
+// After a section's second practice round, 6-8 players with Habre Plus put short phrases together from its words:
+// Habre shows a picture and says the phrase, and the child taps the word tiles into the slots in order (one tile
+// doesn't belong). A describing word and a thing, a number and a thing, or a thing and a doing word. Five phrases a
+// section, 4 right first time to pass. Each is [picture, romanized words, Devanagari words, English words].
+const PHRASES={
+ bagaicha:[['🌹',['rato','phul'],['रातो','फूल'],['red','flower']],['🐜',['sano','kamila'],['सानो','कमिला'],['small','ant']],
+  ['🦋',['putali','udchha'],['पुतली','उड्छ'],['the','butterfly','flies']],['🌳',['thulo','rukh'],['ठूलो','रूख'],['big','tree']],
+  ['☀️',['ghaam','chamkinchha'],['घाम','चम्किन्छ'],['the','sun','shines']]],
+ gaaun:[['🐄',['seto','gai'],['सेतो','गाई'],['white','cow']],['🐤',['sano','challa'],['सानो','चल्ला'],['small','chick']],
+  ['🐕💨',['kukur','kudchha'],['कुकुर','कुद्छ'],['the','dog','runs']],['🐐🐐',['dui','bakhra'],['दुई','बाख्रा'],['two','goats']],
+  ['🐭🧀',['muso','khaanchha'],['मुसो','खान्छ'],['the','mouse','eats']]],
+ bazaar:[['🚗',['rato','kaar'],['रातो','कार'],['red','car']],['🚌',['thulo','bas'],['ठूलो','बस'],['big','bus']],
+  ['🚲💨',['saikal','chalchha'],['साइकल','चल्छ'],['the','bike','goes']],['🎈',['rato','bellun'],['रातो','बेलुन'],['red','balloon']],
+  ['🥟😋',['mitho','momo'],['मीठो','मोमो'],['tasty','momo']]],
+ mandir:[['🥁',['dhol','bajchha'],['ढोल','बज्छ'],['the','drum','plays']],['🪔',['diyo','balchha'],['दियो','बल्छ'],['the','lamp','glows']],
+  ['🌼',['pahelo','mala'],['पहेंलो','माला'],['yellow','garland']],['🕯️🕯️🕯️',['tin','mainbatti'],['तीन','मैनबत्ती'],['three','candles']],
+  ['🚩',['rato','dhwaja'],['रातो','ध्वजा'],['red','flag']]],
+ jangal:[['🐻',['thulo','bhalu'],['ठूलो','भालु'],['big','bear']],['🐇💨',['kharayo','kudchha'],['खरायो','कुद्छ'],['the','rabbit','runs']],
+  ['🐒',['bandar','khelchha'],['बाँदर','खेल्छ'],['the','monkey','plays']],['🦌',['sano','harin'],['सानो','हरिण'],['small','deer']],
+  ['🦁',['singha','garjanchha'],['सिंह','गर्जन्छ'],['the','lion','roars']]],
+ taal:[['🐟',['machha','paudi','khelchha'],['माछा','पौडी','खेल्छ'],['the','fish','swims']],['🐸',['hariyo','bhyaguto'],['हरियो','भ्यागुतो'],['green','frog']],
+  ['🐍',['saanp','ghasrinchha'],['साँप','घस्रिन्छ'],['the','snake','slides']],['⛵',['sano','dunga'],['सानो','डुङ्गा'],['small','boat']],
+  ['🦆🦆',['dui','hans'],['दुई','हाँस'],['two','ducks']]],
+ chidiyakhana:[['🦒',['aglo','jiraph'],['अग्लो','जिराफ'],['tall','giraffe']],['🐘',['thulo','hatti'],['ठूलो','हात्ती'],['big','elephant']],
+  ['🐯💤',['bagh','sutchha'],['बाघ','सुत्छ'],['the','tiger','sleeps']],['🐼🎋',['panda','khaanchha'],['पान्डा','खान्छ'],['the','panda','eats']],
+  ['🐧',['penguin','hidchha'],['पेन्गुइन','हिँड्छ'],['the','penguin','walks']]],
+ bagaan:[['🍊',['mitho','suntala'],['मीठो','सुन्तला'],['tasty','orange']],['🍎',['rato','syau'],['रातो','स्याउ'],['red','apple']],
+  ['🍌',['pahelo','kera'],['पहेंलो','केरा'],['yellow','banana']],['🍐🍐',['dui','nashpati'],['दुई','नासपाती'],['two','pears']],
+  ['🍇',['mitho','angur'],['मीठो','अंगुर'],['tasty','grapes']]],
+ pahad:[['🦜',['hariyo','suga'],['हरियो','सुगा'],['green','parrot']],['🦉',['ullu','bolchha'],['उल्लु','बोल्छ'],['the','owl','hoots']],
+  ['🦅',['chil','udchha'],['चिल','उड्छ'],['the','eagle','flies']],['🦚',['sundar','mayur'],['सुन्दर','मयुर'],['beautiful','peacock']],
+  ['🐦',['sano','bhangera'],['सानो','भँगेरा'],['small','sparrow']]],
+ himal:[['❄️',['seto','hiu'],['सेतो','हिउँ'],['white','snow']],['🏔️',['aglo','himal'],['अग्लो','हिमाल'],['tall','mountain']],
+  ['🌙',['jun','chamkinchha'],['जून','चम्किन्छ'],['the','moon','shines']],['🔥',['aago','balchha'],['आगो','बल्छ'],['the','fire','burns']],
+  ['🚁',['helikoptar','udchha'],['हेलिकप्टर','उड्छ'],['the','helicopter','flies']]],
+};
+// shown to 6-8 players once Habre Plus is owned; for everyone else the stop is left out of the trail
+const PHRASE_PASS=4;
+const phraseOn=p=>!!p&&ageOf(p).id==='middle'&&hasPack('plus');
+let PH=null;
+function startPhrase(rid){PH={rid,list:shuffle(PHRASES[rid].slice()),i:0,stars:0};phraseAsk();}
+function phraseAsk(){
+  screen='phrase';const en=EN(),ph=PH.list[PH.i],words=en?ph[3]:ph[1];
+  const others=[...new Set(PH.list.flatMap(x=>en?x[3]:x[1]).filter(w=>!words.includes(w)&&w!=='the'))];
+  const tiles=shuffle([...words.map((w,k)=>({w,k})),{w:rnd(others),k:-1}]);
+  PH.filled=0;PH.miss=false;
+  main.innerHTML=`${backBtn('🗺️ Yatra')}<h1>🧩 Shabda jodau <small lang="ne">शब्द जोडौं · Make a phrase · ${PH.i+1} / ${PH.list.length}</small></h1>
+   <div class="progress"><i style="width:${PH.i/PH.list.length*100}%"></i></div>
+   <div class="big story phrase" id="phCard" role="button" tabindex="0" aria-label="Hear it again"><span class="story-pic" aria-hidden="true">${ph[0]}</span>
+    <div class="slots">${words.map((_,k)=>`<span class="slot" data-s="${k}"></span>`).join('')}</div>
+    ${en?'':`<span class="en">${esc(ph[3].join(' '))}</span>`}</div>
+   <div class="tiles">${tiles.map((t,n)=>`<button class="ptile" data-n="${n}">${esc(t.w)}</button>`).join('')}</div>`;
+  const hear=()=>{speech(ph[1].join(' '),ph[2].join(' '),ph[3].join(' '));say(ph[1].join(' '),ph[2].join(' '),en?ph[3].join(' '):null);};
+  $('#phCard').onclick=hear;$('#backBtn').onclick=()=>{PH=null;if(!tripBack())openMap();};
+  main.querySelectorAll('.ptile').forEach(b=>b.onclick=()=>{
+    if(!PH)return;const t=tiles[+b.dataset.n];
+    if(t.k!==PH.filled){PH.miss=true;b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),450);mood('sad');speech(RETRY[0],RETRY[1],RETRY[2]);return;}
+    b.disabled=true;b.classList.add('used');const sl=main.querySelector(`.slot[data-s="${t.k}"]`);sl.textContent=t.w;sl.classList.add('on');PH.filled++;
+    if(PH.filled<words.length){sayT(ph[1][t.k]||t.w,ph[2][t.k]||'',ph[3][t.k]||t.w);return;}
+    if(!PH.miss)PH.stars++;hear();mood('happy');if(!PH.miss)confetti();
+    setTimeout(()=>{if(screen!=='phrase'||!PH)return;PH.i++;if(PH.i<PH.list.length)phraseAsk();else phraseEnd();},1500);
+  });
+  hear();mood('wave');
+}
+function phraseEnd(){
+  const p=P(),n=PH.stars,N=PH.list.length,rid=PH.rid;let nb=false;
+  if(n>bestOf(p,'phrase',rid)){p.best=p.best||{};p.best['phrase:'+rid]=n;nb=true;}
+  stat(p).plays++;stat(p).last=today();save();earn(n);renderTop();PH=null;
+  endCard(n,N,{newBest:nb,sub:'Make a phrase',again:()=>startPhrase(rid),back:()=>openPath(rid),backLabel:'Yatra'});
+}
+
 // ---------- Habre Plus: paid places ----------
 // The free game is the house and the free map. Habre Plus adds maps of their own, shown under the map and locked
 // until the pack is owned and the free map is finished. A map is 10 places, each opening once the one before it is finished. To add
@@ -2024,7 +2106,7 @@ function goStop(s){
 // Ownership is kept on this device (S.owned) and shared by every player on it.
 const PACKS={
  plus:{id:'plus',icon:'✨',np:'Habre Plus',dev:'हाब्रे प्लस',en:'Habre Plus',price:{npr:'रु 399',usd:'$4.99'},
-  includes:[['🗺️','Two new maps of 10 places each: down to the deep sea, and up into space','दुई नयाँ नक्सा: पानीमुनि र आकाशमा'],['📖','New stories in every place','हरेक ठाउँमा नयाँ कथा'],
+  includes:[['🧩','Make-a-phrase games in every section, for ages 6–8','हरेक ठाउँमा शब्द जोड्ने खेल'],['🗺️','Two new maps of 10 places each: down to the deep sea, and up into space','दुई नयाँ नक्सा: पानीमुनि र आकाशमा'],['📖','New stories in every place','हरेक ठाउँमा नयाँ कथा'],
    ['🎙️','A real person reading the words and stories (coming)','शब्द र कथा पढ्ने मान्छेको आवाज'],['📊','A weekly report for grown-ups (coming)','ठूला मान्छेका लागि साप्ताहिक रिपोर्ट']]},
 };
 // Each paid map is 10 sections of exactly 10 words, like the free map: 7 new words ([romanized, Devanagari, English,
@@ -2234,7 +2316,7 @@ function openPath(rid){
   if(!pl&&!placeOpen(p,ri)){openMap();return;}
   screen='yatra';
   const moved=at>prev;if(!pl)y.at=at;y.seen=1;save();
-  const first=pl?0:regionFirst(r),stops=pl?list:STOPS.filter(s=>s.r===r&&!littleSkip(p,s)),H=stops.length*104,stopAt=i=>pl?list[i]:STOPS[i],finished=pl?at>=list.length:at>=regionEnd(ri);
+  const first=pl?0:regionFirst(r),stops=pl?list:STOPS.filter(s=>s.r===r&&!skipStop(p,s)),H=stops.length*104,stopAt=i=>pl?list[i]:STOPS[i],finished=pl?at>=list.length:at>=regionEnd(ri);
   const xs=stops.map((_,k)=>Math.round(50+30*Math.sin((first+k)*0.95)));
   let d=`M${xs[0]} 0L${xs[0]} 52`;
   for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
@@ -2927,6 +3009,8 @@ const MOMENTS={bagaicha:['🌻','Bagaicha','बगैंचा','garden'],gaaun:
  chidiyakhana:['🦒','Chidiyakhaana','चिडियाखाना','zoo'],bagaan:['🍊','Suntala','सुन्तला','oranges'],pahad:['⛰️','Pahaad','पहाड','hills'],
  himal:['👵🏔️','Hajuraama!','हजुरआमा!','Grandma!'],ghar:['✉️👵🏔️','Hajuraama!','हजुरआमा!','Grandma!']};
 const littleSkip=(p,s)=>s.k==='story'&&!!s.j&&ageOf(p).id==='little'&&!/_1$/.test(s.id);
+// stops this player doesn't get: the journey's story parts for 3-5, and the phrase stops without Habre Plus or outside 6-8
+const skipStop=(p,s)=>littleSkip(p,s)||(s.k==='phrase'&&!phraseOn(p));
 // the moment: a big picture, its word read aloud, the road to Hajuraama, and one big button
 function openMoment(rid,onGo){
   screen='moment';const m=MOMENTS[rid],ri=YATRA.findIndex(r=>r.id===rid);
