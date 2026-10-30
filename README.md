@@ -111,6 +111,8 @@ Every section's trail is the same:
 | 📖 **Ke hola?** (what next?) | The end of the section's story, on a cliffhanger leading to the next section. A screen then asks "Ani pachhi ke hola? · What happens next?" |
 | 🎁 **Present** | A chest of 💎 gems, opened once |
 
+**The opening:** the first time a player reaches the map, a short story explains the game. Hajuraama's letter arrives ("Come and see me before the snow falls"), the mountains are far away, Habre will need lots of new words on the way, so first he learns at home: find things in every room, and 10 ★ open the garden gate. It ends with "Tayaar? Gharmaa jaau! · Ready? Into the house!". Until the gate opens, the house shows the same reason in a banner with the stars so far, and tapping it plays the opening again.
+
 **Habre's Journey** runs through the whole map: Habre and Mimi the cat travel to visit Hajuraama in the mountains before the first snow. Each section's three story stops are required, and each uses the section's 10 words. The story is in `JOURNEY_PAGES` in `kids.html`, with the outline in `JOURNEY-STORY.md`. The **📖 Habreko kathaa · The story so far** button, on the map and on every section's trail, lists every part the child has reached, to hear one at a time or all together. Players who were already further along when the story arrived keep their place, and find the earlier parts there.
 
 Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories: dashed purple bubbles beside the path that can be read any time and never block the trail. A read one turns solid with a ✓. English learners play the same stops with the English word as the answer.

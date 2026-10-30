@@ -21,6 +21,10 @@
 
 ---
 
+## 0. 🏠 Habreko ghar (the house): the opening
+
+Shown once, the first time a player reaches the map, and kept in the story so far. The letter arrives: "Come and see me before the snow falls." Grandma lives far away in the mountains, and Habre will meet lots of things on the way, so he needs new words. First he learns at home: he finds things in every room, and 10 stars open the garden gate. "Ready? Into the house!" The house repeats the reason in a banner until the gate opens.
+
 ## 1. 🌻 Bagaicha (the garden): *Hajuraamako chitthi* (A letter from Grandma)
 
 The sun (**ghaam**) comes up, and a letter arrives: "Come and see me before the first snow. Love, Hajuraama." Habre wants to bring her a present. In the garden he picks a flower (**phul**) from the flower pot (**gamala**). Busy ants (**kamila**) and a bee (**mauri**) show him the best flowers, and a spider (**makura**) has spun a web across the gate. A butterfly (**putali**) flutters over the tree (**rukh**) towards the road. Mimi the cat (**biralo**) jumps out: "I'm coming too!" That night the moon (**jun**) shines on the road ahead.

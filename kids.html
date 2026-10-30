@@ -303,6 +303,9 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .daily .ic{font-size:3rem;line-height:1}
 .daily b{font-size:1.5rem;display:block;line-height:1.1}
 .daily small{display:block;font-size:.9rem}
+.why{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff7e0;border:3px solid #ffcf5c;border-radius:20px;padding:10px 14px}
+.why>span:first-child{font-size:2rem}
+.why small{display:block;color:var(--soft)}
 .daily.jstory{background:linear-gradient(135deg,#2fae6e,#00a6b8);box-shadow:0 7px 0 #1f7f53}
 .daily.patti{background:linear-gradient(135deg,#3a7bf2,#8e5be8);box-shadow:0 7px 0 #2a52a8}
 .daily:active,.reward:active{transform:translateY(4px)}
@@ -1725,10 +1728,9 @@ const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},...(r.chapter?[{k:'story',id
 // [picture, romanized, Devanagari, English], like the other stories. See JOURNEY-STORY.md.
 const JOURNEY_PAGES={
  bagaicha:[
-  [['☀️🏡','Bihaana ghaam laagyo.','बिहान घाम लाग्यो।','In the morning the sun came out.'],
-   ['✉️','Habrelaai euta chitthi aayo.','हाब्रेलाई एउटा चिठी आयो।','A letter came for Habre.'],
-   ['👵🏔️','"Hiu parnu agaadi malaai bhetna aau. Hajuraama."','"हिउँ पर्नु अगाडि मलाई भेट्न आऊ। हजुरआमा।"','"Come and see me before the snow falls. Love, Grandma."'],
-   ['🎒😀','Habre Hajuraamalaai bhetna jaanchha!','हाब्रे हजुरआमालाई भेट्न जान्छ!','Habre is going to visit Grandma!']],
+  [['☀️🏡','Bihaana ghaam laagyo. Habre tayaar cha!','बिहान घाम लाग्यो। हाब्रे तयार छ!','In the morning the sun came out. Habre is ready!'],
+   ['🎒🚪','Habre jhola bokchha ra bagaichaamaa jaanchha.','हाब्रे झोला बोक्छ र बगैंचामा जान्छ।','Habre takes his bag and goes out into the garden.'],
+   ['🏔️👵','Himal dherai taadha cha. Hajuraama parkhirahanubhaeko cha!','हिमाल धेरै टाढा छ। हजुरआमा पर्खिरहनुभएको छ!','The mountains are far away. Grandma is waiting!']],
   [['🪴🌸','Habre gamalabaata Hajuraamako laagi phul tipchha.','हाब्रे गमलाबाट हजुरआमाको लागि फूल टिप्छ।','Habre picks a flower from the pot for Grandma.'],
    ['🐜🐝','Kamila ra mauri pani phul herchhan.','कमिला र मौरी पनि फूल हेर्छन्।','The ants and the bee look at the flower too.'],
    ['🦋🌳','Putali rukhtira udchha.','पुतली रूखतिर उड्छ।','A butterfly flies towards the tree.']],
@@ -1831,11 +1833,20 @@ const JOURNEY_PAGES={
    ['🐻🥁','Chhimeki bhalu pani aauchha. Sabai Lhosar manaauchhan!','छिमेकी भालु पनि आउँछ। सबै ल्होसार मनाउँछन्!','Bear from next door comes too. Everyone celebrates Lhosar!'],
    ['✈️🗺️','Bihaana hawaijahaj udchha. Hajuraama purano naksa dekhaaunuhunchha: "Aba kahaa jaane?"','बिहान हवाईजहाज उड्छ। हजुरआमा पुरानो नक्सा देखाउनुहुन्छ: "अब कहाँ जाने?"','In the morning a plane flies by. Grandma shows an old map: "Where shall we go next?"']]],
 };
+// the opening, shown once to a new player before the map: Hajuraama's letter, and why Habre learns in the house first
+const JOURNEY_INTRO={id:'j_ghar',rid:'ghar',part:-1,journey:true,intro:true,icon:'✉️',np:'Habreko ghar: Suru',dev:'हाब्रेको घर: सुरु',en:'Habre’s house: the start',pages:[
+ ['🏡','Yo Habreko ghar ho.','यो हाब्रेको घर हो।','This is Habre’s house.'],
+ ['✉️','Ek din Habrelaai euta chitthi aayo.','एक दिन हाब्रेलाई एउटा चिठी आयो।','One day a letter came for Habre.'],
+ ['👵🏔️','"Hiu parnu agaadi malaai bhetna aau. Hajuraama."','"हिउँ पर्नु अगाडि मलाई भेट्न आऊ। हजुरआमा।"','"Come and see me before the snow falls. Love, Grandma."'],
+ ['🗺️','Hajuraama taadha himalmaa basnuhunchha.','हजुरआमा टाढा हिमालमा बस्नुहुन्छ।','Grandma lives far away in the mountains.'],
+ ['🐄🦋🚌','Baatomaa dherai kura bhetinchhan. Habrelaai naya shabda chahinchha!','बाटोमा धेरै कुरा भेटिन्छन्। हाब्रेलाई नयाँ शब्द चाहिन्छ!','He will meet lots of things on the way. Habre needs new words!'],
+ ['🏠🔍','Pahile gharmaa sikau. Harek kothaamaa kura khoja.','पहिले घरमा सिकौं। हरेक कोठामा कुरा खोज।','First, let’s learn at home. Find things in every room.'],
+ ['⭐🚪','Das wota tara bhayepachhi bagaichaako dhoka khulchha!','दस वटा तारा भएपछि बगैंचाको ढोका खुल्छ!','With 10 stars, the garden gate opens!']]};
 const JOURNEY_PART=[['Suru','सुरु','The start'],['Ani','अनि','And then'],['Ke hola?','के होला?','What next?']];
 // every part as a story of its own (id j_<section>_<1..3>), in the order they happen
 const JOURNEY=YATRA.flatMap(r=>(JOURNEY_PAGES[r.id]||[]).map((pages,k)=>{const [pn,pd,pe]=JOURNEY_PART[k];
   return {id:`j_${r.id}_${k+1}`,rid:r.id,part:k,journey:true,pages,icon:pages[0][0].match(/^\p{Extended_Pictographic}️?/u)[0],np:`${r.np}: ${pn}`,dev:`${r.dev}: ${pd}`,en:`${r.en}: ${pe.toLowerCase()}`};}));
-const storyOf=id=>STORIES.find(x=>x.id===id)||JOURNEY.find(x=>x.id===id);
+const storyOf=id=>STORIES.find(x=>x.id===id)||JOURNEY.find(x=>x.id===id)||(id===JOURNEY_INTRO.id?JOURNEY_INTRO:null);
 const T=id=>TOPICS.find(t=>t.id===id);
 // ---------- postcards and souvenirs ----------
 // Finishing a map sends Hajuraama a postcard and brings a souvenir home to the shelf in the living room (baithak).
@@ -1993,6 +2004,7 @@ const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17]
 function openMap(){
   if(!P()){goWho();return;}
   {const pc=newPostcard(P());if(pc){openPostcard(pc,true);return;}}
+  if(!P().introSeen){P().introSeen=1;save();readStory(JOURNEY_INTRO);return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
   const p=P(),y=p.yatra=p.yatra||{},stars=starsOf(p),at=yatraAt(p),gate=stars>=GATE;
   const open=YATRA.map((_,i)=>placeOpen(p,i)),nOpen=open.filter(Boolean).length;
@@ -2055,6 +2067,7 @@ function goHome(quiet){
        <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span>${o.icon}</span></span><span class="knob"></span></span></span>
        <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;};
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Habreko ghar <small>हाब्रेको घर · Pick a room</small></h1>
+   ${gate?'':`<button class="why" id="whyBtn"><span aria-hidden="true">👵🏔️</span><span><b>Hajuraamalaai bhetna jaana, pahile shabda sikau!</b><small lang="ne">हजुरआमालाई भेट्न जान, पहिले शब्द सिकौं!</small><small>To visit Grandma, first learn words here. Find things in the rooms for ★ stars: ${stars} of ${GATE}. Tap to hear the story.</small></span></button>`}
    <div class="house">
     <div class="roof" aria-hidden="true"><span class="gajur"></span><span class="tier t2"></span><span class="tier t1"><span class="sign">Habreko ghar<small>हाब्रेको घर · Habre’s house</small></span></span></div>
     <div class="walls">
@@ -2071,6 +2084,7 @@ function goHome(quiet){
        :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
   main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');sayT(o.np,o.dev,o.en);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
   $('#backBtn').onclick=openMap;
+  if($('#whyBtn'))$('#whyBtn').onclick=()=>readStory(JOURNEY_INTRO);
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
     const en=`Collect ${GATE-stars} more stars in the rooms to open the gate!`;
@@ -2540,6 +2554,13 @@ function readStory(s){story=s;pageI=0;path=s.pages.slice();branchK=-1;guessed=ne
 function journeyEnd(){
   const p=P(),s=story;
   if(!s.all&&bestOf(p,'kathaa',s.id)<1){p.best=p.best||{};p.best['kathaa:'+s.id]=1;save();earn(1);}
+  if(s.intro){
+    screen='jend';const [r,d,e]=['Tayaar? Gharmaa jaau!','तयार? घरमा जाऊँ!','Ready? Let’s go into the house and collect stars!'];
+    main.innerHTML=`<div class="big story"><span class="story-pic" aria-hidden="true">🏡⭐</span><b>${r}</b><span class="dev" lang="ne">${d}</span><span class="en">${e}</span></div>
+     <div class="btns"><button class="btn" style="background:var(--green)" id="jGo">🏠 Gharmaa jaau · Into the house</button><button class="btn ghost" id="jMap">🗺️ Naksa · See the map</button></div>`;
+    speech(r,d,e);say(r,d,e);mood('happy');
+    $('#jGo').onclick=()=>goHome();$('#jMap').onclick=openMap;return;
+  }
   const cliff=s.part===2&&s.rid!=='himal'&&!s.all,fin=s.part===2&&s.rid==='himal'&&!s.all;
   if(!cliff&&!fin){mood('happy');if(!tripBack())openJourney();return;}
   screen='jend';
@@ -2554,9 +2575,11 @@ function openJourney(){
   if(!P()){goWho();return;}
   screen='journey';trip=null;const p=P(),at=yatraAt(p);
   const reached=j=>{const i=STOPS.findIndex(s=>s.k==='story'&&s.id===j.id);return i>=0&&(i<=at||stopDone(p,STOPS[i]));};
-  const open=JOURNEY.filter(reached);
+  const open=[JOURNEY_INTRO,...JOURNEY.filter(reached)];
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>📖 Habreko kathaa <small lang="ne">हाब्रेको कथा · The story so far</small></h1>
    ${open.length?`<div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--purple)" id="jAll">▶ Sabai suna · Hear it all</button></div>`:'<p class="maphint">Start the journey on the map, and Habre’s story appears here.</p>'}
+   <h2 class="sub">🏠 Habreko ghar <small lang="ne">हाब्रेको घर · Habre’s house</small></h2>
+    <div class="topics"><button class="topic" style="--tc:#8e5be8" data-j="j_ghar"><span class="ic" aria-hidden="true">✉️</span><b>${EN()?'The letter':'Chitthi'}</b><span class="dev" lang="ne">चिठी</span><span class="en">${p.introSeen?'✓ Heard':'New'}</span></button></div>
    ${YATRA.filter(r=>open.some(j=>j.rid===r.id)).map(r=>`<h2 class="sub">${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]}</small></h2>
     <div class="topics">${open.filter(j=>j.rid===r.id).map((j,k)=>`<button class="topic" style="--tc:#8e5be8;animation-delay:${k*40}ms" data-j="${j.id}"><span class="ic" aria-hidden="true">${j.icon}</span><b>${EN()?JOURNEY_PART[j.part][2]:JOURNEY_PART[j.part][0]}</b><span class="dev" lang="ne">${JOURNEY_PART[j.part][1]}</span><span class="en">${bestOf(p,'kathaa',j.id)>=1?'✓ Heard':'New'}</span></button>`).join('')}</div>`).join('')}`;
   $('#backBtn').onclick=openMap;
@@ -2590,7 +2613,7 @@ function renderPage(quiet){
     else if(npVoice){dtoks[k]?.classList.add('on');toks[map(k,nD,nR)]?.classList.add('on');}
     else{toks[k]?.classList.add('on');dtoks[map(k,nR,nD)]?.classList.add('on');}};
   const read=()=>{speech(story.np,story.dev,en?story.en:'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');};
-  $('#backBtn').onclick=story.journey?()=>{if(!tripBack())openJourney();}:openStories;
+  $('#backBtn').onclick=story.intro?openMap:story.journey?()=>{if(!tripBack())openJourney();}:openStories;
   $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();read();}};
   toks.forEach(b=>b.onclick=ev=>{
     ev.stopPropagation();const k=+b.dataset.w,w=rt[k].replace(/[.,!?:;“”"’]/g,''),L=en?lookupEn(w):lookup(w),pic=L&&L.t.kind==='pic'?L.it[3]+' ':'';
