@@ -1621,11 +1621,12 @@ const YATRA=(()=>{const K=id=>({k:'story',id});
  sec({id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️']},['bida']),
  sec({id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:25,deco:['🦆','🪷','🐸','🌾']},['paani']),
  sec({id:'chidiyakhana',np:'Chidiyakhana',dev:'चिडियाखाना',en:'The zoo',icon:'🦒',bg:'#f3ecd6',gems:30,deco:['🦓','🐘','🐧','🌴']},['school','janmadin']),
- sec({id:'samundra',np:'Samundra',dev:'समुद्र',en:'The seaside',icon:'🌊',bg:'#d4f1f9',gems:30,deco:['🐚','🌴','⛵','🦀']},[]),
+ sec({id:'bagaan',np:'Suntala bagaan',dev:'सुन्तला बगान',en:'The orange orchard',icon:'🍊',bg:'#fff1d6',gems:30,deco:['🍊','🌳','🐒','🍃']},[]),
  sec({id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿']},['daktar']),
  sec({id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅']},['himal','lhosar']),
 ];})();
 // Each section's 10 words: 7 new and 3 the child has already seen in the house or an earlier section (marked •),
+// each a word already in the game by its romanized name, or a new one written out as [romanized, Devanagari, English, picture],
 // mixed so the easy level (the first 6) has 2 familiar ones. Words are looked up by their romanized name in the
 // word topics and then the rooms, so each keeps its spelling and picture. See MAP-PLAN.md.
 const SECTION_WORDS={
@@ -1636,7 +1637,8 @@ const SECTION_WORDS={
  jangal:['singha','bhalu','rukh•','gaida','kharayo','makura•','harin','phyauro','mauri•','bandar'],
  taal:['saanp','kachhuwa','hans•','gohi','bhyaguto','phul•','machha','dunga','harin•','laamkhutte'],
  chidiyakhana:['jiraph','jebra','singha•','chituwa','panda','bandar•','hatti','bagh','gohi•','penguin'],
- samundra:['hvel','dalphin','machha•','gangato','aktopas','dunga•','shark','sankha','kachhuwa•','rangichangi machha'],
+ bagaan:[['suntala','सुन्तला','orange','🍊'],'syau','bandar•',['aanp','आँप','mango','🥭'],'kera','rukh•',
+  ['angur','अंगुर','grapes','🍇'],['nashpati','नासपाती','pear','🍐'],'putali•',['bhuin katahar','भुइँकटहर','pineapple','🍍']],
  pahad:['ullu','mayur','ghaam•','parewa','chil','putali•','bhangera','suga','bakhra•','indreni'],
  himal:['hiu','himal','jun•','tara','badal','chil•','aago','helikoptar','bhalu•','hawaijahaj'],
 };
@@ -1648,7 +1650,7 @@ const OLD_TRIP_T=['kira','prakriti','janawar','savari','chaad','jangali','sarisr
     throw new Error('No word '+rom);};
   const COLORS=['#2fae6e','#ff9f1c','#e8463a','#ff8c2e','#2fae6e','#00a6b8','#8e5be8','#3a7bf2','#8e5be8','#3a7bf2'];
   YATRA.forEach((r,i)=>TOPICS.push({id:'w_'+r.id,np:r.np,dev:r.dev,en:r.en,icon:r.icon,color:COLORS[i],kind:'pic',q:'kahaa',
-    items:SECTION_WORDS[r.id].map(w=>look(w.replace('•','')))}));
+    items:SECTION_WORDS[r.id].map(w=>Array.isArray(w)?w:look(w.replace('•','')))}));
 })();
 const STOPS=YATRA.flatMap(r=>[...r.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r})));
 const T=id=>TOPICS.find(t=>t.id===id);
@@ -1747,7 +1749,7 @@ function openPath(rid){
 
 // ---------- naksa (the map): the front page. Habre's house at the bottom, the places above it, locked until reached ----------
 const MAP_POS=[[72,91],[28,82.8],[72,74.6],[28,66.4],[72,58.2],[28,50],[72,41.8],[28,33.6],[72,25.4],[28,17.2],[72,9]];
-const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17],['🦒',92,33],['🌲',8,46],['🌳',92,50],['🦀',92,64],['🪔',8,62],['🐐',8,78],['🌷',92,83],['🐄',8,94]];
+const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17],['🦒',92,33],['🌲',8,46],['🌳',92,50],['🍊',92,64],['🪔',8,62],['🐐',8,78],['🌷',92,83],['🐄',8,94]];
 function openMap(){
   if(!P()){goWho();return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();

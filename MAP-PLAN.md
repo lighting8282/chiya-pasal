@@ -24,7 +24,7 @@ The free map has 8 places now, so 2 are new: **Mandir** (the temple square, for 
 | 5 | 🌲 Jangal (the forest) | singha (lion), bhalu (bear), gaida (rhino), kharayo (rabbit), harin (deer), phyauro (fox), bandar (monkey) | **rukh** (tree), **makura** (spider), **mauri** (bee) · 1 |
 | 6 | 🏞️ Taal (the lake) | saanp (snake), kachhuwa (turtle), gohi (crocodile), bhyaguto (frog), machha (fish), dunga (boat), laamkhutte (mosquito) | **hans** (duck) · 2, **phul** (flower) · 1, **harin** (deer) · 5 |
 | 7 | 🦒 Chidiyakhana (the zoo) · *new* | jiraph (giraffe), jebra (zebra), chituwa (leopard), panda, hatti (elephant), bagh (tiger), penguin | **singha** (lion), **bandar** (monkey) · 5, **gohi** (crocodile) · 6 |
-| 8 | 🌊 Samundra (the seaside) | hvel (whale), dalphin (dolphin), gangato (crab), aktopas (octopus), shark, sankha (seashell), rangichangi machha (tropical fish) | **machha** (fish), **dunga** (boat), **kachhuwa** (turtle) · 6 |
+| 8 | 🍊 Suntala bagaan (the orange orchard) · *replaced the seaside* | suntala (orange), syau (apple), aanp (mango), kera (banana), angur (grapes), nashpati (pear), bhuin katahar (pineapple) | **bandar** (monkey) · 5, **rukh** (tree), **putali** (butterfly) · 1 |
 | 9 | ⛰️ Pahad (the hills) | ullu (owl), mayur (peacock), parewa (pigeon), chil (eagle), bhangera (sparrow), suga (parrot), indreni (rainbow) | **ghaam** (sun), **putali** (butterfly) · 1, **bakhra** (goat) · 2 |
 | 10 | 🏔️ Himal (the mountains) | hiu (snow), himal (snowy mountain), tara (star), badal (cloud), aago (fire), helikoptar (helicopter), hawaijahaj (aeroplane) | **jun** (moon) · house, **chil** (eagle) · 9, **bhalu** (bear) · 5 |
 
@@ -41,7 +41,7 @@ That makes 70 new words in the free map.
 | Forest | *Kahaa jaane?* |
 | Lake | *Paani paryo* |
 | Zoo | *Schoolma* (a school trip) (now placed), *Habreko janmadin* (now placed) |
-| Seaside | none |
+| Orange orchard | none |
 | Hills | *Daktarkahaa* (now placed) |
 | Mountains | *Himalko yatra*, *Lhosar* |
 
@@ -49,7 +49,7 @@ All 15 stories are then on the map.
 
 ### Words that leave the free map
 
-These 9 words are in today's topics but aren't in any section above: fatyangro (grasshopper), bichchhi (scorpion), chheparo (lizard), dainosor (dinosaur), jhinge machha (shrimp), chara (bird), rel (train), jamara (barley shoots), khapse (biscuit). They could go into the paid maps.
+The seaside's 7 sea words (whale, dolphin, crab, octopus, shark, seashell, tropical fish) left when the orchard replaced it. These 9 words were also in the old topics but aren't in any section above: fatyangro (grasshopper), bichchhi (scorpion), chheparo (lizard), dainosor (dinosaur), jhinge machha (shrimp), chara (bird), rel (train), jamara (barley shoots), khapse (biscuit). They could go into the paid maps.
 
 ## The paid maps (themes only; words still to choose)
 

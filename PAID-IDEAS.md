@@ -33,9 +33,24 @@ Ideas for what a paid version of Habre's Nepali (`kids.html`) could include. Not
   - Decide what a locked replay shows: a lock and a short "replay with Habre Plus" note behind the grown-ups' gate, so children aren't asked to buy anything.
   - Decide whether the 4 stories that aren't on the path (*Habre ko bihana*, *Habreko janmadin*, *Daktarkahaa*, *Schoolma*) become paid-only.
 
+## Future map ideas
+
+Each map has the same shape as the free map: 10 sections of 10 words, and a Habre's Journey chapter in every section. Maps after the free map open in a set order (still to decide), so the journey story carries on from one map to the next.
+
+- 🌊 **Water**: built on the `habre-plus` branch.
+- ☁️ **Sky**: built on the `habre-plus` branch.
+- 🚀 **Space**: the sky map already ends with three space sections, so a space map could replace those or carry on from them.
+- 🏙️ **City**: for example Kathmandu (temples, buses, shops, street food).
+- 🏫 **School**: the classroom, the playground, lunch, books, sports day.
+- 🎃 **Seasonal and holiday maps**, Nepali and American:
+  - Nepali: Dashain, Tihar, Holi, Lhosar, Teej, Chhath, Nepali New Year
+  - American: Halloween, Thanksgiving, Christmas, Easter, the Fourth of July
+  - The free map's temple square already has the Tihar, Dashain and Holi side stories.
+- Older ideas: Chitwan (jungle safari), a mountain trek, the fair.
+- And more to come.
+
 ## Already sketched on the `habre-plus` branch (local, not pushed)
 
-- New places on the map, each a trip of its own: Kathmandu, Chitwan, a mountain trek, the fair.
 - New stories in every place.
 - A real person reading the words and stories.
 - A weekly report for grown-ups (this overlaps with the analytics idea above).
