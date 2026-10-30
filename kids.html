@@ -1867,6 +1867,25 @@ PLUS.forEach(pl=>{
     items:pl.words.map(w=>Array.isArray(w)?w:findWord(w))});
   pl.stops=[W('easy'),W('medium'),W('hard'),{k:'check',t}];
 });
+// each paid map's postcard to Hajuraama and souvenir, sent once all of its places are finished
+const PLUS_ENDS={
+ paaniko:{pic:'🏝️',bg:'#d4f1f9',
+  note:[['Pyaari Hajuraama,','प्यारी हजुरआमा,','Dear Grandma,'],
+   ['Mimi ra ma samundrako gahiro thaauma pugyau!','मिमी र म समुद्रको गहिरो ठाउँमा पुग्यौं!','Mimi and I went deep under the sea!'],
+   ['Haamile jalpari ra hvel dekhyau.','हामीले जलपरी र ह्वेल देख्यौं।','We saw a mermaid and a whale.'],
+   ['Mero baithakko laagi euta sankha lyaae.','मेरो बैठकको लागि एउटा शङ्ख ल्याएँ।','I brought a seashell home for my living room.'],
+   ['Aba kahaa jaane hola?','अब कहाँ जाने होला?','Where shall I go next?']],
+  souvenir:{icon:'🐚',np:'Samundrako sankha',dev:'समुद्रको शङ्ख',en:'A seashell from the sea'}},
+ aakaashko:{pic:'🚀',bg:'#dcd8f5',
+  note:[['Pyaari Hajuraama,','प्यारी हजुरआमा,','Dear Grandma,'],
+   ['Mimi ra ma badal maathi ra antarikshama pugyau!','मिमी र म बादल माथि र अन्तरिक्षमा पुग्यौं!','Mimi and I flew above the clouds and into space!'],
+   ['Haamile tara ra graha najikbaata dekhyau.','हामीले तारा र ग्रह नजिकबाट देख्यौं।','We saw stars and planets up close.'],
+   ['Mero baithakko laagi euta sano raket lyaae.','मेरो बैठकको लागि एउटा सानो रकेट ल्याएँ।','I brought a little rocket home for my living room.'],
+   ['Aba kahaa jaane hola?','अब कहाँ जाने होला?','Where shall I go next?']],
+  souvenir:{icon:'🚀',np:'Sano raket',dev:'सानो रकेट',en:'A model rocket'}},
+};
+PLUS_PATHS.forEach(pa=>TRIP_ENDS.push({id:pa.id,...PLUS_ENDS[pa.id],place:[pa.np,pa.dev,pa.en.replace(/^The /,'the ')],
+  done:p=>pa.places.every(pl=>plusFinished(p,pl))}));
 const plusStopsCache={};
 const plusStops=pl=>plusStopsCache[pl.id]||(plusStopsCache[pl.id]=[...pl.stops,{k:'boss'},{k:'chest'}].map(s=>({...s,r:pl})));
 const hasPack=id=>!!(S.owned||{})[id];
@@ -1894,6 +1913,7 @@ window.habrePlus={test(on){if(on)grantPack('plus','test');else{const o={...(S.ow
 function openTrack(id){
   if(!P()){goWho();return;}
   const pa=PLUS_PATHS.find(x=>x.id===id);if(!pa||!hasPack(pa.pack)){openPlus();return;}
+  {const pc=newPostcard(P());if(pc){openPostcard(pc,true);return;}}
   screen='track';trip=null;const p=P();
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>${pa.icon} ${EN()?pa.en:pa.np} <small lang="ne">${EN()?pa.dev:pa.en} · ${pa.about}</small></h1>
    <div class="topics">${pa.places.map((pl,i)=>{const open=plusOpen(p,pl),n=plusStops(pl).length,d=plusDoneN(p,pl);
@@ -1954,8 +1974,11 @@ const regionFirst=r=>STOPS.findIndex(s=>s.r===r);
 const regionEnd=ri=>ri+1<YATRA.length?regionFirst(YATRA[ri+1]):STOPS.length;
 // the garden opens at GATE stars; every other place opens once the place before it is finished
 const placeOpen=(p,ri)=>starsOf(p)>=GATE&&yatraAt(p)>=regionFirst(YATRA[ri]);
-// a section's words open for flashcards and memory match once the section is open on the map
-const topicOpen=(p,t)=>{const ri=YATRA.findIndex(r=>'w_'+r.id===t.id);return ri<0||placeOpen(p,ri);};
+// a section's words open for flashcards and memory match once the section is open on its map (a paid map's too)
+const topicOpen=(p,t)=>{
+  if(t.plus){const pl=PLUS.find(x=>'p_'+x.id===t.id);return !!pl&&plusOpen(p,pl);}
+  const ri=YATRA.findIndex(r=>'w_'+r.id===t.id);return ri<0||placeOpen(p,ri);
+};
 // one place: its own stops along a winding path. With no id, the place the player is on now.
 // A Habre Plus place (see PLUS) opens here too, once its pack is owned and the place before it on its map is
 // finished: its stops are its own, counted from its first, and it can be played in any order with the free journey.

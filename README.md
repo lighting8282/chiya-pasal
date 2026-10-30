@@ -365,6 +365,8 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 - **Each section has its own word topic** (`p_` + the section's id, marked `plus:'plus'`). These join daily practice and flashcards only once the pack is owned.
 - **The unlock screen** sits behind a grown-ups-only question.
 - **Ownership** is a per-device flag (`S.owned`).
+- **Flashcards and memory match** show a paid section's deck only once that section is open.
+- **Postcards and souvenirs:** finishing a paid map sends Hajuraama its own postcard and brings home a souvenir for the living-room shelf: a seashell from the water map, a model rocket from the sky map (`PLUS_ENDS`).
 - **Adding a section:** use `sec(...)` with 7 new words and 3 seen ones. A new word can be a word already in the game, written as its romanized name.
 - **`PAY`:** where real payments plug in, either Google Play Billing in the Play Store app or a web checkout whose codes are checked by a server. While `PAY.ready` is false, buying shows "not switched on yet".
 - **Testing on one device:** `habrePlus.test(true)` in the browser console unlocks the pack.
