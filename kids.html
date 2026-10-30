@@ -1092,9 +1092,10 @@ function confetti(){
 // ---------- shared bits ----------
 const main=$('#main');
 // ---------- no Nepali script for ages 3-8, for now ----------
-// Players in the two younger age groups see romanized Nepali and English only: any Devanagari the game writes on
-// screen is taken out as it appears, with the dots and brackets it leaves behind. The voice still speaks Nepali.
-const noScript=()=>!!P()&&ageOf(P()).id!=='big';
+// Players in the two younger age groups who are learning Nepali see romanized Nepali and English only: any
+// Devanagari the game writes on screen is taken out as it appears, with the dots and brackets it leaves behind. The
+// voice still speaks Nepali. Children learning English keep it, as the Nepali meaning under their English words.
+const noScript=()=>!!P()&&ageOf(P()).id!=='big'&&!EN();
 const stripDeva=t=>t.replace(/["“]?[\u0900-\u097F][\u0900-\u097F\s।॥,.!?:;"“”'’()\-–]*["”]?/g,' ')
   .replace(/(\s*·\s*){2,}/g,' · ').replace(/^\s*·\s*|\s*·\s*$/g,'').replace(/\(\s*\)/g,'').replace(/\s{2,}/g,' ').replace(/^\s+$/,'');
 function cleanText(n){if(/[\u0900-\u097F]/.test(n.data)){const v=stripDeva(n.data);if(v!==n.data)n.data=v;}}

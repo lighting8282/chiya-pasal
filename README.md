@@ -50,7 +50,7 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 | 🏆 Big check | 5 questions, 3 to pass | 8 questions, 6 to pass | 8 questions, 6 to pass |
 | 🔍 Room find game | 4 things | 6 things | 8 things |
 
-**No Nepali script for 3–8, for now:** players aged 3–5 and 6–8 see romanised Nepali, English and pictures only. Any Devanagari the game puts on screen is removed as it appears, along with the separators it leaves behind (`noScript` and `stripDeva` in `kids.html`). The voice still speaks Nepali. 9–11 still sees Devanagari.
+**No Nepali script for 3–8, for now:** players aged 3–5 and 6–8 who are learning Nepali see romanised Nepali, English and pictures only. Children learning English keep the Devanagari, since it's the Nepali meaning under their English words. Any Devanagari the game puts on screen is removed as it appears, along with the separators it leaves behind (`noScript` and `stripDeva` in `kids.html`). The voice still speaks Nepali. 9–11 still sees Devanagari.
 
 **Stories for 3–5 are one word at a time:** every story page (Habre's Journey and the side stories) shows the picture with a single word, read aloud, instead of the whole sentence. The word is the section's own word on that page where there is one, such as *phul* (flower) on the page where Habre picks a flower, and otherwise one chosen by hand in `LITTLE_WORDS`. Side stories also skip their question and ordering game for 3–5: reading to the end is enough.
 
