@@ -114,20 +114,19 @@ Snow (**hiu**) begins to fall on the snowy mountain (**himal**). Clouds (**badal
 
 ---
 
-## Where today's stories go (all optional side stories)
+## Where today's stories go (optional side stories, beside the trail)
 
 | Section | Side stories |
 |---|---|
 | Garden | Habre ko bihana, Bagaichama |
-| Farm village | Haraeko biralo, Bhok lagyo! |
+| Farm village | Bhok lagyo! |
 | Market | Bazaar ma |
 | Temple square | Tihar aayo, Dashain aayo, Rangko chaad |
 | Forest | Kahaa jaane? |
 | Lake | Paani paryo |
-| Zoo | Schoolma, Habreko janmadin |
-| Orange orchard | none yet |
-| Hills | Daktarkahaa |
-| Mountains | Himalko yatra, Lhosar |
+| Mountains | Lhosar |
+
+*Haraeko biralo*, *Himalko yatra*, *Daktarkahaa*, *Schoolma* and *Habreko janmadin* are shelved (see `SHELVED.md`).
 
 ## Classic stories and rhymes that could go here later
 

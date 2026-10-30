@@ -60,6 +60,20 @@ Every room of the house keeps its picture and its look-and-find game; only the l
 
 Shelved so that free flashcards are the built-in categories only. Making your own sets is an idea for the paid version (see `PAID-IDEAS.md`). Words a grown-up already ticked are kept with the player.
 
+## From the stories (2026-10-30)
+
+Taken out because they repeat Habre's Journey, or don't fit any section of the map. They're kept in `STORIES` in `kids.html` and switched off by `SHELVED.stories`.
+
+| Story | Id | Why |
+|---|---|---|
+| Haraeko biralo · The lost cat | `mimi` | Same plot as the journey's farm village, where Mimi goes missing |
+| Himalko yatra · Trip to the mountains | `himal` | The journey's mountains section now tells this |
+| Daktarkahaa · At the doctor's | `daktar` | The journey's hills section has Doctor Owl looking after Habre's cold |
+| Schoolma · At school | `school` | Didn't fit any section (it was put at the zoo) |
+| Habreko janmadin · Habre's birthday | `janmadin` | Didn't fit any section (it was put at the zoo) |
+
+Saved progress for them is kept. A future school map would be a natural home for *Schoolma*.
+
 ## Brought back
 
 | What | Id | When | Notes |

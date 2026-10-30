@@ -113,7 +113,7 @@ Every section's trail is the same:
 
 **Habre's Journey** runs through the whole map: Habre and Mimi the cat travel to visit Hajuraama in the mountains before the first snow. Each section's three story stops are required, and each uses the section's 10 words. The story is in `JOURNEY_PAGES` in `kids.html`, with the outline in `JOURNEY-STORY.md`. The **📖 Habreko kathaa · The story so far** button, on the map and on every section's trail, lists every part the child has reached, to hear one at a time or all together. Players who were already further along when the story arrived keep their place, and find the earlier parts there.
 
-Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories, listed under its trail to read any time. English learners play the same stops with the English word as the answer.
+Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories: dashed purple bubbles beside the path that can be read any time and never block the trail. A read one turns solid with a ✓. English learners play the same stops with the English word as the answer.
 
 #### 1. 🌻 Bagaicha (the garden)
 
@@ -123,7 +123,7 @@ Words: putali (butterfly), kamila (ant), **jun** (moon), mauri (bee), makura (sp
 
 #### 2. 🏘️ Gaaun (the farm village)
 
-Side stories: *Haraeko biralo*, *Bhok lagyo!*. Present: 💎 15.
+Side stories: *Bhok lagyo!*. Present: 💎 15.
 
 Words: gai (cow), kukhura (chicken), **hans** (duck), bakhra (goat), ghoda (horse), **aalu** (potato), kukur (dog), muso (mouse), **phul** (flower), challa (chick)
 
@@ -153,25 +153,25 @@ Words: saanp (snake), kachhuwa (turtle), **hans** (duck), gohi (crocodile), bhya
 
 #### 7. 🦒 Chidiyakhana (the zoo)
 
-Side stories: *Schoolma*, *Habreko janmadin*. Present: 💎 30.
+Side stories: none. Present: 💎 30.
 
 Words: jiraph (giraffe), jebra (zebra), **singha** (lion), chituwa (leopard), panda, **bandar** (monkey), hatti (elephant), bagh (tiger), **gohi** (crocodile), penguin
 
 #### 8. 🍊 Suntala bagaan (the orange orchard)
 
-Side stories: none yet. Present: 💎 30.
+Side stories: none. Present: 💎 30.
 
 Words: suntala (orange), syau (apple), **bandar** (monkey), aanp (mango), kera (banana), **rukh** (tree), angur (grapes), nashpati (pear), **putali** (butterfly), bhuin katahar (pineapple)
 
 #### 9. ⛰️ Pahad (the hills)
 
-Side stories: *Daktarkahaa*. Present: 💎 35.
+Side stories: none. Present: 💎 35.
 
 Words: ullu (owl), mayur (peacock), **ghaam** (sun), parewa (pigeon), chil (eagle), **putali** (butterfly), bhangera (sparrow), suga (parrot), **bakhra** (goat), indreni (rainbow)
 
 #### 10. 🏔️ Himal (the mountains)
 
-Side stories: *Himalko yatra*, *Lhosar*. Present: 💎 50.
+Side stories: *Lhosar*. Present: 💎 50.
 
 Words: hiu (snow), himal (snowy mountain), **jun** (moon), tara (star), badal (cloud), **chil** (eagle), aago (fire), helikoptar (helicopter), **bhalu** (bear), hawaijahaj (aeroplane)
 

@@ -547,6 +547,10 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .srow{position:relative;height:104px}
 .stop{position:absolute;top:50%;left:var(--x);transform:translate(-50%,-50%);width:76px;display:flex;flex-direction:column;align-items:center;gap:2px;z-index:1}
 .stop .disc{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:2.1rem;background:var(--card);box-shadow:0 6px 0 var(--sc,var(--line));border:4px solid var(--sc,var(--line));position:relative}
+.xstory{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;z-index:1;width:84px}
+.xstory .xd{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:1.6rem;background:#fff;border:3px dashed var(--purple)}
+.xstory.read .xd{border-style:solid;background:#f1ebfd}
+.xstory .xl{font-size:.68rem;font-weight:800;line-height:1.05;text-align:center;color:var(--purple);background:rgba(255,255,255,.9);border-radius:999px;padding:1px 7px}
 .stop .lb{font-size:.72rem;font-weight:800;line-height:1.05;text-align:center;background:rgba(255,255,255,.85);border-radius:999px;padding:1px 7px;max-width:110px}
 .stop .badge{position:absolute;right:-6px;bottom:-6px;font-size:1rem;background:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;box-shadow:0 2px 0 rgba(0,0,0,.15)}
 .stop.done .disc{--sc:#f2b705;background:#fff7d6}
@@ -1347,8 +1351,11 @@ const SHELVED={
     'khana','ganti','thulo','kapada','rang','sharir',  // kitchen, dining room, bedroom, bathroom
     'akshar','abc'],  // office
   sections:['vakya','kathaa','vyakaran','shabda',
-    'custom']};  // the grown-ups' own flashcard deck (an idea for the paid version)
+    'custom'],  // the grown-ups' own flashcard deck (an idea for the paid version)
+  // stories that repeat Habre's Journey or don't fit a section of the map
+  stories:['mimi','himal','daktar','school','janmadin']};
 const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
+const storyShelved=id=>SHELVED.stories.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
 const WORD_T=()=>ALL_WORD_T().filter(t=>!shelved(t.id)&&!OLD_TRIP_T.includes(t.id));
@@ -1386,7 +1393,7 @@ const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
 function progressOf(p){
   const ak=AKSHAR(),all=allCards();
   return {
-    kathaa:avg(STORIES.map(s=>s.choice?Math.min(2,bestOf(p,'kathaa',s.id))/2:(Math.min(2,bestOf(p,'kathaa',s.id))+Math.min(1,bestOf(p,'krama',s.id)))/3)),
+    kathaa:avg(STORIES.filter(s=>!storyShelved(s.id)).map(s=>s.choice?Math.min(2,bestOf(p,'kathaa',s.id))/2:(Math.min(2,bestOf(p,'kathaa',s.id))+Math.min(1,bestOf(p,'krama',s.id)))/3)),
     shabda:avg(WORD_T().map(t=>topicDone(p,t))),
     akshar:topicDone(p,ak)*0.7+Math.min(1,Object.keys(p.traced||{}).length/ak.items.length)*0.3,
     vyakaran:avg(GRAM_T().map(t=>topicDone(p,t))),
@@ -1672,15 +1679,15 @@ const YATRA=(()=>{
    return {...o,side,chapter:`j_${o.id}_3`,stops:[J(1),W('r1'),J(2),W('r2'),{k:'check',t}]};};
  return [
  sec({id:'bagaicha',np:'Bagaicha',dev:'बगैंचा',en:'The garden',icon:'🌻',bg:'#e3f6d6',gems:10,deco:['🌷','🦋','🌼','🐝']},['bihana','bagaicha']),
- sec({id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡']},['mimi','bhok']),
+ sec({id:'gaaun',np:'Gaaun',dev:'गाउँ',en:'The farm village',icon:'🏘️',bg:'#fdf0d8',gems:15,deco:['🐓','🌾','🐐','🏡']},['bhok']),
  sec({id:'bazaar',np:'Bazaar',dev:'बजार',en:'The market',icon:'🛍️',bg:'#ffe6ee',gems:20,deco:['🍎','🍌','🧺','🎈']},['bazaar']),
  sec({id:'mandir',np:'Mandir',dev:'मन्दिर',en:'The temple square',icon:'🛕',bg:'#fff0dc',gems:20,deco:['🪔','🔔','🌼','🥁']},['tihar','dashain','holi']),
  sec({id:'jangal',np:'Jangal',dev:'जङ्गल',en:'The forest',icon:'🌲',bg:'#d6efd9',gems:25,deco:['🌳','🍄','🦌','🐿️']},['bida']),
  sec({id:'taal',np:'Taal',dev:'ताल',en:'The lake',icon:'🏞️',bg:'#d8eefc',gems:25,deco:['🦆','🪷','🐸','🌾']},['paani']),
- sec({id:'chidiyakhana',np:'Chidiyakhana',dev:'चिडियाखाना',en:'The zoo',icon:'🦒',bg:'#f3ecd6',gems:30,deco:['🦓','🐘','🐧','🌴']},['school','janmadin']),
+ sec({id:'chidiyakhana',np:'Chidiyakhana',dev:'चिडियाखाना',en:'The zoo',icon:'🦒',bg:'#f3ecd6',gems:30,deco:['🦓','🐘','🐧','🌴']},[]),
  sec({id:'bagaan',np:'Suntala bagaan',dev:'सुन्तला बगान',en:'The orange orchard',icon:'🍊',bg:'#fff1d6',gems:30,deco:['🍊','🌳','🐒','🍃']},[]),
- sec({id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿']},['daktar']),
- sec({id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅']},['himal','lhosar']),
+ sec({id:'pahad',np:'Pahad',dev:'पहाड',en:'The hills',icon:'⛰️',bg:'#ece3f7',gems:35,deco:['🛕','🌄','☁️','🌿']},[]),
+ sec({id:'himal',np:'Himal',dev:'हिमाल',en:'The mountains',icon:'🏔️',bg:'#eef4fb',gems:50,final:true,deco:['❄️','🏔️','☁️','🦅']},['lhosar']),
 ];})();
 // Each section's 10 words: 7 new and 3 the child has already seen in the house or an earlier section (marked •),
 // each a word already in the game by its romanized name, or a new one written out as [romanized, Devanagari, English, picture],
@@ -1938,9 +1945,13 @@ function openPath(rid){
   let d=`M${xs[0]} 0L${xs[0]} 52`;
   for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
   d+=`L${xs[xs.length-1]} ${H}`;
+  // optional side stories sit beside the path, next to the practice rounds and the big check, open any time
+  const sideAt={},sides=r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
   const rows=list.map((s,k)=>{const i=first+k,f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
-    const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4];
-    return `<div class="srow"><span class="deco" style="left:${xs[k]>50?16:84}%;top:52px" aria-hidden="true">${r.deco[k%r.deco.length]}</span>
+    const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4],sid=sideAt[k],st=sid&&STORIES.find(x=>x.id===sid);
+    const side=st?`<button class="xstory${bestOf(p,'kathaa',sid)>=1?' read':''}" style="left:${xs[k]>50?20:80}%;top:52px" data-side="${sid}" aria-label="Extra story: ${esc(st.en)}"><span class="xd" aria-hidden="true">${st.icon}</span><span class="xl">${EN()?st.en:st.np}${bestOf(p,'kathaa',sid)>=1?' ✓':''}</span></button>`
+      :`<span class="deco" style="left:${xs[k]>50?16:84}%;top:52px" aria-hidden="true">${r.deco[k%r.deco.length]}</span>`;
+    return `<div class="srow">${side}
      <button class="stop ${cls}${s.k==='boss'?' boss':''}${xs[k]<50?' r':''}" style="--x:${xs[k]}%" data-i="${i}" aria-label="${esc(f[3])}${cls==='lock'?' (locked)':cls==='done'?' (done)':''}">
       ${i===at?`<span class="me" aria-hidden="true">${p.icon}</span>`:''}
       <span class="disc"><span aria-hidden="true">${s.k==='chest'&&cls==='done'?'✨':f[0]}</span>${badge?`<span class="badge" aria-hidden="true">${badge}</span>`:''}</span>
@@ -1952,10 +1963,7 @@ function openPath(rid){
     <div class="trail-end"><span class="pic" aria-hidden="true">${before?before.icon:'🏠'}</span>${before?before.np:'Habreko ghar'}<small>${before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
     <div class="trail-end"><span class="pic" aria-hidden="true">${after?after.icon:'🏔️🚩'}</span>${after?after.np:'Himalko tuppo'}<small>${after?(at>=regionEnd(ri)?'Open now!':'Opens when you finish here'):'The top of the mountain'}</small></div>
-   </div>
-   ${(r.side||[]).length?`<h2 class="sub">📖 Kathaa <small lang="ne">कथा · Stories here, read any time</small></h2>
-    <div class="topics">${r.side.map((id,k)=>{const st=STORIES.find(x=>x.id===id),read=bestOf(p,'kathaa',id)>=1;
-      return `<button class="topic" style="--tc:#8e5be8;animation-delay:${k*40}ms" data-side="${id}"><span class="ic" aria-hidden="true">${st.icon}</span><b>${EN()?st.en:st.np}</b><span class="dev" lang="ne">${st.dev}</span>${read?'<span class="en">✓ Read</span>':''}</button>`;}).join('')}</div>`:''}`;
+   </div>`;
   main.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>goStop({k:'story',id:b.dataset.side,r}));
   $('#jBtn').onclick=openJourney;
   $('#backBtn').onclick=openMap;
@@ -3198,7 +3206,7 @@ function renderProgress(p){
     <tbody>${deckTopics.map(t=>`<tr><td>${t.id==='akshar'?'अ':t.icon} ${t.np} <small>${t.en}</small></td>${Object.keys(ROUNDS).map(k=>cell(t,k)).join('')}${ck(t)}<td>${bestOf(p,'jodi',t.id)?'★'.repeat(bestOf(p,'jodi',t.id)):'–'}</td></tr>`).join('')}</tbody></table></div>
    <p><b>Postcards to Hajuraama:</b> ${TRIP_ENDS.filter(te=>sentPostcard(p,te)).map(te=>`${te.souvenir.icon} ${te.place[2]} (sent ${p.postcards[te.id]})`).join(' · ')||'none yet: one is sent each time a map is finished'}</p>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
-   <p><b>Stories:</b> ${STORIES.map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
+   <p><b>Stories:</b> ${STORIES.filter(s=>!storyShelved(s.id)).map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
    ${shelved('vakya')?'':`<p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${LV_KEYS.map(k=>`${LEVELS[k].icon}${bestOf(p,'vakya:'+a.id,k)}/${V_N}`).join(' ')}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>`}
    ${shelved('patti')?'':`<p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length})</p>`}
    ${shelved('shabda')?'':`<p><b>Stickers:</b> ${stickers}/${stickerItems().length}</p>`}
