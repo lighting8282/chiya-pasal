@@ -11,7 +11,7 @@ A small browser game for learning romanized Nepali. You run a tea stall (*chiya 
 - The Devanagari sits underneath as the help, and the romanized spelling is hidden.
 - Habre's other lines are in Nepali when they have no English.
 - It covers the rooms, the journey's sections, flashcards, memory match, stickers, daily practice and the stories, where each English word lights up as it is read and can be tapped.
-- The Nepali help shows on the easy level and after answering, so the child works from the English.
+- The Nepali help shows after answering, so the child works from the English.
 
 The sections that teach Nepali have English versions instead:
 - **The alphabet:** A–Z, capital and small, each with a picture word (A a 🍎 apple स्याउ). It has Learn cards, tracing, and "Which letter does *apple* start with?".
@@ -32,15 +32,9 @@ The sections that teach Nepali have English versions instead:
 
 A grown-up can change the choice later under "Change player".
 
-**Age groups and difficulty:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). The age group sets the player's difficulty, which decides how hard every question is: in practice rounds, checks and big checks alike. A grown-up can choose a different difficulty under "Kati gaaro? · How hard?". Players made before age groups count as 6–8.
+**Age groups:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). There are no easy, medium or hard levels: every player gets the same questions, with 3 pictures to choose from, each labelled with the word. The help line (English, or Devanagari for an English learner) appears after the child answers. Checks and big checks show only the pictures. Players made before age groups count as 6–8.
 
-| Difficulty | A question looks like | Default for |
-|---|---|---|
-| 🐣 Easy | 2 pictures, labelled in Nepali and English | 3–5 |
-| 🐥 Medium | 3 pictures, labelled in Nepali only (checks have no labels) | 6–8 |
-| 🦅 Hard | 4 pictures with no labels; the word is only spoken until the child answers | 9–11 |
-
-The age group also sets the number of questions. The 3–5 group gets fewer words at a time:
+The age group sets how many questions a round has, how many pairs are in a memory game (3, 4 or 6) and how long the sentences are (up to 3 words for 3–5, up to 4 for the others). The 3–5 group gets fewer words at a time:
 
 | | 3–5 | 6–8 | 9–11 |
 |---|---|---|---|
@@ -59,7 +53,7 @@ The age group also sets the number of questions. The 3–5 group gets fewer word
 - **The postcard** shows just "Dear Grandma" and the signature.
 - **If a 3–5 child opens a story page** (from a grown-up's story-so-far, for example), it shows one word with the picture (`LITTLE_WORDS`).
 
-Practice rounds pass at about 70%. Progress from the old easy, medium and hard levels still counts. Both settings show on the grown-ups' progress page.
+Practice rounds pass at about 70%. Scores from the old easy, medium and hard levels still count as stars and as progress. The age group shows on the grown-ups' progress page.
 
 Each room is a picture full of things. In **Herau** (look), the child taps anything to hear its name and see it written. In **Khoja** (find it), Habre asks "*… kahaa cha?*" ("where is …?") and the child taps that thing in the room. Below the picture are the lessons that belong in that room:
 
@@ -77,7 +71,7 @@ All the room lessons are shelved for now (see `SHELVED.md`). Flashcards are no l
 The lessons:
 
 - **Kathaa (stories):** fifteen short stories, including festival days (Tihar, Dashain, Holi and Lhosar) and everyday scenes (the market, the doctor's, school). A voice reads each page aloud and lights up every word as it's spoken. Tap any word to hear it and see what it means. Three of the stories let the child choose what Habre does next, and each has two endings to find. The rest end with a question, then a game where the child puts four scenes back in order. Finishing one story opens the next. A "Kun chitra?" switch hides each page's picture so the child has to pick it.
-- **Shabda (words):** 19 picture topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings, festivals and everyday sayings). Each topic goes Learn → Play → Check, with three levels: *Sajilo* (easy, 2 choices), *Thikka* (medium, 3) and *Gaaro* (hard, 4, listen-only). There's also a memory-match game. Every word a child gets right twice becomes a sticker in their sticker book.
+- **Shabda (words):** 19 picture topics (animals, wild animals, birds, reptiles and frogs, sea animals, bugs, colours, counting to 20, big numbers up to 100, family, food, body, clothes, things at home, nature, vehicles, feelings, festivals and everyday sayings). Each topic goes Learn → Play → Check. Letters, counting and big numbers start with their first few words and unlock more as the child plays well. There's also a memory-match game. Every word a child gets right twice becomes a sticker in their sticker book.
 - **Akshar (letters):** Devanagari letters, each with a picture word. Children trace each letter with a finger.
 - **Vyakaran (grammar):** twelve picture lessons, each with a one-line rule:
   - one and many (*-haru*)
@@ -124,7 +118,7 @@ Every section's trail is the same:
 
 **Habre's Journey** runs through the whole map: Habre and Mimi the cat travel to visit Hajuraama in the mountains before the first snow. Each section's three story stops are required, and each uses the section's 10 words. The story is in `JOURNEY_PAGES` in `kids.html`, with the outline in `JOURNEY-STORY.md`. The **📖 Habreko kathaa · The story so far** button, on the map and on every section's trail, lists every part the child has reached, to hear one at a time or all together. Players who were already further along when the story arrived keep their place, and find the earlier parts there.
 
-Every question is asked at the player's difficulty (see above). Other stories that fit a section are optional side stories: dashed purple bubbles beside the path that can be read any time and never block the trail. A read one turns solid with a ✓. English learners play the same stops with the English word as the answer.
+Other stories that fit a section are optional side stories: dashed purple bubbles beside the path that can be read any time and never block the trail. A read one turns solid with a ✓. English learners play the same stops with the English word as the answer.
 
 #### 1. 🌻 Bagaicha (the garden)
 
@@ -330,7 +324,7 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 
 **Habre Plus (paid maps, not live yet).** `kids.html` has the structure for a paid pack:
 - **`PACKS` and `PLUS_PATHS`:** the pack and its two maps, shown under the free map. A paid map opens once the pack is owned and the child has finished the free map. After that the child can play either map.
-- **Same shape as the free map:** each map has 10 sections, played in order, and each section has exactly 10 words: 7 new and 3 the child has already seen in the free map, the house or an earlier section of that map. Every section plays like a free one: practice 1 → practice 2 → check → big check → present, at the player's difficulty.
+- **Same shape as the free map:** each map has 10 sections, played in order, and each section has exactly 10 words: 7 new and 3 the child has already seen in the free map, the house or an earlier section of that map. Every section plays like a free one: practice 1 → practice 2 → check → big check → present.
 - **Each section has its own word topic** (`p_` + the section's id, marked `plus:'plus'`). These join daily practice and flashcards only once the pack is owned.
 - **The unlock screen** sits behind a grown-ups-only question.
 - **Ownership** is a per-device flag (`S.owned`).
