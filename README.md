@@ -34,7 +34,7 @@ A grown-up can change the choice later under "Change player".
 
 **Age groups:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). There are no easy, medium or hard levels: every player gets the same questions, with 3 pictures to choose from, each labelled with the word. The help line (English, or Devanagari for an English learner) appears after the child answers. Checks and big checks show only the pictures. Players made before age groups count as 6–8.
 
-The age group sets how many questions a round has, how many pairs are in a memory game (3, 4 or 6) and how long the sentences are (up to 3 words for 3–5, up to 4 for the others). The 3–5 group gets fewer words at a time:
+The age group sets how many questions a round has and how many pairs are in a memory game (3, 4 or 6). The 3–5 group gets fewer words at a time:
 
 | | 3–5 | 6–8 | 9–11 |
 |---|---|---|---|
@@ -46,8 +46,24 @@ The age group sets how many questions a round has, how many pairs are in a memor
 
 **No Nepali script for 3–8, for now:** players aged 3–5 and 6–8 who are learning Nepali see romanised Nepali, English and pictures only. Children learning English keep the Devanagari, since it's the Nepali meaning under their English words. Any Devanagari the game puts on screen is removed as it appears, along with the separators it leaves behind (`noScript` and `stripDeva` in `kids.html`). The voice still speaks Nepali. 9–11 still sees Devanagari.
 
+**How much story: words, phrases or the full story.** This is separate from the age group, though by default it follows it: 3–5 get words, 6–8 get phrases and 9–11 get the full story. Each one builds on the one before. A grown-up can pick a different depth under "Change player" (**Kati kathaa?** / How much story?: By age, Words, Phrases or Full), for a child whose reading is ahead of or behind their age. The age group keeps setting the number of questions, the memory pairs and so on.
+
+| | 🖼️ Words (3–5 by default) | 💬 Phrases (6–8) | 📖 Full (9–11) |
+|---|---|---|---|
+| Story pages | one word a page | a short phrase a page, such as *Habre jhola bokchha* | the whole sentence |
+| Journey chapters | one picture moment a section | the first two parts of each section, and the arrival at Grandma's. The cliffhanger part is skipped | all three parts |
+| Opening story | one picture moment | a few phrases | the whole story |
+| "The story so far" button and side stories | hidden | shown, in phrases | shown in full |
+| End-of-story question | none (reading it is enough) | a shorter question where the whole one is long ("Aamale kati syau kinnubhayo?") | the whole question |
+| Habre's spoken prompts | "Biralo?" | "Biralo kahaa?" | "Biralo kahaa cha?" |
+| Postcard | one line | two lines | the whole note |
+| Sentence train (shelved for now) | up to 3 words; build, find the picture, fix | the same | up to 4 words, plus ask-and-answer and grow-a-sentence |
+| Grammar lessons (shelved for now) | none | one and many, big and small, colours | all of them |
+
+A phrase is made from words in the page's own sentence, so the romanized and Devanagari lines always match; each also has its own English line (`PHRASES_MID` in `kids.html`). A page of 4 words or fewer already is a phrase. A page with no phrase written keeps its whole sentence. Everything is in the learn-English version too.
+
 **Ages 3–5 are pictures and words only:**
-- **No story to read.** Instead, each section opens with one **picture moment**: a big picture and one word, read aloud, such as 🌻 *Bagaicha* (garden) or 🦒 *Chidiyakhaana* (zoo). The last one is 👵🏔️ *Hajuraama!* (Grandma). Under it, a row of dots runs from 🏠 to 👵, showing how close Habre is to Grandma's. The section's other story stops, the side stories and the "story so far" button are left out.
+- **No story to read.** (This is the words depth.) Instead, each section opens with one **picture moment**: a big picture and one word, read aloud, such as 🌻 *Bagaicha* (garden) or 🦒 *Chidiyakhaana* (zoo). The last one is 👵🏔️ *Hajuraama!* (Grandma). Under it, a row of dots runs from 🏠 to 👵, showing how close Habre is to Grandma's. The section's other story stops, the side stories and the "story so far" button are left out.
 - **The opening** is one moment too (✉️👵🏔️ *Hajuraama!*), and the house banner shows only 👵🏔️ and the stars collected.
 - **Questions are just the word:** "Makura?" (with "Spider?" for English learners), not "Makura kahaa cha?". Habre's speech bubble keeps only the short word, without the English instruction.
 - **The postcard** shows just "Dear Grandma" and the signature.

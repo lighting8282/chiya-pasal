@@ -150,6 +150,9 @@ h2.sub small{font-size:.9rem;color:var(--soft);font-weight:500;margin-left:6px}
 .langpick button small{color:var(--soft)}
 .langpick button[aria-pressed="true"]{border-color:var(--green);background:#e4f7ec}
 .langpick.ages{grid-template-columns:repeat(3,minmax(0,1fr))}
+.langpick.depths{grid-template-columns:repeat(4,minmax(0,1fr))}
+.langpick.depths button span{font-size:1.5rem}
+@media (max-width:680px){.langpick.depths{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .warn{background:#fff1ef;border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 
 /* learn card */
@@ -927,15 +930,21 @@ const TOPICS=[
 ];
 // ---------- age groups and practice rounds ----------
 // A grown-up picks each player's age group. Everyone plays the same maps, words and questions (3 picture choices, each
-// labelled with the word). The age group sets how many questions a round has, how many memory pairs and how long the
-// sentences are, and the youngest (3-5) also get fewer words at a time, and shorter checks and find games.
+// labelled with the word). The age group sets how many questions a round has and how many memory pairs, and the
+// youngest (3-5) also get fewer words at a time, and shorter checks and find games. How much story a child sees is a
+// separate setting (depthOf, below), which follows the age group unless a grown-up picks another.
 const AGES=[
- {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',split:true,rounds:{r1:4,r2:4},check:4,boss:5,find:4,pairs:3,sw:3},
- {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒',rounds:{r1:6,r2:8},find:6,pairs:4,sw:4},
- {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚',rounds:{r1:6,r2:10},find:8,pairs:6,sw:4},
+ {id:'little',en:'3–5',np:'Sano',dev:'सानो',icon:'🧸',split:true,rounds:{r1:4,r2:4},check:4,boss:5,find:4,pairs:3},
+ {id:'middle',en:'6–8',np:'Majhaula',dev:'मझौला',icon:'🎒',rounds:{r1:6,r2:8},find:6,pairs:4},
+ {id:'big',en:'9–11',np:'Thulo',dev:'ठूलो',icon:'📚',rounds:{r1:6,r2:10},find:8,pairs:6},
 ];
 // players made before age groups count as 6–8
 const ageOf=p=>AGES.find(a=>a.id===(p&&p.age))||AGES[1];
+// How much story a child sees: a word a page, a short phrase, or the whole sentence. 3-5 get words, 6-8 phrases and
+// 9-11 the full story, unless a grown-up picks one under "Change player".
+const DEPTHS=[['words','🖼️','Words','a word a page'],['phrases','💬','Phrases','short phrases'],['full','📖','Full','whole sentences']];
+const AGE_DEPTH={little:'words',middle:'phrases',big:'full'};
+const depthOf=p=>{const d=p&&p.depth;return DEPTHS.some(x=>x[0]===d)?d:AGE_DEPTH[ageOf(p).id];};
 // Each section is practised in two rounds before its check: round 1 on its first 5 words, round 2 on all 10
 // (for 3-5, on the other 5, so there are fewer words at a time). Learn cards before a round show only its new words.
 const ROUNDS={r1:{np:'Abhyas 1',dev:'अभ्यास १',en:'Practice 1',icon:'🎯'},r2:{np:'Abhyas 2',dev:'अभ्यास २',en:'Practice 2',icon:'🏅'}};
@@ -1362,6 +1371,8 @@ function editProfile(p){
      <div class="langpick">${[['ne','अ','Nepali','नेपाली सिक्ने'],['en','A','English','अंग्रेजी सिक्ने']].map(([l,ic,nm,dv])=>`<button type="button" aria-pressed="${(d.learn||'ne')===l}" data-l="${l}"><span aria-hidden="true">${ic}</span><b>${nm}</b><small lang="ne">${dv}</small></button>`).join('')}</div>
      <label>Kati barsha? <small style="font-weight:500;color:var(--soft)" lang="ne">कति वर्ष? · How old? (for grown-ups to pick)</small></label>
      <div class="langpick ages">${AGES.map(a=>`<button type="button" aria-pressed="${ageOf(d)===a}" data-age="${a.id}"><span>${a.icon}</span><b>${a.en}</b><small>${a.np} · ${a.id==='little'?'fewer words at a time':a.id==='middle'?'the usual game':'for bigger kids'}</small></button>`).join('')}</div>
+     <label>Kati kathaa? <small style="font-weight:500;color:var(--soft)" lang="ne">कति कथा? · How much story? (for grown-ups)</small></label>
+     <div class="langpick depths">${[['','✨','By age','Follows the age group'],...DEPTHS].map(([k,ic,nm,sub])=>`<button type="button" aria-pressed="${(DEPTHS.some(x=>x[0]===d.depth)?d.depth:'')===k}" data-depth="${k}"><span>${ic}</span><b>${nm}</b><small>${sub}</small></button>`).join('')}</div>
      <div class="btns" style="justify-content:flex-start">
        <button type="submit" class="btn" style="background:var(--green)">✔ Thik cha <small style="font-weight:500">save</small></button>
        ${S.profiles.length?`<button type="button" class="btn ghost" id="pCancel">Back</button>`:''}
@@ -1376,11 +1387,12 @@ function editProfile(p){
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{d.color=b.dataset.c;main.querySelectorAll('[data-c]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-age]').forEach(b=>b.onclick=()=>{d.age=b.dataset.age;main.querySelectorAll('[data-age]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   main.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{d.learn=b.dataset.l;main.querySelectorAll('[data-l]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  main.querySelectorAll('[data-depth]').forEach(b=>b.onclick=()=>{d.depth=b.dataset.depth;main.querySelectorAll('[data-depth]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
   $('#pf').onsubmit=e=>{
     e.preventDefault();
-    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne',age=ageOf(d).id;
-    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,best:{}};S.profiles.push(np);S.cur=np.id;}
-    else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age});
+    const name=$('#pName').value.trim()||('Player '+(S.profiles.length+1)),learn=d.learn||'ne',age=ageOf(d).id,depth=DEPTHS.some(x=>x[0]===d.depth)?d.depth:'';
+    if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,depth,best:{}};S.profiles.push(np);S.cur=np.id;}
+    else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age,depth});
     // a new player goes straight to the map, to see where the journey goes
     save();renderTop();if(isNew)openMap();else goWho();
   };
@@ -1417,7 +1429,9 @@ const GRAM_ON=()=>shelved('vyakaran')?[]:GRAM_T();
 // where the word list sends you back to; the map while it's shelved
 const wordsBack=()=>shelved('shabda')?['🗺️ Naksa',openMap]:['Shabda',openWords];
 // the grammar lessons and letters for the player's direction: Nepali ones, or English ones for an English learner
-const GRAM_T=()=>TOPICS.filter(t=>t.section===(EN()?'gramEn':'gram'));
+// words get no grammar; phrases only the simple lessons (one and many, big and small, colours); the full story all of them
+const GRAM_SIMPLE=['g-dherai','g-thulo','g-rang','e-many','e-big','e-rang'];
+const GRAM_T=()=>{const d=depthOf(P());return d==='words'?[]:TOPICS.filter(t=>t.section===(EN()?'gramEn':'gram')&&(d==='full'||GRAM_SIMPLE.includes(t.id)));};
 const AKSHAR=()=>TOPICS.find(t=>t.id===(EN()?'abc':'akshar'));
 const CHECK_N=6,STICKER_AT=2,V_N=5;
 const dayStr=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -1448,7 +1462,7 @@ function progressOf(p){
     shabda:avg(WORD_T().map(t=>topicDone(p,t))),
     akshar:topicDone(p,ak)*0.7+Math.min(1,Object.keys(p.traced||{}).length/ak.items.length)*0.3,
     vyakaran:avg(GRAM_T().map(t=>topicDone(p,t))),
-    vakya:avg(V_ACTS.map(a=>vDone(p,a.id)?1:0))*0.75+avg(grows().map((_,i)=>bestOf(p,'badhau',i)>=2?1:0))*0.25,
+    vakya:depthOf(p)==='full'?avg(vActs().map(a=>vDone(p,a.id)?1:0))*0.75+avg(grows().map((_,i)=>bestOf(p,'badhau',i)>=2?1:0))*0.25:avg(vActs().map(a=>vDone(p,a.id)?1:0)),
     patti:all.length?all.filter(c=>boxOf(p,c)===2).length/all.length:0,
   };
 }
@@ -1693,10 +1707,11 @@ function roomAsk(){
   main.querySelectorAll('.ritem').forEach(b=>b.classList.remove('right','wrong','hint','on'));
   $('#rProg i').style.width=RF.i/findN()*100+'%';
   // an English learner finds it from the English alone; the Nepali shows once it is found
-  if(isLittle()){$('#qSay').innerHTML=EN()?`${esc(cap(it[2]))}?`:`${esc(cap(it[0]))}?<small lang="ne">${it[1]}${S.english?` · ${esc(it[2])}`:''}</small>`;
+  if(isWords()){$('#qSay').innerHTML=EN()?`${esc(cap(it[2]))}?`:`${esc(cap(it[0]))}?<small lang="ne">${it[1]}${S.english?` · ${esc(it[2])}`:''}</small>`;
     speech(cap(it[0])+'?',EN()?'':it[1]+'?',cap(it[2])+'?');say(it[0],it[1],EN()?it[2]:null);}
-  else{$('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} kahaa cha?<small lang="ne">${it[1]} कहाँ छ?${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
-  speech(cap(it[0])+' kahaa cha?',EN()?'':it[1]+' कहाँ छ?',whereEn(it[2]));say(it[0]+' kahaa cha?',it[1]+' कहाँ छ?',EN()?whereEn(it[2]):null);}
+  else{const kr=isPhrases()?'kahaa?':'kahaa cha?',kd=isPhrases()?'कहाँ?':'कहाँ छ?';
+  $('#qSay').innerHTML=EN()?`${esc(whereEn(it[2]))}`:`${esc(cap(it[0]))} ${kr}<small lang="ne">${it[1]} ${kd}${S.english?` · ${esc(whereEn(it[2]))}`:''}</small>`;
+  speech(cap(it[0])+' '+kr,EN()?'':it[1]+' '+kd,whereEn(it[2]));say(it[0]+' '+kr,it[1]+' '+kd,EN()?whereEn(it[2]):null);}
 }
 function roomPick(b){
   if(RF.lock)return;
@@ -1924,10 +1939,10 @@ function openPostcard(te,fresh,back){
   main.innerHTML=`${fresh?'':backBtn(back===openMap?'🗺️ Naksa':back===openCollection?'📌 Sangalo':'🛋️ Baithak')}
    <h1>📮 Postcard <small lang="ne">पोस्टकार्ड · ${fresh?'You finished the map!':'to Hajuraama'}</small></h1>
    <div class="pcard"><div class="pc-pic" style="--pbg:${te.bg}" aria-hidden="true">${te.pic}<span>${en?te.place[2]:te.place[0]}</span></div>
-    <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${(isLittle()?te.note.slice(0,1):te.note).map(line).join('')}
+    <div class="pc-note"><span class="pc-stamp" aria-hidden="true">${sv.icon}</span>${(isWords()?te.note.slice(0,1):isPhrases()?te.note.slice(0,2):te.note).map(line).join('')}
      <p class="pc-sign"><b>${en?'Love, Habre and Mimi':'Maya, Habre ra Mimi'}</b><small lang="ne">माया, हाब्रे र मिमी</small></p></div></div>
    <div class="souv"><span aria-hidden="true">${sv.icon}</span><span><b>${en?sv.en:sv.np}</b><small lang="ne">${sv.dev}${en?'':' · '+sv.en}</small>
-    ${isLittle()?'':`<small>${fresh?'A souvenir to take home! It goes in the glass case in the living room, and the postcard on the board.':'In the glass case in the living room.'}</small>`}</span></div>
+    ${isWords()?'':`<small>${fresh?'A souvenir to take home! It goes in the glass case in the living room, and the postcard on the board.':'In the glass case in the living room.'}</small>`}</span></div>
    ${fresh?`<div class="btns"><button class="btn" style="background:var(--purple)" id="pcSend">📮 Pathau! · Send it</button></div>`:''}`;
   if(fresh){
     $('#pcSend').onclick=()=>{p.postcards={...(p.postcards||{}),[te.id]:today()};save();confetti();setTimeout(confetti,500);
@@ -1987,7 +2002,7 @@ function stopFace(s){
   if(s.k==='play'){const t=T(s.t),R=ROUNDS[s.rd];return [R.icon,R.np,R.dev,`${R.en} · ${t.en.toLowerCase()}`,''];}
   if(s.k==='phrase')return ['🧩','Shabda jodau','शब्द जोडौं','Make a phrase','✨'];
   if(s.k==='check'){const t=T(s.t);return [t.icon,'Jaanch: '+t.np,'जाँच: '+t.dev,`Check: ${t.en.toLowerCase()}`,'✅'];}
-  if(s.k==='story'&&s.j&&isLittle()){const m=MOMENTS[s.r.id];return [m[0],m[1],m[2],m[3],'👀'];}
+  if(s.k==='story'&&s.j&&isWords()){const m=MOMENTS[s.r.id];return [m[0],m[1],m[2],m[3],'👀'];}
   if(s.k==='story'){const st=storyOf(s.id);return st.journey?[st.icon,JOURNEY_PART[st.part][0],JOURNEY_PART[st.part][1],'Story: '+JOURNEY_PART[st.part][2].toLowerCase(),'📖']:[st.icon,st.np,st.dev,'Story: '+st.en,'📖'];}
   if(s.k==='boss')return ['🏆','Thulo jaanch','ठूलो जाँच',`Big check: ${s.r.en.toLowerCase()}`,''];
   return ['🎁','Upahaar','उपहार',`A present of ${s.r.gems} gems`,'💎'];
@@ -2001,7 +2016,7 @@ function goStop(s){
     if(!learn[lk]){learn[lk]=1;save();topic=t;learnI=0;renderLearn();}else{save();startQuiz({mode:'play',t,round:s.rd});}
   }else if(s.k==='phrase')startPhrase(s.rid);
   else if(s.k==='check')startQuiz({mode:'check',t:T(s.t)});
-  else if(s.k==='story'&&s.j&&isLittle())openMoment(s.r.id,()=>{const p=P();if(bestOf(p,'kathaa',s.id)<1){p.best=p.best||{};p.best['kathaa:'+s.id]=1;save();earn(1);}if(!tripBack())openMap();});
+  else if(s.k==='story'&&s.j&&isWords())openMoment(s.r.id,()=>{const p=P();if(bestOf(p,'kathaa',s.id)<1){p.best=p.best||{};p.best['kathaa:'+s.id]=1;save();earn(1);}if(!tripBack())openMap();});
   else if(s.k==='story')readStory(storyOf(s.id));
   else if(s.k==='boss'){
     // the mountains' big check mixes every trip's topics, with all of their words
@@ -2368,7 +2383,7 @@ function openPath(rid){
   for(let k=1;k<xs.length;k++){const y1=k*104-52,y2=y1+104;d+=`C${xs[k-1]} ${y1+52} ${xs[k]} ${y2-52} ${xs[k]} ${y2}`;}
   d+=`L${xs[xs.length-1]} ${H}`;
   // optional side stories sit beside the path, next to the practice rounds and the big check, open any time
-  const sideAt={},sides=pl||isLittle()?[]:r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
+  const sideAt={},sides=pl||isWords()?[]:r.side||[];[1,3,5,2,4].slice(0,sides.length).forEach((row,n)=>sideAt[row]=sides[n]);
   const rows=stops.map((s,k)=>{const i=(pl?list:STOPS).indexOf(s),f=stopFace(s),cls=i<at?'done':i===at?'now':'lock';
     const badge=cls==='done'?'⭐':cls==='lock'?'🔒':f[4],sid=sideAt[k],st=sid&&STORIES.find(x=>x.id===sid);
     const side=st?`<button class="xstory${bestOf(p,'kathaa',sid)>=1?' read':''}" style="left:${xs[k]>50?20:80}%;top:52px" data-side="${sid}" aria-label="Extra story: ${esc(st.en)}"><span class="xd" aria-hidden="true">${st.icon}</span><span class="xl">${EN()?st.en:st.np}${bestOf(p,'kathaa',sid)>=1?' ✓':''}</span></button>`
@@ -2380,7 +2395,7 @@ function openPath(rid){
       <span class="lb">${esc(EN()?f[3].split(' · ')[0]:f[1])}</span></button></div>`;}).join('');
   const pb=pl&&pl.path.places[pl.k-1],pa=pl&&pl.path.places[pl.k+1],before=pl?null:ri?YATRA[ri-1]:null,after=pl?null:YATRA[ri+1],done=stops.filter(s=>(pl?list:STOPS).indexOf(s)<at).length;
   main.innerHTML=`${backBtn(pl?pl.path.icon+' '+(EN()?pl.path.en:pl.path.np):'🗺️ Naksa')}<h1>${r.icon} ${nmOf(r)[0]} <small lang="ne">${nmOf(r)[1]} · ${done} / ${stops.length}</small></h1>
-   ${pl||isLittle()?'':`<div class="btns" style="justify-content:flex-start;margin-top:-6px"><button class="btn ghost" id="jBtn">📖 Kathaa · The story so far</button></div>`}
+   ${pl||isWords()?'':`<div class="btns" style="justify-content:flex-start;margin-top:-6px"><button class="btn ghost" id="jBtn">📖 Kathaa · The story so far</button></div>`}
    <div class="trail">
     <div class="trail-end"><span class="pic" aria-hidden="true">${pl?(pb?pb.icon:pl.path.icon):before?before.icon:'🏠'}</span>${pl?(pb?pb.np:pl.path.np):before?before.np:'Habreko ghar'}<small>${pl?(pb?'Where you came from':'Suru · the start'):before?'Where you came from':'Suru · the start'}</small></div>
     <section class="region" style="--rg:${r.bg}"><div class="rows"><svg class="line" viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#b9a48a" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 16" vector-effect="non-scaling-stroke"/></svg>${rows}</div></section>
@@ -2415,7 +2430,7 @@ const MAP_DECO=[['☀️',10,6],['☁️',48,2.5],['☁️',8,27],['🦅',92,17]
 function openMap(){
   if(!P()){goWho();return;}
   {const pc=newPostcard(P());if(pc){openPostcard(pc,true);return;}}
-  if(!P().introSeen){P().introSeen=1;save();if(isLittle())openMoment('ghar',()=>goHome());else readStory(JOURNEY_INTRO);return;}
+  if(!P().introSeen){P().introSeen=1;save();if(isWords())openMoment('ghar',()=>goHome());else readStory(JOURNEY_INTRO);return;}
   screen='map';topic=null;trip=null;shopSel=null;clearTry();
   const p=P(),y=p.yatra=p.yatra||{},stars=starsOf(p),at=yatraAt(p),gate=stars>=GATE;
   const open=YATRA.map((_,i)=>placeOpen(p,i)),nOpen=open.filter(Boolean).length;
@@ -2448,7 +2463,7 @@ function openMap(){
       <span class="places" aria-hidden="true">${pa.places.map(pl=>pl.icon).join(' ')}</span>
       <span class="pbadge">${!own?'🔒 Plus':!freeDone(p)?'After the free map':`${dn} / ${pa.places.length} places`}</span></button>`;}).join('')}</div>
    <button class="daily" id="dailyBtn"><span class="ic" aria-hidden="true">${done?'✅':'⏱️'}</span><span><b>Aajako abhyas</b><small>${done?'Done today! Play again?':'Today’s practice: 5 minutes, a bit of everything'}${streak}</small></span></button>
-   ${isLittle()?'':`<button class="daily jstory" id="jBtn"><span class="ic" aria-hidden="true">📖</span><span><b>Habreko kathaa</b><small>The story so far: hear it again any time</small></span></button>`}
+   ${isWords()?'':`<button class="daily jstory" id="jBtn"><span class="ic" aria-hidden="true">📖</span><span><b>Habreko kathaa</b><small>The story so far: hear it again any time</small></span></button>`}
    ${shelved('patti')?'':`<button class="daily patti" id="pattiBtn"><span class="ic" aria-hidden="true">🃏</span><span><b>Patti</b><small>Flashcards and memory match: train any time${known?` · ${known} words known`:''}</small></span></button>`}
    <button class="reward" id="wardBtn"><span class="next" aria-hidden="true">${nx?(nx.e||nx.icon):'🏆'}</span>
      <span style="flex:1;min-width:150px"><b>${nx?`${nx.gift-stars} more ★ and Habre gets a free ${nx.en}!`:'Habre has every free gift!'}</b><span class="bar2"><i style="width:${nx?Math.round((stars-from)/(nx.gift-from)*100):100}%"></i></span></span>
@@ -2488,7 +2503,7 @@ function goHome(quiet){
        <span class="frame" aria-hidden="true"><span class="leaf"><span class="wreath" style="--p:${v}"><span>${o.icon}</span></span><span class="knob"></span></span></span>
        <span class="step" aria-hidden="true"></span><span class="mat">${v}%</span></button>`;};
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>Habreko ghar <small>हाब्रेको घर · Pick a room</small></h1>
-   ${gate?'':isLittle()?`<button class="why" id="whyBtn" aria-label="${stars} of ${GATE} stars to go to Grandma"><span aria-hidden="true">👵🏔️</span><span><b>⭐ ${stars} / ${GATE}</b></span></button>`:`<button class="why" id="whyBtn"><span aria-hidden="true">👵🏔️</span><span><b>Hajuraamalaai bhetna jaana, pahile shabda sikau!</b><small lang="ne">हजुरआमालाई भेट्न जान, पहिले शब्द सिकौं!</small><small>To visit Grandma, first learn words here. Find things in the rooms for ★ stars: ${stars} of ${GATE}. Tap to hear the story.</small></span></button>`}
+   ${gate?'':isWords()?`<button class="why" id="whyBtn" aria-label="${stars} of ${GATE} stars to go to Grandma"><span aria-hidden="true">👵🏔️</span><span><b>⭐ ${stars} / ${GATE}</b></span></button>`:`<button class="why" id="whyBtn"><span aria-hidden="true">👵🏔️</span><span><b>Hajuraamalaai bhetna jaana, pahile shabda sikau!</b><small lang="ne">हजुरआमालाई भेट्न जान, पहिले शब्द सिकौं!</small><small>To visit Grandma, first learn words here. Find things in the rooms for ★ stars: ${stars} of ${GATE}. Tap to hear the story.</small></span></button>`}
    <div class="house">
     <div class="roof" aria-hidden="true"><span class="gajur"></span><span class="tier t2"></span><span class="tier t1"><span class="sign">Habreko ghar<small>हाब्रेको घर · Habre’s house</small></span></span></div>
     <div class="walls">
@@ -2505,7 +2520,7 @@ function goHome(quiet){
        :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
   main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');sayT(o.np,o.dev,o.en);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
   $('#backBtn').onclick=openMap;
-  if($('#whyBtn'))$('#whyBtn').onclick=()=>isLittle()?openMoment('ghar',()=>goHome()):readStory(JOURNEY_INTRO);
+  if($('#whyBtn'))$('#whyBtn').onclick=()=>isWords()?openMoment('ghar',()=>goHome()):readStory(JOURNEY_INTRO);
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
     const en=`Collect ${GATE-stars} more stars in the rooms to open the gate!`;
@@ -3040,15 +3055,143 @@ const LITTLE_WORDS={
  'Habre ra bandar syau baadchhan.':['saathi','साथी','friend'],
 };
 const isLittle=()=>ageOf(P()).id==='little';
+const isWords=()=>depthOf(P())==='words',isPhrases=()=>depthOf(P())==='phrases';
+// ---------- phrases for ages 6-8 ----------
+// A page's phrase is a few of its own words (so the romanized and Devanagari lines always match), written here as
+// word numbers ('2-5' is words 2 to 5, '0,4,5' those three) with its own English; a few are written out in full as
+// [romanized, Devanagari, English]. Pages of 4 words or fewer already are phrases, so they have no entry. A page with
+// no entry keeps its whole sentence.
+const PHRASES_MID={
+"Ek din Habrelaai euta chitthi aayo.":["2-5","A letter came for Habre."],
+"\"Hiu parnu agaadi malaai bhetna aau. Hajuraama.\"":["3-5","Come and see me."],
+"Baatomaa dherai kura bhetinchhan. Habrelaai naya shabda chahinchha!":["4-7","Habre needs new words!"],
+"Pahile gharmaa sikau. Harek kothaamaa kura khoja.":["0-2","First, let’s learn at home."],
+"Das wota tara bhayepachhi bagaichaako dhoka khulchha!":["4-6","The garden gate opens!"],
+"Bihaana ghaam laagyo. Habre tayaar cha!":["3-5","Habre is ready!"],
+"Habre jhola bokchha ra bagaichaamaa jaanchha.":["0-2","Habre takes his bag."],
+"Himal dherai taadha cha. Hajuraama parkhirahanubhaeko cha!":["0-3","The mountains are far away."],
+"Habre gamalabaata Hajuraamako laagi phul tipchha.":["0,4,5","Habre picks a flower."],
+"Kamila ra mauri pani phul herchhan.":["0,1,2,5","The ant and the bee look."],
+"Mimi biralo kudera aauchhe. \"Ma pani jaanchhu!\"":["0-3","Mimi the cat runs over."],
+"Raati jun chamkinchha. Baato laamo cha.":["0-2","At night the moon shines."],
+"Habre ra Mimi gaaunmaa pugchhan.":["0,1,2,4","Habre and Mimi arrive."],
+"Gai ra bakhra ghaans khaanchhan.":["0,1,2,4","The cow and the goat eat."],
+"Kukhura ra challa daana tipchhan.":["0,1,2,4","The hen and the chick peck."],
+"Kukur ra hans Mimilaai khojchhan.":["0,1,2,4","The dog and the duck look."],
+"Kisaan aama bhanchhin: \"Ghoda gaadaamaa chadha!\"":["3-5","Hop on the horse cart!"],
+"Ghoda gaadaa bazaar jaanchha. Bazaarmaa ke hola?":["0-3","The horse cart goes to the market."],
+"Kaar, bas ra trak \"peep peep\" garchhan.":["4-6","They go “beep beep”."],
+"Motorsaikal ra saikal chhito jaanchhan.":["0,1,2,4","Motorbikes and bicycles go."],
+"Habre ra Mimi momo khaanchhan.":["3,4","They eat momos."],
+"Pasalmaa golbheda, pyaaj ra bellun chhan.":["2-5","There are onions and balloons."],
+"Habre euta raato changa dekhchha.":["0,2,3,4","Habre sees a red kite."],
+"Changawaala bhanchha: \"Mandirmaa chaad cha. Jaau!\"":["2-4","There’s a festival at the temple."],
+"Mandirmaa diyo ra mainbatti balchhan.":["1-4","Lamps and candles glow."],
+"Ae! Kasaile pichkariko paani chhyaapyo!":["1-4","Someone squirted water!"],
+"Hajurbuwa changa berera upahaar banaaunuhunchha.":["0,3,4","Grandpa makes a present."],
+"Uhaa Hajuraamaako laagi phulko mala dinuhunchha.":["0,3,4,5","He gives a flower garland."],
+"\"Himaltira jaana jangalko baato chhito cha.\"":["2-5","The forest path is quick."],
+"Tara jangal andhyaaro cha. Darr laagla?":["0-3","But the forest is dark."],
+"Jangalmaa thulaa thulaa rukh chhan.":["0,1,3,4","The forest has big trees."],
+"Kharayo ra harin namaste bhanchhan.":["3,4","They say hello."],
+"Bhalu ra gaida baato khaali garchhan.":["3-5","They clear the path."],
+"Buddho singha sodhchha: \"Kataa jaane?\"":["3,4","Which way?"],
+"Mauri ra makura bhanchhan: \"Yataa! Paanitira!\"":["4,5","This way! To the water!"],
+"Agaadi thulo taal cha. Kasari paar garne?":["0-3","Ahead is a big lake."],
+"Taal thulo ra nilo cha.":["0,3,4","The lake is blue."],
+"Gohi bhanchha: \"Mero dhaadmaa basa!\"":["2-4","Sit on my back!"],
+"Bhyaguto euta sano dunga dekhaauchha.":["0,2,3,4","A frog shows a small boat."],
+"Dunga chalchha. Hans saathmaa paudi khelchhan.":["0,1","The boat moves."],
+"Machha uphrinchhan. Laamkhutte bhunbhun garchhan.":["0,1","Fish jump."],
+"Parapatti harin phul nera paani khaanchha.":["1,4,5","A deer drinks water."],
+"Taal paari euta sahar cha. Tyahaa chidiyakhaana cha!":["5-7","There is a zoo!"],
+"Chidiyakhaanaamaa jiraph ra jebra chhan.":["1-4","There’s a giraffe and a zebra."],
+"Hatti, bagh ra chituwa pani chhan.":["1,2,3,5","There’s a tiger and a leopard."],
+"\"Hera! Singha, bandar ra gohi!\"":["1-4","A lion, a monkey and a crocodile!"],
+"Thulo panda bhanchha: \"Timi pani panda?\"":["3-5","Are you a panda too?"],
+"Habre haanschha: \"Ma raato panda hu!\"":["2-5","I’m a red panda!"],
+"Penguin bhanchha: \"Malaai hiu man parchha.\"":["2-5","I love snow."],
+"\"Mero Hajuraama hiu bhayeko thaaumaa basnuhunchha!\"":["2-5","She lives where it snows!"],
+"Chidiyakhaanaako didi bhanchhin: \"Bholi mero trak pahaadtira jaanchha. Aau!\"":["5-7","The truck goes to the hills."],
+"Syau, nashpati ra angur pani chhan.":["3-5","There are grapes too."],
+"Trakmaa aanp, kera ra bhuin katahar chhan.":["aanp ra kera chhan.","आँप र केरा छन्।","There are mangoes and bananas."],
+"Kisaan baa Hajuraamaako laagi tokari bhari suntala dinuhunchha.":["0,1,6,7","The farmer gives oranges."],
+"\"Ukaalo chadha. Pahaad pachhi himal aauchha!\"":["2-5","After the hills come the mountains!"],
+"Hawa chiso hudaichha. Hiu parla?":["0-2","The air is getting cold."],
+"Suga ra mayur rangichangi chhan.":["3,4","They are colourful."],
+"Bakhra Habre bhandaa chhito chadhchha!":["Bakhra chhito chadhchha!","बाख्रा छिटो चढ्छ!","The goat climbs fast!"],
+"Ullu daaktar bhanchha: \"Taato paani piu ra aaraam gara.\"":["3-5","Drink warm water."],
+"Parewa, bhangera ra putali naachchhan.":["1-4","Sparrows and butterflies dance."],
+"Ullu bhanchha: \"Chhito jaau! Hiu parna laagyo!\"":["4-6","The snow is coming!"],
+"Maathi chil ghumchha. Himal najik cha!":["3-5","The mountains are near!"],
+"Badalle baato chhopchha. Habre ra Mimi haraauchhan!":["0-2","Clouds cover the path."],
+"Raati jun ra tara niskinchhan.":["1-4","The moon and stars come out."],
+"Chil bhanchha: \"Mero pachhi aau!\"":["2-4","Follow me!"],
+"Tala helikoptarko batti jhimjhim garchha.":["1-4","A helicopter’s light blinks."],
+"Agaadi aago balchha. Tyo Hajuraamaako ghar ho!":["3-6","It’s Grandma’s house!"],
+"\"Hajuraama!\" Habre Hajuraamalaai angaalo haalchha.":["1-4","Habre hugs Grandma."],
+"Habre changa, mala ra suntala dinchha.":["Habre upahaar dinchha.","हाब्रे उपहार दिन्छ।","Habre gives presents."],
+"Chhimeki bhalu pani aauchha. Sabai Lhosar manaauchhan!":["4-6","Everyone celebrates Lhosar!"],
+"Bihaana hawaijahaj udchha. Hajuraama purano naksa dekhaaunuhunchha: \"Aba kahaa jaane?\"":["7-9","Where shall we go now?"],
+"Habre dudh piunchha ra syau khanchha.":["0-2","Habre drinks milk."],
+"Habre school jaanchha. Bye bye!":["0-2","Habre goes to school."],
+"Aama tin wota syau kinnuhunchha.":["0,1,3,4","Mum buys three apples."],
+"Habre paanch wota mainbatti nibhauchha.":["0,1,3,4","Habre blows out five candles."],
+"Mimi rukh maathi pani chaina.":["0,1,2,4","Mimi isn’t up the tree."],
+"La! Mimi tokari bhitra sutdai cha!":["1,4,5","Mimi is asleep!"],
+"Habre das wota momo khanchha!":["0,1,3,4","Habre eats ten momos!"],
+"Pet bhariyo. Habrelai nindra lagyo.":["2-4","Habre feels sleepy."],
+"Habre ra bandar syau baadchhan.":["3,4","They share the apple."],
+"Habrelai jaado lagyo. U panja lagauchha.":["0-2","Habre feels cold."],
+"Habre bhanchha: Himal kati ramro!":["2-4","The mountains are so beautiful!"],
+"Tihar aayo! Ghar gharma diyo balchha.":["0,1","Tihar is here!"],
+"Pahilo din kaaglai khana dinchhan.":["2-4","They feed the crows."],
+"Dosro din kukurlai mala lagaunchhan.":["2-4","They garland the dogs."],
+"Habre dungama chadhchha. Majja aayo!":["0-2","Habre rides in a boat."],
+"Dashain aayo! Sabai ghar farkinchhan.":["0,1","Dashain is here!"],
+"Gaaunma thulo ping cha. Habre ping khelchha.":["4-6","Habre plays on the swing."],
+"Aaja Holi ho. Rangko chaad!":["0-2","Today is Holi."],
+"Habresanga rato, hariyo ra pahelo rang cha.":["0,5,6","Habre has colours."],
+"Aaja Lhosar ho. Naya barsa aayo!":["3-5","The new year is here!"],
+"Uslai rugha ra khoki pani lagyo.":["1,2,3,5","He has a cold and a cough."],
+"Habre aushadhi khanchha ra dherai paani piunchha.":["0-2","Habre takes his medicine."],
+"Habre aaram garchha. Bholi sanchai bhayo!":["3-5","The next day he was better!"],
+"Guruaama bhannuhunchha: Namaste, bachchaharu!":["2,3","Hello, children!"],
+"Tiphinko ghanti bajyo. Ke garne?":["0-2","The break bell rang."],
+"Sabai taali bajauchhan. Syabaas, Habre!":["0-2","Everyone claps."],
+"Usle ghar ra indreni banayo.":["0,1,4","He drew a house."],
+"Guruaamale tara dinubhayo. Syabaas, Habre!":["0-2","The teacher gave him a star."],
+};
+// a story question for phrases, shorter where the whole one is long: [romanized, Devanagari, English]
+const QUIZ_MID={
+ 'Aamale kati wota syau kinnubhayo?':['Aamale kati syau kinnubhayo?','आमाले कति स्याउ किन्नुभयो?','How many apples?'],
+ 'Habrele kati wota mainbatti nibhayo?':['Habrele kati mainbatti nibhayo?','हाब्रेले कति मैनबत्ती निभायो?','How many candles?'],
+ 'Dosro din kaslai mala lagaunchhan?':['Kaslai mala lagaunchhan?','कसलाई माला लगाउँछन्?','Who gets a garland?']};
+const idxList=spec=>spec.split(',').flatMap(x=>{const [a,b]=x.split('-').map(Number);return isNaN(b)?[a]:Array.from({length:b-a+1},(_,i)=>a+i);});
+function phrasePage(pg){
+  const sp=PHRASES_MID[pg[1]];if(!sp)return pg;
+  if(sp.length===3)return [pg[0],sp[0],sp[1],sp[2]];
+  const rw=pg[1].split(' '),dw=pg[2].split(' ');if(rw.length!==dw.length)return pg;
+  const ix=idxList(sp[0]),cl=w=>w.replace(/["“”]/g,'');
+  let rom=ix.map(i=>cl(rw[i])).join(' '),dev=ix.map(i=>cl(dw[i])).join(' ');
+  if(!/[.!?]$/.test(rom))rom=rom.replace(/[,:;]+$/,'')+'.';
+  if(!/[।!?]$/.test(dev))dev=dev.replace(/[,:;]+$/,'')+'।';
+  return [pg[0],cap(rom),dev,sp[1]];
+}
+// the page as this child sees it: a word, a phrase or the whole sentence
+const storyPage=(pg,st)=>{const d=depthOf(P());return d==='words'?littlePage(pg,st):d==='phrases'?phrasePage(pg):pg;};
+const quizFor=st=>{const q=st.quiz,m=depthOf(P())==='phrases'&&QUIZ_MID[q[0]];return m?[...m,q[3],q[4]]:q;};
 // Ages 3-5 get no story to read: each section opens with one picture and one word instead (a "moment"), and a row of
 // dots from Habre's house to Hajuraama shows how close he is. The rest of the journey's story stops are skipped.
 const MOMENTS={bagaicha:['🌻','Bagaicha','बगैंचा','garden'],gaaun:['🏘️','Gaaun','गाउँ','village'],bazaar:['🛍️','Bazaar','बजार','market'],
  mandir:['🛕','Mandir','मन्दिर','temple'],jangal:['🌲','Jangal','जङ्गल','forest'],taal:['🏞️','Taal','ताल','lake'],
  chidiyakhana:['🦒','Chidiyakhaana','चिडियाखाना','zoo'],bagaan:['🍊','Suntala','सुन्तला','oranges'],pahad:['⛰️','Pahaad','पहाड','hills'],
  himal:['👵🏔️','Hajuraama!','हजुरआमा!','Grandma!'],ghar:['✉️👵🏔️','Hajuraama!','हजुरआमा!','Grandma!']};
-const littleSkip=(p,s)=>s.k==='story'&&!!s.j&&ageOf(p).id==='little'&&!/_1$/.test(s.id);
-// stops this player doesn't get: the journey's story parts for 3-5, and the phrase stops without Habre Plus or outside 6-8
-const skipStop=(p,s)=>littleSkip(p,s)||(s.k==='phrase'&&!phraseOn(p));
+const littleSkip=(p,s)=>s.k==='story'&&!!s.j&&depthOf(p)==='words'&&!/_1$/.test(s.id);
+// phrases skip the last part of each section (the cliffhanger, which needs whole sentences), but not the arrival at Grandma's
+const midSkip=(p,s)=>s.k==='story'&&!!s.j&&depthOf(p)==='phrases'&&/_3$/.test(s.id)&&s.id!=='j_himal_3';
+// stops this player doesn't get: journey story parts for words and phrases, and the phrase stops without Habre Plus or outside 6-8
+const skipStop=(p,s)=>littleSkip(p,s)||midSkip(p,s)||(s.k==='phrase'&&!phraseOn(p));
 // the moment: a big picture, its word read aloud, the road to Hajuraama, and one big button
 function openMoment(rid,onGo){
   screen='moment';const m=MOMENTS[rid],ri=YATRA.findIndex(r=>r.id===rid);
@@ -3101,7 +3244,7 @@ function openJourney(){
   if(!P()){goWho();return;}
   screen='journey';trip=null;const p=P(),at=yatraAt(p);
   const reached=j=>{const i=STOPS.findIndex(s=>s.k==='story'&&s.id===j.id);return i>=0&&(i<=at||stopDone(p,STOPS[i]));};
-  const open=[JOURNEY_INTRO,...JOURNEY.filter(reached)];
+  const open=[JOURNEY_INTRO,...JOURNEY.filter(j=>reached(j)&&!midSkip(p,{k:'story',j:true,id:j.id}))];
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>📖 Habreko kathaa <small lang="ne">हाब्रेको कथा · The story so far</small></h1>
    ${open.length?`<div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--purple)" id="jAll">▶ Sabai suna · Hear it all</button></div>`:'<p class="maphint">Start the journey on the map, and Habre’s story appears here.</p>'}
    <h2 class="sub">🏠 Habreko ghar <small lang="ne">हाब्रेको घर · Habre’s house</small></h2>
@@ -3114,8 +3257,8 @@ function openJourney(){
   speech('Habreko kathaa','हाब्रेको कथा','The story so far. Tap a part to hear it.');say('Habreko kathaa','हाब्रेको कथा',null);mood('wave');
 }
 function renderPage(quiet){
-  // ages 3-5 see one word a page instead of the sentence
-  screen='story';const en=EN(),pg=isLittle()?littlePage(path[pageI],story):path[pageI],rt=(en?pg[3]:pg[1]).split(' '),dt=pg[2].split(' '),same=!en&&rt.length===dt.length;
+  // the page as this child sees it: a word, a phrase or the whole sentence
+  screen='story';const en=EN(),pg=storyPage(path[pageI],story),rt=(en?pg[3]:pg[1]).split(' '),dt=pg[2].split(' '),same=!en&&rt.length===dt.length;
   const guess=S.storyGuess&&!guessed.has(pageI),more=story.choice&&branchK<0;
   let gopts=[];
   if(guess){const others=[...new Set(pagesOf(story).map(x=>x[0]).filter(x=>x!==pg[0]))];gopts=shuffle([pg[0],...shuffle(others).slice(0,2)]);}
@@ -3155,7 +3298,7 @@ function renderPage(quiet){
     else if(more)renderChoice();
     else if(story.choice)branchEnd();
     else if(story.journey)journeyEnd();
-    else if(isLittle())littleStoryEnd();
+    else if(isWords())littleStoryEnd();
     else storyQuiz();
   };
   main.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{
@@ -3186,7 +3329,7 @@ function branchEnd(){
   $('#otherWay').onclick=()=>goBranch(other);
 }
 function storyQuiz(){
-  screen='storyq';const [rom,dev,en,ans,opts]=story.quiz;let tries=0,done=false;
+  screen='storyq';const [rom,dev,en,ans,opts]=quizFor(story);let tries=0,done=false;
   main.innerHTML=`${backBtn('Kathaa')}<div class="q"><div class="say">${qLine(rom,dev,en)}</div><button class="again" id="again" aria-label="Say it again">🔊</button></div>
    <div class="opts three" style="--cols:3">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${o[2]}"><span class="pic">${o[0]}</span>${EN()?`<span class="w">${o[2]}</span>`:`<span class="w">${o[1]}</span><span class="w-en">${o[2]}</span>`}</button>`).join('')}</div>`;
   const ask=()=>{speech(rom,dev,en);say(rom,dev,en);};
@@ -3208,12 +3351,12 @@ function storyOrder(){
   screen='storyo';const pg=story.pages,mid=shuffle(pg.slice(1,-1).map((_,i)=>i+1)).slice(0,2).sort((a,b)=>a-b),pick=[0,...mid,pg.length-1];
   const cards=shuffle(pick.map((pi,ord)=>({pi,ord})));let nextOrd=0;
   main.innerHTML=`${backBtn('Kathaa')}<h2 class="sub">🧩 Kun pahile? <small>Tap what happened first, then next…</small></h2>
-   <div class="order">${cards.map((c,k)=>`<button class="ocard" data-k="${k}" style="animation:pop .45s ${k*80}ms backwards"><span class="pic" aria-hidden="true">${pg[c.pi][0]}</span><span>${esc(pg[c.pi][EN()?3:1])}</span></button>`).join('')}</div>`;
+   <div class="order">${cards.map((c,k)=>`<button class="ocard" data-k="${k}" style="animation:pop .45s ${k*80}ms backwards"><span class="pic" aria-hidden="true">${pg[c.pi][0]}</span><span>${esc(storyPage(pg[c.pi],story)[EN()?3:1])}</span></button>`).join('')}</div>`;
   $('#backBtn').onclick=openStories;
   main.querySelectorAll('.ocard').forEach(b=>b.onclick=()=>{
     const c=cards[+b.dataset.k];if(b.classList.contains('done'))return;
     if(c.ord===nextOrd){
-      nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=pg[c.pi];sayT(l[1],l[2],l[3]);mood('happy');
+      nextOrd++;b.classList.add('done');b.insertAdjacentHTML('beforeend',`<span class="num">${nextOrd}</span>`);const l=storyPage(pg[c.pi],story);sayT(l[1],l[2],l[3]);mood('happy');
       if(nextOrd===pick.length){
         const p=P();if(!bestOf(p,'krama',story.id)){p.best=p.best||{};p.best['krama:'+story.id]=1;save();}
         earn(2);
@@ -3257,7 +3400,9 @@ const SENTS=[
 ].map(([pic,en,...w])=>({pic,en,w,rom:sRom(w),dev:sDev(w)}));
 const VAKYA_T={id:'vakya',np:'Vakya',dev:'वाक्य',en:'Sentences',icon:'🚂',color:'#ff9f1c',kind:'pic',q:'phrase',items:SENTS.map(s=>[s.rom,s.dev,s.en,s.pic])};
 // the sentences a player gets: as long as their age group allows
-const vSents=()=>sents().filter(s=>s.w.length<=ageOf(P()).sw);
+// sentences are up to 3 words for words and phrases, 4 for the full story
+const SENT_MAX={words:3,phrases:3,full:4};
+const vSents=()=>sents().filter(s=>s.w.length<=SENT_MAX[depthOf(P())]);
 // grow a sentence one word at a time
 const GROW=[
  {pic:'🐱',en:['cat','The cat sleeps.','The little cat sleeps.','The little cat sleeps on the bed.'],steps:[
@@ -3339,6 +3484,8 @@ const V_ACTS=[
  {id:'ulto',icon:'🤪',np:'Ulto-pulto',dev:'उल्टोपुल्टो',en:'Fix Habre’s silly sentence'},
  {id:'sodhau',icon:'❓',np:'Sodhau',dev:'सोधौं',en:'Ask and answer'},
 ];
+// ask-and-answer and grow-a-sentence are for the full story
+const vActs=()=>depthOf(P())==='full'?V_ACTS:V_ACTS.filter(a=>a.id!=='sodhau');
 function openVakya(){
   if(tripBack())return;
   screen='vakya';const p=P(),grown=grows().filter((_,i)=>bestOf(p,'badhau',i)>=2).length;
@@ -3348,9 +3495,9 @@ function openVakya(){
    <button class="rule" id="ruleCard" type="button"><span aria-hidden="true">💡</span><span>${en?`<b lang="ne">${rule[1]}</b><small>${rule[2]}</small>`
      :`<b>The doing word is the engine: it always goes last. Biralo sutchha = the cat sleeps.</b><small lang="ne">${rule[1]}</small>`}</span></button>
    <div class="legend">${Object.values(ROLES).map(r=>`<span style="background:${r[3]}">${en?`${r[2]} <small lang="ne">${r[1]}</small>`:`${r[0]} <small>${r[2]}</small>`}</span>`).join('')}</div>
-   <div class="topics">${V_ACTS.map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${en?a.en:a.np}</b><span class="dev" lang="ne">${a.dev}</span>${en?'':`<span class="en">${a.en}</span>`}
+   <div class="topics">${vActs().map((a,i)=>`<button class="topic" style="--tc:#ff9f1c;animation-delay:${i*50}ms" data-a="${a.id}"><span class="ic" aria-hidden="true">${a.icon}</span><b>${en?a.en:a.np}</b><span class="dev" lang="ne">${a.dev}</span>${en?'':`<span class="en">${a.en}</span>`}
       <span class="medals"><span class="${vDone(p,a.id)?'on':''}" title="Done">🎯</span></span></button>`).join('')}
-     <button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>${en?'Grow a sentence':'Badhau'}</b><span class="dev" lang="ne">बढाऊ</span>${en?'':'<span class="en">Grow a sentence</span>'}<span class="medals"><span class="on">🌱 ${grown}/${grows().length}</span></span></button></div>`;
+     ${depthOf(p)!=='full'?'':`<button class="topic" style="--tc:#2fae6e;animation-delay:200ms" data-a="grow"><span class="ic" aria-hidden="true">🌱</span><b>${en?'Grow a sentence':'Badhau'}</b><span class="dev" lang="ne">बढाऊ</span>${en?'':'<span class="en">Grow a sentence</span>'}<span class="medals"><span class="on">🌱 ${grown}/${grows().length}</span></span></button>`}</div>`;
   $('#backBtn').onclick=toRoom('vakya');
   $('#ruleCard').onclick=()=>{if(en){speech('',rule[1],null);say(rule[1],rule[1],null);}else{speech(...rule);say(...rule);}mood('happy');};
   main.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>vStart(b.dataset.a));
@@ -3562,7 +3709,7 @@ function openTrace(it){
 const ENDING_DEV={haru:'हरू',ko:'को',ma:'मा',lai:'लाई',le:'ले',sanga:'सँग',s:'धेरै',ing:'गर्दै',ed:'भइसक्यो','’s':'को'};
 const ENDING_EN={haru:'many',ko:'whose',ma:'in',lai:'to / for',le:'did it',sanga:'with',s:'many',ing:'doing now',ed:'already happened','’s':'whose'};
 function questionLine(t,it){
-  if(isLittle()&&t.kind==='pic')return [cap(it[0])+'?',it[1]+'?',cap(it[2])+'?'];
+  if(isWords()&&t.kind==='pic')return [cap(it[0])+'?',it[1]+'?',cap(it[2])+'?'];
   if(t.kind==='num')return ['Kati wota?','कति वटा?','How many?'];
   if(t.kind==='yesno')return [it[0],it[1],it[2]];
   if(t.kind==='ending')return ['Kun tukra milchha?','कुन टुक्रा मिल्छ?','Which ending fits?'];
@@ -3570,6 +3717,7 @@ function questionLine(t,it){
   if(t.q==='phrase')return [`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture means “${it[2]}”?`];
   if(t.id==='abc')return [`${cap(it[5])}: kun akshar?`,`${it[6]} (${it[5]}) कुन अक्षरबाट सुरु हुन्छ?`,`Which letter does “${it[5]}” start with?`];
   if(t.kind==='letter')return [`“${it[0]}” kun akshar?`,`${it[1]}। ${it[1]} कुन अक्षर?`,`Which letter says “${it[0]}”?`];
+  if(isPhrases()&&t.kind==='pic')return [`${cap(it[0])} kahaa?`,`${it[1]} कहाँ?`,whereEn(it[2])];
   return [`${cap(it[0])} kahaa cha?`,`${it[1]} कहाँ छ?`,whereEn(it[2])];
 }
 // a list of n, reshuffled as often as needed, never the same thing twice in a row
@@ -3737,7 +3885,7 @@ function renderProgress(p){
   const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
   const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id)),custom=new Set(p.custom||[]);
   $('#progBody').innerHTML=`
-   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}; change it under Change player): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
+   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}, story: ${DEPTHS.find(x=>x[0]===depthOf(p))[2].toLowerCase()}; change these under Change player): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
    ${doors.length?`<div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
     <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
    <div class="progwrap"><table class="prog"><thead><tr><th>Section</th>${Object.keys(ROUNDS).map(k=>`<th>${ROUNDS[k].icon} ${ROUNDS[k].en}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
@@ -3745,7 +3893,7 @@ function renderProgress(p){
    <p><b>Postcards to Hajuraama:</b> ${TRIP_ENDS.filter(te=>sentPostcard(p,te)).map(te=>`${te.souvenir.icon} ${te.place[2]} (sent ${p.postcards[te.id]})`).join(' · ')||'none yet: one is sent each time a map is finished'}</p>
    <p><b>Journey:</b> ${(()=>{const at=yatraAt(p);return starsOf(p)<GATE?`gate opens at ${GATE} ★ (${starsOf(p)} so far)`:at>=STOPS.length?'reached the mountains, every stop done':`stop ${at+1} of ${STOPS.length}, ${STOPS[at].r.icon} ${STOPS[at].r.np} (${STOPS[at].r.en.toLowerCase()}): ${esc(stopFace(STOPS[at])[3])}`;})()}</p>
    <p><b>Stories:</b> ${STORIES.filter(s=>!storyShelved(s.id)).map(s=>{const b=bestOf(p,'kathaa',s.id);return `${s.icon} ${s.np} ${s.choice?(b?`✓ ${b} of 2 endings`:'not yet'):b>=2?'✓ read + quiz'+(bestOf(p,'krama',s.id)?' + order':''):b?'✓ read':'not yet'}`;}).join(' · ')}</p>
-   ${shelved('vakya')?'':`<p><b>Sentences:</b> ${V_ACTS.map(a=>`${a.icon} ${a.np} ${vBest(p,a.id)}/${V_N}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>`}
+   ${shelved('vakya')?'':`<p><b>Sentences:</b> ${vActs().map(a=>`${a.icon} ${a.np} ${vBest(p,a.id)}/${V_N}`).join(' · ')} · 🌱 grown ${grows().filter((_,i)=>bestOf(p,'badhau',i)).length}/${grows().length}</p>`}
    ${shelved('patti')?'':`<p><b>Flashcard baskets:</b> ${bx[0]} new or again · ${bx[1]} practising · ${bx[2]} known (of ${cards.length})</p>`}
    ${shelved('shabda')?'':`<p><b>Stickers:</b> ${stickers}/${stickerItems().length}</p>`}
    <p><b>Gems:</b> 💎 ${gemsOf(p)} to spend · ${ITEMS.filter(x=>owns(p,x)&&!x.free).length} of ${ITEMS.filter(x=>!x.free).length} shop things owned</p>
