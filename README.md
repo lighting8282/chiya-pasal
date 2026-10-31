@@ -328,4 +328,51 @@ Spend your rupees in the **Bazaar** (from the home screen or the day summary):
 
 ## Project layout
 
+**Habre Plus (paid maps, not live yet).** `kids.html` has the structure for a paid pack:
+- **`PACKS` and `PLUS_PATHS`:** the pack and its two maps, shown under the free map. A paid map opens once the pack is owned and the child has finished the free map. After that the child can play either map.
+- **Same shape as the free map:** each map has 10 sections, played in order, and each section has exactly 10 words: 7 new and 3 the child has already seen in the free map, the house or an earlier section of that map. Every section plays like a free one: practice 1 → practice 2 → check → big check → present, at the player's difficulty.
+- **Each section has its own word topic** (`p_` + the section's id, marked `plus:'plus'`). These join daily practice and flashcards only once the pack is owned.
+- **The unlock screen** sits behind a grown-ups-only question.
+- **Ownership** is a per-device flag (`S.owned`).
+- **Flashcards and memory match** show a paid section's deck only once that section is open.
+- **Postcards and souvenirs:** finishing a paid map sends Hajuraama its own postcard and brings home a souvenir for the living-room shelf: a seashell from the water map, a model rocket from the sky map (`PLUS_ENDS`).
+- **🧩 Shabda jodau (make a phrase), ages 6–8:** with Habre Plus, every section of the free map and of the paid maps gets one more stop after Practice 2. Habre shows a picture and says a short phrase from the section's words, such as *rato syau* (red apple), *dui hans* (two ducks) or *putali udchha* (the butterfly flies). The child taps the word tiles into the slots in order; one tile doesn't belong. There are five phrases a section, and 4 right first time pass. Without Habre Plus, or for other ages, the stop isn't on the trail. In sections finished before buying, it counts as done but can be replayed. The phrases are in `PHRASES`.
+- **Adding a section:** use `sec(...)` with 7 new words and 3 seen ones. A new word can be a word already in the game, written as its romanized name.
+- **`PAY`:** where real payments plug in, either Google Play Billing in the Play Store app or a web checkout whose codes are checked by a server. While `PAY.ready` is false, buying shows "not switched on yet".
+- **Testing on one device:** `habrePlus.test(true)` in the browser console unlocks the pack.
+
+**🌊 Paaniko yatra (the water map)**
+
+| # | Section | 7 new words | 3 seen words |
+|---|---|---|---|
+| 1 | 🏞️ Khola (the river) · 💎 20 | paani (water), khola (river), pul (bridge), dhunga (stone), bhumari (whirlpool), udbiralo (otter), kenu (canoe) | machha (fish), bhyaguto (frog), hans (duck) |
+| 2 | 🌾 Khet (the rice fields) · 💎 20 | dhaan (rice plant), barsha (rain), chhata (umbrella), gadyaula (earthworm), bhainsi (buffalo), goru (ox), makai (corn) | gai (cow), laamkhutte (mosquito), paani (water) |
+| 3 | 🛶 Phewa Taal (Phewa Lake) · 💎 25 | kamal (lotus), rajhans (swan), tapu (island), suryaasta (sunset), flamingo, jalgaida (hippo), chiplekira (snail) | kenu (canoe), machha (fish), phul (flower) |
+| 4 | 🎣 Machhuwa gaun (the fishing village) · 💎 25 | balchhi (fishing rod), tokari (basket), dori (rope), jhupadi (hut), kaanta (hook), laalten (lantern), taraju (scales) | machha (fish), dunga (boat), baalti (bucket) |
+| 5 | 🏖️ Samudri kinaar (the beach) · 💎 30 | kinaar (beach), nariwal (coconut), gangato (crab), taad (palm tree), sankha (seashell), baluwako mahal (sandcastle), aaiskrim (ice cream) | ghaam (sun), dunga (boat), tapu (island) |
+| 6 | 🪸 Mungako chattan (the coral reef) · 💎 30 | munga (coral), phulne machha (puffer fish), rangichangi machha (tropical fish), samudri kachhuwa (sea turtle), jalpari (mermaid), aktopas (octopus), lobstar (lobster) | machha (fish), gangato (crab), sankha (seashell) |
+| 7 | 🚢 Samudri yatra (across the sea) · 💎 35 | jahaj (ship), langar (anchor), hvel (whale), kampas (compass), jeevan rakshak (life ring), dalphin (dolphin), samundra (sea) | tapu (island), dunga (boat), aktopas (octopus) |
+| 8 | 🤿 Gahiro samundra (the deep sea) · 💎 35 | torch, moti (pearl), skwid (squid), phoka (bubbles), gotakhor (diver), shark, jwaalaamukhi (volcano) | jalpari (mermaid), aktopas (octopus), hvel (whale) |
+| 9 | 🏴‍☠️ Khajana tapu (treasure island) · 💎 40 | naksa (map), khajana (treasure), samudri daaku (pirate), sikka (coin), saancho (key), tarwaar (sword), mukut (crown) | suga (parrot), tapu (island), jahaj (ship) |
+| 10 | 🧊 Hiuko samundra (the frozen sea) · 💎 60 | baraf (ice), seto bhalu (polar bear), sil (seal), slej (sled), panja (gloves), galbandi (scarf), hiumaanchhe (snowman) | penguin, hiu (snow), hvel (whale) |
+
+**☁️ Aakaashko yatra (the sky map)**
+
+| # | Section | 7 new words | 3 seen words |
+|---|---|---|---|
+| 1 | 🪁 Chhat (on the roof) · 💎 20 | hawa (wind), dhaago (thread), bharyang (ladder), topi (cap), yoyo (yo-yo), ghanti (bell), pwaakh (feather) | changa (kite), ghaam (sun), bellun (balloon) |
+| 2 | 🌦️ Mausam (the weather) · 💎 20 | kuhiro (fog), chatyaang (lightning), aandhi (storm), garjan (thunder), tharmamitar (thermometer), ghaam paani (sun and rain), sireto (cold wind) | badal (cloud), indreni (rainbow), hawa (wind) |
+| 3 | 🪹 Rukhko tuppo (the treetops) · 💎 25 | gund (nest), anda (egg), paat (leaf), chara (bird), chamero (bat), lokharke (squirrel), maha (honey) | rukh (tree), ullu (owl), challa (chick) |
+| 4 | ☁️ Badal maathi (above the clouds) · 💎 25 | pari (fairy), ajingar (dragon), yunikarn (unicorn), sapana (dream), darbar (palace), jaadugar (wizard), chhadi (magic wand) | badal (cloud), pwaakh (feather), chara (bird) |
+| 5 | 🛫 Bimanasthal (the airport) · 💎 30 | pailat (pilot), tikat (ticket), sutkes (suitcase), sano jahaj (small plane), udaan (take-off), avataran (landing), rahadani (passport) | hawaijahaj (aeroplane), helikoptar (helicopter), jhola (school bag) |
+| 6 | 🪂 Pokhara (flying over Pokhara) · 💎 30 | pyarasut (paraglider), helmet, kyamera (camera), buut (boots), paal (tent), sooryodaya (sunrise), daada (hill) | chil (eagle), himal (snowy mountain), hawa (wind) |
+| 7 | 🌃 Raat (the night sky) · 💎 35 | raat (night), nakshatra (constellation), durbin (telescope), khasne tara (shooting star), purnima (full moon), aadha jun (half moon), aunsi (new moon) | jun (moon), tara (star), ullu (owl) |
+| 8 | 🪐 Grahaharu (the sun and planets) · 💎 35 | surya (the Sun), graha (planet), prithvi (Earth), mangal (Mars), puchchhre tara (comet), grahan (eclipse), kaksha (orbit) | khasne tara (shooting star), jun (moon), durbin (telescope) |
+| 9 | 🚀 Raket udaan (the rocket launch) · 💎 40 | raket (rocket), antarikshayatri (astronaut), sanket (satellite dish), upagraha (satellite), byaatri (battery), chumbak (magnet), paila (footprints) | ghadi (clock), kampyutar (computer), aago (fire) |
+| 10 | 🌌 Tadhako antariksha (far out in space) · 💎 60 | aliyan (alien), udan tashtari (flying saucer), robot, daitya (space monster), chamkine tara (shining star), kaalo pwaal (black hole), aakaashganga (Milky Way) | raket (rocket), tara (star), graha (planet) |
+
+The paid maps have no stories yet.
+
+The lock lives in the page, so it is not secure on its own: real payments need the store or a server to confirm them.
+
 `manifest.webmanifest`, `sw.js` (offline cache) and `icons/` make the main game installable. Regenerate the icons with `python tools/make_icons.py`. The kids' game is a separate single file, `kids.html`. The main game lives in one file, `index.html`, which GitHub Pages serves from the `main` branch: styles, vocabulary data (`VOCAB`, `ITEMS`, `CHATS`), the step generators, and the game loop.

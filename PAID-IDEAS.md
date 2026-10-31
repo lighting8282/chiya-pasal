@@ -33,10 +33,21 @@ Ideas for what a paid version of Habre's Nepali (`kids.html`) could include. Not
   - Decide what a locked replay shows: a lock and a short "replay with Habre Plus" note behind the grown-ups' gate, so children aren't asked to buy anything.
   - Decide whether the 4 stories that aren't on the path (*Habre ko bihana*, *Habreko janmadin*, *Daktarkahaa*, *Schoolma*) become paid-only.
 
+## Paid maps
+
+Built on the `habre-plus` branch (local, not pushed): two maps shaped like the free one, each 10 sections of 10 words (7 new, 3 already seen). They open once the free map is finished. Every word is listed in the README's Habre Plus section.
+- 🌊 **The water map:** river → rice fields → Phewa Lake → fishing village → beach → coral reef → across the sea → deep sea → treasure island → frozen sea.
+- ☁️ **The sky map:** roof → weather → treetops → above the clouds → airport → paragliding over Pokhara → night sky → sun and planets → rocket launch → far out in space.
+
+Still to add:
+- Stories along each map.
+- A Nepali speaker's check of the new words.
+- More maps: see the ideas below.
+
 ## Sentence building and grammar, by age
 
 Ages 3–5 stay pictures and words only (built). For the older groups, each section could get one more stop. These would be paid:
-- **6–8: make a phrase.** 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *biralo sutchha* (the cat sleeps).
+- **6–8: make a phrase.** Built on `habre-plus` for all 30 sections: the free map's 10 and the water and sky maps' 20 (5 phrases each, in `PHRASES`). 2–3 word phrases from the section's own words, like *rato syau* (red apple) or *putali udchha* (the butterfly flies).
 - **9–11: the sentence train plus a grammar point.** Full sentences (who → what → where → doing word) and one short grammar point per section.
 
 The shelved sentence train (`vakya`) and grammar lessons (`vyakaran`, see `SHELVED.md`) are a starting point for both.
@@ -63,7 +74,7 @@ Each map has the same shape as the free map: 10 sections of 10 words, and a Habr
 - Older ideas: Chitwan (jungle safari), a mountain trek, the fair.
 - And more to come.
 
-## Already sketched on the `habre-plus` branch (local, not pushed)
+## Also sketched on the `habre-plus` branch
 
 - New stories in every place.
 - A real person reading the words and stories.
