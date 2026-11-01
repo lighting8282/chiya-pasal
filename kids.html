@@ -531,6 +531,35 @@ body.little .speech .en{display:none}
 .chosen button{background:#e4f7ec;border-radius:999px;padding:3px 12px;font-size:.95rem}
 @media (max-width:680px){.gcats{grid-template-columns:minmax(0,1fr)}}
 
+/* animals come alive, and Habre's reactions */
+@keyframes fxHop{0%,100%{transform:translateY(0) scale(1)}15%{transform:scale(1.12,.84)}40%{transform:translateY(-34%) scale(.92,1.1)}65%{transform:translateY(0) scale(1.1,.9)}80%{transform:translateY(-14%)}}
+@keyframes fxSway{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+@keyframes fxRun{0%,100%{transform:translateX(0) rotate(0)}15%{transform:translateX(-10%) rotate(-5deg)}30%{transform:translateX(10%) rotate(5deg)}45%{transform:translateX(-10%) rotate(-5deg)}60%{transform:translateX(10%) rotate(5deg)}80%{transform:translateX(0)}}
+@keyframes fxFly{0%,100%{transform:translate(0,0) rotate(0)}20%{transform:translate(8%,-18%) rotate(8deg)}40%{transform:translate(-8%,-30%) rotate(-8deg)}60%{transform:translate(8%,-18%) rotate(8deg)}80%{transform:translate(-4%,-6%) rotate(-4deg)}}
+@keyframes fxSwim{0%,100%{transform:translateX(0) scaleX(1)}25%{transform:translateX(14%) rotate(-6deg)}50%{transform:translateX(0) scaleX(-1)}75%{transform:translateX(-14%) scaleX(-1) rotate(6deg)}}
+@keyframes fxWiggle{0%,100%{transform:skewX(0) rotate(0)}20%{transform:skewX(14deg) rotate(4deg)}40%{transform:skewX(-14deg) rotate(-4deg)}60%{transform:skewX(14deg) rotate(4deg)}80%{transform:skewX(-8deg)}}
+@keyframes fxCrawl{0%,100%{transform:translateX(0)}25%{transform:translateX(-8%) rotate(-3deg)}50%{transform:translateX(0)}75%{transform:translateX(8%) rotate(3deg)}}
+.fx-on.fx-hop{animation:fxHop 1s ease-in-out}
+.fx-on.fx-sway{animation:fxSway 1.2s ease-in-out}
+.fx-on.fx-run{animation:fxRun .9s ease-in-out}
+.fx-on.fx-fly{animation:fxFly 1.3s ease-in-out}
+.fx-on.fx-swim{animation:fxSwim 1.3s ease-in-out}
+.fx-on.fx-wiggle{animation:fxWiggle 1s ease-in-out}
+.fx-on.fx-crawl{animation:fxCrawl 1.3s ease-in-out}
+.ears .hb-armL{transform-origin:50px 120px;animation:earsL .3s ease-out forwards}
+.ears .hb-armR{transform-origin:110px 120px;animation:earsR .3s ease-out forwards}
+.ears .hb-head{transform-origin:80px 100px;animation:wince .5s ease-in-out 3}
+@keyframes earsL{to{transform:rotate(160deg) scale(1,1.9)}}
+@keyframes earsR{to{transform:rotate(-160deg) scale(1,1.9)}}
+@keyframes wince{30%,70%{transform:scale(.97,.94) translateY(2px)}}
+.laugh .hb-body{transform-origin:80px 160px;animation:laughB .22s ease-in-out 8}
+.laugh .hb-mouth{animation:talk .12s ease-in-out infinite alternate}
+@keyframes laughB{50%{transform:translateY(-7px) rotate(-2deg)}}
+.dance .hb-body{transform-origin:80px 160px;animation:danceB .5s ease-in-out 4}
+.dance .hb-armL{transform-origin:50px 120px;animation:waveL .25s ease-in-out 8 alternate}
+.dance .hb-armR{transform-origin:110px 120px;animation:waveR .25s ease-in-out 8 alternate}
+@keyframes danceB{25%{transform:rotate(-7deg) translateY(-4px)}75%{transform:rotate(7deg) translateY(-4px)}}
+
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
 .confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall var(--d) cubic-bezier(.2,.6,.4,1) forwards}
@@ -1143,7 +1172,7 @@ $('#habre').innerHTML=`<div class="scene" id="hbScene" aria-hidden="true"></div>
  </g></svg><div class="fx" id="hbFx" aria-hidden="true"></div>`;
 // remember each shape's own colours so a fur colour can be swapped in and out
 $('#habre').querySelectorAll('svg [fill],svg [stroke]').forEach(el=>{const f=el.getAttribute('fill'),k=el.getAttribute('stroke');if(f&&f[0]==='#')el.dataset.of=f.toLowerCase();if(k&&k[0]==='#')el.dataset.os=k.toLowerCase();});
-function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave');void h.offsetWidth;if(cls)h.classList.add(cls);}
+function mood(cls){const h=$('#habre');h.classList.remove('happy','sad','wave','ears','laugh','dance');void h.offsetWidth;if(cls)h.classList.add(cls);}
 function speech(rom,dev,en){
   // an English learner reads the English, with the Devanagari under it; with no English, just the Devanagari
   if(EN()){$('#speech').innerHTML=en?`<b>${esc(en)}</b>${dev?`<span class="dev" lang="ne">${esc(dev)}</span>`:''}`:`<b lang="ne">${esc(dev||rom)}</b>`;return;}
@@ -2644,7 +2673,7 @@ function renderLearn(){
    </div>
    <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
   const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,(t.id==='abc'?it[1]:it[0])+', as in '+it[7]);mood('happy');}
-    :yn?()=>{say(it[0]+' '+yn[0],it[1]+' '+yn[1],it[2]+' '+yn[2]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
+    :yn?()=>{say(it[0]+' '+yn[0],it[1]+' '+yn[1],it[2]+' '+yn[2]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');critter($('#card .pic'),it);};
   $('#backBtn').onclick=()=>leaveLearn(t);
   if(isL)$('#writeBtn').onclick=()=>{$('#writeBtn').hidden=true;openTrace(it);};
   $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
@@ -2712,6 +2741,7 @@ function memFlip(b,k){
   if(A.i===C.i){
     btns[a].classList.add('done');btns[c].classList.add('done');M.done++;
     const {t,it}=A.c;speech(t.kind==='letter'?it[5]:it[0],t.kind==='letter'?it[6]:it[1],t.kind==='letter'?it[7]:it[2]);hearItem(t,it);mood('happy');
+    btns[a].querySelectorAll('.pic').forEach(x=>critter(x,it,{sound:false}));btns[c].querySelectorAll('.pic').forEach(x=>critter(x,it,{sound:false}));critter(null,it);
     if(M.done===M.pairs){const m=M;setTimeout(()=>{if(screen==='memory'&&M===m)memEnd();},1100);}
   }else{M.lock=true;mood('sad');setTimeout(()=>{btns[a].classList.remove('up');btns[c].classList.remove('up');M.lock=false;},1000);}
 }
@@ -2835,8 +2865,8 @@ function drawKCard(){
    </div>`;
   const hear=()=>hearItem(t,it);
   if(KF.wordFirst)hear();
-  $('#kCard').onclick=()=>{KF.flipped=!KF.flipped;$('#kCard').classList.toggle('flipped',KF.flipped);if(KF.flipped&&!KF.wordFirst){hear();mood('happy');}};
-  $('#kSay').onclick=hear;
+  $('#kCard').onclick=()=>{KF.flipped=!KF.flipped;$('#kCard').classList.toggle('flipped',KF.flipped);if(KF.flipped&&!KF.wordFirst){hear();mood('happy');critter(document.querySelector('.kfc-back .pic'),it);}};
+  $('#kSay').onclick=()=>{hear();critter(document.querySelector(KF.flipped?'.kfc-back .pic':'.kfc-face .pic'),it);};
   $('#kWordFirst').onchange=e=>{KF.wordFirst=e.target.checked;S.wordFirst=KF.wordFirst;save();KF.flipped=false;drawKCard();};
   $('#kYes').onclick=()=>kDone(true);$('#kNo').onclick=()=>kDone(false);
   speech(KF.title,'',KF.wordFirst?'What does it mean?':'What is it called?');
@@ -3330,7 +3360,7 @@ function renderPage(quiet){
     if(en)toks[k]?.classList.add('on');
     else if(npVoice){dtoks[k]?.classList.add('on');toks[map(k,nD,nR)]?.classList.add('on');}
     else{toks[k]?.classList.add('on');dtoks[map(k,nR,nD)]?.classList.add('on');}};
-  const read=()=>{speech(story.np,story.dev,en?story.en:'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');};
+  const read=()=>{speech(story.np,story.dev,en?story.en:'Tap a word to hear it.');say(pg[1],pg[2],pg[3],{onWord:hl});mood('happy');if(isWords()&&!en){const L=lookup(pg[1]);if(L)critter($('.story-pic'),L.it);}};
   $('#backBtn').onclick=story.intro?openMap:story.journey?()=>{if(!tripBack())openJourney();}:openStories;
   $('#card').onclick=read;$('#card').onkeydown=e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();read();}};
   toks.forEach(b=>b.onclick=ev=>{
@@ -3788,6 +3818,10 @@ function startQuiz(o){
   }else if(o.mode==='vchitra'){
     const words=vSents().map(s=>[s.rom,s.dev,s.en,s.pic]);
     entries=mk(vakyaT(),words,{lab:false})(spread(words,V_N));
+  }else if(o.mode==='sound'){
+    // hear a sound word, find the animal: every animal on the map that makes a sound, with all of them as wrong answers
+    const pool=animalCards(true);
+    entries=spread(pool.filter(c=>hasSound(c.it)),roundN('r2')).map(c=>({...c,pool,lab:false,hide:true,choices:3,pick:true,sound:true}));
   }else if(o.mode==='listen'){
     entries=spread(o.cards,Math.min(8,o.cards.length)).map(c=>({...c,pool:o.cards,lab:false,hide:true,choices:3,pick:true}));
   }else if(o.mode==='daily'){
@@ -3808,7 +3842,9 @@ function startQuiz(o){
 }
 function distractors(e,n){
   const k0=keyOf(e.t,e.it);
-  const pool=e.pool.filter(x=>keyOf(x.t,x.it)!==k0&&x.it[3]!==e.it[3]).filter((x,i,a)=>a.findIndex(y=>y.it[3]===x.it[3])===i);
+  let pool=e.pool.filter(x=>keyOf(x.t,x.it)!==k0&&x.it[3]!==e.it[3]).filter((x,i,a)=>a.findIndex(y=>y.it[3]===x.it[3])===i);
+  // in the sound game, no wrong answer makes the same sound
+  if(e.sound)pool=pool.filter(x=>!(hasSound(x.it)&&ANIMAL_FX[x.it[0]][1][0]===ANIMAL_FX[e.it[0]][1][0]));
   if(e.t.kind!=='num')return shuffle(pool).slice(0,n);
   const near=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])<=3)),far=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])>3));
   return [...near,...far].slice(0,n);
@@ -3840,20 +3876,21 @@ function renderQ(){
     ans=opts.find(x=>x.end===it[5]);
   }else{const c=e.choices||3;opts=shuffle([e,...distractors(e,c-1)]);ans=e;}
   Q.opts=opts;Q.ans=ans;
-  const [rom,dev,en]=kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
+  const [rom,dev,en]=e.sound?[ANIMAL_FX[it[0]][1][0]+'!',ANIMAL_FX[it[0]][1][1]+'!','Who says “'+ANIMAL_FX[it[0]][1][0]+'”?']:kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
   const hide=e.hide&&canListen()&&!['num','yesno','ending'].includes(kind);
   const face=o=>kind==='yesno'?`<span class="pic">${o.it[3]}</span><span class="w">${o.it[EN()?2:0]}</span>${EN()?`<span class="w-en" lang="ne">${o.it[1]}</span>`:S.english?`<span class="w-en">${esc(o.it[2])}</span>`:''}`
     :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lab?' · '+esc(o.it[2]):''}</span>`
     :optionFace(o.t,o.it,e.lab);
   main.innerHTML=`${Q.back?backBtn('Back'):''}<div class="progress" aria-label="Question ${Q.i+1} of ${Q.n}"><i style="width:${Q.i/Q.n*100}%"></i></div>
-   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?`${esc(en)}${isWords()?`<small lang="ne">${dev}</small>`:''}`:`${esc(rom)}<small lang="ne">${dev}${isWords()&&S.english?` · ${esc(en)}`:''}</small>`)}</div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?(e.sound?`Kun bolchha? <small>कुन बोल्छ? · Who says that?</small>`:`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`):(EN()?`${esc(en)}${isWords()?`<small lang="ne">${dev}</small>`:''}`:`${esc(rom)}<small lang="ne">${dev}${isWords()&&S.english?` · ${esc(en)}`:''}</small>`)}</div>
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
    ${kind==='num'?`<div class="counter">${countHtml(it[3],rnd(COUNT_PICS),`aria-label="${it[3]} things"`)}</div>`:''}
    ${kind==='yesno'||kind==='ending'?`<div class="counter"><span class="pic" style="font-size:4.6rem;line-height:1.1" aria-hidden="true">${it[3]}</span></div>`:''}
    ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}${EN()?`<small lang="ne">${it[1]}</small>`:''}</div></div>`:''}
    <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
-  const ask=()=>{if(!hide)speech(rom,EN()&&!isWords()?'':dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
-    if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,EN()||isWords()?en:null);};
+  const ask=()=>{if(!hide)speech(rom,EN()&&!isWords()?'':dev,en);else if(e.sound)speech('Kun bolchha?','कुन बोल्छ?','Who says that?');else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
+    if(e.sound){say(ANIMAL_FX[it[0]][1][0],ANIMAL_FX[it[0]][1][1],null);habreReact(ANIMAL_FX[it[0]][2]);}
+    else if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,EN()||isWords()?en:null);};
   if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k]));
@@ -3866,10 +3903,11 @@ function pick(b,o){
   if(o===ans){
     Q.lock=true;if(Q.tries===0){Q.stars++;st.right[key]=(st.right[key]||0)+1;save();}
     b.classList.add('right');confetti();mood('happy');
-    $('#qSay').innerHTML=EN()?`${esc(t.kind==='ending'?it[2]:questionLine(t,it)[2])}<small lang="ne">${it[1]}</small>`:`${esc(t.kind==='ending'?it[0]:questionLine(t,it)[0])}<small lang="ne">${it[1]} · ${esc(it[2])}</small>`;
+    $('#qSay').innerHTML=EN()?`${esc(e.sound?cap(it[2])+'!':t.kind==='ending'?it[2]:questionLine(t,it)[2])}<small lang="ne">${it[1]}</small>`:`${esc(e.sound?cap(it[0])+'!':t.kind==='ending'?it[0]:questionLine(t,it)[0])}<small lang="ne">${it[1]} · ${esc(it[2])}</small>`;
     if($('#blankLine'))$('#blankLine').innerHTML=esc(it[4]).replace('___',`<span class="blank" style="color:var(--green);border-color:var(--green)">${it[5]}</span>`);
     const pr=rnd(PRAISE),w=t.kind==='yesno'?ans.it:it;
     speech(pr[0]+' '+cap(w[0])+'!',pr[1]+' '+w[1],pr[2]+' '+cap(w[2])+'!');say(pr[0]+' '+w[0],pr[1]+' '+w[1],EN()?pr[2]+' '+cap(w[2])+'!':null);
+    critter(b.querySelector('.pic'),it);
     const q=Q;setTimeout(()=>qNext(q),1900);
   }else{
     Q.tries++;b.classList.add('wrong','show');b.disabled=true;mood('sad');
@@ -3889,6 +3927,7 @@ function endQuiz(){
   if(Q.mode==='play')key=Q.t.id+':'+Q.o.part;
   else if(Q.mode==='check')key='check:'+Q.t.id;
   else if(Q.mode==='vchitra')key='vakya:chitra:play';
+  else if(Q.mode==='sound')key='bolchha';
   else if(Q.mode==='yatra')key='yatra:'+Q.rid;
   else if(Q.mode==='daily'){key='daily:'+today();const d=p.daily||{};if(d.last!==today()){d.streak=d.last===yesterday()?(d.streak||0)+1:1;d.last=today();}p.daily=d;}
   let newBest=false;
@@ -3916,6 +3955,8 @@ function endQuiz(){
     const r=YATRA.find(x=>x.id===Q.rid),ok=n>=bossN()-2;
     endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
       sub:ok?`You know ${r.en.toLowerCase()}! A present is waiting.`:`Get ${bossN()-2} right to go on. Try again!`,again:()=>startQuiz(o),back:openPath,backLabel:'🗺️ Yatra'});
+  }else if(Q.mode==='sound'){
+    endCard(n,N,{newBest,sub:'Kun bolchha? · Who says that?',again:()=>startQuiz(o),back:Q.back,backLabel:Q.backLabel||'Janawar'});
   }else if(Q.mode==='vchitra'){
     endCard(n,N,{newBest,sub:'Find the picture',again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
   }else{
@@ -3986,6 +4027,8 @@ function renderGrown(sec){
       return SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');})()}</div></div>
     <label><input type="checkbox" id="vSound" ${S.sound?'checked':''}> Sound on (Habre’s voice)</label>
     <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
+    <label><input type="checkbox" id="vAnimal" ${S.animalSounds!==false?'checked':''}> Animal sounds (Habre says the sound each animal makes)</label>
+    <label><input type="checkbox" id="vMoves" ${S.moves!==false?'checked':''}> Moving pictures (animals hop, swim and fly when tapped, and Habre reacts)</label>
     <div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button></div>`),
    stats:()=>growPage('📊','Stats',`${growPlayerSelect('progSel',p)}${S.profiles.length?'<div id="progBody"></div>':''}`),
    practice:()=>growPage('✏️','My own practice',`${growPlayerSelect('practSel',p)}${S.profiles.length?'<div id="practBody"></div>':''}`),
@@ -4003,6 +4046,8 @@ function renderGrown(sec){
   if(growSec==='voice'){
     $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
     $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
+    $('#vAnimal').onchange=e=>{S.animalSounds=e.target.checked;save();};
+    $('#vMoves').onchange=e=>{S.moves=e.target.checked;save();};
     $('#vSound').onchange=e=>{S.sound=e.target.checked;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
     main.querySelectorAll('.speeds button').forEach(b=>b.onclick=()=>{S.rate=+b.dataset.r;save();
       main.querySelectorAll('.speeds button').forEach(x=>x.setAttribute('aria-checked',String(x===b)));
@@ -4047,6 +4092,39 @@ function renderPractice(p){
   $('#cdTopic').onchange=e=>{practTopic=e.target.value;renderPractice(p);};
   main.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{custom.delete(b.dataset.rm);save2();});
 }
+
+// ---------- animals come alive ----------
+// Tap an animal's picture and it moves the way that animal moves, Habre says the Nepali sound word it makes, and
+// Habre reacts (hands over his ears at a roar, a laugh at a duck, a dance for a butterfly). It happens on the learn cards,
+// the flashcards, a right answer and a matched memory pair. [movement, [sound word, Devanagari] or null, Habre's reaction]
+const ANIMAL_FX={
+ putali:['fly',null,'dance'],kamila:['crawl',null],mauri:['fly',['bhun bhun','भुन भुन'],'dance'],makura:['crawl',null],biralo:['hop',['myaau myaau','म्याउँ म्याउँ']],
+ gai:['sway',['hammaa hammaa','हम्मा हम्मा']],kukhura:['hop',['kukhurikaa','कुखुरीका']],hans:['sway',['kwak kwak','क्वाक् क्वाक्'],'laugh'],bakhra:['hop',['men men','मेँ मेँ'],'laugh'],
+ ghoda:['run',['hin hin','हिँ हिँ']],kukur:['run',['bhau bhau','भौ भौ']],muso:['run',['chin chin','चिँ चिँ'],'laugh'],challa:['hop',['chiu chiu','चिउ चिउ'],'laugh'],
+ singha:['sway',['garr garr','गर्र गर्र'],'ears'],bhalu:['sway',['ghurr ghurr','घुर्र घुर्र'],'ears'],gaida:['run',null],kharayo:['hop',null],harin:['hop',null],phyauro:['run',null],
+ bandar:['hop',['khee khee','खी खी'],'laugh'],saanp:['wiggle',['sss sss','सस्स सस्स']],kachhuwa:['crawl',null],gohi:['crawl',null],bhyaguto:['hop',['tarr tarr','टर्र टर्र'],'laugh'],
+ machha:['swim',null],laamkhutte:['fly',['bhin bhin','भिन भिन'],'ears'],jiraph:['sway',null],jebra:['run',null],chituwa:['run',['garr garr','गर्र गर्र'],'ears'],
+ panda:['sway',null],hatti:['sway',['poon poon','पूँ पूँ'],'ears'],bagh:['sway',['garr garr','गर्र गर्र'],'ears'],penguin:['sway',null,'dance'],
+ ullu:['sway',['hoo hoo','हु हु']],mayur:['sway',null,'dance'],parewa:['hop',['gutargu gutargu','गुटरगुँ गुटरगुँ']],chil:['fly',null],bhangera:['fly',['chir chir','चिर् चिर्'],'dance'],suga:['fly',null,'dance']};
+const FX_MOVES=['hop','sway','run','fly','swim','wiggle','crawl'];
+let reactT=0;
+function habreReact(kind){
+  if(!kind||S.moves===false)return;
+  mood(kind);const my=++reactT;
+  setTimeout(()=>{if(my===reactT&&$('#habre').classList.contains(kind))mood('');},kind==='ears'?2000:1800);
+}
+// the picture moves, the sound word is said after whatever is being said, and Habre reacts; false if it isn't an animal
+function critter(el,it,o){
+  o=o||{};const fx=ANIMAL_FX[it[0]];if(!fx)return false;
+  if(el&&S.moves!==false){
+    el.classList.remove('fx-on',...FX_MOVES.map(m=>'fx-'+m));void el.offsetWidth;el.classList.add('fx-on','fx-'+fx[0]);
+    clearTimeout(el._fxT);el._fxT=setTimeout(()=>el.classList.remove('fx-on','fx-'+fx[0]),1400);
+  }
+  if(o.sound!==false&&fx[1]&&S.animalSounds!==false)say(fx[1][0],fx[1][1],null,{keep:true});
+  habreReact(fx[2]||'happy');
+  return true;
+}
+const hasSound=it=>!!(ANIMAL_FX[it[0]]&&ANIMAL_FX[it[0]][1]);
 
 // ---------- welcome, and Habre asking "what would you like to do today?" (the words depth: ages 3-5 by default) ----------
 // The youngest open on one big welcome button. Habre then asks what they'd like to do, with a picture button for each
@@ -4109,9 +4187,9 @@ function knownCards(){const p=P();return WORD_T().filter(t=>topicOpen(p,t)).flat
 function memoryQuick(){startMemory(knownCards(),{key:'jodi:menu',title:'Jodi milau',pairs:ageOf(P()).pairs,back:openMenu});}
 // animals: the animal words in the map's places the child has opened (the garden's always)
 const ANIMAL_TOPICS=['janawar','jangali','chara','sarisrip','samundra','kira'];
-function animalCards(){
+function animalCards(all){
   const names=new Set(ANIMAL_TOPICS.flatMap(id=>(T(id)||{items:[]}).items.map(it=>it[0]))),p=P(),seen=new Set(),out=[];
-  WORD_T().filter(t=>t.id.startsWith('w_')&&topicOpen(p,t)).forEach(t=>t.items.forEach(it=>{if(names.has(it[0])&&!seen.has(it[0])){seen.add(it[0]);out.push({t,it});}}));
+  WORD_T().filter(t=>t.id.startsWith('w_')&&(all||topicOpen(p,t))).forEach(t=>t.items.forEach(it=>{if(names.has(it[0])&&!seen.has(it[0])){seen.add(it[0]);out.push({t,it});}}));
   return out;
 }
 const PLAYSETS={
@@ -4124,7 +4202,8 @@ function openPlayset(id){
   const back=()=>openPlayset(id),acts=[
     pics>=1&&['flip','🃏','Patti','पत्ती','Flashcards','#00a6b8'],
     pics>=2&&['jodi','🧠','Jodi milau','जोडी मिलाऊ','Memory match','#8e5be8'],
-    ps.t?['play','🎯','Ganau','गनौं','Let’s count','#ff9f1c']:pics>=3&&['hear','👂','Suna ra chhana','सुन र छान','Listen and tap','#ff9f1c']].filter(Boolean);
+    ps.t?['play','🎯','Ganau','गनौं','Let’s count','#ff9f1c']:pics>=3&&['hear','👂','Suna ra chhana','सुन र छान','Listen and tap','#ff9f1c'],
+    id==='janawar'&&['bolchha','🎧','Kun bolchha?','कुन बोल्छ?','Who says that?','#e8463a']].filter(Boolean);
   main.innerHTML=`${backBtn('Ke garne?')}<h1>${ps.icon} ${esc(n[0])} <small lang="ne">${n[1]} · ${cards.length}</small></h1>${menuButtons(acts,'acts')}`;
   $('#backBtn').onclick=openMenu;
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
@@ -4133,6 +4212,7 @@ function openPlayset(id){
       if(a==='flip')startKCards(cards,back,t);
       else if(a==='jodi')startMemory(cards,{key:'jodi:'+id,title:t,pairs:ageOf(P()).pairs,back});
       else if(a==='play')startQuiz({mode:'play',t:T(ps.t),back,backLabel:t});
+      else if(a==='bolchha')startQuiz({mode:'sound',back,backLabel:t});
       else startQuiz({mode:'listen',cards,title:t,back,backLabel:t});},RM?0:550);
   });
   speech(ps.np,ps.dev,ps.en);sayT(ps.np,ps.dev,ps.en);mood('wave');
