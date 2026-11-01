@@ -3821,7 +3821,7 @@ function startQuiz(o){
   }else if(o.mode==='sound'){
     // hear a sound word, find the animal: every animal on the map that makes a sound, with all of them as wrong answers
     const pool=animalCards(true);
-    entries=spread(pool.filter(c=>hasSound(c.it)),roundN('r2')).map(c=>({...c,pool,lab:false,hide:true,choices:3,pick:true,sound:true}));
+    entries=spread(pool.filter(c=>hasNoise(c.it)),roundN('r2')).map(c=>({...c,pool,lab:false,hide:true,choices:3,pick:true,sound:true}));
   }else if(o.mode==='listen'){
     entries=spread(o.cards,Math.min(8,o.cards.length)).map(c=>({...c,pool:o.cards,lab:false,hide:true,choices:3,pick:true}));
   }else if(o.mode==='daily'){
@@ -3844,7 +3844,7 @@ function distractors(e,n){
   const k0=keyOf(e.t,e.it);
   let pool=e.pool.filter(x=>keyOf(x.t,x.it)!==k0&&x.it[3]!==e.it[3]).filter((x,i,a)=>a.findIndex(y=>y.it[3]===x.it[3])===i);
   // in the sound game, no wrong answer makes the same sound
-  if(e.sound)pool=pool.filter(x=>!(hasSound(x.it)&&ANIMAL_FX[x.it[0]][1][0]===ANIMAL_FX[e.it[0]][1][0]));
+  if(e.sound)pool=pool.filter(x=>!(hasNoise(x.it)&&noiseKey(x.it)===noiseKey(e.it)));
   if(e.t.kind!=='num')return shuffle(pool).slice(0,n);
   const near=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])<=3)),far=shuffle(pool.filter(x=>Math.abs(x.it[3]-e.it[3])>3));
   return [...near,...far].slice(0,n);
@@ -3876,7 +3876,7 @@ function renderQ(){
     ans=opts.find(x=>x.end===it[5]);
   }else{const c=e.choices||3;opts=shuffle([e,...distractors(e,c-1)]);ans=e;}
   Q.opts=opts;Q.ans=ans;
-  const [rom,dev,en]=e.sound?[ANIMAL_FX[it[0]][1][0]+'!',ANIMAL_FX[it[0]][1][1]+'!','Who says “'+ANIMAL_FX[it[0]][1][0]+'”?']:kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
+  const [rom,dev,en]=e.sound?[soundWord(it)[0]+'!',soundWord(it)[1]+'!','Who says “'+soundWord(it)[0]+'”?']:kind==='pick'?[`“${cap(it[0])}” — kun chitra?`,`“${it[1]}” — कुन चित्र?`,`Which picture is “${it[2]}”?`]:questionLine(t,it);
   const hide=e.hide&&canListen()&&!['num','yesno','ending'].includes(kind);
   const face=o=>kind==='yesno'?`<span class="pic">${o.it[3]}</span><span class="w">${o.it[EN()?2:0]}</span>${EN()?`<span class="w-en" lang="ne">${o.it[1]}</span>`:S.english?`<span class="w-en">${esc(o.it[2])}</span>`:''}`
     :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lab?' · '+esc(o.it[2]):''}</span>`
@@ -3889,7 +3889,7 @@ function renderQ(){
    ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}${EN()?`<small lang="ne">${it[1]}</small>`:''}</div></div>`:''}
    <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
   const ask=()=>{if(!hide)speech(rom,EN()&&!isWords()?'':dev,en);else if(e.sound)speech('Kun bolchha?','कुन बोल्छ?','Who says that?');else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
-    if(e.sound){say(ANIMAL_FX[it[0]][1][0],ANIMAL_FX[it[0]][1][1],null);habreReact(ANIMAL_FX[it[0]][2]);}
+    if(e.sound){animalNoise(it);habreReact(ANIMAL_FX[it[0]][2]);}
     else if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,EN()||isWords()?en:null);};
   if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
@@ -4001,6 +4001,7 @@ const GROWN_CATS=[
  ['practice','✏️','My own practice','Pick the words a child should practise. They become a deck in Patti.','#2fae6e'],
  ['players','🙂','Players','Add a player, or change a name, age group, how much story they see and Nepali or English.','#8e5be8'],
  ['plus','✨','Habre Plus','More places on the map. See what it adds and unlock it.','#ff9f1c'],
+ ['credits','📜','Sound credits','Who recorded the animal sounds, and the licence for each.','#00a6b8'],
  ['reset','🔄','Start over','Clear one child’s stars and begin again. Everything is saved in this browser only.','#ff7eb6']];
 const growPlayerSelect=(id,p)=>S.profiles.length?`<label>Player <select id="${id}">${S.profiles.map(x=>`<option value="${x.id}" ${p&&x.id===p.id?'selected':''}>${x.icon} ${esc(x.name)}</option>`).join('')}</select></label>`:'<p>No players yet. Add one under Players.</p>';
 const growPage=(icon,title,body)=>`<button class="back" id="gBack">◀ Grown-ups</button><h1>${icon} ${title}</h1><div class="grown">${body}</div>
@@ -4027,7 +4028,7 @@ function renderGrown(sec){
       return SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');})()}</div></div>
     <label><input type="checkbox" id="vSound" ${S.sound?'checked':''}> Sound on (Habre’s voice)</label>
     <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
-    <label><input type="checkbox" id="vAnimal" ${S.animalSounds!==false?'checked':''}> Animal sounds (Habre says the sound each animal makes)</label>
+    <label><input type="checkbox" id="vAnimal" ${S.animalSounds!==false?'checked':''}> Animal sounds (a recording of the animal if there is one, otherwise Habre says its sound word)</label>
     <label><input type="checkbox" id="vMoves" ${S.moves!==false?'checked':''}> Moving pictures (animals hop, swim and fly when tapped, and Habre reacts)</label>
     <div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button></div>`),
    stats:()=>growPage('📊','Stats',`${growPlayerSelect('progSel',p)}${S.profiles.length?'<div id="progBody"></div>':''}`),
@@ -4037,6 +4038,11 @@ function renderGrown(sec){
     <div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--green)" id="gNew">＋ New player</button></div>`),
    plus:()=>growPage('✨','Habre Plus',`<p>${hasPack('plus')?'Unlocked on this device, for every player.':'Not unlocked. Habre Plus adds new places to the map, each a trip of its own.'}</p>
     <div class="btns" style="justify-content:flex-start"><button type="button" class="btn" style="background:var(--purple)" id="gPlus">${hasPack('plus')?'See Habre Plus':'About Habre Plus'}</button></div>`),
+   credits:()=>growPage('📜','Sound credits',(()=>{const rows=Object.entries(ANIMAL_AUDIO);
+    return rows.length?`<p>These animal sounds are recordings. Where a licence asks for a credit, this is it.</p>
+     <div class="progwrap"><table class="prog"><thead><tr><th>Animal</th><th>Sound</th><th>By</th><th>Licence</th></tr></thead><tbody>${rows.map(([k,r])=>{const c=animalCards(true).find(x=>x.it[0]===k);
+       return `<tr><td>${c?c.it[3]+' '+esc(c.it[2]):esc(k)}</td><td>${r.src?`<a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.title||r.f)}</a>`:esc(r.title||r.f)}</td><td>${esc(r.by||'')}</td><td>${esc(r.lic||'')}</td></tr>`;}).join('')}</tbody></table></div>`
+     :'<p>No recorded animal sounds are in the game yet, so Habre says the sound each animal makes with his own voice.</p>';})()),
    reset:()=>growPage('🔄','Start over',`<p>This clears every star a player has earned, so their journey begins again. Their name, outfits and gems stay. Everything is saved in this browser only.</p>
     ${growPlayerSelect('resetSel',p)}${S.profiles.length?`<div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="resetP">Clear this player’s stars</button></div>
     <div class="warn" id="resetBox" hidden><b id="resetQ">Clear every star?</b><div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="resetYes">Yes, clear</button><button class="btn ghost" id="resetNo">Keep</button></div></div>`:''}`)};
@@ -4120,11 +4126,45 @@ function critter(el,it,o){
     el.classList.remove('fx-on',...FX_MOVES.map(m=>'fx-'+m));void el.offsetWidth;el.classList.add('fx-on','fx-'+fx[0]);
     clearTimeout(el._fxT);el._fxT=setTimeout(()=>el.classList.remove('fx-on','fx-'+fx[0]),1400);
   }
-  if(o.sound!==false&&fx[1]&&S.animalSounds!==false)say(fx[1][0],fx[1][1],null,{keep:true});
+  if(o.sound!==false)animalNoise(it,{wait:true});
   habreReact(fx[2]||'happy');
   return true;
 }
 const hasSound=it=>!!(ANIMAL_FX[it[0]]&&ANIMAL_FX[it[0]][1]);
+// Recorded animal sounds. sounds/manifest.json lists the files that are there ({ "biralo": {f, ms, title, by, src, lic}, ... });
+// an animal with a file plays it after its name, and without one Habre says its sound word. See sounds/README.md.
+const ANIMAL_AUDIO={};
+fetch('sounds/manifest.json').then(r=>r.ok?r.json():{}).then(m=>{Object.assign(ANIMAL_AUDIO,m||{});}).catch(()=>{});
+const hasNoise=it=>hasSound(it)||!!ANIMAL_AUDIO[it[0]];
+const soundWord=it=>(ANIMAL_FX[it[0]]&&ANIMAL_FX[it[0]][1])||['…','…'];
+// which sound an animal makes, so the sound game never offers two animals that sound the same
+const noiseKey=it=>ANIMAL_AUDIO[it[0]]?ANIMAL_AUDIO[it[0]].f:(hasSound(it)?ANIMAL_FX[it[0]][1][0]:'');
+let noiseAudio=null,noiseT=0;
+// runs cb once whatever is being said has finished (a silent line queued behind it), or after 5 seconds at most
+function afterSpeech(cb){
+  if(!TTS||!S.sound){cb();return;}
+  let done=false;const go=()=>{if(!done){done=true;cb();}};
+  try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;u.onend=go;u.onerror=go;speechSynthesis.speak(u);}catch(e){go();}
+  setTimeout(go,5000);
+}
+// an animal's sound: its recording (cut off after a few seconds, fading out), or Habre saying the sound word
+function animalNoise(it,o){
+  o=o||{};const fx=ANIMAL_FX[it[0]],rec=ANIMAL_AUDIO[it[0]];
+  if(!fx||S.animalSounds===false||!S.sound)return;
+  let said=false;const word=()=>{if(said)return;said=true;if(fx[1])say(fx[1][0],fx[1][1],null,{keep:true});};
+  if(!rec){word();return;}
+  const play=()=>{
+    try{
+      if(noiseAudio){noiseAudio.pause();clearTimeout(noiseT);}
+      const a=new Audio('sounds/'+rec.f);noiseAudio=a;a.volume=rec.vol||0.9;
+      a.onerror=()=>{if(noiseAudio===a)word();};
+      const fade=()=>{let v=a.volume;const iv=setInterval(()=>{v-=0.15;if(v<=0||a.paused){a.pause();clearInterval(iv);}else a.volume=v;},40);};
+      const p=a.play();
+      if(p&&p.then)p.then(()=>{noiseT=setTimeout(fade,rec.ms||3000);},word);else noiseT=setTimeout(fade,rec.ms||3000);
+    }catch(e){word();}
+  };
+  if(o.wait)afterSpeech(play);else play();
+}
 
 // ---------- welcome, and Habre asking "what would you like to do today?" (the words depth: ages 3-5 by default) ----------
 // The youngest open on one big welcome button. Habre then asks what they'd like to do, with a picture button for each
