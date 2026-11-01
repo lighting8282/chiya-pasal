@@ -490,6 +490,30 @@ body.little .speech .en{display:none}
 @media (prefers-reduced-motion: reduce){.fx span,.fx.fall span{opacity:.8;top:auto;bottom:40%}}
 @media (max-width:680px){.shopgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.sitem .si{font-size:2rem}.gems{padding:4px 10px}}
 
+/* the welcome button and Habre's "what would you like to do today?" menu */
+.welcome{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0 24px;text-align:center}
+.welcome .av{font-size:5rem;line-height:1}
+.welcome .hi{font-size:2.3rem;line-height:1.1}
+.welcome small{color:var(--soft)}
+.startbtn{display:flex;flex-direction:column;align-items:center;gap:0;width:min(380px,92%);margin-top:14px;padding:26px 16px;border-radius:48px;background:var(--green);color:#fff;box-shadow:0 10px 0 #1d8a52;animation:glow 1.1s ease-in-out infinite alternate}
+.startbtn span{font-size:5.5rem;line-height:1}
+.startbtn b{font-size:2.3rem;line-height:1.1}
+.startbtn small{color:#fff;opacity:.92;font-size:1.1rem}
+.startbtn:active{transform:translateY(6px);box-shadow:0 4px 0 #1d8a52}
+.menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.menu.more{grid-template-columns:repeat(3,minmax(0,1fr))}
+.menu.acts{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mbtn{background:var(--card);border-radius:30px;padding:16px 6px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 8px 0 var(--mc);animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards;transition:transform .12s}
+.mbtn .mi{font-size:3.8rem;line-height:1.1}
+.mbtn b{font-size:1.4rem;line-height:1.05}
+.mbtn small{color:var(--soft);font-size:.85rem;line-height:1.1}
+.mbtn:hover{transform:translateY(-3px)}
+.mbtn:active{transform:translateY(5px);box-shadow:0 3px 0 var(--mc)}
+.mbtn.open{transform:scale(1.08);box-shadow:0 8px 0 var(--mc),0 0 0 5px var(--yellow)}
+.menu.more .mbtn .mi{font-size:2.8rem}
+.menu.more .mbtn{padding:10px 6px 8px}
+@media (max-width:680px){.menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.menu.more,.menu.acts{grid-template-columns:repeat(3,minmax(0,1fr))}.mbtn .mi{font-size:3.2rem}.mbtn b{font-size:1.2rem}.menu.more .mbtn .mi{font-size:2.4rem}.menu:not(.more):not(.acts) .mbtn:last-child:nth-child(odd){grid-column:1/-1}}
+
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
 .confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall var(--d) cubic-bezier(.2,.6,.4,1) forwards}
@@ -1142,6 +1166,8 @@ function renderTop(){
   $('#whoAv').textContent=p?p.icon:'🙂';$('#whoAv').style.background=p?p.color+'33':'';
   $('#whoNm').textContent=p?p.name:'Ko?';
   $('#stars').textContent='★ '+starsOf(p);
+  $('#homeBtn').innerHTML=isWords()?'🐾<span class="hl"> Habre</span>':'🗺️<span class="hl"> Naksa</span>';
+  $('#homeBtn').setAttribute('aria-label',isWords()?'Habre’s menu':'Map');
   $('#gemBtn').textContent='💎 '+(p?gemsOf(p):0);
   $('.title').innerHTML=EN()?'Habre’s English<small lang="ne">हाब्रेको अंग्रेजी</small>':'Habre’s Nepali<small lang="ne">हाब्रेको नेपाली</small>';
   // free gifts at star milestones; Habre puts each one on straight away
@@ -1292,7 +1318,7 @@ function openShop(cat){
    <div class="seg shoptabs" role="tablist">${SHOP_CATS.map(c=>`<button role="tab" aria-pressed="${c[0]===shopCat}" data-c="${c[0]}">${c[1]} ${c[2]} <small style="font-weight:500;color:var(--soft)">${c[3]}</small></button>`).join('')}</div>
    <div class="shopgrid">${list.length?list.map(card).join(''):'<p style="color:var(--soft)">Nothing here yet. Buy something!</p>'}</div>
    <div class="shopbar" id="shopBar" ${shopSel?'':'hidden'}></div>`;
-  $('#backBtn').onclick=()=>{shopSel=null;clearTry();openMap();};
+  $('#backBtn').onclick=()=>{shopSel=null;clearTry();homeScreen();};
   main.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{shopSel=null;clearTry();openShop(b.dataset.c);});
   main.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{
     const x=ITEM[b.dataset.i];shopSel=x.id;tryOn={[x.slot]:x.free?'':x.id};renderOutfit();openShop();
@@ -1349,7 +1375,7 @@ function goWho(){
      <button class="person add" id="addP" style="animation-delay:${S.profiles.length*60}ms"><span class="av" aria-hidden="true">＋</span><b>Naya</b><small style="color:var(--soft)">New player</small></button>
    </div>`;
   main.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{S.cur=b.dataset.id;save();renderTop();const p=P();
-    speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Hello, '+p.name+'!');say('Namaste, '+p.name,'नमस्ते, '+p.name,null);mood('happy');openMap();});
+    speech('Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Hello, '+p.name+'!');say('Namaste, '+p.name,'नमस्ते, '+p.name,null);mood('happy');openStart();});
   main.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProfile(S.profiles.find(p=>p.id===b.dataset.edit)));
   $('#addP').onclick=()=>editProfile(null);
   speech('Ko khelcha?','को खेल्छ?','Who’s playing?');mood('wave');
@@ -1394,7 +1420,7 @@ function editProfile(p){
     if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,depth,best:{}};S.profiles.push(np);S.cur=np.id;}
     else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age,depth});
     // a new player goes straight to the map, to see where the journey goes
-    save();renderTop();if(isNew)openMap();else goWho();
+    save();renderTop();if(isNew)openStart();else goWho();
   };
   $('#pCancel')&&($('#pCancel').onclick=goWho);
   if(!isNew){
@@ -1418,7 +1444,8 @@ const SHELVED={
     'custom'],  // the grown-ups' own flashcard deck (an idea for the paid version)
   // stories that repeat Habre's Journey or don't fit a section of the map
   stories:['mimi','himal','daktar','school','janmadin']};
-const shelved=id=>SHELVED.topics.includes(id)||SHELVED.sections.includes(id);
+// counting comes back for the words depth (3-5 by default); the rest stays shelved
+const shelved=id=>(SHELVED.topics.includes(id)&&!(id==='ganti'&&depthOf(P())==='words'))||SHELVED.sections.includes(id);
 const storyShelved=id=>SHELVED.stories.includes(id);
 // every word topic, including shelved ones (story words still look them up); WORD_T is the ones in play
 const ALL_WORD_T=()=>TOPICS.filter(t=>!t.section&&t.kind!=='story'&&t.kind!=='letter');
@@ -1442,7 +1469,7 @@ const keyOf=(t,it)=>t.id+'|'+it[0];
 const checked=(p,t)=>bestOf(p,'check',t.id)>=checkN()-1;
 const topicDone=(p,t)=>((playedTopic(p,t)?1:0)+(checked(p,t)?1:0))/2;
 const ynOf=(t,it)=>it[4]?t.yes:t.no;
-const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':label}</button>`;
+const backBtn=label=>`<button class="back" id="backBtn">◀ ${trip?'🗺️ Yatra':isWords()&&/Naksa/.test(label)?'🐾 Habre':label}</button>`;
 function hearItem(t,it){
   if(t.id==='abc')say(it[1],it[6],`${it[1]}, ${it[5]}`);
   else if(t.kind==='letter')say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,null);
@@ -1960,7 +1987,7 @@ function openCollection(){
   if(!P()){goWho();return;}
   screen='collection';trip=null;topic=null;clearTry();
   main.innerHTML=`${backBtn('🗺️ Naksa')}<h1>📌 Mero sangalo <small lang="ne">मेरो सँगालो · My postcards and souvenirs</small></h1>${shelfHtml(P())}`;
-  $('#backBtn').onclick=openMap;bindShelf(openCollection);
+  $('#backBtn').onclick=homeScreen;bindShelf(openCollection);
   speech('Mero sangalo','मेरो सँगालो','My postcards and souvenirs.');say('Mero sangalo','मेरो सँगालो',null);mood('wave');
 }
 // the living room's collection: postcards pinned on a bulletin board, souvenirs in a glass case, with an empty spot
@@ -2361,7 +2388,9 @@ const placeOpen=(p,ri)=>starsOf(p)>=GATE&&yatraAt(p)>=regionFirst(YATRA[ri]);
 // a section's words open for flashcards and memory match once the section is open on its map (a paid map's too)
 const topicOpen=(p,t)=>{
   if(t.plus){const pl=PLUS.find(x=>'p_'+x.id===t.id);return !!pl&&plusOpen(p,pl);}
-  const ri=YATRA.findIndex(r=>'w_'+r.id===t.id);return ri<0||placeOpen(p,ri);
+  const ri=YATRA.findIndex(r=>'w_'+r.id===t.id);
+  // the youngest start with the garden's words, so flashcards and memory match are never empty
+  return ri<0||placeOpen(p,ri)||(ri===0&&depthOf(p)==='words');
 };
 // one place: its own stops along a winding path. With no id, the place the player is on now.
 // A Habre Plus place (see PLUS) opens here too, once its pack is owned and the place before it on its map is
@@ -2519,7 +2548,7 @@ function goHome(quiet){
        ?`<small>Habre’s journey · ${at>=STOPS.length?'you reached the mountains!':`stop ${at+1} of ${STOPS.length}: ${esc(stopFace(STOPS[at])[3])}`}</small>`
        :`<small>Habre’s journey · ${GATE-stars} more ★ from the rooms to open the gate</small><span class="bar2"><i style="width:${Math.round(stars/GATE*100)}%"></i></span>`}</span></button>`;
   main.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const o=ROOMS.find(x=>x.id===b.dataset.d);if(b.classList.contains('open'))return;b.classList.add('open');mood('happy');sayT(o.np,o.dev,o.en);setTimeout(()=>{if(screen==='home')openRoom(o);},RM?0:520);});
-  $('#backBtn').onclick=openMap;
+  $('#backBtn').onclick=homeScreen;
   if($('#whyBtn'))$('#whyBtn').onclick=()=>isWords()?openMoment('ghar',()=>goHome()):readStory(JOURNEY_INTRO);
   $('#gateBtn').onclick=()=>{
     if(gate){openPath();return;}
@@ -2599,7 +2628,7 @@ function renderLearn(){
    <div class="dots">${words.map((_,i)=>`<i class="${i===learnI?'on':''}"></i>`).join('')}</div>`;
   const hear=isL?()=>{say(it[0]+', '+it[5],`${it[1]}। ${it[6]}`,(t.id==='abc'?it[1]:it[0])+', as in '+it[7]);mood('happy');}
     :yn?()=>{say(it[0]+' '+yn[0],it[1]+' '+yn[1],it[2]+' '+yn[2]);mood('happy');}:()=>{say(it[0],it[1],it[2]);mood('happy');};
-  $('#backBtn').onclick=()=>openTopic(t);
+  $('#backBtn').onclick=()=>leaveLearn(t);
   if(isL)$('#writeBtn').onclick=()=>{$('#writeBtn').hidden=true;openTrace(it);};
   $('#card').onclick=hear;$('#card').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hear();}};
   $('#listen').onclick=hear;
@@ -2607,7 +2636,7 @@ function renderLearn(){
   $('#next').onclick=()=>{
     if(learnI===words.length-1){
       const p=P();p.seen=p.seen||{};if(!p.seen[t.id])earn(2);p.seen[t.id]=1;save();
-      speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn'){if(trip)startQuiz({mode:'play',t});else openTopic(t);}},1600);return;
+      speech('Syabaas!','स्याबास!','You saw them all! Now let’s play.');say('Syabaas!','स्याबास!','You saw them all!');confetti();mood('happy');learnI=0;setTimeout(()=>{if(screen==='learn'){if(trip)startQuiz({mode:'play',t});else leaveLearn(t);}},1600);return;
     }
     learnI++;renderLearn();
   };
@@ -2622,10 +2651,12 @@ function endCard(n,N,o){
     <h1>${esc(o.title||line[0])}<small>${esc(o.sub||line[2])}${o.newBest?' · new best!':''}</small></h1>
     ${N?`<div class="row" aria-label="${n} of ${N} stars">${Array.from({length:N},(_,k)=>`<span class="${k<n?'':'off'}">⭐</span>`).join('')}</div>`:''}
     <div class="btns">${o.extra||''}
+      ${isWords()&&o.back!==homeScreen&&o.back!==openMenu?`<button class="btn" style="background:var(--purple)" id="eMenu">🐾 Ke garne? <small style="font-weight:500">what next?</small></button>`:''}
       ${o.again?`<button class="btn" style="background:var(--green)" id="eAgain">🔁 Pheri <small style="font-weight:500">again</small></button>`:''}
       <button class="btn" style="background:var(--red)" id="eBack">◀ ${esc(o.backLabel||'Back')}</button></div></div>`;
   if(o.again)$('#eAgain').onclick=o.again;
   $('#eBack').onclick=o.back;
+  if($('#eMenu'))$('#eMenu').onclick=openMenu;
   confetti();setTimeout(confetti,500);mood('happy');
   const said=o.title?[o.title,o.titleDev||o.title,o.sub||null]:line;speech(...said);say(...said);
 }
@@ -2735,7 +2766,7 @@ function openPatti(){
    ${words>special?`<div class="topics">${decks.slice(special,words).map(tile).join('')}</div>`:''}
    <p class="maphint">${words>special?'More decks open as you open more places on the map.':'Open the garden on the map to get your first deck! 🌻'}</p>
    ${decks.length>words?`<h2 class="sub">${EN()?'Grammar <small lang="ne">व्याकरण</small>':'Vyakaran <small>grammar</small>'}</h2><div class="topics">${decks.slice(words).map(tile).join('')}</div>`:''}`;
-  $('#backBtn').onclick=openMap;
+  $('#backBtn').onclick=homeScreen;
   main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.pattiMode=b.dataset.m;save();openPatti();const m=PATTI_MODES.find(x=>x[0]===b.dataset.m);speech(m[1],'',m[2]);});
   main.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{
     const d=decks.find(x=>x.id===b.dataset.k),pics=new Set(d.cards.map(c=>c.it[3])).size;
@@ -3755,7 +3786,7 @@ function startQuiz(o){
       return {t,it,pool:w.map(x=>({t,it:x})),lab:false};});
   }
   Q={...o,o,entries,n:entries.length,i:0,stars:0};
-  if(!Q.back)Q.back=o.t?()=>openTopic(o.t):openMap;
+  if(!Q.back)Q.back=o.t?()=>openTopic(o.t):homeScreen;
   renderQ();
 }
 function distractors(e,n){
@@ -3852,7 +3883,7 @@ function endQuiz(){
     endCard(n,N,{newBest,sub:(R?`${R.icon} ${R.np} · ${R.en}`:'🎯 Khelaun · Let’s play')+(unlocked?' · 🔓 more words unlocked!':''),
       extra:`${n/N>=0.7&&!checked(p,t)?`<button class="btn" style="background:#ff9f1c" id="toCheck">✅ Jaanch <small style="font-weight:500">check</small></button>`:''}
         <button class="btn" style="background:var(--blue)" id="toLearn">👀 Sikaun <small style="font-weight:500">learn</small></button>`,
-      again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
+      again:()=>startQuiz(o),back:o.back||(()=>openTopic(t)),backLabel:o.backLabel||t.np});
     if($('#toCheck'))$('#toCheck').onclick=()=>startQuiz({mode:'check',t});
     $('#toLearn').onclick=()=>{topic=t;learnI=0;renderLearn();};
   }else if(Q.mode==='check'){
@@ -3861,7 +3892,7 @@ function endQuiz(){
       again:()=>startQuiz(o),back:()=>openTopic(t),backLabel:t.np});
   }else if(Q.mode==='daily'){
     const d=p.daily||{};
-    endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:openMap,backLabel:'🗺️ Naksa'});
+    endCard(n,N,{newBest,trophy:'⏱️',title:'Aajako abhyas sakiyo!',titleDev:'आजको अभ्यास सकियो!',sub:d.streak>1?`🔥 ${d.streak} days in a row!`:'See you tomorrow!',back:homeScreen,backLabel:isWords()?'🐾 Habre':'🗺️ Naksa'});
   }else if(Q.mode==='yatra'){
     const r=YATRA.find(x=>x.id===Q.rid),ok=n>=bossN()-2;
     endCard(n,N,{newBest,trophy:ok?'🏆':'🌟',title:ok?'Jaanch paas!':'Ramro kosis!',titleDev:ok?'जाँच पास!':'राम्रो कोसिस!',
@@ -3869,7 +3900,7 @@ function endQuiz(){
   }else if(Q.mode==='vchitra'){
     endCard(n,N,{newBest,sub:'Find the picture',again:()=>startQuiz(o),back:openVakya,backLabel:'Vakya'});
   }else{
-    endCard(n,N,{sub:`${Q.title} · listen and tap`,again:()=>startQuiz(o),back:Q.back,backLabel:'Patti'});
+    endCard(n,N,{sub:`${Q.title} · listen and tap`,again:()=>startQuiz(o),back:Q.back,backLabel:Q.backLabel||'Patti'});
   }
 }
 function startDaily(){startQuiz({mode:'daily'});}
@@ -3949,7 +3980,97 @@ function renderGrown(){
   }
 }
 
-$('#homeBtn').onclick=()=>openMap();
+// ---------- welcome, and Habre asking "what would you like to do today?" (the words depth: ages 3-5 by default) ----------
+// The youngest open on one big welcome button. Habre then asks what they'd like to do, with a picture button for each
+// thing, and everything they finish brings them back to this question (so does the 🐾 Habre button at the top). The
+// journey's map is behind the Kathaa button.
+const homeScreen=()=>isWords()?openMenu():openMap();
+const openStart=()=>isWords()?openWelcome():openMap();
+let learnBack=null;
+const leaveLearn=t=>{const b=learnBack;learnBack=null;if(b)b();else openTopic(t);};
+function openWelcome(){
+  if(!P()){goWho();return;}
+  screen='welcome';topic=null;trip=null;shopSel=null;clearTry();speechSynthesis?.cancel?.();
+  const p=P(),hi=['Namaste, '+p.name+'!','नमस्ते, '+p.name+'!','Hello, '+p.name+'!'],go=EN()?['Let’s start','सुरु गरौं']:['Suru garau','सुरु गरौं'];
+  main.innerHTML=`<div class="welcome"><span class="av" aria-hidden="true">${p.icon}</span><b class="hi">${esc(EN()?hi[2]:hi[0])}</b>${EN()?`<small lang="ne">${hi[1]}</small>`:`<small>${esc(hi[2])}</small>`}
+    <button class="startbtn" id="startBtn" aria-label="${go[0]}"><span aria-hidden="true">▶</span><b>${go[0]}</b><small lang="ne">${go[1]}</small></button></div>`;
+  $('#startBtn').onclick=()=>{mood('happy');openMenu();};
+  speech(hi[0],EN()?hi[1]:'',hi[2]);say(...hi);mood('wave');
+}
+// [id, picture, romanized, Devanagari, English, colour]
+const MENU_MAIN=[
+ ['learn','👀','Naya shabda','नयाँ शब्द','New words','#3a7bf2'],
+ ['patti','🃏','Patti','पत्ती','Flashcards','#00a6b8'],
+ ['jodi','🧠','Jodi milau','जोडी मिलाऊ','Memory match','#8e5be8'],
+ ['ganti','🔢','Ganti','गन्ती','Numbers','#ff9f1c'],
+ ['janawar','🐘','Janawar','जनावर','Animals','#2fae6e'],
+ ['ghar','🏠','Ghar','घर','House','#e8463a'],
+ ['kathaa','📖','Kathaa','कथा','Story','#8e5be8']];
+const MENU_MORE=[
+ ['khelau','🎲','Khelau','खेलौं','Surprise me!','#ff7eb6'],
+ ['lugaa','👕','Lugaa','लुगा','Dress up','#ff9f1c'],
+ ['sangalo','📮','Sangalo','सँगालो','My postcards','#3a7bf2']];
+const MENU_GO={learn:()=>learnNew(),patti:()=>openPatti(),jodi:()=>memoryQuick(),ganti:()=>openPlayset('ganti'),janawar:()=>openPlayset('janawar'),
+  ghar:()=>goHome(),kathaa:()=>openMap(),khelau:()=>startDaily(),lugaa:()=>openShop(),sangalo:()=>openCollection()};
+function menuButtons(list,cls){
+  return `<div class="menu ${cls||''}">${list.map((m,i)=>{const n=nmOf({np:m[2],dev:m[3],en:m[4]});
+    return `<button class="mbtn" style="--mc:${m[5]};animation-delay:${i*50}ms" data-m="${m[0]}" aria-label="${esc(m[4])}"><span class="mi" aria-hidden="true">${m[1]}</span><b>${esc(n[0])}</b><small lang="ne">${esc(n[1])}</small></button>`;}).join('')}</div>`;
+}
+function openMenu(){
+  if(!P()){goWho();return;}
+  screen='menu';topic=null;trip=null;shopSel=null;learnBack=null;clearTry();speechSynthesis?.cancel?.();
+  const q=['Aaja ke garne?','आज के गर्ने?','What would you like to do today?'];
+  main.innerHTML=`<h1>${esc(EN()?q[2]:q[0])} <small lang="ne">${q[1]}${EN()?'':' · '+q[2]}</small></h1>${menuButtons(MENU_MAIN)}${menuButtons(MENU_MORE,'more')}`;
+  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
+    const m=[...MENU_MAIN,...MENU_MORE].find(x=>x[0]===b.dataset.m);if(b.classList.contains('open'))return;
+    b.classList.add('open');mood('happy');sayT(m[2],m[3],m[4]);
+    setTimeout(()=>{if(screen==='menu')MENU_GO[m[0]]();},RM?0:550);
+  });
+  speech(...q);say(...q);mood('wave');
+}
+// "New words": the next practice round on the map (its new words come first), or the garden's words until the gate opens
+function learnNew(){
+  const p=P();
+  if(starsOf(p)>=GATE)for(let i=yatraAt(p);i<STOPS.length;i++){
+    const s=STOPS[i];if(s.k==='play'&&placeOpen(p,YATRA.indexOf(s.r))&&!skipStop(p,s)){goStop(s);return;}
+  }
+  const t=T('w_bagaicha');topic=t;learnI=0;learnBack=openMenu;renderLearn();
+}
+// every word the child can use, for a quick memory match
+function knownCards(){const p=P();return WORD_T().filter(t=>topicOpen(p,t)).flatMap(t=>wordsFor(t).map(it=>({t,it})));}
+function memoryQuick(){startMemory(knownCards(),{key:'jodi:menu',title:'Jodi milau',pairs:ageOf(P()).pairs,back:openMenu});}
+// animals: the animal words in the map's places the child has opened (the garden's always)
+const ANIMAL_TOPICS=['janawar','jangali','chara','sarisrip','samundra','kira'];
+function animalCards(){
+  const names=new Set(ANIMAL_TOPICS.flatMap(id=>(T(id)||{items:[]}).items.map(it=>it[0]))),p=P(),seen=new Set(),out=[];
+  WORD_T().filter(t=>t.id.startsWith('w_')&&topicOpen(p,t)).forEach(t=>t.items.forEach(it=>{if(names.has(it[0])&&!seen.has(it[0])){seen.add(it[0]);out.push({t,it});}}));
+  return out;
+}
+const PLAYSETS={
+ ganti:{icon:'🔢',np:'Ganti',dev:'गन्ती',en:'Numbers',t:'ganti',cards:()=>{const t=T('ganti');return wordsFor(t).map(it=>({t,it}));}},
+ janawar:{icon:'🐘',np:'Janawar',dev:'जनावर',en:'Animals',cards:animalCards}};
+// a set of words with big buttons for what to do with them
+function openPlayset(id){
+  const ps=PLAYSETS[id],cards=ps.cards(),pics=new Set(cards.map(c=>c.it[3])).size,n=nmOf(ps);
+  screen='playset';topic=null;trip=null;clearTry();
+  const back=()=>openPlayset(id),acts=[
+    pics>=1&&['flip','🃏','Patti','पत्ती','Flashcards','#00a6b8'],
+    pics>=2&&['jodi','🧠','Jodi milau','जोडी मिलाऊ','Memory match','#8e5be8'],
+    ps.t?['play','🎯','Ganau','गनौं','Let’s count','#ff9f1c']:pics>=3&&['hear','👂','Suna ra chhana','सुन र छान','Listen and tap','#ff9f1c']].filter(Boolean);
+  main.innerHTML=`${backBtn('Ke garne?')}<h1>${ps.icon} ${esc(n[0])} <small lang="ne">${n[1]} · ${cards.length}</small></h1>${menuButtons(acts,'acts')}`;
+  $('#backBtn').onclick=openMenu;
+  main.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{
+    const a=b.dataset.m,t=ps.np;if(b.classList.contains('open'))return;const m=acts.find(x=>x[0]===a);b.classList.add('open');mood('happy');sayT(m[2],m[3],m[4]);
+    setTimeout(()=>{if(screen!=='playset')return;
+      if(a==='flip')startKCards(cards,back,t);
+      else if(a==='jodi')startMemory(cards,{key:'jodi:'+id,title:t,pairs:ageOf(P()).pairs,back});
+      else if(a==='play')startQuiz({mode:'play',t:T(ps.t),back,backLabel:t});
+      else startQuiz({mode:'listen',cards,title:t,back,backLabel:t});},RM?0:550);
+  });
+  speech(ps.np,ps.dev,ps.en);sayT(ps.np,ps.dev,ps.en);mood('wave');
+}
+
+$('#homeBtn').onclick=()=>homeScreen();
 $('#collBtn').onclick=()=>openCollection();
 $('#whoBtn').onclick=goWho;
 $('#grownBtn').onclick=renderGrown;
@@ -3959,7 +4080,7 @@ $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)sp
 scriptObs.observe(document.querySelector('.app'),{subtree:true,childList:true,characterData:true});
 save();renderSound();renderTop();
 // with more than one player (or none yet), ask who is playing first
-if(S.profiles.length===1&&P())openMap();else goWho();
+if(S.profiles.length===1&&P())openStart();else goWho();
 </script>
 </body>
 </html>

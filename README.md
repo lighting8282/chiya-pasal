@@ -62,6 +62,23 @@ The age group sets how many questions a round has and how many pairs are in a me
 
 A phrase is made from words in the page's own sentence, so the romanized and Devanagari lines always match; each also has its own English line (`PHRASES_MID` in `kids.html`). A page of 4 words or fewer already is a phrase. A page with no phrase written keeps its whole sentence. Everything is in the learn-English version too.
 
+**The welcome and Habre's question (the words depth: 3–5 by default).** The youngest open on one big green ▶ welcome button (*Suru garau*, "Let's start") with their name. Pressing it, Habre asks *Aaja ke garne?* ("What would you like to do today?") and shows a picture button for each thing. Tapping one says its name and goes there:
+
+| Button | What it opens |
+|---|---|
+| 👀 *Naya shabda* (New words) | the next practice round on the map, with its new words as cards first; until the garden opens, the garden's 10 words as cards |
+| 🃏 *Patti* (Flashcards) | the flashcard decks; the garden's words are open from the start |
+| 🧠 *Jodi milau* (Memory match) | a memory game with words the child can use (3 pairs) |
+| 🔢 *Ganti* (Numbers) | counting (starting at 1–5, more unlock as they play well): flashcards, memory match and a counting game. Counting is shelved for the other depths |
+| 🐘 *Janawar* (Animals) | the animal words from the map's places they have opened: flashcards, memory match and hear-and-tap |
+| 🏠 *Ghar* (House) | Habre's house and its rooms' find games |
+| 📖 *Kathaa* (Story) | the map with its picture moments |
+| 🎲 *Khelau* (Surprise me!) | today's practice |
+| 👕 *Lugaa* (Dress up) | Habre's shop |
+| 📮 *Sangalo* (My postcards) | the postcards and souvenirs |
+
+Every activity ends with a 🐾 *Ke garne?* button back to Habre's question, and the 🐾 Habre button at the top does the same. Other age groups, and a 3–5 child a grown-up has set to phrases or full story, open on the map as before.
+
 **Ages 3–5 are pictures and words only:**
 - **No story to read.** (This is the words depth.) Instead, each section opens with one **picture moment**: a big picture and one word, read aloud, such as 🌻 *Bagaicha* (garden) or 🦒 *Chidiyakhaana* (zoo). The last one is 👵🏔️ *Hajuraama!* (Grandma). Under it, a row of dots runs from 🏠 to 👵, showing how close Habre is to Grandma's. The section's other story stops, the side stories and the "story so far" button are left out.
 - **The opening** is one moment too (✉️👵🏔️ *Hajuraama!*), and the house banner shows only 👵🏔️ and the stars collected.
