@@ -32,7 +32,7 @@ The sections that teach Nepali have English versions instead:
 
 A grown-up can change the choice later under "Change player".
 
-**Age groups:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). There are no easy, medium or hard levels: every player gets the same questions, with 3 pictures to choose from, each labelled with the word. The help line (English, or Devanagari for an English learner) appears after the child answers. Checks and big checks show only the pictures. Players made before age groups count as 6–8.
+**Age groups:** when setting up a player, a grown-up picks an age group (🧸 3–5, 🎒 6–8 or 📚 9–11). There are no easy, medium or hard levels: every player gets the same questions, with 3 pictures to choose from, each labelled with the word. The help line (English, or Devanagari for an English learner) shows beside the word for the words depth (3–5 by default), and appears after the child answers for the other depths. Checks and big checks show only the pictures. Players made before age groups count as 6–8.
 
 The age group sets how many questions a round has and how many pairs are in a memory game (3, 4 or 6). The 3–5 group gets fewer words at a time:
 

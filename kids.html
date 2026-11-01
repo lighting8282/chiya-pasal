@@ -340,6 +340,7 @@ body.little .speech .en{display:none}
 .mc-face .letter{font-size:3rem}
 .mc-face b{font-size:1rem;line-height:1.1;overflow-wrap:anywhere}
 .mc-face .dev{font-size:.8rem;color:var(--soft)}
+.mc-face .men{font-size:.8rem;color:var(--soft);line-height:1.1}
 .mc.done .mc-face{box-shadow:0 5px 0 var(--good),0 0 0 4px var(--good)}
 /* sticker book */
 .book{background:#fffaf0;border-radius:24px;padding:12px 14px;box-shadow:0 6px 0 #ecd9b5;display:flex;flex-direction:column;gap:8px}
@@ -2669,7 +2670,7 @@ function memFace(x){
   if(t.kind==='letter')return `<span class="pic" style="font-size:2rem">${it[3]}</span><b>${esc(it[5])}</b><span class="dev" lang="ne">${it[6]}</span>`;
   const [w,help]=tw(it);
   if(EN())return `<b>${esc(w)}</b>`;
-  return `<b>${esc(w)}</b><span class="dev" lang="ne">${help}</span>`;
+  return `<b>${esc(w)}</b><span class="dev" lang="ne">${help}</span>${isWords()&&S.english?`<small class="men">${esc(it[2])}</small>`:''}`;
 }
 function startMemory(cards,o){
   const uniq=shuffle(cards).filter((c,i,a)=>a.findIndex(x=>x.it[3]===c.it[3]||keyOf(x.t,x.it)===keyOf(c.t,c.it))===i);
@@ -3803,11 +3804,13 @@ function optionFace(t,o,lab){
   if(t.id==='abc')return pictureOf(t,o)+(lab?`<span class="w">${o[0]}</span>`:'')+`<span class="lab">${o[3]} ${o[5]}</span>`;
   if(t.kind==='letter'){
     const ex=`${o[3]} ${o[5]}`;
-    return pictureOf(t,o)+(lab?`<span class="w">${o[0]}</span><span class="lab">${ex}</span>`:`<span class="lab">${o[0]} · ${ex}</span>`);
+    return pictureOf(t,o)+(lab?`<span class="w">${o[0]}</span>${isWords()&&S.english?`<span class="w-en">${ex}</span>`:`<span class="lab">${ex}</span>`}`:`<span class="lab">${o[0]} · ${ex}</span>`);
   }
   // the word being learned, then its help line (English for Nepali learners, Devanagari for English learners)
   const pic=t.kind==='num'?`<span class="digit">${o[3]}</span>`:pictureOf(t,o),[w,help]=EN()?[o[2],o[1]]:[o[0],o[2]];
-  return pic+(lab?`<span class="w">${esc(w)}</span><span class="lab">${esc(help)}</span>`:`<span class="lab">${esc(w+' · '+help)}</span>`);
+  // the words depth (3-5 by default) sees the help line beside the word; everyone else sees it once answered
+  const open=isWords()&&(EN()||S.english);
+  return pic+(lab?`<span class="w">${esc(w)}</span>${open?`<span class="w-en"${EN()?' lang="ne"':''}>${esc(help)}</span>`:`<span class="lab">${esc(help)}</span>`}`:`<span class="lab">${esc(w+' · '+help)}</span>`);
 }
 function renderQ(){
   screen='quiz';const e=Q.entries[Q.i],{t,it}=e;Q.tries=0;Q.lock=false;
@@ -3827,14 +3830,14 @@ function renderQ(){
     :kind==='ending'?`<span class="w">${o.it[0]}</span><span class="w-en" lang="ne">${o.it[1]}${S.english&&e.lab?' · '+esc(o.it[2]):''}</span>`
     :optionFace(o.t,o.it,e.lab);
   main.innerHTML=`${Q.back?backBtn('Back'):''}<div class="progress" aria-label="Question ${Q.i+1} of ${Q.n}"><i style="width:${Q.i/Q.n*100}%"></i></div>
-   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?esc(en):`${esc(rom)}<small lang="ne">${dev}</small>`)}</div>
+   <div class="q${hide?' listenonly':''}"><div class="say" id="qSay">${hide?`Suna ra chhana! <small>सुन र छान · Listen and choose</small>`:(EN()?`${esc(en)}${isWords()?`<small lang="ne">${dev}</small>`:''}`:`${esc(rom)}<small lang="ne">${dev}${isWords()&&S.english?` · ${esc(en)}`:''}</small>`)}</div>
      <button class="again" id="again" aria-label="Say it again">🔊</button></div>
    ${kind==='num'?`<div class="counter">${countHtml(it[3],rnd(COUNT_PICS),`aria-label="${it[3]} things"`)}</div>`:''}
    ${kind==='yesno'||kind==='ending'?`<div class="counter"><span class="pic" style="font-size:4.6rem;line-height:1.1" aria-hidden="true">${it[3]}</span></div>`:''}
    ${kind==='ending'?`<div class="q"><div class="say" id="blankLine" style="margin:0 auto">${esc(it[4]).replace('___','<span class="blank">?</span>')}${EN()?`<small lang="ne">${it[1]}</small>`:''}</div></div>`:''}
    <div class="opts ${kind}${opts.length===3?' three':''}" style="--cols:${opts.length}">${opts.map((o,k)=>`<button class="opt" data-k="${k}" style="animation-delay:${k*90}ms" aria-label="${esc(kind==='num'?o.it[0]:kind==='yesno'||kind==='ending'?o.it[0]:o.it[2])}">${face(o)}</button>`).join('')}</div>`;
-  const ask=()=>{if(!hide)speech(rom,EN()?'':dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
-    if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,EN()?en:null);};
+  const ask=()=>{if(!hide)speech(rom,EN()&&!isWords()?'':dev,en);else speech('Suna ra chhana!','सुन र छान!','Listen and choose!');
+    if(kind==='pick')sayT(it[0],it[1],it[2]);else say(rom,dev,EN()||isWords()?en:null);};
   if(Q.back)$('#backBtn').onclick=Q.back;
   $('#again').onclick=ask;
   main.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(b,opts[+b.dataset.k]));
