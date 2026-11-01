@@ -52,13 +52,9 @@ Every room of the house keeps its picture and its look-and-find game; only the l
 | Vyakaran · Grammar | `vyakaran` | section | 12 grammar lessons (and the 12 English ones for English learners) | office, daily practice (two grammar questions), flashcards, grown-ups' progress |
 | Sabai shabda · Every word topic | `shabda` | section | the full list of word topics, and the sticker book (only reached from there) | office, grown-ups' page (stickers) |
 
-## From the flashcards
+## Back again
 
-| What | Id | Kind | What it held | Where it appeared |
-|---|---|---|---|---|
-| Thulo maanchhe · Grown-ups' deck | `custom` | flashcard deck | one flashcard set a grown-up builds by ticking words on the grown-ups' page | flashcards (a deck under "My decks"), grown-ups' page ("Your flashcard deck" picker) |
-
-Shelved so that free flashcards are the built-in categories only. Making your own sets is an idea for the paid version (see `PAID-IDEAS.md`). Words a grown-up already ticked are kept with the player.
+- **Thulo maanchhe · Grown-ups' deck** (`custom`): a flashcard set a grown-up builds by ticking words. It was shelved with the flashcards, and came back on 2026-11-01 as **For grown-ups > My own practice**; it shows in Patti under "My decks".
 
 ## From the stories (2026-10-30)
 

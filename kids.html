@@ -515,6 +515,22 @@ body.little .speech .en{display:none}
 .menu.more .mbtn{padding:10px 6px 8px}
 @media (max-width:680px){.menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.menu.more,.menu.acts{grid-template-columns:repeat(3,minmax(0,1fr))}.mbtn .mi{font-size:3.2rem}.mbtn b{font-size:1.2rem}.menu.more .mbtn .mi{font-size:2.4rem}.menu:not(.more):not(.acts) .mbtn:last-child:nth-child(odd){grid-column:1/-1}}
 
+/* grown-ups: a menu of categories */
+.gcats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.gcat{display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border-radius:26px;padding:14px 16px;box-shadow:0 7px 0 var(--gc);animation:pop .45s cubic-bezier(.3,1.5,.5,1) backwards;transition:transform .12s}
+.gcat .gi{font-size:2.8rem;line-height:1;flex:0 0 auto}
+.gcat b{font-size:1.25rem;display:block;line-height:1.1}
+.gcat small{display:block;color:var(--soft);font-size:.9rem;line-height:1.25;margin-top:3px}
+.gcat:hover{transform:translateY(-3px)}
+.gcat:active{transform:translateY(4px);box-shadow:0 3px 0 var(--gc)}
+.prow{display:flex;align-items:center;gap:12px;background:var(--sky);border-radius:18px;padding:8px 12px}
+.prow .av{font-size:2rem;line-height:1}
+.prow small{display:block;color:var(--soft);font-size:.9rem}
+.prow .mini{margin-left:auto;flex:0 0 auto}
+.chosen{display:flex;flex-wrap:wrap;gap:6px}
+.chosen button{background:#e4f7ec;border-radius:999px;padding:3px 12px;font-size:.95rem}
+@media (max-width:680px){.gcats{grid-template-columns:minmax(0,1fr)}}
+
 /* confetti */
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
 .confetti i{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall var(--d) cubic-bezier(.2,.6,.4,1) forwards}
@@ -1058,7 +1074,7 @@ function loadVoices(){
   const saved=voices.find(v=>v.name===S.voice);
   npVoice=saved||voices.find(v=>/^ne/i.test(v.lang))||voices.find(v=>/^hi/i.test(v.lang))||voices.find(v=>/^mr/i.test(v.lang))||null;
   enVoice=voices.find(v=>/^en/i.test(v.lang)&&/female|zira|aria|jenny|samantha|google us/i.test(v.name))||voices.find(v=>/^en/i.test(v.lang))||null;
-  if(screen==='grown')renderGrown();
+  if(screen==='grown')renderGrown(growSec);
 }
 if(TTS){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices);}
 // say a Nepali line (Devanagari for a Nepali/Hindi voice, romanized otherwise), then optionally the English
@@ -1366,8 +1382,9 @@ function countHtml(n,pic,cls){
 }
 
 // ---------- players ----------
+let editBack=null;
 function goWho(){
-  clearTry();screen='who';trip=null;speechSynthesis?.cancel?.();
+  editBack=null;clearTry();screen='who';trip=null;speechSynthesis?.cancel?.();
   main.innerHTML=`<h1>Ko khelcha? <small>Who’s playing?</small></h1>
    <div class="people">${S.profiles.map((p,i)=>`<div class="person" style="--pc:${p.color};animation-delay:${i*60}ms">
       <button class="pick" data-id="${p.id}" style="display:flex;flex-direction:column;align-items:center;width:100%" aria-label="Play as ${esc(p.name)}">
@@ -1421,13 +1438,13 @@ function editProfile(p){
     if(isNew){const np={id:'p'+Date.now(),name,icon:d.icon,color:d.color,learn,age,depth,best:{}};S.profiles.push(np);S.cur=np.id;}
     else Object.assign(p,{name,icon:d.icon,color:d.color,learn,age,depth});
     // a new player goes straight to the map, to see where the journey goes
-    save();renderTop();if(isNew)openStart();else goWho();
+    save();renderTop();if(editBack){const b=editBack;editBack=null;b();}else if(isNew)openStart();else goWho();
   };
-  $('#pCancel')&&($('#pCancel').onclick=goWho);
+  $('#pCancel')&&($('#pCancel').onclick=()=>{const b=editBack;editBack=null;(b||goWho)();});
   if(!isNew){
     $('#pDel').onclick=()=>{$('#delBox').hidden=false;$('#delNo').focus();};
     $('#delNo').onclick=()=>{$('#delBox').hidden=true;};
-    $('#delYes').onclick=()=>{S.profiles=S.profiles.filter(x=>x!==p);if(S.cur===p.id)S.cur=S.profiles[0]?S.profiles[0].id:'';save();renderTop();goWho();};
+    $('#delYes').onclick=()=>{S.profiles=S.profiles.filter(x=>x!==p);if(S.cur===p.id)S.cur=S.profiles[0]?S.profiles[0].id:'';save();renderTop();{const b=editBack;editBack=null;(b||goWho)();}};
   }
   speech(isNew?'Timro naam ke ho?':'Thik cha!',isNew?'तिम्रो नाम के हो?':'ठिक छ!',isNew?'What’s your name?':'Okay!');
   setTimeout(()=>$('#pName')&&$('#pName').focus(),50);
@@ -1441,8 +1458,7 @@ const SHELVED={
   topics:['pariwar','bhavana','saman','bhanai',  // baithak
     'khana','ganti','thulo','kapada','rang','sharir',  // kitchen, dining room, bedroom, bathroom
     'akshar','abc'],  // office
-  sections:['vakya','kathaa','vyakaran','shabda',
-    'custom'],  // the grown-ups' own flashcard deck (an idea for the paid version)
+  sections:['vakya','kathaa','vyakaran','shabda'],  // ('custom', the grown-ups' own flashcard deck, is back: Grown-ups > My own practice)
   // stories that repeat Habre's Journey or don't fit a section of the map
   stories:['mimi','himal','daktar','school','janmadin']};
 // counting comes back for the words depth (3-5 by default); the rest stays shelved
@@ -3917,9 +3933,9 @@ function renderProgress(p){
   const hard=Object.keys(st.miss).map(k=>({k,score:(st.miss[k]||0)-(st.right[k]||0)*0.5,miss:st.miss[k]})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,10).map(x=>({...x,f:findCard(x.k)})).filter(x=>x.f);
   const traced=Object.keys(p.traced||{}),cards=allCards(),bx=[0,0,0];cards.forEach(c=>bx[boxOf(p,c)]++);
   const stickers=stickerItems().filter(c=>(st.right[keyOf(c.t,c.it)]||0)>=STICKER_AT).length,d=p.daily||{};
-  const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id)),custom=new Set(p.custom||[]);
+  const deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()],doors=DOORS.filter(o=>!shelved(o.id));
   $('#progBody').innerHTML=`
-   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}, story: ${DEPTHS.find(x=>x[0]===depthOf(p))[2].toLowerCase()}; change these under Change player): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
+   <p><b>${esc(p.name)}</b> (${ageOf(p).icon} age ${ageOf(p).en}, story: ${DEPTHS.find(x=>x[0]===depthOf(p))[2].toLowerCase()}; change these under Players): ★ ${starsOf(p)} stars · ${st.plays} game${st.plays===1?'':'s'} played${st.last?` · last played ${st.last}`:''}${d.last?` · today’s practice last done ${d.last}${d.streak>1?` (${d.streak} days in a row)`:''}`:''}</p>
    ${doors.length?`<div class="progwrap"><table class="prog"><thead><tr><th>Door</th><th>Done</th></tr></thead>
     <tbody>${doors.map(o=>`<tr><td>${o.icon} ${o.np} <small>${o.en}</small></td><td class="${pr[o.id]>=0.7?'pass':pr[o.id]>0?'some':''}">${Math.round(pr[o.id]*100)}%</td></tr>`).join('')}</tbody></table></div>`:''}
    <div class="progwrap"><table class="prog"><thead><tr><th>Section</th>${Object.keys(ROUNDS).map(k=>`<th>${ROUNDS[k].icon} ${ROUNDS[k].en}</th>`).join('')}<th>✅ Check</th><th>🧠 Pairs</th></tr></thead>
@@ -3934,53 +3950,102 @@ function renderProgress(p){
    ${shelved(AKSHAR().id)?'':`<p><b>Letters written:</b> ${traced.length?traced.join(' '):'none yet'}</p>`}
    <h3>Words to practise</h3>
    ${hard.length?`<div class="practise">${hard.map(x=>`<span>${x.f.t.kind==='color'?`<i class="dot" style="background:${x.f.it[3]}"></i>`:x.f.t.kind==='num'?x.f.it[3]:x.f.t.kind==='letter'?x.f.it[1]:x.f.it[3]} <b>${esc(x.f.it[0])}</b> ${esc(x.f.t.kind==='letter'?x.f.it[5]:x.f.it[2])} <small>missed ${x.miss}×</small></span>`).join('')}</div>`:'<p>Nothing stands out yet. Words show up here when they’re missed more often than they’re got right.</p>'}
-   ${shelved('patti')||shelved('custom')?'':`<h3>Your flashcard deck for ${esc(p.name)}</h3>
-   <p>Tick words for ${esc(p.name)} to practise. They appear in Patti as the “Thulo maanchhe” (grown-ups’) deck. ${custom.size} chosen.</p>
-   <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}">${t.id==='akshar'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
-   <div class="cd" id="cdWords"></div>`}`;
-  const drawCd=()=>{const t=TOPICS.find(x=>x.id===$('#cdTopic').value);
-    $('#cdWords').innerHTML=t.items.map(it=>{const k=keyOf(t,it);return `<label><input type="checkbox" data-key="${esc(k)}" ${custom.has(k)?'checked':''}> ${t.kind==='color'?`<i class="dot" style="background:${it[3]}"></i>`:t.kind==='num'?it[3]:t.kind==='letter'?it[1]:it[3]} ${esc(it[0])}</label>`;}).join('');
-    $('#cdWords').querySelectorAll('input').forEach(c=>c.onchange=()=>{if(c.checked)custom.add(c.dataset.key);else custom.delete(c.dataset.key);p.custom=[...custom];save();});};
-  if($('#cdTopic')){$('#cdTopic').onchange=drawCd;drawCd();}
+  `;
 }
-// grown-ups panel
-function renderGrown(){
-  clearTry();screen='grown';
-  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang)),p=P();
-  main.innerHTML=`<div class="grown">
-    <h2>For grown-ups</h2>
+// grown-ups: a menu of what can be changed or seen, then a page for each
+let growSec='',practTopic='';
+const GROWN_CATS=[
+ ['voice','🔊','Voice and sound','The voice Habre speaks with and how fast. Show or hide the English. Sound on or off.','#e8463a'],
+ ['stats','📊','Stats','How each child is doing: stars, sections, stories, flashcards and the words they keep missing.','#3a7bf2'],
+ ['practice','✏️','My own practice','Pick the words a child should practise. They become a deck in Patti.','#2fae6e'],
+ ['players','🙂','Players','Add a player, or change a name, age group, how much story they see and Nepali or English.','#8e5be8'],
+ ['plus','✨','Habre Plus','More places on the map. See what it adds and unlock it.','#ff9f1c'],
+ ['reset','🔄','Start over','Clear one child’s stars and begin again. Everything is saved in this browser only.','#ff7eb6']];
+const growPlayerSelect=(id,p)=>S.profiles.length?`<label>Player <select id="${id}">${S.profiles.map(x=>`<option value="${x.id}" ${p&&x.id===p.id?'selected':''}>${x.icon} ${esc(x.name)}</option>`).join('')}</select></label>`:'<p>No players yet. Add one under Players.</p>';
+const growPage=(icon,title,body)=>`<button class="back" id="gBack">◀ Grown-ups</button><h1>${icon} ${title}</h1><div class="grown">${body}</div>
+  <div class="btns"><button class="btn ghost" id="gBack2">◀ Grown-ups</button><button class="btn" style="background:var(--blue)" id="gDone">Done</button></div>`;
+function renderGrown(sec){
+  clearTry();screen='grown';growSec=typeof sec==='string'?sec:'';
+  const p=P();
+  if(!growSec){
+    main.innerHTML=`<h1>⚙ For grown-ups <small>What would you like to change or see?</small></h1>
+     <div class="gcats">${GROWN_CATS.map((c,i)=>`<button class="gcat" style="--gc:${c[4]};animation-delay:${i*50}ms" data-g="${c[0]}"><span class="gi" aria-hidden="true">${c[1]}</span><span><b>${c[2]}</b><small>${c[3]}${c[0]==='plus'?(hasPack('plus')?' (Unlocked.)':' (Not unlocked.)'):''}</small></span></button>`).join('')}</div>
+     <div class="btns"><button class="btn" style="background:var(--blue)" id="gDone">Done</button></div>`;
+    main.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>renderGrown(b.dataset.g));
+    $('#gDone').onclick=()=>P()?homeScreen():goWho();
+    speech('For grown-ups','','Pick what you’d like to change.');
+    return;
+  }
+  const list=voices.filter(v=>/^(ne|hi|mr)/i.test(v.lang));
+  const pages={
+   voice:()=>growPage('🔊','Voice and sound',`
     <p>The voice comes from this device’s browser. Microsoft Edge has real Nepali voices. Chrome usually uses its Hindi voice, which reads the Nepali (Devanagari) words closely. If no Nepali or Hindi voice is installed, the romanized spelling is read with an English voice, which sounds less accurate.</p>
     <p><b>Voice in use:</b> ${!TTS?'none (this browser cannot speak)':npVoice?`${esc(npVoice.name)} (${npVoice.lang})`:'no Nepali or Hindi voice found'}</p>
     ${list.length>1?`<label>Choose voice <select id="vSel">${list.map(v=>`<option value="${esc(v.name)}" ${npVoice&&v.name===npVoice.name?'selected':''}>${esc(v.name)} (${v.lang})</option>`).join('')}</select></label>`:''}
-    <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
     <div class="speedrow"><b>Voice speed</b><div class="speeds" role="radiogroup" aria-label="Voice speed">${(()=>{const cur=SPEEDS.reduce((a,s)=>Math.abs(s[2]-S.rate)<Math.abs(a[2]-S.rate)?s:a);
       return SPEEDS.map(s=>`<button type="button" role="radio" aria-checked="${s===cur}" data-r="${s[2]}"><b>${s[0]}</b><small>${s[1]}</small></button>`).join('');})()}</div></div>
-    <div class="btns" style="justify-content:flex-start">
-      <button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button>
-      <button class="btn" style="background:var(--blue)" id="vDone">Done</button>
-    </div>
-    <h2>✨ Habre Plus</h2>
-    <p>${hasPack('plus')?'Unlocked on this device, for every player.':'Not unlocked. Habre Plus adds new places to the map, each a trip of its own.'} <button type="button" class="btn ghost" id="gPlus">${hasPack('plus')?'See Habre Plus':'About Habre Plus'}</button></p>
-    <h2>Progress</h2>
-    ${S.profiles.length?`<label>Player <select id="progSel">${S.profiles.map(x=>`<option value="${x.id}" ${p&&x.id===p.id?'selected':''}>${x.icon} ${esc(x.name)}</option>`).join('')}</select></label>
-    <div id="progBody"></div>`:'<p>No players yet.</p>'}
-    <p>Each player keeps their own stars. Everything is saved in this browser only.</p>
-    ${p?`<div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="resetP">Reset ${esc(p.name)}’s stars</button></div><div class="warn" id="resetBox" hidden><b>Clear every star ${esc(p.name)} has earned?</b><div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="resetYes">Yes, clear</button><button class="btn ghost" id="resetNo">Keep</button></div></div>`:''}
-  </div>`;
-  if($('#progSel')){const show=()=>renderProgress(S.profiles.find(x=>x.id===$('#progSel').value));$('#progSel').onchange=show;show();}
-  $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
-  $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
-  main.querySelectorAll('.speeds button').forEach(b=>b.onclick=()=>{S.rate=+b.dataset.r;save();
-    main.querySelectorAll('.speeds button').forEach(x=>x.setAttribute('aria-checked',String(x===b)));
-    say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।',null);});
-  $('#vTest').onclick=()=>say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');
-  $('#vDone').onclick=()=>openMap();
-  $('#gPlus').onclick=()=>openPlus();
-  if(p){
-    $('#resetP').onclick=()=>{$('#resetBox').hidden=false;$('#resetNo').focus();};
-    $('#resetNo').onclick=()=>{$('#resetBox').hidden=true;};
-    $('#resetYes').onclick=()=>{p.best={};p.rw=0;save();renderTop();renderGrown();};
+    <label><input type="checkbox" id="vSound" ${S.sound?'checked':''}> Sound on (Habre’s voice)</label>
+    <label><input type="checkbox" id="vEn" ${S.english?'checked':''}> Show and say the English too</label>
+    <div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="vTest">🔊 Test voice</button></div>`),
+   stats:()=>growPage('📊','Stats',`${growPlayerSelect('progSel',p)}${S.profiles.length?'<div id="progBody"></div>':''}`),
+   practice:()=>growPage('✏️','My own practice',`${growPlayerSelect('practSel',p)}${S.profiles.length?'<div id="practBody"></div>':''}`),
+   players:()=>growPage('🙂','Players',`<p>Each player keeps their own stars, outfits and settings.</p>
+    ${S.profiles.map(x=>`<div class="prow"><span class="av" aria-hidden="true">${x.icon}</span><span><b>${esc(x.name)}</b><small>${ageOf(x).icon} age ${ageOf(x).en} · story: ${DEPTHS.find(d=>d[0]===depthOf(x))[2].toLowerCase()} · learning ${x.learn==='en'?'English':'Nepali'} · ★ ${starsOf(x)}</small></span><button class="mini" data-edit="${x.id}">Change</button></div>`).join('')}
+    <div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--green)" id="gNew">＋ New player</button></div>`),
+   plus:()=>growPage('✨','Habre Plus',`<p>${hasPack('plus')?'Unlocked on this device, for every player.':'Not unlocked. Habre Plus adds new places to the map, each a trip of its own.'}</p>
+    <div class="btns" style="justify-content:flex-start"><button type="button" class="btn" style="background:var(--purple)" id="gPlus">${hasPack('plus')?'See Habre Plus':'About Habre Plus'}</button></div>`),
+   reset:()=>growPage('🔄','Start over',`<p>This clears every star a player has earned, so their journey begins again. Their name, outfits and gems stay. Everything is saved in this browser only.</p>
+    ${growPlayerSelect('resetSel',p)}${S.profiles.length?`<div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="resetP">Clear this player’s stars</button></div>
+    <div class="warn" id="resetBox" hidden><b id="resetQ">Clear every star?</b><div class="btns" style="justify-content:flex-start"><button class="btn" style="background:var(--red)" id="resetYes">Yes, clear</button><button class="btn ghost" id="resetNo">Keep</button></div></div>`:''}`)};
+  main.innerHTML=pages[growSec]();
+  $('#gBack').onclick=$('#gBack2').onclick=()=>renderGrown();
+  $('#gDone').onclick=()=>P()?homeScreen():goWho();
+  if(growSec==='voice'){
+    $('#vSel')&&($('#vSel').onchange=e=>{S.voice=e.target.value;save();loadVoices();});
+    $('#vEn').onchange=e=>{S.english=e.target.checked;save();};
+    $('#vSound').onchange=e=>{S.sound=e.target.checked;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
+    main.querySelectorAll('.speeds button').forEach(b=>b.onclick=()=>{S.rate=+b.dataset.r;save();
+      main.querySelectorAll('.speeds button').forEach(x=>x.setAttribute('aria-checked',String(x===b)));
+      say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।',null);});
+    $('#vTest').onclick=()=>say('Namaste! Ma Habre hu.','नमस्ते! म हाब्रे हुँ।','Hello! I am Habre.');
   }
+  if(growSec==='stats'&&$('#progSel')){const show=()=>renderProgress(S.profiles.find(x=>x.id===$('#progSel').value));$('#progSel').onchange=show;show();}
+  if(growSec==='practice'&&$('#practSel')){const show=()=>renderPractice(S.profiles.find(x=>x.id===$('#practSel').value));$('#practSel').onchange=show;show();}
+  if(growSec==='players'){
+    main.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{editBack=()=>renderGrown('players');editProfile(S.profiles.find(x=>x.id===b.dataset.edit));});
+    $('#gNew').onclick=()=>{editBack=()=>renderGrown('players');editProfile(null);};
+  }
+  if(growSec==='plus')$('#gPlus').onclick=()=>openPlus();
+  if(growSec==='reset'&&$('#resetSel')){
+    const who=()=>S.profiles.find(x=>x.id===$('#resetSel').value);
+    $('#resetP').onclick=()=>{$('#resetQ').textContent='Clear every star '+who().name+' has earned?';$('#resetBox').hidden=false;$('#resetNo').focus();};
+    $('#resetSel').onchange=()=>{$('#resetBox').hidden=true;};
+    $('#resetNo').onclick=()=>{$('#resetBox').hidden=true;};
+    $('#resetYes').onclick=()=>{const x=who();x.best={};x.rw=0;save();renderTop();renderGrown('reset');};
+  }
+}
+// the words a grown-up picks for a child, which become a flashcard deck in Patti
+function renderPractice(p){
+  if(!p)return;
+  const custom=new Set(p.custom||[]),deckTopics=[...WORD_T(),...AKSHAR_ON(),...GRAM_ON()];
+  if(!deckTopics.some(t=>t.id===practTopic))practTopic=deckTopics[0]?deckTopics[0].id:'';
+  const face=(t,it)=>t.kind==='color'?`<i class="dot" style="background:${it[3]}"></i>`:t.kind==='num'?it[3]:t.kind==='letter'?it[1]:it[3];
+  const chosen=[...custom].map(k=>({k,f:findCard(k)})).filter(x=>x.f);
+  $('#practBody').innerHTML=`<p>Tick the words ${esc(p.name)} should practise. They become a flashcard deck in Patti, under <b>My decks</b> as “Thulo maanchhe” (the grown-ups’ deck). <b>${chosen.length}</b> chosen.</p>
+   ${chosen.length?`<div class="chosen" aria-label="Chosen words">${chosen.map(x=>`<button type="button" data-rm="${esc(x.k)}" title="Take it out">${face(x.f.t,x.f.it)} ${esc(x.f.it[0])} ✕</button>`).join('')}</div>`:''}
+   <label>Topic <select id="cdTopic">${deckTopics.map(t=>`<option value="${t.id}" ${t.id===practTopic?'selected':''}>${t.id==='akshar'?'अ':t.icon} ${t.np} (${t.en})</option>`).join('')}</select></label>
+   <div class="btns" style="justify-content:flex-start"><button class="btn ghost" id="cdAll">Tick all</button><button class="btn ghost" id="cdNone">Clear this topic</button></div>
+   <div class="cd" id="cdWords"></div>`;
+  const t=deckTopics.find(x=>x.id===practTopic);
+  const save2=()=>{p.custom=[...custom];save();renderPractice(p);};
+  if(t){
+    $('#cdWords').innerHTML=t.items.map(it=>{const k=keyOf(t,it);return `<label><input type="checkbox" data-key="${esc(k)}" ${custom.has(k)?'checked':''}> ${face(t,it)} ${esc(it[0])}</label>`;}).join('');
+    $('#cdWords').querySelectorAll('input').forEach(c=>c.onchange=()=>{if(c.checked)custom.add(c.dataset.key);else custom.delete(c.dataset.key);save2();});
+    $('#cdAll').onclick=()=>{t.items.forEach(it=>custom.add(keyOf(t,it)));save2();};
+    $('#cdNone').onclick=()=>{t.items.forEach(it=>custom.delete(keyOf(t,it)));save2();};
+  }
+  $('#cdTopic').onchange=e=>{practTopic=e.target.value;renderPractice(p);};
+  main.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{custom.delete(b.dataset.rm);save2();});
 }
 
 // ---------- welcome, and Habre asking "what would you like to do today?" (the words depth: ages 3-5 by default) ----------
@@ -4076,7 +4141,7 @@ function openPlayset(id){
 $('#homeBtn').onclick=()=>homeScreen();
 $('#collBtn').onclick=()=>openCollection();
 $('#whoBtn').onclick=goWho;
-$('#grownBtn').onclick=renderGrown;
+$('#grownBtn').onclick=()=>renderGrown();
 $('#gemBtn').onclick=()=>{if(P())openShop();};
 function renderSound(){const b=$('#soundBtn');b.setAttribute('aria-pressed',String(S.sound));b.setAttribute('aria-label',S.sound?'Sound on':'Sound off');b.textContent=S.sound?'🔊':'🔇';}
 $('#soundBtn').onclick=()=>{S.sound=!S.sound;save();renderSound();if(!S.sound)speechSynthesis?.cancel?.();};
